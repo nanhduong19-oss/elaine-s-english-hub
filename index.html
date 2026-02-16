@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elaine's English Hub</title>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     
     <script>
       var password = prompt("Please enter the password to access Elaine's materials:");
@@ -16,108 +16,156 @@
 
     <style>
         :root {
-            --blue: #007bff; --green: #2ecc71; --orange: #e67e22; --bg: #f0f7ff;
+            --pet-pink: #FFD1DC; /* Pastel Pink */
+            --fce-green: #C1E1C1; /* Pastel Green */
+            --moet-yellow: #FEF9E7; /* Pastel Yellow */
+            --text-color: #5D5D5D;
+            --bg-pastel: #FDFCF0;
         }
-        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg); margin: 0; padding: 0; }
-        .header-img { width: 100%; max-width: 800px; display: block; margin: 20px auto; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; background: white; border-radius: 25px; margin-bottom: 50px; }
-        h1 { text-align: center; color: var(--blue); margin-bottom: 30px; }
 
-        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
-        .tab-btn { padding: 12px 25px; cursor: pointer; border: none; border-radius: 50px; font-weight: bold; background: #e0e0e0; transition: 0.3s; }
-        
-        .tab-btn.active[data-target="fce"] { background: var(--orange); color: white; }
-        .tab-btn.active[data-target="pet"] { background: var(--green); color: white; }
-        .tab-btn.active[data-target="moet"] { background: var(--blue); color: white; }
+        body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-pastel); margin: 0; padding: 0; color: var(--text-color); }
+        .container { max-width: 950px; margin: 10px auto; padding: 10px; background: rgba(255,255,255,0.8); border-radius: 30px; }
+        .header-img { width: 100%; border-radius: 25px; margin-bottom: 15px; }
+        h1 { text-align: center; font-size: 2.2em; font-weight: 700; color: #7B68EE; margin-bottom: 15px; }
 
-        .tab-content { display: none; animation: fadeIn 0.4s; }
-        .tab-content.active { display: block; }
+        /* TẦNG 1: TABS CHÍNH */
+        .main-tabs { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; }
+        .tab-btn { flex: 1; padding: 12px; cursor: pointer; border: none; border-radius: 15px; font-weight: 700; font-size: 1em; transition: 0.3s; }
+        .tab-btn[data-target="pet"] { background: var(--pet-pink); }
+        .tab-btn[data-target="fce"] { background: var(--fce-green); }
+        .tab-btn[data-target="moet"] { background: var(--moet-yellow); border: 1px solid #F9E79F; }
+        .tab-btn.active { transform: scale(1.05); border: 2px solid #7B68EE; }
+
+        /* TẦNG 2: TABS CON */
+        .sub-tabs { display: none; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .sub-tabs.active { display: flex; }
+        .sub-btn { padding: 8px 15px; cursor: pointer; border: 1px solid #ddd; background: white; border-radius: 12px; font-weight: 700; font-size: 0.85em; }
+        .sub-btn.active { background: #7B68EE; color: white; border-color: #7B68EE; }
+
+        .content-area { display: none; animation: fadeIn 0.5s; }
+        .content-area.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .sub-section-title { font-size: 1.1em; color: #555; margin-top: 25px; display: block; border-bottom: 2px dashed #eee; padding-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
+        li { background: white; border-radius: 15px; border: 1px solid #f0f0f0; transition: 0.3s; }
+        li:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        a { text-decoration: none; color: var(--text-color); display: block; padding: 15px; font-weight: 700; }
 
-        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; margin-top: 15px; }
-        li { background: white; border-radius: 12px; border: 2px solid #f1f1f1; transition: 0.3s; }
-        li:hover { transform: translateY(-3px); border-color: var(--blue); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        a { text-decoration: none; color: #444; display: block; padding: 15px; font-weight: 600; font-size: 0.9em; }
-        
-        .footer { text-align: center; padding: 40px; color: #95a5a6; font-size: 0.9em; }
+        .footer { text-align: center; padding: 20px; font-weight: 700; font-size: 0.9em; color: #999; }
     </style>
 </head>
 <body>
 
-<img src="https://img.freepik.com/free-vector/back-school-kids-students-with-backpacks-textbooks-stand-row-boy-girls-pupils-reading-books-education-learning-studying-concept-with-children-group-line-art-vector-illustration_107791-11175.jpg?semt=ais_hybrid&w=740&q=80" class="header-img">
-
 <div class="container">
+    <img src="https://i.ibb.co/v4mYp0Z/ChatGPT-Image-14-04-59-16-thg-2-2026.jpg" alt="English Hub" class="header-img">
     <h1>ELAINE'S ENGLISH HUB</h1>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-target="fce">FCE (B2)</button>
-        <button class="tab-btn" data-target="pet">PET (B1)</button>
-        <button class="tab-btn" data-target="moet">MOET (K6-9)</button>
+    <div class="main-tabs">
+        <button class="tab-btn active" data-target="pet">B1 PRELIMINARY (PET)</button>
+        <button class="tab-btn" data-target="fce">First Certificate (FCE)</button>
+        <button class="tab-btn" data-target="moet">MOET</button>
     </div>
 
-    <div id="fce" class="tab-content active">
-        <span class="sub-section-title">🏆 Full Tests</span>
+    <div id="pet-subs" class="sub-tabs active">
+        <button class="sub-btn active" data-sub="pet-full">Full Tests</button>
+        <button class="sub-btn" data-sub="pet-skills-listening">Skills: Listening</button>
+        <button class="sub-btn" data-sub="pet-skills-reading">Skills: Reading & Use</button>
+        <button class="sub-btn" data-sub="pet-skills-writing">Skills: Writing</button>
+    </div>
+
+    <div id="fce-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="fce-full">Full Tests</button>
+        <button class="sub-btn" data-sub="fce-skills-listening">Skills: Listening</button>
+        <button class="sub-btn" data-sub="fce-skills-reading">Skills: Reading & Use</button>
+        <button class="sub-btn" data-sub="fce-skills-writing">Skills: Writing</button>
+    </div>
+
+    <div id="moet-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="moet7">MOET 7</button>
+        <button class="sub-btn" data-sub="moet9">MOET 9</button>
+        <button class="sub-btn" data-sub="ts10">TUYỂN SINH 10</button>
+    </div>
+
+    <hr style="border: 0.5px solid #eee; margin: 20px 0;">
+
+    <div id="pet-full" class="content-area active">
+        <ul><li><a href="#">No Full Test files yet</a></li></ul>
+    </div>
+    <div id="pet-skills-listening" class="content-area">
         <ul>
-            <li><a href="FCE/FULL-TESTS/FCE LISTENING PART 4 - BOOK 2 - TEST 1 - 2.html">Listening P4 - Test 1-2</a></li>
-            <li><a href="FCE/FULL-TESTS/FCE LISTENING PART 4 - BOOK 2 - TEST 3 - 4.html">Listening P4 - Test 3-4</a></li>
-            <li><a href="FCE/FULL-TESTS/FCE READING PART 6 - BOOK 2 - TEST 1 - 2.HTML">Reading P6 - Test 1-2</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Listening/B1 LISTENING PART 4 Test 3 - 4.html">Listening Part 4 Test 3 - 4</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Listening/PET LISTENING PART 1 - B1 OXFORD - TEST 1 - 3.html">Listening P1 - Oxford Test 1-3</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Listening/PET LISTENING PART 1 - B1 OXFORD - TEST 4 - 6.html">Listening P1 - Oxford Test 4-6</a></li>
         </ul>
-        <span class="sub-section-title">🎯 Skills Practices</span>
+    </div>
+    <div id="pet-skills-reading" class="content-area">
         <ul>
-            <li><a href="FCE/SKILLS-PRACTICES/B2 REGULAR VERBS PRACTICE.html">B2 Regular Verbs Practice</a></li>
-            <li><a href="FCE/SKILLS-PRACTICES/FCE READING PART 1 - BOOK 1 - STUDY MODE.html">Reading P1 - Book 1</a></li>
-            <li><a href="FCE/SKILLS-PRACTICES/FCE READING PART 1 - BOOK 2 - STUDY MODE v1.html">Reading P1 - Book 2 v1</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Reading/PET READING PART 4 - B1 OXFORD - TEST 1 - 3.html">Reading P4 - Oxford Test 1-3</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Reading/PET READING PART 5 - B1 OXFORD - TEST 1 - 3.html">Reading P5 - Oxford Test 1-3</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Reading/PET READING PART 5 - B1 SIMPLY - TEST 1 - 4.html">Reading P5 - Simply Test 1-4</a></li>
+            <li><a href="PET/SKILLS-PRACTICE/Reading/B1 REGULAR VERBS PRACTICE.html">B1 Regular Verbs Practice</a></li>
         </ul>
     </div>
 
-    <div id="pet" class="tab-content">
-        <span class="sub-section-title">🏆 Full Tests</span>
+    <div id="fce-full" class="content-area">
+        <ul><li><a href="#">No Full Test files yet</a></li></ul>
+    </div>
+    <div id="fce-skills-listening" class="content-area">
         <ul>
-            <li><a href="PET/FULL-TESTS/B1 Listening Part 4 Test 3 - 4.html">Listening P4 - Test 3-4</a></li>
-            <li><a href="PET/FULL-TESTS/PET LISTENING PART 1 - B1 OXFORD - TEST 1 - 3.html">Listening P1 - Oxford 1-3</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Listening/FCE LISTENING PART 4 - BOOK 2 - TEST 1 - 2.html">Listening P4 - Book 2 Test 1-2</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Listening/FCE LISTENING PART 4 - BOOK 2 - TEST 3 - 4.html">Listening P4 - Book 2 Test 3-4</a></li>
         </ul>
-        <span class="sub-section-title">🎯 Skills Practices</span>
+    </div>
+    <div id="fce-skills-reading" class="content-area">
         <ul>
-            <li><a href="PET/SKILLS-PRACTICES/B1 REGULAR VERBS PRACTICE.html">B1 Regular Verbs Practice</a></li>
-            <li><a href="PET/SKILLS-PRACTICES/B1 Verbs Challenge 2.0.html">B1 Verbs Challenge 2.0</a></li>
-            <li><a href="PET/SKILLS-PRACTICES/PET READING PART 4 - B1 OXFORD - TEST 1 - 3.html">Reading P4 - Oxford 1-3</a></li>
-            <li><a href="PET/SKILLS-PRACTICES/PET READING PART 5 - B1 SIMPLY - TEST 1 - 4.html">Reading P5 - Simply 1-4</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Reading/FCE READING PART 1 - BOOK 1 - STUDY MODE.html">Reading P1 - Book 1 Study Mode</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Reading/FCE READING PART 1 - BOOK 2 - STUDY MODE v1.html">Reading P1 - Book 2 Study Mode v1</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Reading/FCE READING PART 6 - BOOK 2 - TEST 1 - 2.HTML">Reading P6 - Book 2 Test 1-2</a></li>
+            <li><a href="FCE/SKILLS-PRACTICE/Reading/B2 REGULAR VERBS PRACTICE.html">B2 Regular Verbs Practice</a></li>
         </ul>
     </div>
 
-    <div id="moet" class="tab-content">
-        <span class="sub-section-title">📘 Grade 7 & 9</span>
-        <ul>
-            <li><a href="MOET/MOET-7/unit-1.html">MOET 7 - Unit 1</a></li>
-            <li><a href="MOET/MOET-9/unit-1.html">MOET 9 - Unit 1</a></li>
-        </ul>
-        <span class="sub-section-title">📝 Tuyển Sinh 10</span>
-        <ul>
-            <li><a href="MOET/TUYEN-SINH-10/mock-test-01.html">TS10 Mock Test 01</a></li>
-        </ul>
+    <div id="moet7" class="content-area">
+        <ul><li><a href="MOET/MOET-7/unit-1.html">MOET 7 - Unit 1</a></li></ul>
+    </div>
+    <div id="moet9" class="content-area">
+        <ul><li><a href="MOET/MOET-9/unit-1.html">MOET 9 - Unit 1</a></li></ul>
+    </div>
+    <div id="ts10" class="content-area">
+        <ul><li><a href="MOET/TUYEN-SINH-10/mock-test-01.html">TS10 Mock Test</a></li></ul>
     </div>
 
-    <div class="footer">
-        <strong>Ms. Elaine Nguyen (Thuong)</strong><br>
-        "Empowering students through Language and Technology"
-    </div>
+    <div class="footer">Ms. Elaine Nguyen<br>"Empowering Students"</div>
 </div>
 
 <script>
-    const btns = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
+    const mainBtns = document.querySelectorAll('.tab-btn');
+    const subTabGroups = document.querySelectorAll('.sub-tabs');
+    const subBtns = document.querySelectorAll('.sub-btn');
+    const contents = document.querySelectorAll('.content-area');
 
-    btns.forEach(btn => {
+    mainBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            btns.forEach(b => b.classList.remove('active'));
+            mainBtns.forEach(b => b.classList.remove('active'));
+            subTabGroups.forEach(s => s.classList.remove('active'));
             contents.forEach(c => c.classList.remove('active'));
             btn.classList.add('active');
-            document.getElementById(btn.dataset.target).classList.add('active');
+            const target = btn.dataset.target;
+            const activeSubs = document.getElementById(target + '-subs');
+            activeSubs.classList.add('active');
+            activeSubs.querySelector('.sub-btn').click();
+        });
+    });
+
+    subBtns.forEach(sBtn => {
+        sBtn.addEventListener('click', () => {
+            const parent = sBtn.parentElement;
+            parent.querySelectorAll('.sub-btn').forEach(b => b.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            sBtn.classList.add('active');
+            document.getElementById(sBtn.dataset.sub).classList.add('active');
         });
     });
 </script>
-
 </body>
 </html>
