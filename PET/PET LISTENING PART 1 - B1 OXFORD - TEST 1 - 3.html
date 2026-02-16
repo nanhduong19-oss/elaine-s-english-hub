@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Listening - Focused Practice</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pet: { 50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 800: '#9f1239' }
+                    },
+                    fontFamily: { sans: ['Quicksand', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-image: radial-gradient(#e11d48 0.5px, transparent 0.5px), radial-gradient(#e11d48 0.5px, #fff1f2 0.5px);
+            background-size: 20px 20px;
+            /* Prevent body scroll, handle scroll inside #quiz-content */
+            overflow: hidden; 
+            height: 100vh;
+        }
+
+        /* --- LAYOUT ARCHITECTURE --- */
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            max-height: 100vh;
+        }
+
+        /* Header stays fixed at top */
+        #quiz-header-wrapper {
+            flex: none;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 1px solid #fce7f3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Content area SCROLLS independently */
+        #quiz-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Footer stays fixed at bottom */
+        #quiz-footer-wrapper {
+            flex: none;
+            z-index: 50;
+            background: white;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        /* Audio Player Styling */
+        audio { width: 100%; height: 40px; }
+        audio::-webkit-media-controls-enclosure { background-color: #f3f4f6; border-radius: 99px; }
+
+        /* Animation & UI Elements */
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .option-btn:active:not(:disabled) { transform: translateY(0); }
+        
+        #penalty-overlay, #fullscreen-blocker { backdrop-filter: blur(8px); }
+        .progress-ring__circle { transition: stroke-dashoffset 0.1s linear; transform: rotate(-90deg); transform-origin: 50% 50%; }
+
+        .evidence-box { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .evidence-box.show { max-height: 1000px; opacity: 1; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #fecdd3; }
+
+        .cheat-toast { animation: slideInDown 0.5s forwards; }
+        @keyframes slideInDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 20px); opacity: 1; } }
+
+        /* Custom Scrollbar */
+        #quiz-content-wrapper::-webkit-scrollbar { width: 8px; }
+        #quiz-content-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex justify-center items-center w-full">
+
+    <!-- SPAM PENALTY OVERLAY -->
+    <div id="penalty-overlay" class="fixed inset-0 z-[100] bg-gray-900/80 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-sm mx-4 border border-gray-200 relative overflow-hidden animate-bounce-subtle">
+            <div class="absolute inset-0 bg-red-50 animate-pulse opacity-50 z-0"></div>
+            <div class="relative z-10">
+                <div class="text-6xl mb-4">🚫</div>
+                <h3 class="text-2xl font-bold text-red-600 mb-2">Slow Down!</h3>
+                <p class="text-gray-600 mb-6 text-sm">Irregular activity detected.</p>
+                <div class="relative w-32 h-32 mx-auto">
+                    <svg class="w-full h-full" width="120" height="120">
+                        <circle class="text-gray-200" stroke-width="8" stroke="currentColor" fill="transparent" r="52" cx="64" cy="64"/>
+                        <circle id="penalty-ring" class="text-red-500 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="52" cx="64" cy="64" stroke-dasharray="326.72" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                        <span id="penalty-timer" class="text-4xl font-bold text-gray-800 font-mono">10</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-4 uppercase tracking-widest font-bold">System Locked</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN BLOCKER OVERLAY -->
+    <div id="fullscreen-blocker" class="fixed inset-0 z-[110] bg-white/95 hidden flex flex-col items-center justify-center text-center p-8">
+        <div class="bg-red-50 p-8 rounded-3xl border-2 border-red-100 max-w-md w-full shadow-xl">
+            <div class="text-6xl mb-6">🖥️</div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Full Screen Required</h3>
+            <p id="fullscreen-msg" class="text-gray-600 mb-8 font-medium">Please do not minimize the window.<br>You must be in full screen mode to continue.</p>
+            <button onclick="resumeFullscreen()" class="w-full py-4 bg-pet-600 text-white font-bold rounded-2xl shadow-lg hover:bg-pet-700 transition transform hover:-translate-y-1 active:scale-95 text-lg flex items-center justify-center gap-2">
+                <span>Resume Full Screen</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="w-full max-w-[95%] xl:max-w-7xl bg-white md:rounded-3xl shadow-2xl relative border border-white overflow-hidden">
+        
+        <!-- === SCREEN: WELCOME === -->
+        <div id="screen-welcome" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-8 text-center space-y-8">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-pet-200 rounded-full blur-xl opacity-50 animate-pulse group-hover:opacity-70 transition"></div>
+                <div class="relative w-32 h-32 bg-gradient-to-br from-pet-500 to-pet-600 rounded-full flex items-center justify-center shadow-lg text-6xl transform group-hover:rotate-12 transition duration-500 text-white">
+                    🎧
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Focused Listening Practice</h1>
+                <p class="text-pet-600 font-bold text-lg uppercase tracking-wide">English Test Mode</p>
+            </div>
+
+            <!-- Student Input -->
+            <div class="w-full max-w-md">
+                <input type="text" id="student-name" placeholder="Enter your full name..." class="w-full px-6 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-pet-500 focus:outline-none text-lg text-center shadow-sm transition-all" autocomplete="off">
+            </div>
+
+            <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-100 max-w-md w-full text-center">
+                <p class="text-blue-800 font-semibold text-lg flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Please stay focused and take the test seriously
+                </p>
+                <!-- Warning Note -->
+                <p class="text-red-500 text-sm font-semibold mt-3">
+                    ⚠️ Note: Violating the rules 3 times will automatically terminate the test and submit your current results.
+                </p>
+            </div>
+
+            <button onclick="startApp()" class="group relative inline-flex items-center justify-center px-12 py-4 font-bold text-white transition-all duration-200 bg-gray-900 font-lg rounded-full hover:bg-pet-600 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+                Start Test
+                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+
+        <!-- === QUIZ INTERFACE (Hidden by default) === -->
+        <div id="quiz-interface" class="flex flex-col h-full hidden opacity-0 transition-opacity duration-500">
+            
+            <!-- 1. FIXED HEADER -->
+            <div id="quiz-header-wrapper" class="px-6 py-3">
+                <!-- Content injected via JS -->
+            </div>
+            
+            <!-- 2. SCROLLABLE CONTENT -->
+            <div id="quiz-content-wrapper" class="p-6">
+                <div id="quiz-content">
+                    <!-- Questions injected via JS -->
+                </div>
+            </div>
+
+            <!-- 3. FIXED FOOTER -->
+            <div id="quiz-footer-wrapper" class="p-4 px-6 flex justify-between items-center bg-gray-50/80 backdrop-blur-sm">
+                <div class="text-sm font-semibold text-gray-500 flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span>Score:</span>
+                        <span id="current-score" class="text-pet-600 text-xl font-bold">0</span>
+                    </div>
+                    <span id="violation-display" class="text-xs text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-100">Status: Good</span>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="submit-btn" onclick="submitPage()" class="px-8 py-3 bg-gray-800 text-white font-bold rounded-2xl shadow-lg hover:bg-black transition active:scale-95 flex items-center gap-2">
+                        <span>Submit Page</span>
+                    </button>
+                    
+                    <button id="next-btn" onclick="nextPage()" class="hidden px-8 py-3 bg-pet-600 text-white font-bold rounded-2xl shadow-lg hover:bg-pet-700 transition active:scale-95 flex items-center gap-2 animate-bounce-subtle">
+                        <span>Next Page</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- === SCREEN: RESULT === -->
+        <div id="screen-result" class="absolute inset-0 z-40 bg-white hidden flex-col items-center justify-center p-8 text-center space-y-6 overflow-y-auto">
+            <h2 class="text-3xl font-bold text-gray-800">Test Results</h2>
+            
+            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 w-full max-w-md shadow-sm text-left space-y-4">
+                <div class="border-b pb-4">
+                    <p class="text-gray-500 text-sm uppercase tracking-wide font-bold">Student</p>
+                    <p class="text-xl font-bold text-gray-900" id="res-name">--</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-500 text-sm">Start Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-start-time">--</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">End Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-end-time">--</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 bg-white p-3 rounded-xl border border-gray-100">
+                    <div>
+                        <p class="text-gray-500 text-sm">Score</p>
+                        <p class="text-2xl font-bold text-pet-600" id="res-score">0/21</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Percentage</p>
+                        <p class="text-2xl font-bold text-pet-600" id="res-percent">0%</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center justify-between">
+                    <span class="text-red-800 font-medium text-sm">Distraction Count</span>
+                    <span class="font-bold text-red-600 text-xl" id="res-violations">0</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                    <div class="text-green-600 text-xs font-bold uppercase">Correct</div>
+                    <div id="stats-correct" class="text-3xl font-bold text-green-700">0</div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <div class="text-red-600 text-xs font-bold uppercase">Wrong</div>
+                    <div id="stats-wrong" class="text-3xl font-bold text-red-700">0</div>
+                </div>
+            </div>
+            
+            <div id="result-message" class="text-lg font-bold px-6 py-2 rounded-lg"></div>
+
+            <button onclick="location.reload()" class="px-8 py-3 border-2 border-gray-200 text-gray-600 font-bold rounded-full hover:border-pet-500 hover:text-pet-600 hover:bg-pet-50 transition">
+                Retry
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-transform duration-300">
+        <p class="text-white/70 mt-4 text-sm font-medium">Click anywhere to close</p>
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+        // --- DATA ---
+        const quizData = [
+            {
+                id: "page1",
+                title: "PART 1: Practice Test 1",
+                audio: "https://www.dropbox.com/scl/fi/7pm0wyoo2xu3dugadoryz/OPP-Preliminary-for-Schools-Track-02.mp3?rlkey=w5jasuwqcpljougjqrgj4nkfu&st=okt2hxmo&raw=1",
+                images: [
+                    { src: "https://www.dropbox.com/scl/fi/vc3z9tqx1qodai4w7am8g/image_c9ace2.png?rlkey=b1okxe8z79jg4hkffqcqtd00a&st=2l25lqlr&raw=1", startQ: 1, endQ: 4 }, 
+                    { src: "https://www.dropbox.com/scl/fi/aqmr9p98jribfhq8pymji/image_c9aa3a.png?rlkey=fta0lvarx9p5iuhbe8i50ku84&st=0md6cy3r&raw=1", startQ: 5, endQ: 7 }
+                ],
+                questions: [
+                    { 
+                        id: 1, 
+                        text: "On which date did the boy’s grandparents get married?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Girl:</b> Are you coming to the concert with us on the 14th?<br><b>Boy:</b> I’m not sure. You see, I’m travelling to Edinburgh with my parents on the 15th. It’s for my grandparents’ wedding anniversary, and the train leaves early in the morning. I don’t want to be tired after a late night. Their anniversary is actually on the <b>17th</b>, but we want to spend a bit of time in Edinburgh before we visit them." 
+                    },
+                    { 
+                        id: 2, 
+                        text: "What is the woman going to buy today?", 
+                        options: ["A", "B", "C"], 
+                        correct: "A", 
+                        script: "<b>Man:</b> Can you get some milk and some butter when you go to the shop, please? I want to do some cooking later.<br><b>Woman:</b> I’ve done that already. Like I bought some yesterday. It’s in the fridge, on the bottom shelf. I’ll just get <b>butter</b> and bread.<br><b>Man:</b> We’ve got plenty of bread. I went to the new bakery on the corner this morning. Don’t buy any more." 
+                    },
+                    { 
+                        id: 3, 
+                        text: "What is the man going to do on Saturday?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Woman:</b> I’m going to a basketball match on Saturday evening. Do you want to come with me? It’s going to be great.<br><b>Man:</b> I’d love to, but I’m so busy. I’m going to the cinema today, and I need to go shopping later. It must buy my mother a present. It’s her birthday on Sunday, you see.<br><b>Woman:</b> Well, why don’t you go shopping this evening instead? Then you can come to the <b>basketball game</b> with me.<br><b>Man:</b> OK. That’s a good idea. I’ll do that." 
+                    },
+                    { 
+                        id: 4, 
+                        text: "What did the woman do last Sunday?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Man:</b> I went to the beach with my family last weekend. I had a great time.<br><b>Woman:</b> But it rained, didn’t it? I remember, because we were having a picnic in the park and we had to run home with all our things. We got soaked.<br><b>Man:</b> That was on Saturday. We went on Sunday when it was nice and sunny.<br><b>Woman:</b> Oh yes, you’re right. I remember now. I sat in the <b>garden</b> all day." 
+                    },
+                    { 
+                        id: 5, 
+                        text: "How did the man book his holiday?", 
+                        options: ["A", "B", "C"], 
+                        correct: "A", 
+                        script: "<b>Man:</b> I’ve booked a fantastic holiday in Italy for next month. I can’t wait to go!<br><b>Woman:</b> That sounds exciting! I’d love to go to Italy. Did you book it on the Internet?<br><b>Man:</b> No, I don’t like booking things on the Internet. I <b>phoned</b> the travel agent, told her what I wanted and she found me just the right thing. I’m going there to pick up the tickets next week." 
+                    },
+                    { 
+                        id: 6, 
+                        text: "What time is the exam?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Girl:</b> Why aren’t you ready to go? It’s nearly one o’clock. We need to hurry if we’re going to get to the exam hall in time. The traffic is really bad today.<br><b>Boy:</b> What’s the rush? The exam is not until 4.00.<br><b>Girl:</b> No, it starts at <b>2.00</b> and ends at 4.00. Check your exam timetable!<br><b>Boy:</b> Really? Oh no! How did I get that wrong? We’d better hurry up, then. I’ll just grab my things." 
+                    },
+                    { 
+                        id: 7, 
+                        text: "What happens as soon as the man answers his phone?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Woman:</b> A man drives across a long bridge. He is lost. On the far side of the bridge, he parks and gets out of the car. Suddenly his mobile rings. He quickly grabs it and says, ‘Hello’. But the man accidentally lets the phone fall to the ground and it <b>smashes</b>. A few minutes later, a girl on a bicycle stops to talk to him. She gives him directions. It’s a pretty exciting film!" 
+                    }
+                ]
+            },
+            {
+                id: "page2",
+                title: "PART 1: Practice Test 2",
+                audio: "https://www.dropbox.com/scl/fi/gsjsgywxfxx2up3j06hwd/OPP-Preliminary-for-Schools-Track-11.mp3?rlkey=ms5agumevfptphmkmamh0k898&st=k8z0il8a&raw=1",
+                images: [
+                    { src: "https://www.dropbox.com/scl/fi/piig30rdfrgygbuhne4x7/image_bfa249.png?rlkey=m4sxygnj3i07k0ex70ixa9zdt&st=kd81fzeh&raw=1", startQ: 1, endQ: 4 },
+                    { src: "https://www.dropbox.com/scl/fi/ikqlxu40mkhm14vng3ojs/image_bfa22b.png?rlkey=oq888vod8ynaxyo6rc9hy4n2h&st=1cy22vge&raw=1", startQ: 5, endQ: 7 }
+                ],
+                questions: [
+                    { 
+                        id: 1, 
+                        text: "What is the weather forecast for tomorrow?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Man:</b> Good afternoon. Well, it looks as if tomorrow’s weather won’t be quite what was expected. We had some storm warnings earlier, with a forecast of very heavy rain indeed. It’s been cloudy this afternoon with a few showers. And we can expect <b>more of the same</b> tomorrow, although winds will be stronger than today, before the weekend. Sunnier weather arrives towards the weekend." 
+                    },
+                    { 
+                        id: 2, 
+                        text: "What does Paul look like?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Teen boy:</b> You know that guy with long hair you were just talking to – is that Paul, your brother?<br><b>Teen girl:</b> Oh, you mean Robbie? No, he’s a friend from school. My brother doesn’t look anything like that. He’s got shorter hair and would never wear such smart clothes! There he is over there!<br><b>Teen boy:</b> Oh! I see him, in the <b>sunglasses</b>…<br><b>Teen girl:</b> That’s him. He thinks they make him look cool!" 
+                    },
+                    { 
+                        id: 3, 
+                        text: "What exercise does the girl do at the moment?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Boy:</b> You always seem so healthy. How do you manage it?<br><b>Girl:</b> Well, I used to do a lot of running and swimming, but I got tired of the jogging after a while.<br><b>Boy:</b> Oh, I know what you mean. I’m going to the gym again tonight, but it gets so boring. Why don’t we meet up afterwards and go to the cinema?<br><b>Girl:</b> OK. I’ll be out of the <b>pool</b> by 7.00. I could meet you outside the gym at about 7.30." 
+                    },
+                    { 
+                        id: 4, 
+                        text: "What can teenagers do at the new club?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Woman:</b> Turning to local news. Young people have been waiting for this since the Internet café closed last spring. The new club for teenagers finally opened today. It’s a fantastic place to listen to music, play <b>table tennis</b> and meet up with your friends. And there are plans to open a café next year. Why not go along and try it out?" 
+                    },
+                    { 
+                        id: 5, 
+                        text: "What equipment is missing?", 
+                        options: ["A", "B", "C"], 
+                        correct: "A", 
+                        script: "<b>Man:</b> Hello. I’ve just received my new computer through the post this morning and it doesn’t seem to be all here… I’m just looking for the keyboard… Ah, here we are. But I can’t see the printer anywhere.<br><b>Woman:</b> That has to be ordered separately, I’m afraid.<br><b>Man:</b> Oh yes, sorry, I forgot about that. But there’s no <b>mouse</b> here either.<br><b>Woman:</b> That’s not the first time I’ve heard that. Give me your order number and we’ll send you one straightaway." 
+                    },
+                    { 
+                        id: 6, 
+                        text: "Where is the boy's money?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Boy:</b> Mum, where have you put the money for my lunch?<br><b>Mum:</b> I thought you picked it up. It was on the table in the kitchen. Have you put it in the front pocket of your bag as usual?<br><b>Boy:</b> No, I’ve looked there. It’s not in my jacket pocket either.<br><b>Mum:</b> Oh, I remember. Jenny took the money from the table, yours is by the <b>front door</b>. I put it there so you wouldn’t forget it on your way out." 
+                    },
+                    { 
+                        id: 7, 
+                        text: "How did Susie contact her friend?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Girl:</b> Guess what? Susie can come camping after all.<br><b>Boy:</b> Oh good! Did she answer your email, then?<br><b>Girl:</b> I don’t know if she ever got it. It was just lucky that I found an old address book with her number in. I left a message and she <b>called me back</b> this morning. I was texting her all last week, but she said she lost her mobile two weeks ago and she hasn’t bought a new one yet." 
+                    }
+                ]
+            },
+            {
+                id: "page3",
+                title: "PART 1: Practice Test 3",
+                audio: "https://www.dropbox.com/scl/fi/yfpeewzjedt6f2jue8or2/OPP-Preliminary-for-Schools-Track-15.mp3?rlkey=20s4v8dao9uewu3p6caetpooj&st=bznjhhj6&raw=1",
+                images: [
+                    { src: "https://www.dropbox.com/scl/fi/abzcv4jmvoqvgdnhs82rq/image_bfa1f0.png?rlkey=9ilq5vg3y80umd63o6cpfuhmv&st=samswbe8&raw=1", startQ: 1, endQ: 4 },
+                    { src: "https://www.dropbox.com/scl/fi/mgje9gmqlwieuujakhchg/image_bfa1d3.png?rlkey=gkcx1it1g9vg2nz4mrx03khdl&st=m13uate9&raw=1", startQ: 5, endQ: 7 }
+                ],
+                questions: [
+                    { 
+                        id: 1, 
+                        text: "What is the girl going to do this morning?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Girl:</b> I don’t feel very well today. Dad. My head hurts and I’m very tired. I wish I could just stay at home and rest.<br><b>Dad:</b> Oh, I’m going to make a doctor’s appointment for you right now. Maybe she can give you something to make you feel better.<br><b>Girl:</b> But I’ve got a big <b>test</b> this morning, Dad, and I really can’t miss it. Could we make a doctor’s appointment for this afternoon? Then maybe I could go there straight from the exam." 
+                    },
+                    { 
+                        id: 2, 
+                        text: "When is the man's birthday?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Man:</b> Can you come to my house for a meal on Tuesday evening? I’m inviting a few friends over to celebrate my birthday, and I’d love you to come.<br><b>Woman:</b> Oh, is it your birthday on Tuesday? I didn’t realize.<br><b>Man:</b> No, it’s actually on <b>Thursday</b>, but I’m going out to dinner with my parents on Thursday evening, and on Wednesday I’m meeting an old school friend in town, so I thought I’d have an early celebration with friends." 
+                    },
+                    { 
+                        id: 3, 
+                        text: "Where is the girl going to go this weekend?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Boy:</b> I’m going to the new theme park with my family on Saturday. Would you like to come with us?<br><b>Girl:</b> Oh, thanks, but I went there with my sister last weekend. It was good, but I don’t think I want to go there again, not just yet. I’ve been invited to my aunt’s house by the sea this Saturday, but I’ve said I can’t go. I really just want to have a quiet day in the <b>park</b> instead." 
+                    },
+                    { 
+                        id: 4, 
+                        text: "What happened yesterday?", 
+                        options: ["A", "B", "C"], 
+                        correct: "A", 
+                        script: "<b>Woman:</b> Yesterday, St John’s School closed for the second time this month, after problems with <b>flooding</b> in the kitchens. Only two weeks ago, there was a fire in one of the science labs. The fire brigade was called, but luckily no one was hurt. It is believed that the school will be closed for a week while they deal with this new problem." 
+                    },
+                    { 
+                        id: 5, 
+                        text: "How did Ben find the information for his article?", 
+                        options: ["A", "B", "C"], 
+                        correct: "B", 
+                        script: "<b>Woman:</b> This is a really interesting article, Ben. It’s full of great facts. Did you find this information on the Internet or did you go to the library?<br><b>Man:</b> Well, I went to the library, but I couldn’t find any good books. So I had a quick look on the Internet, but then my friend Simon came in and suggested I look at some new history <b>magazines</b>. They were really good, and that’s what I used." 
+                    },
+                    { 
+                        id: 6, 
+                        text: "Where did the boy leave the passports?", 
+                        options: ["A", "B", "C"], 
+                        correct: "C", 
+                        script: "<b>Boy:</b> Mum, it’s time to go to the airport, but I can’t find our passports! Have you seen them? Did I leave them on the kitchen table?<br><b>Mum:</b> No, I’ve looked – they aren’t there. Maybe you left them upstairs. Have you looked on the bed?<br><b>Boy:</b> No, they aren’t upstairs. Oh, I’ve just remembered! I put them in a small bag and I put it in the <b>front door</b> so I would not forget it. That’s where they are!" 
+                    },
+                    { 
+                        id: 7, 
+                        text: "Where are the girl's parents?", 
+                        options: ["A", "B", "C"], 
+                        correct: "A", 
+                        script: "<b>Boy:</b> Hi, Angela. Do you want to meet us at the cinema in half an hour?<br><b>Girl:</b> Thanks, Ted, but I can’t. I’m babysitting my little brother this evening. My parents have gone out with my aunt who’s visiting from Canada.<br><b>Boy:</b> Oh, have they gone to that big concert in town?<br><b>Girl:</b> Actually they couldn’t get tickets. They’re having dinner at that new Italian <b>restaurant</b> opposite the theatre. Lucky for them!" 
+                    }
+                ]
+            }
+        ];
+
+        // --- STATE & VARIABLES ---
+        let currentPageIndex = 0;
+        let userAnswers = {}; 
+        let currentScore = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentAudioPlayer = null;
+        let startTime = null;
+        let endTime = null;
+        let studentName = "";
+        let violationCount = 0;
+        let lastClickTime = 0;
+        let isGlobalLocked = false;
+        let isExamActive = false;
+        const SPAM_THRESHOLD = 3000;
+        const PENALTY_DURATION = 10;
+        const totalQuestions = 21;
+        const MAX_VIOLATIONS = 3; 
+
+        // Interval for polling fullscreen status
+        let fullscreenPollInterval = null;
+
+        // --- CORE FUNCTIONS ---
+        function startApp() {
+            const nameInput = document.getElementById('student-name');
+            if (!nameInput.value.trim()) {
+                alert("Please enter your name.");
+                nameInput.focus();
+                return;
+            }
+            studentName = nameInput.value.trim();
+            isExamActive = true;
+            startTime = new Date();
+
+            // 1. Trigger Fullscreen
+            resumeFullscreen();
+
+            // 2. Setup Monitoring
+            setupAntiCheat();
+
+            // 3. UI Transition
+            document.getElementById('screen-welcome').classList.add('hidden');
+            const quizInterface = document.getElementById('quiz-interface');
+            quizInterface.classList.remove('hidden');
+            setTimeout(() => quizInterface.classList.remove('opacity-0'), 50);
+            
+            renderPage(0);
+        }
+
+        function resumeFullscreen() {
+            const elem = document.documentElement;
+            const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+            if (req) {
+                req.call(elem).then(() => {
+                    document.getElementById('fullscreen-blocker').classList.add('hidden');
+                    // Reset text
+                    document.getElementById('fullscreen-msg').innerHTML = "Please do not minimize the window.<br>You must be in full screen mode to continue.";
+                }).catch(err => {
+                    console.log("Fullscreen request denied/failed:", err);
+                });
+            }
+        }
+
+        function setupAntiCheat() {
+            // 1. Visibility Check (Tabs)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden && isExamActive) recordViolation("Left quiz tab");
+            });
+            
+            // 2. Focus Check (Clicks outside)
+            window.addEventListener('blur', () => {
+                if (isExamActive) recordViolation("Lost focus (Clicked outside/Alt-Tab)");
+            });
+
+            // 3. Fullscreen Event Check (Standard)
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            // 4. POLLING CHECK (The Fix for macOS Minimize/Green Button)
+            // Checks every second if we are really in fullscreen or if dimensions are wrong
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+            fullscreenPollInterval = setInterval(checkFullscreenState, 1000);
+        }
+
+        function handleFullscreenChange() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                 document.getElementById('fullscreen-blocker').classList.add('hidden');
+            } else if (isExamActive) {
+                recordViolation("Exited fullscreen");
+                document.getElementById('fullscreen-blocker').classList.remove('hidden');
+            }
+        }
+
+        function checkFullscreenState() {
+            if (!isExamActive) return;
+
+            const isApiFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            
+            // Check screen dimensions as backup (allow small variance for scrollbars)
+            const isScreenFull = (window.innerWidth >= screen.width - 10) && (window.innerHeight >= screen.height - 10);
+
+            // If API says no, AND dimensions say no, then we are definitely out.
+            if (!isApiFullscreen && !isScreenFull) {
+                // If the blocker is ALREADY visible, don't spam violations
+                if (document.getElementById('fullscreen-blocker').classList.contains('hidden')) {
+                    
+                    // --- EXPLICIT NOTIFICATION LOGIC ---
+                    recordViolation("System detected window resizing/minimizing");
+                    
+                    // Update blocker message to be specific about the detection
+                    document.getElementById('fullscreen-msg').innerHTML = 
+                        "<strong class='text-red-600'>System Alert:</strong> Window resizing/minimizing detected.<br>Please return to full screen mode immediately.";
+                    
+                    document.getElementById('fullscreen-blocker').classList.remove('hidden');
+                }
+            }
+        }
+
+        function recordViolation(reason) {
+            violationCount++;
+            
+            if (violationCount >= MAX_VIOLATIONS) {
+                // Stop the polling
+                clearInterval(fullscreenPollInterval);
+                alert(`Violation limit reached (${violationCount}/${MAX_VIOLATIONS}). The exam is terminated.`);
+                showResult();
+                return;
+            }
+
+            const statusEl = document.getElementById('violation-display');
+            statusEl.innerText = `Warning: ${violationCount} / ${MAX_VIOLATIONS} ⚠️`;
+            statusEl.className = "text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-100 animate-pulse";
+            showToast(`Warning #${violationCount}: ${reason}`);
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'cheat-toast fixed top-6 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-2xl z-[100] font-bold text-sm border-2 border-white';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function formatTime(date) {
+            if (!date) return "--";
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(-2);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} - ${hours}:${minutes}`;
+        }
+
+        function renderPage(index) {
+            currentPageIndex = index;
+            const data = quizData[index];
+            const headerWrapper = document.getElementById('quiz-header-wrapper');
+            const content = document.getElementById('quiz-content');
+
+            if (currentAudioPlayer) { currentAudioPlayer.pause(); currentAudioPlayer.currentTime = 0; }
+
+            headerWrapper.innerHTML = `
+                <div class="flex flex-col md:flex-row items-center gap-4 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex items-center gap-3 w-full md:w-auto min-w-[200px]">
+                        <span class="bg-pet-600 text-white font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm whitespace-nowrap">Page ${index + 1}/3</span>
+                        <h2 class="text-lg font-bold text-gray-800 line-clamp-1">${data.title}</h2>
+                    </div>
+                    <div class="w-full flex-1">
+                        <audio id="audio-player" controls controlsList="nodownload" class="shadow-inner">
+                            <source src="${data.audio}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+            `;
+            currentAudioPlayer = document.getElementById('audio-player');
+
+            let html = '';
+            data.images.forEach(imgGroup => {
+                html += `<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 border-b border-gray-100 pb-10 last:border-0">`;
+                
+                html += `
+                    <div class="flex flex-col">
+                        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-2 shadow-sm lg:sticky lg:top-4 group cursor-zoom-in" onclick="openLightbox('${imgGroup.src}')">
+                            <div class="flex justify-between items-center mb-2 px-2">
+                                 <span class="text-xs font-bold text-gray-400 uppercase">Image</span>
+                                 <span class="text-xs text-pet-600 font-bold bg-white px-2 py-0.5 rounded border border-pet-100 shadow-sm">Questions ${imgGroup.startQ} - ${imgGroup.endQ}</span>
+                            </div>
+                            <div class="relative rounded-xl overflow-hidden border border-gray-200">
+                                <img src="${imgGroup.src}" class="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400?text=Error'">
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <span class="opacity-0 group-hover:opacity-100 bg-black/70 text-white text-xs px-3 py-1 rounded-full backdrop-blur transition-opacity">🔍 Zoom</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                html += `<div class="flex flex-col space-y-6">`;
+                const questions = data.questions.filter(q => q.id >= imgGroup.startQ && q.id <= imgGroup.endQ);
+                questions.forEach(q => {
+                    html += `
+                        <div id="q-box-${q.id}" class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex gap-3 mb-4">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-pet-50 text-pet-700 font-bold rounded-full text-sm">${q.id}</span>
+                                <h3 class="font-bold text-gray-800 pt-1">${q.text}</h3>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                                ${q.options.map(opt => `
+                                    <button onclick="selectOption(${q.id}, '${opt}')" id="btn-${q.id}-${opt}" class="option-btn py-3 px-2 rounded-xl border-2 border-gray-100 font-bold text-gray-500 hover:border-pet-200 hover:bg-pet-50 focus:outline-none bg-white">${opt}</button>
+                                `).join('')}
+                            </div>
+                            <div id="feedback-${q.id}" class="hidden flex items-center gap-2 text-sm font-bold mb-3 animate-pulse"></div>
+                            <div id="evidence-${q.id}" class="evidence-box bg-gray-50 rounded-xl">
+                                <div class="p-3 border-l-4 border-pet-500 text-sm text-gray-700 leading-relaxed text-justify">
+                                    <span class="block text-xs uppercase font-bold text-gray-400 mb-1">Explanation</span>
+                                    ${q.script}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`; 
+            });
+
+            content.innerHTML = html;
+            document.getElementById('quiz-content-wrapper').scrollTop = 0;
+            
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            if(index === 2) {
+                 document.getElementById('submit-btn').innerHTML = "<span>Submit & View Results</span>";
+            } else {
+                 document.getElementById('submit-btn').innerHTML = "<span>Submit Page</span>";
+            }
+        }
+
+        // --- CORE LOGIC ---
+        function selectOption(qId, option) {
+            const stateKey = `${currentPageIndex}_${qId}`;
+            if (isGlobalLocked || userAnswers[stateKey]?.locked) return;
+
+            const now = Date.now();
+            if (lastClickTime > 0 && (now - lastClickTime < SPAM_THRESHOLD)) {
+                triggerGlobalLock(); return;
+            }
+            lastClickTime = now;
+
+            document.querySelectorAll(`[id^="btn-${qId}-"]`).forEach(btn => 
+                btn.className = "option-btn py-3 px-2 rounded-xl border-2 border-gray-100 font-bold text-gray-500 hover:border-pet-200 hover:bg-pet-50 focus:outline-none bg-white");
+            
+            const selectedBtn = document.getElementById(`btn-${qId}-${option}`);
+            selectedBtn.className = "option-btn py-3 px-2 rounded-xl border-2 border-pet-500 bg-pet-500 text-white font-bold shadow-md transform scale-[1.02]";
+
+            if (!userAnswers[stateKey]) userAnswers[stateKey] = { attempts: 0, pointsFlag: true };
+            userAnswers[stateKey].selected = option;
+        }
+
+        function triggerGlobalLock() {
+            isGlobalLocked = true;
+            const overlay = document.getElementById('penalty-overlay');
+            const timerEl = document.getElementById('penalty-timer');
+            const ringEl = document.getElementById('penalty-ring');
+            
+            let timeLeft = PENALTY_DURATION;
+            overlay.classList.remove('hidden');
+            timerEl.innerText = timeLeft;
+            
+            ringEl.style.transition = 'none'; ringEl.style.strokeDashoffset = '0';
+            void ringEl.offsetWidth; // force reflow
+            ringEl.style.transition = `stroke-dashoffset ${PENALTY_DURATION}s linear`;
+            ringEl.style.strokeDashoffset = 326.72; // circumference
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    overlay.classList.add('hidden');
+                    isGlobalLocked = false;
+                    lastClickTime = 0;
+                }
+            }, 1000);
+        }
+
+        function submitPage() {
+            const currentData = quizData[currentPageIndex];
+            let pageComplete = true; 
+            let hasUnanswered = false;
+            
+            for (let q of currentData.questions) {
+                const key = `${currentPageIndex}_${q.id}`;
+                if ((!userAnswers[key] || !userAnswers[key].selected) && !userAnswers[key]?.locked) hasUnanswered = true;
+            }
+            if (hasUnanswered) { alert("You have unanswered questions!"); return; }
+
+            currentData.questions.forEach(q => {
+                const key = `${currentPageIndex}_${q.id}`;
+                const record = userAnswers[key];
+                if (record.locked) return;
+
+                const btn = document.getElementById(`btn-${q.id}-${record.selected}`);
+                const feedback = document.getElementById(`feedback-${q.id}`);
+                const evidence = document.getElementById(`evidence-${q.id}`);
+
+                if (record.selected === q.correct) {
+                    btn.className = "py-3 px-2 rounded-xl border-2 border-green-500 bg-green-500 text-white font-bold shadow-md";
+                    feedback.innerHTML = `<span class="text-green-700 bg-green-100 px-2 py-0.5 rounded">Correct</span>`;
+                    feedback.classList.remove('hidden');
+                    evidence.classList.add('show');
+                    record.locked = true;
+                    if (record.pointsFlag) { currentScore++; correctCount++; updateScore(); }
+                } else {
+                    record.attempts++;
+                    record.pointsFlag = false;
+                    if (record.attempts < 2) {
+                        btn.className = "py-3 px-2 rounded-xl border-2 border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-60";
+                        btn.disabled = true;
+                        feedback.innerHTML = `<span class="text-orange-700 bg-orange-100 px-2 py-0.5 rounded">Wrong. Try again!</span>`;
+                        feedback.classList.remove('hidden');
+                        pageComplete = false;
+                        record.selected = null;
+                        lastClickTime = 0;
+                    } else {
+                        btn.className = "py-3 px-2 rounded-xl border-2 border-red-500 bg-red-500 text-white font-bold";
+                        document.getElementById(`btn-${q.id}-${q.correct}`).className = "py-3 px-2 rounded-xl border-2 border-green-500 bg-white text-green-600 font-bold border-dashed";
+                        feedback.innerHTML = `<span class="text-red-700 bg-red-100 px-2 py-0.5 rounded">Wrong. Answer: ${q.correct}</span>`;
+                        feedback.classList.remove('hidden');
+                        evidence.classList.add('show');
+                        wrongCount++;
+                        record.locked = true;
+                    }
+                }
+            });
+
+            if (pageComplete) {
+                document.getElementById('submit-btn').classList.add('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                if (currentPageIndex === quizData.length - 1) {
+                    const nextBtn = document.getElementById('next-btn');
+                    nextBtn.innerHTML = `<span>View Results</span>`;
+                    nextBtn.classList.replace('bg-pet-600', 'bg-gray-900');
+                    nextBtn.onclick = showResult;
+                }
+            }
+        }
+
+        function nextPage() { if (currentPageIndex < quizData.length - 1) renderPage(currentPageIndex + 1); }
+        function updateScore() { document.getElementById('current-score').innerText = currentScore; }
+        
+        function showResult() {
+            if (currentAudioPlayer) currentAudioPlayer.pause();
+            isExamActive = false;
+            endTime = new Date();
+            
+            // Stop polling
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+
+            // Hide Overlays
+            document.getElementById('fullscreen-blocker').classList.add('hidden');
+            document.getElementById('penalty-overlay').classList.add('hidden');
+            
+            document.getElementById('quiz-interface').classList.add('hidden');
+            const resScreen = document.getElementById('screen-result');
+            resScreen.classList.remove('hidden');
+            resScreen.style.display = 'flex';
+
+            const pct = Math.round((currentScore/totalQuestions)*100);
+            
+            document.getElementById('res-name').innerText = studentName;
+            document.getElementById('res-score').innerText = `${currentScore}/${totalQuestions}`;
+            document.getElementById('res-percent').innerText = `${pct}%`;
+            document.getElementById('res-violations').innerText = violationCount;
+            document.getElementById('stats-correct').innerText = correctCount;
+            document.getElementById('stats-wrong').innerText = wrongCount;
+            document.getElementById('res-start-time').innerText = formatTime(startTime);
+            document.getElementById('res-end-time').innerText = formatTime(endTime);
+
+            const msg = document.getElementById('result-message');
+            if(pct >= 85) {
+                msg.innerHTML = "🎉 Excellent! You passed.";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-green-100 text-green-800";
+            } else {
+                msg.innerHTML = "💪 Keep trying! You need 85% to pass.";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-red-100 text-red-800";
+            }
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+    </script>
+</body>
+</html>

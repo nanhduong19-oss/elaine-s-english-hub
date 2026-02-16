@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Reading Part 1 - Set 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f0fdf4;
+        }
+        .gap-slot {
+            display: inline-block;
+            min-width: 45px;
+            border-bottom: 2px solid #cbd5e1;
+            text-align: center;
+            font-weight: bold;
+            color: #64748b;
+            padding: 0 6px;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .filled-text {
+            display: inline-block;
+            padding: 0 6px;
+            font-weight: 700;
+            border-radius: 6px;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .filled-correct {
+            color: #15803d;
+            background-color: #dcfce7;
+            border-bottom: 2px solid #16a34a;
+        }
+        .filled-wrong {
+            color: #b91c1c;
+            background-color: #fee2e2;
+            border-bottom: 2px solid #dc2626;
+            text-decoration: line-through;
+        }
+        
+        .option-btn {
+            transition: all 0.2s;
+        }
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+        
+        /* Animation */
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        /* Penalty Bar (10s) */
+        .penalty-bar {
+            height: 4px;
+            background-color: #ef4444; 
+            width: 100%;
+            animation: shrink 10s linear forwards;
+        }
+        @keyframes shrink {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* Global Lock Overlay */
+        .global-lock-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.6);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 1rem;
+            backdrop-filter: blur(1px);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 bg-white flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8 border-t-8 border-green-600 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-2">FCE Reading Part 1</h1>
+            <p class="text-slate-500 mb-2 font-semibold text-green-600">SET 2 (Tests 5 - 8)</p>
+            <div class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full mb-6 border border-orange-200 uppercase tracking-wide">
+                Mastery Study Mode
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-left text-sm font-semibold text-slate-700 mb-1">Your Name</label>
+                    <input type="text" id="username-input" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition" placeholder="Enter your name...">
+                </div>
+                <button onclick="startApp()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+                    Start Practice
+                </button>
+            </div>
+            
+            <!-- Mastery Rules -->
+            <div class="mt-6 text-sm text-slate-500 bg-slate-50 p-5 rounded-xl text-left border border-slate-200 shadow-inner">
+                <p class="font-bold mb-3 text-slate-700 flex items-center uppercase tracking-wider text-xs border-b pb-2 border-slate-200">
+                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                    Mastery Rules
+                </p>
+                <ul class="space-y-3 text-xs text-slate-600">
+                    <li class="flex items-start">
+                        <span class="text-green-600 font-bold mr-2">✓ 1st Try Correct:</span>
+                        <span>Full points (100%).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-orange-500 font-bold mr-2">⚠ 1st Try Wrong:</span>
+                        <span>
+                            <strong>10s Penalty Wait</strong> + Global Lock.
+                            <br>Score reduced to 50%.
+                        </span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 font-bold mr-2">✕ 2nd Try Wrong:</span>
+                        <span>0 points. Answer revealed.</span>
+                    </li>
+                    <li class="flex items-start border-t border-slate-200 pt-2 mt-2">
+                        <span class="text-blue-600 font-bold mr-2">★ Target:</span>
+                        <span>You need <strong>85% score</strong> to pass.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-2xl w-full bg-white shadow-2xl rounded-2xl p-8 relative">
+                <!-- Status Bar -->
+                <div id="result-header-bar" class="absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-gray-300"></div>
+                
+                <h2 class="text-3xl font-bold text-center mb-2 text-slate-800">Study Mode Results</h2>
+                <p id="result-message" class="text-center mb-8 font-semibold text-lg text-slate-500">---</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                        <p class="text-xs text-blue-500 font-bold uppercase tracking-wide">Candidate</p>
+                        <p class="text-xl font-bold text-slate-800 truncate" id="result-name">---</p>
+                    </div>
+                    <div id="score-card" class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wide">Mastery Score</p>
+                        <div class="flex items-baseline">
+                            <span id="result-score" class="text-4xl font-black text-slate-700">0</span>
+                            <span class="text-lg text-slate-500 font-medium ml-1">/32</span>
+                            <span id="result-percentage" class="ml-auto text-lg font-bold px-2 py-1 rounded bg-white border">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pass/Fail Action Area -->
+                <div id="action-area" class="mb-8">
+                    <!-- Buttons will be injected here -->
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 mb-8 shadow-sm">
+                    <h3 class="font-bold text-slate-700 mb-4 border-b pb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Performance Stats
+                    </h3>
+                    <div class="flex justify-between items-center mb-2 text-sm">
+                        <span class="text-slate-500">Duration:</span>
+                        <span id="result-duration" class="text-slate-800 font-bold">---</span>
+                    </div>
+                    <div class="mt-4 space-y-3" id="result-details">
+                        <!-- Detailed breakdown -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden flex-1 flex flex-col h-full bg-slate-100">
+        <!-- Header -->
+        <header class="bg-white shadow-sm z-20 border-b border-slate-200 h-16 flex items-center justify-between px-4 md:px-6">
+            <div class="flex items-center space-x-4">
+                <div class="bg-green-50 text-green-700 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center border border-green-200 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span id="timer-display" class="tabular-nums">00:00:00</span>
+                </div>
+                <h2 id="part-title" class="hidden md:block text-lg font-bold text-slate-700 truncate max-w-xs">Part 1</h2>
+            </div>
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <div class="text-sm font-medium text-slate-500 mr-2 flex flex-col items-end md:items-center md:flex-row">
+                    <span class="text-xs uppercase font-bold text-slate-400 md:mr-2">Progress</span>
+                    <span id="progress-text" class="text-slate-800 font-black text-xl">1/4</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="prevTest()" id="btn-prev" class="p-2 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button onclick="nextTest()" id="btn-next" class="p-2 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <button onclick="finishTest()" id="btn-finish" class="hidden ml-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition transform active:scale-95 flex items-center">
+                    <span>FINISH</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-hidden flex flex-col md:flex-row">
+            
+            <!-- Left: Reading Text -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 border-r border-slate-200">
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-100 leading-loose text-lg text-slate-700" id="reading-text">
+                    <!-- Text content rendered here -->
+                </div>
+            </div>
+
+            <!-- Right: Questions -->
+            <div class="h-[50%] md:h-auto md:w-[480px] lg:w-[550px] flex flex-col bg-white shadow-[-4px_0_20px_-5px_rgba(0,0,0,0.1)] z-10">
+                <div class="p-4 bg-white border-b border-slate-100 font-bold text-slate-700 flex justify-between items-center shadow-sm z-10">
+                    <span class="flex items-center text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        QUESTIONS
+                    </span>
+                    <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded border border-orange-200 uppercase tracking-wider">Study Mode</span>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50" id="questions-container">
+                    <!-- Questions rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // DATA SET 2 - ENGLISH STANDARDIZED UI, VIETNAMESE EXPLANATIONS
+        const testsData = [
+            {
+                id: 1,
+                title: "Genealogy",
+                content: `Genealogy is a (0) <span class="gap-slot filled-correct font-bold text-green-700">branch</span> of history. It concerns family history, (1) <span id="gap-1-1" class="gap-slot">......</span> than the national or world history studied at school. It doesn't merely involve drawing a family tree, however – tracing your family history can also (2) <span id="gap-1-2" class="gap-slot">......</span> in learning about your roots and your identity. The internet enables millions of people worldwide to (3) <span id="gap-1-3" class="gap-slot">......</span> information about their family history, without great (4) <span id="gap-1-4" class="gap-slot">......</span> .<br><br>
+                People who research their family history often (5) <span id="gap-1-5" class="gap-slot">......</span> that it's a fascinating hobby which (6) <span id="gap-1-6" class="gap-slot">......</span> a lot about where they come from and whether they have famous ancestors. According to a survey involving 900 people who had researched their family history, the chances of discovering a celebrity in your past are one in ten. The survey also concluded that the (7) <span id="gap-1-7" class="gap-slot">......</span> back you trace your family, the more likely you are to find a relation who was much wealthier than you are. However, the vast majority of people who (8) <span id="gap-1-8" class="gap-slot">......</span> in the survey discovered they were better off than their ancestors.`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "instead", B: "rather", C: "except", D: "sooner" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. rather</strong><br>Cụm từ <em>'rather than'</em> có nghĩa là 'thay vì' hoặc 'hơn là'. Câu này so sánh lịch sử gia đình với lịch sử quốc gia.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. instead</strong>: Thường dùng với 'of' (instead of).<br>• <strong>C. except</strong>: Thường đi với 'for' (ngoại trừ).<br>• <strong>D. sooner</strong>: Dùng trong so sánh thời gian (sớm hơn).<br><strong>Ghi nhớ:</strong> Cụm cố định 'rather than' dùng để so sánh/đối chiếu."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "cause", B: "mean", C: "result", D: "lead" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. result</strong><br>Cụm động từ <em>'result in'</em> nghĩa là dẫn đến một kết quả cụ thể. Ở đây, việc tìm hiểu lịch sử dẫn đến việc biết về nguồn gốc.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. cause</strong>: Theo sau trực tiếp là tân ngữ (cause something).<br>• <strong>B. mean</strong>: Theo sau là danh từ hoặc V-ing (means learning).<br>• <strong>D. lead</strong>: Phải đi với giới từ 'to' (lead to).<br><strong>Ghi nhớ:</strong> Giới từ đi kèm: 'result in' (dẫn đến), 'lead to' (dẫn tới)."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "accomplish", B: "access", C: "approach", D: "admit" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. access</strong><br><em>'Access'</em> nghĩa là truy cập, tiếp cận hoặc lấy thông tin. Bạn 'access information' từ internet.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. accomplish</strong>: Đạt được thành tựu/hoàn thành nhiệm vụ.<br>• <strong>C. approach</strong>: Tiếp cận (lại gần về không gian).<br>• <strong>D. admit</strong>: Thừa nhận hoặc cho phép vào.<br><strong>Ghi nhớ:</strong> Collocation: 'access information/data' (truy cập thông tin/dữ liệu)."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "fee", B: "price", C: "charge", D: "expense" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. expense</strong><br>Cụm từ <em>'without great expense'</em> nghĩa là không tốn nhiều chi phí nói chung.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. fee</strong>: Phí trả cho dịch vụ chuyên nghiệp (học phí, lệ phí).<br>• <strong>B. price</strong>: Giá tiền của một món hàng cụ thể.<br>• <strong>C. charge</strong>: Số tiền bị tính phí cho dịch vụ.<br><strong>Ghi nhớ:</strong> 'Expense' thường dùng cho ý tưởng chi tiêu nói chung."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "describe", B: "define", C: "remark", D: "regard" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. remark</strong><br><em>'Remark that'</em> là cấu trúc dùng để đưa ra một nhận xét hoặc bình luận.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. describe</strong>: Thường là 'describe something as'.<br>• <strong>B. define</strong>: Định nghĩa.<br>• <strong>D. regard</strong>: Thường là 'regard as' (coi như là).<br><strong>Ghi nhớ:</strong> Ngữ pháp: remark (that) + mệnh đề."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "reveals", B: "opens", C: "begins", D: "arises" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. reveals</strong><br><em>'Reveal'</em> nghĩa là tiết lộ, làm sáng tỏ những điều chưa biết (bí mật, sự thật).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. opens</strong>: Mở (cửa, hộp).<br>• <strong>C. begins</strong>: Bắt đầu.<br>• <strong>D. arises</strong>: Nảy sinh (vấn đề nảy sinh).<br><strong>Ghi nhớ:</strong> Từ vựng: 'reveal a secret/truth/fact' (tiết lộ bí mật/sự thật)."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "older", B: "greater", C: "higher", D: "further" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. further</strong><br><em>'Further back'</em> chỉ khoảng cách xa hơn về thời gian (quay ngược về quá khứ xa hơn).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. older</strong>: Chỉ tuổi tác.<br>• <strong>B. greater</strong>: Chỉ kích thước hoặc số lượng lớn hơn.<br>• <strong>C. higher</strong>: Chỉ độ cao.<br><strong>Ghi nhớ:</strong> 'Further' dùng cho khoảng cách trừu tượng (thời gian, mức độ)."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "attended", B: "participated", C: "included", D: "associated" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. participated</strong><br><em>'Participate in'</em> là cụm động từ chuẩn nghĩa là tham gia vào một hoạt động (khảo sát).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. attended</strong>: Tham dự (không đi với 'in').<br>• <strong>C. included</strong>: Được bao gồm.<br>• <strong>D. associated</strong>: Đi với 'with' (liên kết với).<br><strong>Ghi nhớ:</strong> Collocation: 'participate in something' (tham gia vào cái gì)."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "The Joy of Cycling",
+                content: `For many people, the bicycle is a (0) <span class="gap-slot filled-correct font-bold text-green-700">means</span> of transport to work or school. But for others, cycling is their favourite (1) <span id="gap-2-1" class="gap-slot">......</span> time activity. It is a fantastic way to improve fitness and (2) <span id="gap-2-2" class="gap-slot">......</span> weight, without causing the damage to knees and ankles that running can cause.<br><br>
+                However, cycling is not without its risks. Cyclists must (3) <span id="gap-2-3" class="gap-slot">......</span> attention to the road at all times and follow traffic rules to (4) <span id="gap-2-4" class="gap-slot">......</span> accidents. Wearing a helmet is highly recommended, and in some countries, it is a legal (5) <span id="gap-2-5" class="gap-slot">......</span> .<br><br>
+                For those who want to take it more seriously, mountain biking offers a (6) <span id="gap-2-6" class="gap-slot">......</span> challenge. Riding up steep hills requires strength, while coming down them at speed needs a lot of (7) <span id="gap-2-7" class="gap-slot">......</span> . But whether you ride for fun or for fitness, the important thing is to (8) <span id="gap-2-8" class="gap-slot">......</span> the ride and stay safe.`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "leisure", B: "spare", C: "free", D: "play" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. leisure</strong><br><em>'Leisure time'</em> là danh từ ghép chỉ thời gian rảnh rỗi/giải trí. Cụm từ này trang trọng và phù hợp ngữ cảnh hơn 'free time'.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. spare</strong>: Dùng trong 'spare time' (đúng nhưng ít đi với 'activity' theo cách này).<br>• <strong>C. free</strong>: 'Free time activity' có thể dùng, nhưng 'leisure activity' là kết hợp từ mạnh hơn.<br>• <strong>D. play</strong>: Không hợp ngữ cảnh.<br><strong>Ghi nhớ:</strong> Collocation: 'leisure time/activity'."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "drop", B: "lose", C: "miss", D: "fail" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. lose</strong><br><em>'Lose weight'</em> là cụm từ cố định để chỉ việc giảm cân.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. drop</strong>: Có thể dùng 'drop pounds' nhưng 'lose weight' phổ biến hơn.<br>• <strong>C. miss</strong>: Bỏ lỡ.<br>• <strong>D. fail</strong>: Thất bại.<br><strong>Ghi nhớ:</strong> Cụm cố định: 'lose/gain weight' (giảm/tăng cân)."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "give", B: "pay", C: "keep", D: "put" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. pay</strong><br><em>'Pay attention to'</em> là thành ngữ nghĩa là chú ý đến ai/cái gì.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. give</strong>: Kết hợp từ sai.<br>• <strong>C. keep</strong>: Dùng 'keep an eye on' chứ không 'keep attention'.<br>• <strong>D. put</strong>: Sai.<br><strong>Ghi nhớ:</strong> Idiom: 'pay attention to something/someone'."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "prevent", B: "escape", C: "avoid", D: "cancel" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. avoid</strong><br><em>'Avoid'</em> nghĩa là tránh để bản thân rơi vào tình huống xấu (tránh tai nạn).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. prevent</strong>: Ngăn chặn cái gì xảy ra (prevent accidents from happening).<br>• <strong>B. escape</strong>: Trốn thoát.<br>• <strong>D. cancel</strong>: Hủy bỏ sự kiện đã lên kế hoạch.<br><strong>Ghi nhớ:</strong> 'Avoid' + danh từ/V-ing."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "demand", B: "request", C: "requirement", D: "order" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. requirement</strong><br><em>'Legal requirement'</em> là yêu cầu bắt buộc theo luật pháp.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. demand</strong>: Sự đòi hỏi gắt gao.<br>• <strong>B. request</strong>: Lời yêu cầu lịch sự.<br>• <strong>D. order</strong>: Mệnh lệnh.<br><strong>Ghi nhớ:</strong> Collocation: 'meet a requirement' (đáp ứng yêu cầu)."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "sharp", B: "heavy", C: "strict", D: "tough" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. tough</strong><br><em>'Tough'</em> mô tả điều gì đó khó khăn, khắc nghiệt (thử thách cam go).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. sharp</strong>: Sắc bén.<br>• <strong>B. heavy</strong>: Nặng.<br>• <strong>C. strict</strong>: Nghiêm khắc (dùng cho người/luật lệ).<br><strong>Ghi nhớ:</strong> Tính từ: 'tough' = difficult (khó khăn)."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "skill", B: "capacity", C: "ability", D: "talent" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. skill</strong><br><em>'Skill'</em> chỉ khả năng làm tốt việc gì đó nhờ tập luyện (kỹ năng lái xe xuống dốc).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. capacity</strong>: Sức chứa hoặc năng lực tiềm tàng.<br>• <strong>C. ability</strong>: Khả năng chung chung.<br>• <strong>D. talent</strong>: Tài năng thiên bẩm.<br><strong>Ghi nhớ:</strong> 'Skill' ám chỉ kỹ thuật có được qua rèn luyện."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "please", B: "satisfy", C: "enjoy", D: "amuse" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. enjoy</strong><br><em>'Enjoy'</em> nghĩa là thích thú, tận hưởng một hoạt động.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. please</strong>: Làm hài lòng ai đó.<br>• <strong>B. satisfy</strong>: Thỏa mãn nhu cầu.<br>• <strong>D. amuse</strong>: Làm ai đó buồn cười.<br><strong>Ghi nhớ:</strong> Động từ: 'enjoy' + danh từ/V-ing."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Virtual Reality",
+                content: `Imagine being able to visit any place in the world without leaving your living room. Virtual Reality (VR) technology is making this a (0) <span class="gap-slot filled-correct font-bold text-green-700">possibility</span> for more and more people. By wearing a special headset, you can be transported to a computer-generated world that (1) <span id="gap-3-1" class="gap-slot">......</span> very real.<br><br>
+                VR is not just for gaming; it is also used in education. Medical students can (2) <span id="gap-3-2" class="gap-slot">......</span> operations without any risk to patients, and history students can walk through ancient cities. This (3) <span id="gap-3-3" class="gap-slot">......</span> of learning is engaging and can help students understand complex subjects more (4) <span id="gap-3-4" class="gap-slot">......</span> .<br><br>
+                However, there are some concerns. Spending too much time in a virtual world might cause people to (5) <span id="gap-3-5" class="gap-slot">......</span> contact with the real world. Also, the equipment can be expensive, which (6) <span id="gap-3-6" class="gap-slot">......</span> many people from buying it. Despite these issues, experts (7) <span id="gap-3-7" class="gap-slot">......</span> that VR will become a common part of our daily lives in the near (8) <span id="gap-3-8" class="gap-slot">......</span> .`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "looks", B: "sees", C: "feels", D: "watches" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. feels</strong><br>Động từ <em>'feel'</em> mô tả cảm giác trải nghiệm hoặc không khí của một nơi chốn (cảm thấy như thật).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. looks</strong>: Chỉ nói về vẻ bề ngoài.<br>• <strong>B. sees</strong>: Cần chủ ngữ thực hiện hành động nhìn.<br>• <strong>D. watches</strong>: Hành động xem/theo dõi.<br><strong>Ghi nhớ:</strong> Linking verb: 'It feels real' (Nó mang lại cảm giác thật)."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "practise", B: "do", C: "make", D: "work" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. practise</strong><br><em>'Practise'</em> nghĩa là thực hành lặp đi lặp lại để thành thạo (thực hành phẫu thuật).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. do</strong>: 'Do operations' nghĩa là thực hiện ca mổ thật.<br>• <strong>C. make</strong>: Kết hợp từ sai.<br>• <strong>D. work</strong>: Sai ngữ cảnh.<br><strong>Ghi nhớ:</strong> Từ vựng: 'practise' (tập luyện) vs 'do' (làm thật)."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "way", B: "method", C: "habit", D: "system" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. method</strong><br><em>'Method of learning'</em> là cụm từ chuẩn chỉ phương pháp học tập có hệ thống.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. way</strong>: Thường dùng 'way to learn' hoặc 'way of doing'.<br>• <strong>C. habit</strong>: Thói quen.<br>• <strong>D. system</strong>: Hệ thống phức tạp.<br><strong>Ghi nhớ:</strong> Collocation: 'teaching/learning method' (phương pháp dạy/học)."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "easy", B: "ease", C: "easily", D: "easier" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. easily</strong><br>Cần một trạng từ để bổ nghĩa cho động từ 'understand'. Hiểu như thế nào? Hiểu một cách dễ dàng.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. easy</strong>: Tính từ.<br>• <strong>B. ease</strong>: Danh từ.<br>• <strong>D. easier</strong>: Tính từ so sánh hơn.<br><strong>Ghi nhớ:</strong> Ngữ pháp: Trạng từ bổ nghĩa cho động từ."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "lose", B: "miss", C: "fail", D: "drop" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. lose</strong><br><em>'Lose contact'</em> là cụm từ cố định nghĩa là mất liên lạc/kết nối.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. miss</strong>: Nhớ nhung hoặc bỏ lỡ.<br>• <strong>C. fail</strong>: Thất bại.<br>• <strong>D. drop</strong>: Làm rơi.<br><strong>Ghi nhớ:</strong> Collocation: 'lose contact with'."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "avoids", B: "prevents", C: "blocks", D: "refuses" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. prevents</strong><br>Cấu trúc <em>'prevent someone from doing something'</em> (ngăn cản ai làm gì).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. avoids</strong>: Tránh xa.<br>• <strong>C. blocks</strong>: Chặn đường (vật lý).<br>• <strong>D. refuses</strong>: Từ chối.<br><strong>Ghi nhớ:</strong> Ngữ pháp: 'prevent object + from + V-ing'."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "predict", B: "guess", C: "tell", D: "speak" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. predict</strong><br>Các chuyên gia đưa ra dự đoán (predict) về các sự kiện tương lai.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. guess</strong>: Đoán (hàm ý không chắc chắn, thiếu căn cứ).<br>• <strong>C. tell</strong>: Cần tân ngữ (tell us).<br>• <strong>D. speak</strong>: Nói.<br><strong>Ghi nhớ:</strong> Từ vựng: 'predict the future'."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "time", B: "period", C: "future", D: "coming" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. future</strong><br><em>'In the near future'</em> là cụm từ chỉ thời gian cố định (trong tương lai gần).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. time</strong>: 'In near time' là sai.<br>• <strong>B. period</strong>: Sai.<br>• <strong>D. coming</strong>: Sai.<br><strong>Ghi nhớ:</strong> Idiom: 'in the near/distant future'."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "A Trip to the Netherlands",
+                content: `Last year, I visited the Netherlands, a country famous for its flat landscape and (0) <span class="gap-slot filled-correct font-bold text-green-700">windmills</span>. Although the country is small, there is so much to see. One of the first things you notice is the (1) <span id="gap-4-1" class="gap-slot">......</span> number of bicycles; almost everyone owns one.<br><br>
+                The Dutch people are very friendly and most speak English (2) <span id="gap-4-2" class="gap-slot">......</span> , which makes it easy for tourists to get around. I spent a few days in Amsterdam, wandering along the canals and visiting museums. The art galleries are (3) <span id="gap-4-3" class="gap-slot">......</span> a visit, especially if you like Van Gogh.<br><br>
+                The food was another highlight. I (4) <span id="gap-4-4" class="gap-slot">......</span> everyone to try the local cheese and the small pancakes called 'poffertjes'. The weather can be a bit (5) <span id="gap-4-5" class="gap-slot">......</span> , so it is a good idea to pack a raincoat. Despite the occasional shower, I had a wonderful time and I am already (6) <span id="gap-4-6" class="gap-slot">......</span> forward to my next trip. It was truly a (7) <span id="gap-4-7" class="gap-slot">......</span> experience that I will never (8) <span id="gap-4-8" class="gap-slot">......</span> .`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "huge", B: "high", C: "deep", D: "full" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. huge</strong><br>Dùng <em>'huge'</em> (hoặc large) để mô tả số lượng lớn nhằm nhấn mạnh quy mô.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. high</strong>: Dùng 'a high number' cũng đúng nhưng 'huge' nhấn mạnh sự ấn tượng hơn.<br>• <strong>C. deep</strong>: Sâu.<br>• <strong>D. full</strong>: Đầy.<br><strong>Ghi nhớ:</strong> Collocation: 'a huge/large number of'."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "fluently", B: "fast", C: "smooth", D: "good" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. fluently</strong><br><em>'Fluently'</em> là trạng từ chuyên dùng để chỉ khả năng nói ngôn ngữ một cách trôi chảy, tự nhiên.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. fast</strong>: Chỉ tốc độ nhanh.<br>• <strong>C. smooth</strong>: Tính từ (phải là smoothly).<br>• <strong>D. good</strong>: Tính từ (phải là well).<br><strong>Ghi nhớ:</strong> Từ vựng: 'speak a language fluently'."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "value", B: "worth", C: "cost", D: "price" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. worth</strong><br>Cấu trúc <em>'to be worth + danh từ/V-ing'</em> nghĩa là đáng để làm gì đó.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. value</strong>: Danh từ (good value).<br>• <strong>C. cost</strong>: Chi phí.<br>• <strong>D. price</strong>: Giá cả.<br><strong>Ghi nhớ:</strong> Ngữ pháp: 'It is worth doing/a visit' (Đáng để làm/thăm)."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "suggest", B: "advise", C: "say", D: "offer" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. advise</strong><br><em>'Advise'</em> đúng cấu trúc: động từ + tân ngữ + to-infinitive (advise everyone to try).<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. suggest</strong>: Theo sau là V-ing hoặc mệnh đề 'that' (suggest trying).<br>• <strong>C. say</strong>: Không dùng cấu trúc 'say someone to do'.<br>• <strong>D. offer</strong>: Đề nghị cung cấp cái gì.<br><strong>Ghi nhớ:</strong> Ngữ pháp: 'advise someone to do something'."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "changeable", B: "changing", C: "moved", D: "various" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. changeable</strong><br><em>'Changeable'</em> là tính từ mô tả thời tiết hay thay đổi thất thường.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. changing</strong>: Hiện tại phân từ (đang thay đổi).<br>• <strong>C. moved</strong>: Di chuyển.<br>• <strong>D. various</strong>: Đa dạng.<br><strong>Ghi nhớ:</strong> Từ vựng: 'changeable weather'."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "thinking", B: "planning", C: "looking", D: "going" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. looking</strong><br><em>'Look forward to'</em> là cụm động từ nghĩa là mong chờ một sự kiện trong tương lai.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. thinking</strong>: Suy nghĩ về (thinking about).<br>• <strong>B. planning</strong>: Lên kế hoạch (planning to).<br>• <strong>D. going</strong>: Dự định (going to).<br><strong>Ghi nhớ:</strong> Phrasal verb: 'look forward to'."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "memory", B: "memorable", C: "memorial", D: "remember" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. memorable</strong><br>Cần một tính từ để bổ nghĩa cho danh từ 'experience'. <em>'Memorable'</em> nghĩa là đáng nhớ.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>A. memory</strong>: Danh từ (kỷ niệm/trí nhớ).<br>• <strong>C. memorial</strong>: Đài tưởng niệm.<br>• <strong>D. remember</strong>: Động từ.<br><strong>Ghi nhớ:</strong> Word Formation: 'memorable experience'."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "forget", B: "miss", C: "leave", D: "lose" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. forget</strong><br><em>'Never forget'</em> là cụm từ phổ biến chỉ một ký ức không bao giờ quên.<br><strong>Tại sao các đáp án khác sai:</strong><br>• <strong>B. miss</strong>: Nhớ nhung/Bỏ lỡ.<br>• <strong>C. leave</strong>: Rời đi.<br>• <strong>D. lose</strong>: Làm mất.<br><strong>Ghi nhớ:</strong> Cụm từ: 'an experience I will never forget'."
+                    }
+                ]
+            }
+        ];
+
+        // GLOBAL STATE
+        let state = {
+            currentTestIndex: 0,
+            userAnswers: {},
+            userName: "",
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            lockedQuestions: {}, 
+            isGlobalPenaltyActive: false
+        };
+
+        // DOM ELEMENTS
+        const dom = {
+            welcomeScreen: document.getElementById('welcome-screen'),
+            mainApp: document.getElementById('main-app'),
+            resultScreen: document.getElementById('result-screen'),
+            usernameInput: document.getElementById('username-input'),
+            timerDisplay: document.getElementById('timer-display'),
+            partTitle: document.getElementById('part-title'),
+            progressText: document.getElementById('progress-text'),
+            readingText: document.getElementById('reading-text'),
+            questionsContainer: document.getElementById('questions-container'),
+            btnPrev: document.getElementById('btn-prev'),
+            btnNext: document.getElementById('btn-next'),
+            btnFinish: document.getElementById('btn-finish')
+        };
+
+        // FUNCTIONS
+        function startApp() {
+            const name = dom.usernameInput.value.trim();
+            if (!name) {
+                alert("Please enter your name!");
+                return;
+            }
+            state.userName = name;
+            state.startTime = new Date();
+            
+            dom.welcomeScreen.classList.add('hidden');
+            dom.mainApp.classList.remove('hidden');
+            dom.mainApp.classList.add('flex');
+
+            startTimer();
+            loadTest(0);
+        }
+
+        function startTimer() {
+            state.timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = now - state.startTime;
+                
+                const hours = Math.floor(diff / 3600000);
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+
+                dom.timerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadTest(index) {
+            state.currentTestIndex = index;
+            const test = testsData[index];
+
+            // Update Header
+            dom.partTitle.textContent = `Test ${index + 1}: ${test.title}`;
+            dom.progressText.textContent = `${index + 1}/${testsData.length}`;
+            
+            // Render Text
+            dom.readingText.innerHTML = test.content;
+            
+            // Apply text gap fills
+            setTimeout(() => restoreTextGaps(index), 0);
+
+            // Render Questions
+            dom.questionsContainer.innerHTML = '';
+            test.questions.forEach(q => {
+                const qKey = `${test.id}-${q.id}`;
+                const answerState = state.userAnswers[qKey] || { attempts: 0, correct: null, selected: null };
+                const isTempLocked = state.lockedQuestions[qKey] === true;
+                const isGlobalLock = state.isGlobalPenaltyActive; 
+                
+                const qDiv = document.createElement('div');
+                let cardClass = "p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm mb-4 relative overflow-hidden ";
+                
+                if (answerState.correct === true) cardClass += "border-green-200 bg-green-50/50";
+                else if (answerState.correct === false && answerState.attempts >= 2) cardClass += "border-red-100 bg-red-50/50";
+                else if (isTempLocked) cardClass += "border-orange-300 bg-orange-50"; 
+                else cardClass += "border-white bg-white hover:border-blue-200 hover:shadow-md";
+
+                qDiv.className = cardClass;
+                qDiv.id = `q-card-${q.id}`;
+
+                const isFinalLocked = answerState.correct === true || (answerState.correct === false && answerState.attempts >= 2);
+
+                let html = `
+                    ${isTempLocked ? '<div class="absolute top-0 left-0 penalty-bar"></div>' : ''}
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <span class="w-9 h-9 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center mr-3 shadow-md border-2 border-slate-600 text-lg shadow-slate-300/50">
+                                ${q.id}
+                            </span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Answer</span>
+                        </div>
+                        ${answerState.attempts === 1 && !isFinalLocked && !isTempLocked && !isGlobalLock ? '<span class="text-[10px] text-orange-600 font-extrabold bg-orange-100 px-2 py-1 rounded-md border border-orange-200 animate-pulse uppercase tracking-wide">⚠️ Retry</span>' : ''}
+                        ${isTempLocked ? '<span class="text-[10px] text-orange-600 font-extrabold flex items-center"><svg class="w-3 h-3 mr-1 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Think again...</span>' : ''}
+                         ${isGlobalLock && !isTempLocked && !isFinalLocked ? '<span class="text-[10px] text-slate-500 font-bold bg-slate-100 px-2 py-1 rounded border border-slate-200"><svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>Waiting...</span>' : ''}
+                    </div>
+                    
+                    ${isGlobalLock && !isTempLocked && !isFinalLocked ? '<div class="global-lock-overlay"><span class="text-sm font-bold text-slate-600 bg-white px-3 py-1 rounded shadow-sm border border-slate-200">Please finish the current question...</span></div>' : ''}
+
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                `;
+
+                for (const [key, value] of Object.entries(q.options)) {
+                    let btnClass = "option-btn w-full py-3 px-4 rounded-xl border-2 text-[15px] font-semibold text-left flex items-center shadow-sm relative overflow-hidden ";
+                    let disabled = false;
+                    let icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 text-xs mr-3 font-bold border border-slate-200 group-hover:bg-white group-hover:border-blue-300 transition-colors">${key}</span>`;
+
+                    if (isFinalLocked) {
+                        disabled = true;
+                        if (key === q.correct) {
+                            btnClass += "bg-green-600 text-white border-green-600 shadow-md ring-2 ring-green-200 ring-offset-1";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-white text-green-700 text-xs mr-3 font-bold">✓</span>`;
+                        } else if (key === answerState.selected && answerState.correct === false) {
+                            btnClass += "bg-red-500 text-white border-red-500 opacity-80";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-white text-red-600 text-xs mr-3 font-bold">✕</span>`;
+                        } else {
+                            btnClass += "bg-slate-50 text-slate-400 border-slate-100 opacity-40";
+                        }
+                    } else if (isTempLocked) {
+                        disabled = true;
+                        if (answerState.attempts === 1 && key === answerState.selected) {
+                            btnClass += "bg-red-50 text-red-400 border-red-100 cursor-not-allowed opacity-60";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-400 text-xs mr-3 font-bold">✕</span>`;
+                        } else {
+                            btnClass += "bg-slate-100 text-slate-400 border-slate-200 opacity-70 cursor-wait";
+                        }
+                    } else if (isGlobalLock) {
+                         disabled = true;
+                         btnClass += "bg-slate-50 text-slate-300 border-slate-100 opacity-50 cursor-not-allowed grayscale";
+                    } else {
+                        if (answerState.attempts === 1 && key === answerState.selected) {
+                             btnClass += "bg-red-50 text-red-400 border-red-100 cursor-not-allowed opacity-60";
+                             icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-400 text-xs mr-3 font-bold">✕</span>`;
+                             disabled = true;
+                        } else {
+                             btnClass += "bg-white text-slate-600 border-slate-200 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 hover:shadow-md group transition-all active:scale-[0.98]";
+                        }
+                    }
+
+                    html += `<button onclick="handleAnswer(${index}, ${q.id}, '${key}')" ${disabled ? 'disabled' : ''} class="${btnClass}">
+                        ${icon}
+                        ${value}
+                    </button>`;
+                }
+
+                html += `</div>`;
+
+                if (isFinalLocked) {
+                    html += `
+                        <div class="mt-4 text-sm p-4 rounded-xl border-l-4 shadow-sm animate-[fadeIn_0.5s] ${answerState.correct ? 'bg-green-100 border-green-500 text-green-900' : 'bg-red-50 border-red-500 text-red-900'}">
+                            <div class="flex items-center mb-2">
+                                <span class="font-bold text-lg mr-2">${answerState.correct ? '🎉 Correct!' : '😞 Correct answer is ' + q.correct}</span>
+                            </div>
+                            <div class="pt-3 border-t border-black/5 text-slate-700 leading-relaxed text-[15px]">
+                                <span class="font-bold text-slate-900 block mb-1 uppercase text-xs tracking-wider opacity-70">Detailed Explanation:</span>
+                                ${q.explanation}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                qDiv.innerHTML = html;
+                dom.questionsContainer.appendChild(qDiv);
+            });
+
+            dom.btnPrev.disabled = index === 0;
+            if (index === 0) dom.btnPrev.classList.add('opacity-30'); else dom.btnPrev.classList.remove('opacity-30');
+            
+            if (index === testsData.length - 1) {
+                dom.btnNext.classList.add('hidden');
+                dom.btnFinish.classList.remove('hidden');
+            } else {
+                dom.btnNext.classList.remove('hidden');
+                dom.btnFinish.classList.add('hidden');
+            }
+        }
+
+        function restoreTextGaps(testIndex) {
+            const test = testsData[testIndex];
+            test.questions.forEach(q => {
+                const qKey = `${test.id}-${q.id}`;
+                const stateAnswer = state.userAnswers[qKey];
+                const gapEl = document.getElementById(`gap-${test.id}-${q.id}`);
+
+                if (gapEl && stateAnswer) {
+                    gapEl.className = 'gap-slot filled-text'; 
+
+                    if (stateAnswer.attempts === 1 && stateAnswer.correct === null) {
+                        gapEl.textContent = q.options[stateAnswer.selected];
+                        gapEl.classList.add('filled-wrong');
+                    } else if (stateAnswer.correct === true) {
+                        gapEl.textContent = q.options[q.correct];
+                        gapEl.classList.add('filled-correct');
+                    } else if (stateAnswer.correct === false && stateAnswer.attempts >= 2) {
+                        gapEl.textContent = q.options[q.correct];
+                        gapEl.classList.add('filled-correct'); 
+                    }
+                }
+            });
+        }
+
+        function handleAnswer(testIndex, qId, selectedOption) {
+            const test = testsData[testIndex];
+            const q = test.questions.find(x => x.id === qId);
+            const qKey = `${test.id}-${qId}`;
+            
+            if (state.lockedQuestions[qKey] || state.isGlobalPenaltyActive) return;
+
+            if (!state.userAnswers[qKey]) {
+                state.userAnswers[qKey] = { attempts: 0, correct: null, selected: null };
+            }
+
+            const currentAnsState = state.userAnswers[qKey];
+
+            if (selectedOption === q.correct) {
+                currentAnsState.correct = true;
+                currentAnsState.attempts++;
+                currentAnsState.selected = selectedOption;
+                saveAndRender(testIndex);
+            } else {
+                currentAnsState.attempts++;
+                currentAnsState.selected = selectedOption;
+                
+                if (currentAnsState.attempts >= 2) {
+                    currentAnsState.correct = false; 
+                    saveAndRender(testIndex);
+                } else {
+                    currentAnsState.correct = null;
+                    state.lockedQuestions[qKey] = true;
+                    state.isGlobalPenaltyActive = true;
+                    saveAndRender(testIndex); 
+
+                    setTimeout(() => {
+                        state.lockedQuestions[qKey] = false;
+                        state.isGlobalPenaltyActive = false;
+                        saveAndRender(testIndex); 
+                    }, 10000);
+                }
+            }
+        }
+
+        function saveAndRender(testIndex) {
+            const scrollPos = dom.questionsContainer.scrollTop;
+            loadTest(testIndex);
+            dom.questionsContainer.scrollTop = scrollPos;
+        }
+
+        function prevTest() {
+            if (state.currentTestIndex > 0) loadTest(state.currentTestIndex - 1);
+        }
+
+        function nextTest() {
+            if (state.currentTestIndex < testsData.length - 1) loadTest(state.currentTestIndex + 1);
+        }
+
+        function finishTest() {
+            clearInterval(state.timerInterval);
+            state.endTime = new Date();
+            showResults();
+        }
+
+        function showResults() {
+            dom.mainApp.classList.add('hidden');
+            dom.mainApp.classList.remove('flex');
+            dom.resultScreen.classList.remove('hidden');
+
+            document.getElementById('result-name').textContent = state.userName;
+            
+            const startStr = state.startTime.toLocaleTimeString('en-US');
+            const endStr = state.endTime.toLocaleTimeString('en-US');
+            const diff = state.endTime - state.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            
+            document.getElementById('result-duration').textContent = `${minutes} min ${seconds} sec`;
+
+            let totalWeightedScore = 0;
+            let totalMax = 32; // 4 tests * 8 questions
+            let detailsHtml = '';
+
+            testsData.forEach(test => {
+                let testCorrectCount = 0;
+                let weightedScore = 0;
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const ans = state.userAnswers[key];
+                    if (ans && ans.correct === true) {
+                        testCorrectCount++;
+                        if (ans.attempts === 1) {
+                            weightedScore += 1;
+                        } else {
+                            weightedScore += 0.5;
+                        }
+                    }
+                });
+                totalWeightedScore += weightedScore;
+
+                detailsHtml += `
+                    <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="flex flex-col">
+                             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Test ${test.id}</span>
+                             <span class="font-bold text-slate-700 text-sm truncate w-40 md:w-auto">${test.title}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-bold text-slate-600 mr-2">${testCorrectCount}/8 correct</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // LOGIC 85% PASS/FAIL
+            const percentage = (totalWeightedScore / totalMax) * 100;
+            const percentageStr = percentage.toFixed(1) + '%';
+            
+            const scoreDisplay = document.getElementById('result-score');
+            const percentDisplay = document.getElementById('result-percentage');
+            const messageDisplay = document.getElementById('result-message');
+            const headerBar = document.getElementById('result-header-bar');
+            const scoreCard = document.getElementById('score-card');
+            const actionArea = document.getElementById('action-area');
+
+            scoreDisplay.textContent = totalWeightedScore;
+            percentDisplay.textContent = percentageStr;
+            document.getElementById('result-details').innerHTML = detailsHtml;
+
+            if (percentage >= 85) {
+                // PASSED
+                messageDisplay.textContent = "🏆 Mastery Achieved! Excellent Job.";
+                messageDisplay.className = "text-center mb-8 font-bold text-xl text-green-600";
+                
+                headerBar.className = "absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-green-500";
+                
+                scoreCard.className = "bg-green-50 p-5 rounded-2xl border border-green-200";
+                percentDisplay.className = "ml-auto text-lg font-bold px-2 py-1 rounded bg-white text-green-700 border border-green-200";
+                
+                actionArea.innerHTML = `
+                    <button onclick="location.reload()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                        Restart Set
+                    </button>
+                `;
+            } else {
+                // FAILED
+                messageDisplay.textContent = "⚠️ Not Passed. You need 85% to master this set.";
+                messageDisplay.className = "text-center mb-8 font-bold text-xl text-red-500";
+                
+                headerBar.className = "absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-red-500";
+                
+                scoreCard.className = "bg-red-50 p-5 rounded-2xl border border-red-200";
+                percentDisplay.className = "ml-auto text-lg font-bold px-2 py-1 rounded bg-white text-red-700 border border-red-200";
+
+                actionArea.innerHTML = `
+                    <button onclick="location.reload()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex justify-center items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Retry This Set
+                    </button>
+                `;
+            }
+        }
+
+        dom.usernameInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                startApp();
+            }
+        });
+    </script>
+</body>
+</html>

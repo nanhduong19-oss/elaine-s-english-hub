@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1 Vocabulary Practice (337 Words)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap');
+        body { font-family: 'Quicksand', sans-serif; }
+        
+        .shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .word-input:focus { 
+            border-color: #f59e0b; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); 
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff7ed; }
+        ::-webkit-scrollbar-thumb { background: #fb923c; border-radius: 4px; }
+
+        .tab-active {
+            background-color: #fff;
+            border-color: #f97316;
+            color: #c2410c;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .tab-inactive {
+            background-color: #ffedd5;
+            border-color: transparent;
+            color: #9a3412;
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen pb-10 flex flex-col items-center">
+
+    <div id="app" class="w-full max-w-3xl px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <div class="inline-block p-4 bg-orange-500 rounded-2xl text-white text-3xl mb-3 shadow-lg transform -rotate-3">
+                <i class="fas fa-fire"></i>
+            </div>
+            <h1 class="text-4xl font-extrabold text-orange-900 mb-2 tracking-tight">B1 Verb Master</h1>
+            <p class="text-orange-700 font-semibold">Master 337 Common Verbs</p>
+        </header>
+
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="bg-white rounded-3xl shadow-xl p-8 border-b-4 border-orange-200">
+            <!-- Student Information Inputs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Student ID</label>
+                    <div class="relative">
+                        <i class="fas fa-id-card absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="student-id" placeholder="Ex: HS001" 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-orange-400 transition-all font-bold text-lg outline-none text-orange-900">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Full Name</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="student-name" placeholder="Enter your name..." 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-orange-400 transition-all font-bold text-lg outline-none text-orange-900">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex gap-2 mb-6 bg-orange-100 p-2 rounded-xl">
+                <button onclick="switchTab('range')" id="tab-range" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm sm:text-base border-2 tab-active">
+                    <i class="fas fa-list-ol mr-2"></i> Range Mode
+                </button>
+                <button onclick="switchTab('random')" id="tab-random" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm sm:text-base border-2 tab-inactive">
+                    <i class="fas fa-dice mr-2"></i> Random Mode
+                </button>
+            </div>
+
+            <!-- MODE 1: RANGE SELECTION -->
+            <div id="mode-range" class="space-y-6 animate-fade-in">
+                <div class="bg-orange-50 p-6 rounded-2xl border border-orange-100">
+                    <label class="block text-sm font-bold text-orange-800 mb-4 uppercase tracking-wide">
+                        Select Word Range (1 - 337)
+                    </label>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">From No. (Min: 1)</span>
+                            <input type="number" id="start-range" value="1" min="1" max="337" oninput="updateRangePreview()"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-500 outline-none text-center text-xl font-bold text-gray-800">
+                        </div>
+                        <div>
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">To No. (Max: 337)</span>
+                            <input type="number" id="end-range" value="20" min="1" max="337" oninput="updateRangePreview()"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-500 outline-none text-center text-xl font-bold text-gray-800">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 pt-4 border-t border-orange-200">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xs font-bold text-gray-400 uppercase">Word List Preview:</span>
+                            <span id="preview-count" class="text-xs font-bold text-orange-600">0 words</span>
+                        </div>
+                        <div id="range-preview" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-white/50 rounded-lg border border-orange-100"></div>
+                    </div>
+                </div>
+
+                <button onclick="startRangeQuiz()" class="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-5 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
+                    Start Learning <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+
+            <!-- MODE 2: RANDOM SELECTION -->
+            <div id="mode-random" class="space-y-6 hidden animate-fade-in">
+                <div class="bg-orange-50 p-6 rounded-2xl border border-orange-100 text-center">
+                    <label class="block text-sm font-bold text-orange-800 mb-4 uppercase tracking-wide">
+                        Number of Questions
+                    </label>
+                    <div class="flex justify-center items-center mb-4">
+                        <button onclick="adjustLimit(-5)" class="w-10 h-10 bg-white rounded-full shadow text-orange-500 font-bold hover:bg-orange-100">-</button>
+                        <input type="number" id="random-limit" value="20" min="1" max="337"
+                            class="w-32 mx-4 px-4 py-3 rounded-xl border-2 border-orange-200 focus:border-orange-500 outline-none text-center text-2xl font-bold text-orange-600">
+                        <button onclick="adjustLimit(5)" class="w-10 h-10 bg-white rounded-full shadow text-orange-500 font-bold hover:bg-orange-100">+</button>
+                    </div>
+                    <div class="text-sm text-orange-700 bg-orange-100 p-3 rounded-lg inline-block">
+                        <i class="fas fa-info-circle mr-1"></i> The system will randomly select from 337 words.
+                        <br><span class="font-bold text-xs opacity-75">(No word preview in this mode)</span>
+                    </div>
+                </div>
+                <button onclick="startRandomQuiz()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-yellow-600 hover:to-orange-700 text-white font-bold py-5 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
+                    Start Random Challenge <i class="fas fa-random ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden w-full">
+            <div class="flex justify-between items-center mb-6 bg-white px-5 py-3 rounded-2xl shadow-sm border border-orange-100">
+                <div class="flex items-center text-gray-700 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-2 text-sm">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="display-name">Student</span>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-gray-400 uppercase font-bold">Progress</div>
+                    <div class="text-orange-600 font-bold" id="progress-text">0/0</div>
+                </div>
+            </div>
+
+            <div id="question-card" class="bg-white rounded-3xl shadow-xl border-b-8 border-gray-100 overflow-hidden relative w-full">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fas fa-language text-6xl text-orange-500"></i>
+                </div>
+
+                <div class="p-8 pt-12 text-center">
+                    <span class="inline-block px-3 py-1 bg-orange-50 text-orange-400 text-xs font-bold rounded-full uppercase tracking-wider mb-2">Meaning</span>
+                    <h2 id="meaning-clue" class="text-2xl md:text-3xl font-bold text-gray-800 leading-tight">...</h2>
+                    
+                    <div class="relative mt-8">
+                        <input type="text" id="answer-input" placeholder="Type the English verb..." autocomplete="off"
+                            class="word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all uppercase">
+                        <div id="feedback-icon" class="hidden absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl"></div>
+                    </div>
+
+                    <div id="feedback-box" class="hidden mt-6 p-5 rounded-xl text-center animate-fade-in-up">
+                        <div id="feedback-title" class="font-bold text-lg mb-1"></div>
+                        <div id="feedback-content" class="text-gray-700"></div>
+                        <div id="ipa-display" class="mt-2 text-orange-600 font-mono text-lg font-semibold"></div>
+                        <div id="retry-msg" class="text-xs mt-3 font-semibold uppercase tracking-wide opacity-75 hidden text-red-500 bg-red-50 inline-block px-2 py-1 rounded">
+                            <i class="fas fa-redo mr-1"></i> Mistake -> Review at the end
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 flex gap-4 border-t border-gray-100">
+                    <button id="check-btn" onclick="checkAnswer()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Check Answer
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                 <button onclick="quitQuiz()" class="text-gray-400 hover:text-red-500 text-sm font-semibold transition-colors">
+                    <i class="fas fa-times mr-1"></i> Quit Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center w-full">
+            <div class="bg-white rounded-3xl shadow-xl p-10 border-b-4 border-orange-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-400 via-red-500 to-pink-500"></div>
+                <div class="w-24 h-24 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 text-5xl shadow-inner">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="text-3xl font-extrabold text-gray-800 mb-2">Excellent, <span id="result-name">Student</span>!</h2>
+                <div class="grid grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <div class="text-3xl font-bold text-orange-600" id="total-words-count">0</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase">Words Learned</div>
+                    </div>
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        <div class="text-3xl font-bold text-green-500" id="accuracy-rate">100%</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase">Accuracy</div>
+                    </div>
+                </div>
+                <div class="mb-6 text-left">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider"><i class="fas fa-history mr-1"></i> Review List</h3>
+                    <div id="reviewed-list" class="bg-orange-50 rounded-xl p-4 max-h-48 overflow-y-auto border border-orange-100 text-sm grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+                </div>
+                <button onclick="quitQuiz()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all text-lg uppercase">Start New Session</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="sound-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+    <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+
+    <script>
+        var studyStartTime = new Date();
+        var currentStudentName = "";
+        var currentStudentId = "";
+
+        // --- DATA SOURCE ---
+        const verbData = [
+{id:1,word:"ACCEPT",ipa:"/əkˈsept/",meaning:"(v) chấp nhận, thừa nhận"},{id:2,word:"ACCOMPANY",ipa:"/əˈkʌmpəni/",meaning:"(v) đi theo, đi cùng, kèm theo"},{id:3,word:"ACHIEVE",ipa:"/əˈtʃiːv/",meaning:"(v) đạt được, giành được"},{id:4,word:"ACT",ipa:"/ækt/",meaning:"(v) hành động, cư xử"},{id:5,word:"ADAPT",ipa:"/əˈdæpt/",meaning:"(v) thích nghi"},{id:6,word:"ADD",ipa:"/æd/",meaning:"(v) cộng, thêm vào"},{id:7,word:"ADMIRE",ipa:"/ədˈmaɪər/",meaning:"(v) ngưỡng mộ"},{id:8,word:"ADMIT",ipa:"/ədˈmɪt/",meaning:"(v) thừa nhận"},{id:9,word:"ADVISE",ipa:"/ədˈvaɪz/",meaning:"(v) khuyên, khuyên bảo"},{id:10,word:"AFFECT",ipa:"/əˈfekt/",meaning:"(v) làm ảnh hưởng, tác động đến"},
+{id:11,word:"AGREE",ipa:"/əˈɡriː/",meaning:"(v) đồng ý, tán thành"},{id:12,word:"AIM",ipa:"/eɪm/",meaning:"(v) nhắm, tập trung, hướng vào"},{id:13,word:"ALLOW",ipa:"/əˈlaʊ/",meaning:"(v) cho phép, để cho"},{id:14,word:"ANNOY",ipa:"/əˈnɔɪ/",meaning:"(v) làm phiền, chọc tức"},{id:15,word:"ANSWER",ipa:"/ˈɑːnsər/",meaning:"(v) trả lời"},{id:16,word:"APOLOGISE",ipa:"/əˈpɒlədʒaɪz/",meaning:"(v) xin lỗi"},{id:17,word:"APPEAR",ipa:"/əˈpɪər/",meaning:"(v) xuất hiện"},{id:18,word:"APPLY",ipa:"/əˈplaɪ/",meaning:"(v) áp dụng, nộp đơn"},{id:19,word:"APPRECIATE",ipa:"/əˈpriːʃieɪt/",meaning:"(v) trân trọng, đánh giá cao"},{id:20,word:"APPROACH",ipa:"/əˈprəʊtʃ/",meaning:"(v) đến gần, lại gần"},
+{id:21,word:"APPROVE",ipa:"/əˈpruːv/",meaning:"(v) chấp thuận"},{id:22,word:"ARGUE",ipa:"/ˈɑːɡjuː/",meaning:"(v) tranh cãi"},{id:23,word:"ARRANGE",ipa:"/əˈreɪndʒ/",meaning:"(v) sắp xếp"},{id:24,word:"ASK",ipa:"/ɑːsk/",meaning:"(v) hỏi, yêu cầu"},{id:25,word:"ATTACH",ipa:"/əˈtætʃ/",meaning:"(v) đính kèm, gắn"},{id:26,word:"ATTEMPT",ipa:"/əˈtempt/",meaning:"(v) cố gắng, nỗ lực"},{id:27,word:"ATTEND",ipa:"/əˈtend/",meaning:"(v) tham dự"},{id:28,word:"ATTRACT",ipa:"/əˈtrækt/",meaning:"(v) thu hút, hấp dẫn"},{id:29,word:"AVOID",ipa:"/əˈvɔɪd/",meaning:"(v) tránh né"},{id:30,word:"BABYSIT",ipa:"/ˈbeɪbisɪt/",meaning:"(v) giữ trẻ, trông trẻ"},
+{id:31,word:"BEAT",ipa:"/biːt/",meaning:"(v) đánh bại, đánh đập"},{id:32,word:"BEHAVE",ipa:"/bɪˈheɪv/",meaning:"(v) cư xử, ứng xử"},{id:33,word:"BLAME",ipa:"/bleɪm/",meaning:"(v) đổ lỗi, trách mắng"},{id:34,word:"BLEED",ipa:"/bliːd/",meaning:"(v) chảy máu"},{id:35,word:"BLOG",ipa:"/blɒɡ/",meaning:"(v) viết nhật ký trực tuyến"},{id:36,word:"BLOW",ipa:"/bləʊ/",meaning:"(v) thổi"},{id:37,word:"BOARD",ipa:"/bɔːd/",meaning:"(v) lên tàu, lên xe"},{id:38,word:"BOTHER",ipa:"/ˈbɒðər/",meaning:"(v) làm phiền, làm bận tâm"},{id:39,word:"BREAK",ipa:"/breɪk/",meaning:"(v) làm vỡ, gãy"},{id:40,word:"BREATHE",ipa:"/briːð/",meaning:"(v) thở"},
+{id:41,word:"BURN",ipa:"/bɜːn/",meaning:"(v) đốt cháy, làm bỏng"},{id:42,word:"BURY",ipa:"/ˈberi/",meaning:"(v) chôn cất, mai táng"},{id:43,word:"CALL",ipa:"/kɔːl/",meaning:"(v) gọi"},{id:44,word:"CANCEL",ipa:"/ˈkænsəl/",meaning:"(v) hủy bỏ"},{id:45,word:"CARE",ipa:"/keər/",meaning:"(v) quan tâm, chăm sóc"},{id:46,word:"CELEBRATE",ipa:"/ˈselɪbreɪt/",meaning:"(v) ăn mừng"},{id:47,word:"CHANGE",ipa:"/tʃeɪndʒ/",meaning:"(v) thay đổi"},{id:48,word:"CHARGE",ipa:"/tʃɑːdʒ/",meaning:"(v) tính giá; (n) tiền phải trả"},{id:49,word:"CHECK",ipa:"/tʃek/",meaning:"(v) kiểm tra"},{id:50,word:"CLAP",ipa:"/klæp/",meaning:"(v) vỗ tay"},
+{id:51,word:"COMB",ipa:"/kəʊm/",meaning:"(v) chải tóc"},{id:52,word:"COMMIT",ipa:"/kəˈmɪt/",meaning:"(v) phạm (tội ác...), cam kết"},{id:53,word:"COMMUNICATE",ipa:"/kəˈmjuːnɪkeɪt/",meaning:"(v) giao tiếp, truyền đạt"},{id:54,word:"COMPARE",ipa:"/kəmˈpeər/",meaning:"(v) so sánh"},{id:55,word:"COMPETE",ipa:"/kəmˈpiːt/",meaning:"(v) cạnh tranh"},{id:56,word:"COMPLAIN",ipa:"/kəmˈpleɪn/",meaning:"(v) phàn nàn"},{id:57,word:"CONCENTRATE",ipa:"/ˈkɒnsəntreɪt/",meaning:"(v) tập trung"},{id:58,word:"CONFIRM",ipa:"/kənˈfɜːm/",meaning:"(v) xác nhận"},{id:59,word:"CONNECT",ipa:"/kəˈnekt/",meaning:"(v) kết nối"},{id:60,word:"CONSIDER",ipa:"/kənˈsɪdər/",meaning:"(v) cân nhắc, xem xét"},
+{id:61,word:"CONTAIN",ipa:"/kənˈteɪn/",meaning:"(v) chứa đựng"},{id:62,word:"CONTINUE",ipa:"/kənˈtɪnjuː/",meaning:"(v) tiếp tục"},{id:63,word:"CONTRAST",ipa:"/kənˈtrɑːst/",meaning:"(v) tương phản, đối lập"},{id:64,word:"CONTROL",ipa:"/kənˈtrəʊl/",meaning:"(v) kiểm soát"},{id:65,word:"CONVERT",ipa:"/kənˈvɜːt/",meaning:"(v) đổi, chuyển đổi"},{id:66,word:"CONVINCE",ipa:"/kənˈvɪns/",meaning:"(v) thuyết phục"},{id:67,word:"COUNT",ipa:"/kaʊnt/",meaning:"(v) đếm"},{id:68,word:"COVER",ipa:"/ˈkʌvər/",meaning:"(v) bao phủ, che đậy"},{id:69,word:"CRASH",ipa:"/kræʃ/",meaning:"(v) va chạm"},{id:70,word:"CUT",ipa:"/kʌt/",meaning:"(v) cắt"},
+{id:71,word:"CYCLE",ipa:"/ˈsaɪkəl/",meaning:"(v) đạp xe"},{id:72,word:"DAMAGE",ipa:"/ˈdæmɪdʒ/",meaning:"(v) gây thiệt hại"},{id:73,word:"DATE",ipa:"/deɪt/",meaning:"(v) ghi ngày tháng"},{id:74,word:"DEAL",ipa:"/diːl/",meaning:"(v) giải quyết, xử lý"},{id:75,word:"DECORATE",ipa:"/ˈdekəreɪt/",meaning:"(v) trang trí"},{id:76,word:"DECREASE",ipa:"/dɪˈkriːs/",meaning:"(v) giảm bớt"},{id:77,word:"DEFEND",ipa:"/dɪˈfend/",meaning:"(v) bảo vệ, phòng thủ"},{id:78,word:"DELAY",ipa:"/dɪˈleɪ/",meaning:"(v) trì hoãn"},{id:79,word:"DELETE",ipa:"/dɪˈliːt/",meaning:"(v) xóa bỏ"},{id:80,word:"DELIVER",ipa:"/dɪˈlɪvər/",meaning:"(v) giao, chuyển"},
+{id:81,word:"DEMAND",ipa:"/dɪˈmɑːnd/",meaning:"(v) yêu cầu"},{id:82,word:"DENY",ipa:"/dɪˈnaɪ/",meaning:"(v) phủ nhận"},{id:83,word:"DEPART",ipa:"/dɪˈpɑːt/",meaning:"(v) khởi hành"},{id:84,word:"DESERVE",ipa:"/dɪˈzɜːv/",meaning:"(v) xứng đáng"},{id:85,word:"DESIGN",ipa:"/dɪˈzaɪn/",meaning:"(v) thiết kế"},{id:86,word:"DESTROY",ipa:"/dɪˈstrɔɪ/",meaning:"(v) phá hủy"},{id:87,word:"DEVELOP",ipa:"/dɪˈveləp/",meaning:"(v) phát triển"},{id:88,word:"DIAL",ipa:"/ˈdaɪəl/",meaning:"(v) quay số"},{id:89,word:"DIRECT",ipa:"/dəˈrekt/",meaning:"(v) chỉ đạo, điều khiển"},{id:90,word:"DISAGREE",ipa:"/ˌdɪsəˈɡriː/",meaning:"(v) không đồng ý"},
+{id:91,word:"DISAPPEAR",ipa:"/ˌdɪsəˈpɪər/",meaning:"(v) biến mất"},{id:92,word:"DISAPPOINT",ipa:"/ˌdɪsəˈpɔɪnt/",meaning:"(v) làm thất vọng"},{id:93,word:"DISCOVER",ipa:"/dɪˈskʌvər/",meaning:"(v) khám phá"},{id:94,word:"DISPLAY",ipa:"/dɪˈspleɪ/",meaning:"(v) trưng bày"},{id:95,word:"DIVE",ipa:"/daɪv/",meaning:"(v) lặn"},{id:96,word:"DOUBT",ipa:"/daʊt/",meaning:"(v) nghi ngờ"},{id:97,word:"DRAG",ipa:"/dræɡ/",meaning:"(v) kéo lê"},{id:98,word:"DREAM",ipa:"/driːm/",meaning:"(v) mơ"},{id:99,word:"DRESS",ipa:"/dres/",meaning:"(v) mặc quần áo"},{id:100,word:"EDUCATE",ipa:"/ˈedʒukeɪt/",meaning:"(v) giáo dục"},
+{id:101,word:"EMPLOY",ipa:"/ɪmˈplɔɪ/",meaning:"(v) thuê, mướn"},{id:102,word:"ENCOURAGE",ipa:"/ɪnˈkʌrɪdʒ/",meaning:"(v) khuyến khích"},{id:103,word:"ENTER",ipa:"/ˈentər/",meaning:"(v) đi vào"},{id:104,word:"ENTERTAIN",ipa:"/ˌentəˈteɪn/",meaning:"(v) giải trí"},{id:105,word:"ESCAPE",ipa:"/ɪˈskeɪp/",meaning:"(v) trốn thoát"},{id:106,word:"EVALUATE",ipa:"/ɪˈvæljueɪt/",meaning:"(v) đánh giá"},{id:107,word:"EXCHANGE",ipa:"/ɪksˈtʃeɪndʒ/",meaning:"(v) trao đổi"},{id:108,word:"EXCUSE",ipa:"/ɪkˈskjuːz/",meaning:"(v) xin lỗi, bào chữa"},{id:109,word:"EXIST",ipa:"/ɪɡˈzɪst/",meaning:"(v) tồn tại"},{id:110,word:"EXIT",ipa:"/ˈeksɪt/",meaning:"(v) ra, thoát khỏi"},
+{id:111,word:"EXPECT",ipa:"/ɪkˈspekt/",meaning:"(v) mong đợi"},{id:112,word:"EXPERIENCE",ipa:"/ɪkˈspɪəriəns/",meaning:"(v) trải nghiệm"},{id:113,word:"FALL",ipa:"/fɔːl/",meaning:"(v) ngã, rơi"},{id:114,word:"FANCY",ipa:"/ˈfænsi/",meaning:"(v) thích, muốn"},{id:115,word:"FASTEN",ipa:"/ˈfɑːsən/",meaning:"(v) thắt chặt, cài"},{id:116,word:"FAX",ipa:"/fæks/",meaning:"(v) gửi fax"},{id:117,word:"FEED",ipa:"/fiːd/",meaning:"(v) cho ăn"},{id:118,word:"FEEL",ipa:"/fiːl/",meaning:"(v) cảm thấy"},{id:119,word:"FETCH",ipa:"/fetʃ/",meaning:"(v) tìm, mang về"},{id:120,word:"FILL",ipa:"/fɪl/",meaning:"(v) lấp đầy"},
+{id:121,word:"FIND",ipa:"/faɪnd/",meaning:"(v) tìm thấy"},{id:122,word:"FINISH",ipa:"/ˈfɪnɪʃ/",meaning:"(v) kết thúc, hoàn thành"},{id:123,word:"FISH",ipa:"/fɪʃ/",meaning:"(v) câu cá"},{id:124,word:"FIX",ipa:"/fɪks/",meaning:"(v) sửa chữa"},{id:125,word:"FLOAT",ipa:"/fləʊt/",meaning:"(v) nổi"},{id:126,word:"FLOOD",ipa:"/flʌd/",meaning:"(v) ngập lụt"},{id:127,word:"FLOW",ipa:"/fləʊ/",meaning:"(v) chảy"},{id:128,word:"FOLLOW",ipa:"/ˈfɒləʊ/",meaning:"(v) theo sau"},{id:129,word:"FORCE",ipa:"/fɔːs/",meaning:"(v) ép buộc"},{id:130,word:"FORGET",ipa:"/fəˈɡet/",meaning:"(v) quên"},
+{id:131,word:"FORM",ipa:"/fɔːm/",meaning:"(v) hình thành"},{id:132,word:"FREEZE",ipa:"/friːz/",meaning:"(v) đóng băng"},{id:133,word:"FRY",ipa:"/fraɪ/",meaning:"(v) rán, chiên"},{id:134,word:"GAIN",ipa:"/ɡeɪn/",meaning:"(v) đạt được"},{id:135,word:"GATHER",ipa:"/ˈɡæðər/",meaning:"(v) tụ tập, thu thập"},{id:136,word:"GET",ipa:"/ɡet/",meaning:"(v) được, có"},{id:137,word:"GIVE",ipa:"/ɡɪv/",meaning:"(v) cho"},{id:138,word:"GO",ipa:"/ɡəʊ/",meaning:"(v) đi"},{id:139,word:"GRAB",ipa:"/ɡræb/",meaning:"(v) túm lấy"},{id:140,word:"GRADUATE",ipa:"/ˈɡrædjueɪt/",meaning:"(v) tốt nghiệp"},
+{id:141,word:"GREET",ipa:"/ɡriːt/",meaning:"(v) chào hỏi"},{id:142,word:"GRILL",ipa:"/ɡrɪl/",meaning:"(v) nướng bằng vỉ"},{id:143,word:"GROW",ipa:"/ɡrəʊ/",meaning:"(v) trồng, phát triển"},{id:144,word:"GUARD",ipa:"/ɡɑːd/",meaning:"(v) bảo vệ, canh gác"},{id:145,word:"HAND",ipa:"/hænd/",meaning:"(v) đưa, trao"},{id:146,word:"HANDLE",ipa:"/ˈhændəl/",meaning:"(v) xử lý"},{id:147,word:"HANG",ipa:"/hæŋ/",meaning:"(v) treo"},{id:148,word:"HIDE",ipa:"/haɪd/",meaning:"(v) trốn, ẩn nấp"},{id:149,word:"HIRE",ipa:"/ˈhaɪər/",meaning:"(v) thuê, mướn"},{id:150,word:"HIT",ipa:"/hɪt/",meaning:"(v) đánh, đập"},
+{id:151,word:"HITCHHIKE",ipa:"/ˈhɪtʃhaɪk/",meaning:"(v) đi nhờ xe"},{id:152,word:"HOLD",ipa:"/həʊld/",meaning:"(v) cầm, nắm; tổ chức"},{id:153,word:"HOST",ipa:"/həʊst/",meaning:"(v) tổ chức"},{id:154,word:"HUNT",ipa:"/hʌnt/",meaning:"(v) săn bắn"},{id:155,word:"HURT",ipa:"/hɜːt/",meaning:"(v) làm đau"},{id:156,word:"IGNORE",ipa:"/ɪɡˈnɔːr/",meaning:"(v) phớt lờ, bỏ qua"},{id:157,word:"IMAGINE",ipa:"/ɪˈmædʒɪn/",meaning:"(v) tưởng tượng"},{id:158,word:"INFLUENCE",ipa:"/ˈɪnfluəns/",meaning:"(v) ảnh hưởng"},{id:159,word:"INFORM",ipa:"/ɪnˈfɔːm/",meaning:"(v) báo tin"},{id:160,word:"INJURE",ipa:"/ˈɪndʒər/",meaning:"(v) làm bị thương"},
+{id:161,word:"INSIST",ipa:"/ɪnˈsɪst/",meaning:"(v) khăng khăng"},{id:162,word:"INSTALL",ipa:"/ɪnˈstɔːl/",meaning:"(v) lắp đặt"},{id:163,word:"INTEND",ipa:"/ɪnˈtend/",meaning:"(v) dự định"},{id:164,word:"INTEREST",ipa:"/ˈɪntrəst/",meaning:"(v) làm quan tâm"},{id:165,word:"INTERVIEW",ipa:"/ˈɪntəvjuː/",meaning:"(v) phỏng vấn"},{id:166,word:"INTRODUCE",ipa:"/ˌɪntrəˈdjuːs/",meaning:"(v) giới thiệu"},{id:167,word:"INVEST",ipa:"/ɪnˈvest/",meaning:"(v) đầu tư"},{id:168,word:"INVESTIGATE",ipa:"/ɪnˈvestɪɡeɪt/",meaning:"(v) điều tra"},{id:169,word:"INVOLVE",ipa:"/ɪnˈvɒlv/",meaning:"(v) bao gồm, liên quan"},{id:170,word:"IRON",ipa:"/ˈaɪən/",meaning:"(v) ủi, là quần áo"},
+{id:171,word:"JOIN",ipa:"/dʒɔɪn/",meaning:"(v) tham gia"},{id:172,word:"JOKE",ipa:"/dʒəʊk/",meaning:"(v) đùa"},{id:173,word:"JUDGE",ipa:"/dʒʌdʒ/",meaning:"(v) đánh giá"},{id:174,word:"KEEP",ipa:"/kiːp/",meaning:"(v) giữ"},{id:175,word:"KNIT",ipa:"/nɪt/",meaning:"(v) đan"},{id:176,word:"KNOCK",ipa:"/nɒk/",meaning:"(v) gõ, đập"},{id:177,word:"KNOW",ipa:"/nəʊ/",meaning:"(v) biết"},{id:178,word:"LACK",ipa:"/læk/",meaning:"(v) thiếu"},{id:179,word:"LAST",ipa:"/lɑːst/",meaning:"(v) kéo dài"},{id:180,word:"LEAD",ipa:"/liːd/",meaning:"(v) dẫn dắt"},
+{id:181,word:"LEARN",ipa:"/lɜːn/",meaning:"(v) học"},{id:182,word:"LEAVE",ipa:"/liːv/",meaning:"(v) rời đi"},{id:183,word:"LIE",ipa:"/laɪ/",meaning:"(v) nằm"},{id:184,word:"LIFT",ipa:"/lɪft/",meaning:"(v) nâng"},{id:185,word:"LIGHT",ipa:"/laɪt/",meaning:"(v) thắp sáng"},{id:186,word:"LISTEN",ipa:"/ˈlɪsən/",meaning:"(v) lắng nghe"},{id:187,word:"LIVE",ipa:"/lɪv/",meaning:"(v) sống"},{id:188,word:"LOCATE",ipa:"/ləʊˈkeɪt/",meaning:"(v) xác định vị trí"},{id:189,word:"LOCK",ipa:"/lɒk/",meaning:"(v) khóa"},{id:190,word:"LOSE",ipa:"/luːz/",meaning:"(v) mất, thua"},
+{id:191,word:"MAKE",ipa:"/meɪk/",meaning:"(v) làm"},{id:192,word:"MANAGE",ipa:"/ˈmænɪdʒ/",meaning:"(v) quản lý"},{id:193,word:"MARRY",ipa:"/ˈmæri/",meaning:"(v) kết hôn"},{id:194,word:"MATCH",ipa:"/mætʃ/",meaning:"(v) làm cho phù hợp"},{id:195,word:"MEAN",ipa:"/miːn/",meaning:"(v) có nghĩa"},{id:196,word:"MEASURE",ipa:"/ˈmeʒər/",meaning:"(v) đo lường"},{id:197,word:"MEET",ipa:"/miːt/",meaning:"(v) gặp"},{id:198,word:"MEND",ipa:"/mend/",meaning:"(v) sửa chữa"},{id:199,word:"MENTION",ipa:"/ˈmenʃən/",meaning:"(v) đề cập"},{id:200,word:"MIND",ipa:"/maɪnd/",meaning:"(v) để ý, phiền"},
+{id:201,word:"MISS",ipa:"/mɪs/",meaning:"(v) bỏ lỡ; nhớ"},{id:202,word:"MIX",ipa:"/mɪks/",meaning:"(v) trộn"},{id:203,word:"MURDER",ipa:"/ˈmɜːdər/",meaning:"(v) giết người"},{id:204,word:"NAME",ipa:"/neɪm/",meaning:"(v) đặt tên"},{id:205,word:"NEED",ipa:"/niːd/",meaning:"(v) cần"},{id:206,word:"NOTE",ipa:"/nəʊt/",meaning:"(v) ghi chú"},{id:207,word:"NOTICE",ipa:"/ˈnəʊtɪs/",meaning:"(v) chú ý, nhận thấy"},{id:208,word:"OBSERVE",ipa:"/əbˈzɜːv/",meaning:"(v) quan sát"},{id:209,word:"OCCUR",ipa:"/əˈkɜːr/",meaning:"(v) xảy ra"},{id:210,word:"OPEN",ipa:"/ˈəʊpən/",meaning:"(v) mở"},
+{id:211,word:"OPERATE",ipa:"/ˈɒpəreɪt/",meaning:"(v) vận hành, điều khiển"},{id:212,word:"OWN",ipa:"/əʊn/",meaning:"(v) sở hữu"},{id:213,word:"PASS",ipa:"/pɑːs/",meaning:"(v) qua, vượt"},{id:214,word:"PAY",ipa:"/peɪ/",meaning:"(v) trả tiền"},{id:215,word:"PERFORM",ipa:"/pəˈfɔːm/",meaning:"(v) biểu diễn"},{id:216,word:"PERMIT",ipa:"/pəˈmɪt/",meaning:"(v) cho phép"},{id:217,word:"PERSUADE",ipa:"/pəˈsweɪd/",meaning:"(v) thuyết phục"},{id:218,word:"PICK",ipa:"/pɪk/",meaning:"(v) hái, nhặt"},{id:219,word:"PLAN",ipa:"/plæn/",meaning:"(v) lên kế hoạch"},{id:220,word:"PLANT",ipa:"/plɑːnt/",meaning:"(v) trồng"},
+{id:221,word:"PLAY",ipa:"/pleɪ/",meaning:"(v) chơi"},{id:222,word:"PLEASE",ipa:"/pliːz/",meaning:"(v) làm hài lòng"},{id:223,word:"POST",ipa:"/pəʊst/",meaning:"(v) đăng tải"},{id:224,word:"POSTPONE",ipa:"/pəʊstˈpəʊn/",meaning:"(v) hoãn"},{id:225,word:"POUR",ipa:"/pɔːr/",meaning:"(v) rót, đổ"},{id:226,word:"PRESS",ipa:"/pres/",meaning:"(v) ấn, nhấn"},{id:227,word:"PRETEND",ipa:"/prɪˈtend/",meaning:"(v) giả vờ, làm ra vẻ"},{id:228,word:"PRODUCE",ipa:"/prəˈdjus/",meaning:"(v) sản xuất"},{id:229,word:"PROMISE",ipa:"/ˈprɒmɪs/",meaning:"(v) hứa"},{id:230,word:"PROMOTE",ipa:"/prəˈməʊt/",meaning:"(v) thăng chức, quảng bá"},
+{id:231,word:"PROTECT",ipa:"/prəˈtekt/",meaning:"(v) bảo vệ"},{id:232,word:"PROVE",ipa:"/pruːv/",meaning:"(v) chứng minh"},{id:233,word:"PROVIDE",ipa:"/prəˈvaɪd/",meaning:"(v) cung cấp"},{id:234,word:"PUBLISH",ipa:"/ˈpʌblɪʃ/",meaning:"(v) xuất bản"},{id:235,word:"PUNISH",ipa:"/ˈpʌnɪʃ/",meaning:"(v) trừng phạt"},{id:236,word:"PUSH",ipa:"/pʊʃ/",meaning:"(v) đẩy"},{id:237,word:"QUEUE",ipa:"/kjuː/",meaning:"(v) xếp hàng"},{id:238,word:"QUIT",ipa:"/kwɪt/",meaning:"(v) bỏ, thôi"},{id:239,word:"RAISE",ipa:"/reɪz/",meaning:"(v) nâng, tăng"},{id:240,word:"REBUILD",ipa:"/ˌriːˈbɪld/",meaning:"(v) xây dựng lại"},
+{id:241,word:"RECKON",ipa:"/ˈrekən/",meaning:"(v) cho là, đoán là"},{id:242,word:"RECOGNIZE",ipa:"/ˈrekəɡnaɪz/",meaning:"(v) nhận ra"},{id:243,word:"RECORD",ipa:"/rɪˈkɔːd/",meaning:"(v) ghi âm, ghi hình"},{id:244,word:"RECOVER",ipa:"/rɪˈkʌvər/",meaning:"(v) hồi phục"},{id:245,word:"RECYCLE",ipa:"/ˌriːˈsaɪkəl/",meaning:"(v) tái chế"},{id:246,word:"REDUCE",ipa:"/rɪˈdjuːs/",meaning:"(v) giảm, giảm bớt"},{id:247,word:"REFLECT",ipa:"/rɪˈflekt/",meaning:"(v) phản ánh, suy ngẫm"},{id:248,word:"REFUSE",ipa:"/rɪˈfjuːz/",meaning:"(v) từ chối"},{id:249,word:"REGISTER",ipa:"/ˈredʒɪstər/",meaning:"(v) đăng ký"},{id:250,word:"REGRET",ipa:"/rɪˈɡret/",meaning:"(v) hối tiếc"},
+{id:251,word:"RELAX",ipa:"/rɪˈlæks/",meaning:"(v) thư giãn"},{id:252,word:"RELEASE",ipa:"/rɪˈliːs/",meaning:"(v) thả, phát hành"},{id:253,word:"REMAIN",ipa:"/rɪˈmeɪn/",meaning:"(v) vẫn còn, duy trì"},{id:254,word:"REMOVE",ipa:"/rɪˈmuːv/",meaning:"(v) loại bỏ"},{id:255,word:"RENOVATE",ipa:"/ˈrenəveɪt/",meaning:"(v) cải tạo"},{id:256,word:"REPLACE",ipa:"/rɪˈpleɪs/",meaning:"(v) thay thế"},{id:257,word:"REPLY",ipa:"/rɪˈplaɪ/",meaning:"(v) trả lời"},{id:258,word:"REQUEST",ipa:"/rɪˈkwest/",meaning:"(v) yêu cầu"},{id:259,word:"REQUIRE",ipa:"/rɪˈkwaɪər/",meaning:"(v) yêu cầu"},{id:260,word:"RESCUE",ipa:"/ˈreskjuː/",meaning:"(v) cứu hộ"},
+{id:261,word:"RESERVE",ipa:"/rɪˈzɜːv/",meaning:"(v) đặt trước"},{id:262,word:"RESPECT",ipa:"/rɪˈspekt/",meaning:"(v) tôn trọng"},{id:263,word:"RING",ipa:"/rɪŋ/",meaning:"(v) gọi điện thoại"},{id:264,word:"RISE",ipa:"/raɪz/",meaning:"(v) tăng lên, mọc"},{id:265,word:"RISK",ipa:"/rɪsk/",meaning:"(v) liều, mạo hiểm"},{id:266,word:"SAIL",ipa:"/seɪl/",meaning:"(v) chèo thuyền buồm"},{id:267,word:"SATISFY",ipa:"/ˈsætɪsfaɪ/",meaning:"(v) làm thỏa mãn"},{id:268,word:"SAVE",ipa:"/seɪv/",meaning:"(v) cứu, tiết kiệm"},{id:269,word:"SAY",ipa:"/seɪ/",meaning:"(v) nói"},{id:270,word:"SCORE",ipa:"/skɔːr/",meaning:"(v) ghi điểm"},
+{id:271,word:"SCREAM",ipa:"/skriːm/",meaning:"(v) hét"},{id:272,word:"SEARCH",ipa:"/sɜːtʃ/",meaning:"(v) tìm kiếm"},{id:273,word:"SEE",ipa:"/siː/",meaning:"(v) nhìn thấy"},{id:274,word:"SELECT",ipa:"/sɪˈlekt/",meaning:"(v) chọn"},{id:275,word:"SEPARATE",ipa:"/ˈsepəreɪt/",meaning:"(v) tách rời, phân chia"},{id:276,word:"SET",ipa:"/set/",meaning:"(v) đặt, để"},{id:277,word:"SEW",ipa:"/səʊ/",meaning:"(v) may, khâu"},{id:278,word:"SHAKE",ipa:"/ʃeɪk/",meaning:"(v) lắc"},{id:279,word:"SHARE",ipa:"/ʃeər/",meaning:"(v) chia sẻ"},{id:280,word:"SHAVE",ipa:"/ʃeɪv/",meaning:"(v) cạo râu"},
+{id:281,word:"SHOOT",ipa:"/ʃuːt/",meaning:"(v) bắn, quay phim"},{id:282,word:"SHOW",ipa:"/ʃəʊ/",meaning:"(v) cho thấy, chỉ ra"},{id:283,word:"SIGN",ipa:"/saɪn/",meaning:"(v) ký"},{id:284,word:"SINK",ipa:"/sɪŋk/",meaning:"(v) chìm"},{id:285,word:"SMELL",ipa:"/smel/",meaning:"(v) ngửi, có mùi"},{id:286,word:"SMILE",ipa:"/smaɪl/",meaning:"(v) mỉm cười"},{id:287,word:"SORT",ipa:"/sɔːt/",meaning:"(v) phân loại, sắp xếp"},{id:288,word:"SPOIL",ipa:"/spɔɪl/",meaning:"(v) làm hỏng"},{id:289,word:"SPOT",ipa:"/spɒt/",meaning:"(v) phát hiện, nhìn thấy"},{id:290,word:"SPREAD",ipa:"/spred/",meaning:"(v) lan rộng, truyền"},
+{id:291,word:"START",ipa:"/stɑːt/",meaning:"(v) bắt đầu"},{id:292,word:"STAY",ipa:"/steɪ/",meaning:"(v) ở lại"},{id:293,word:"STIR",ipa:"/stɜːr/",meaning:"(v) khuấy"},{id:294,word:"STOP",ipa:"/stɒp/",meaning:"(v) dừng lại"},{id:295,word:"STORE",ipa:"/stɔːr/",meaning:"(v) lưu trữ, cất giữ"},{id:296,word:"STRIKE",ipa:"/straɪk/",meaning:"(v) đình công"},{id:297,word:"STRUGGLE",ipa:"/ˈstrʌɡəl/",meaning:"(v) vật lộn, cố gắng khó khăn"},{id:298,word:"SUCCEED",ipa:"/səkˈsiːd/",meaning:"(v) thành công"},{id:299,word:"SUFFER",ipa:"/ˈsʌfər/",meaning:"(v) chịu đựng"},{id:300,word:"SUGGEST",ipa:"/səˈdʒest/",meaning:"(v) đề nghị"},
+{id:301,word:"SUIT",ipa:"/suːt/",meaning:"(v) phù hợp"},{id:302,word:"SUNBATHE",ipa:"/ˈsʌnbeɪð/",meaning:"(v) tắm nắng"},{id:303,word:"SUPPLY",ipa:"/səˈplaɪ/",meaning:"(v) cung cấp"},{id:304,word:"SUPPORT",ipa:"/səˈpɔːrt/",meaning:"(v) hỗ trợ"},{id:305,word:"SURF",ipa:"/sɜːrf/",meaning:"(v) lướt sóng, lướt web"},{id:306,word:"SURROUND",ipa:"/səˈraʊnd/",meaning:"(v) bao quanh"},{id:307,word:"SURVIVE",ipa:"/səˈvaɪv/",meaning:"(v) sống sót"},{id:308,word:"TAKE",ipa:"/teɪk/",meaning:"(v) lấy"},{id:309,word:"TASTE",ipa:"/teɪst/",meaning:"(v) nếm"},{id:310,word:"TEACH",ipa:"/tiːtʃ/",meaning:"(v) dạy"},
+{id:311,word:"TEST",ipa:"/test/",meaning:"(v) kiểm tra"},{id:312,word:"THINK",ipa:"/θɪŋk/",meaning:"(v) nghĩ"},{id:313,word:"TICK",ipa:"/tɪk/",meaning:"(v) đánh dấu"},{id:314,word:"TIE",ipa:"/taɪ/",meaning:"(v) buộc"},{id:315,word:"TOUCH",ipa:"/tʌtʃ/",meaning:"(v) chạm"},{id:316,word:"TOUR",ipa:"/tʊər/",meaning:"(v) đi tham quan"},{id:317,word:"TRAIN",ipa:"/treɪn/",meaning:"(v) đào tạo"},{id:318,word:"TRANSLATE",ipa:"/trænsˈleɪt/",meaning:"(v) dịch"},{id:319,word:"TRAVEL",ipa:"/ˈtrævəl/",meaning:"(v) đi du lịch"},{id:320,word:"TRUST",ipa:"/trʌst/",meaning:"(v) tin tưởng"},
+{id:321,word:"TURN",ipa:"/tɜːrn/",meaning:"(v) rẽ"},{id:322,word:"TYPE",ipa:"/taɪp/",meaning:"(v) đánh máy"},{id:323,word:"UNDERLINE",ipa:"/ˌʌndəˈlaɪn/",meaning:"(v) gạch chân"},{id:324,word:"UNDERSTAND",ipa:"/ˌʌndəˈstænd/",meaning:"(v) hiểu"},{id:325,word:"UNDRESS",ipa:"/ʌnˈdres/",meaning:"(v) cởi quần áo"},{id:326,word:"UNPACK",ipa:"/ʌnˈpæk/",meaning:"(v) mở, dỡ đồ"},{id:327,word:"UPDATE",ipa:"/ʌpˈdeɪt/",meaning:"(v) cập nhật"},{id:328,word:"UPLOAD",ipa:"/ˌʌpˈləʊd/",meaning:"(v) tải lên"},{id:329,word:"VOTE",ipa:"/vəʊt/",meaning:"(v) bỏ phiếu"},{id:330,word:"WAKE",ipa:"/weɪk/",meaning:"(v) thức dậy"},
+{id:331,word:"WARN",ipa:"/wɔːrn/",meaning:"(v) cảnh báo"},{id:332,word:"WAVE",ipa:"/weɪv/",meaning:"(v) vẫy tay"},{id:333,word:"WEIGH",ipa:"/weɪ/",meaning:"(v) cân"},{id:334,word:"WELCOME",ipa:"/ˈwelkəm/",meaning:"(v) chào mừng"},{id:335,word:"WIN",ipa:"/wɪn/",meaning:"(v) chiến thắng"},{id:336,word:"WONDER",ipa:"/ˈwʌndər/",meaning:"(v) tự hỏi, thắc mắc"},{id:337,word:"WORK",ipa:"/wɜːrk/",meaning:"(v) làm việc"}
+        ];
+
+        // --- GLOBAL STATE ---
+        let questionQueue = [];
+        let totalPracticeWords = 0;
+        let mistakesCount = 0;
+        let reviewedWords = [];
+        let currentMode = 'range';
+
+        // --- GOOGLE SHEET INTEGRATION ---
+        function sendResultsToSheet(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDA2JO5j-aXbvYBIVBYVg4wvQEvLrafuoyPq_XglM-siz1eGQRJcXSMDcuhfBoTCw/exec"; 
+            const TEN_SHEET_LUU = "KET_QUA_TU_VUNG_REGULAR_VERBS"; 
+
+            var gio = studyStartTime.getHours();
+            var phut = studyStartTime.getMinutes();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut);
+
+            var duLieu = {
+                tenSheet: TEN_SHEET_LUU,
+                tenBai: tenBaiHoc,
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                cheDoHoc: cheDo,
+                soTuLam: soTuDaLam,
+                phanTramDung: phanTramKetQua
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                alert("✅ Study results have been saved successfully!");
+            }).catch(err => {
+                alert("❌ Connection error. Results were not saved.");
+            });
+        }
+
+        function switchTab(mode) {
+            currentMode = mode;
+            const tabRange = document.getElementById('tab-range');
+            const tabRandom = document.getElementById('tab-random');
+            const contentRange = document.getElementById('mode-range');
+            const contentRandom = document.getElementById('mode-random');
+
+            if (mode === 'range') {
+                tabRange.classList.add('tab-active');
+                tabRange.classList.remove('tab-inactive');
+                tabRandom.classList.add('tab-inactive');
+                tabRandom.classList.remove('tab-active');
+                contentRange.classList.remove('hidden');
+                contentRandom.classList.add('hidden');
+            } else {
+                tabRandom.classList.add('tab-active');
+                tabRandom.classList.remove('tab-inactive');
+                tabRange.classList.add('tab-inactive');
+                tabRange.classList.remove('tab-active');
+                contentRandom.classList.remove('hidden');
+                contentRange.classList.add('hidden');
+            }
+        }
+
+        function updateRangePreview() {
+            const start = parseInt(document.getElementById('start-range').value) || 0;
+            const end = parseInt(document.getElementById('end-range').value) || 0;
+            const previewBox = document.getElementById('range-preview');
+            const countBox = document.getElementById('preview-count');
+
+            if (start > end) {
+                previewBox.innerHTML = "<span class='text-red-500 font-bold'>Invalid Range (Start > End)</span>";
+                countBox.innerText = "0 words";
+                return;
+            }
+
+            const selected = verbData.filter(w => w.id >= start && w.id <= end);
+            countBox.innerText = `${selected.length} words`;
+            
+            if (selected.length === 0) {
+                previewBox.innerHTML = "<span class='text-gray-400 italic'>No words found.</span>";
+            } else {
+                const tags = selected.map((w) => 
+                    `<span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-bold bg-orange-100 text-orange-800 border border-orange-200 shadow-sm mb-1 mr-1">
+                        <span class="mr-1 text-orange-500 opacity-75">#${w.id}</span> ${w.word}
+                    </span>`
+                ).join('');
+                previewBox.innerHTML = tags;
+            }
+        }
+
+        function adjustLimit(change) {
+            const input = document.getElementById('random-limit');
+            let val = parseInt(input.value) + change;
+            if (val < 1) val = 1;
+            if (val > 337) val = 337;
+            input.value = val;
+        }
+
+        function playSound(type) {
+            const audio = document.getElementById(type === 'correct' ? 'sound-correct' : 'sound-wrong');
+            if(audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio Error"));
+            }
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function startRangeQuiz() {
+            const id = document.getElementById('student-id').value.trim();
+            const name = document.getElementById('student-name').value.trim();
+            if (!id || !name) { alert("Please enter both Student ID and Full Name!"); return; }
+            
+            currentStudentId = id;
+            currentStudentName = name;
+            studyStartTime = new Date();
+            
+            const start = parseInt(document.getElementById('start-range').value);
+            const end = parseInt(document.getElementById('end-range').value);
+            const availableWords = verbData.filter(w => w.id >= start && w.id <= end);
+            if (availableWords.length === 0) { alert(`No words found in range ${start} - ${end}.`); return; }
+            questionQueue = [...availableWords].sort(() => 0.5 - Math.random());
+            initQuiz(name, questionQueue);
+        }
+
+        function startRandomQuiz() {
+            const id = document.getElementById('student-id').value.trim();
+            const name = document.getElementById('student-name').value.trim();
+            if (!id || !name) { alert("Please enter both Student ID and Full Name!"); return; }
+            
+            currentStudentId = id;
+            currentStudentName = name;
+            studyStartTime = new Date();
+            
+            const limit = parseInt(document.getElementById('random-limit').value);
+            const shuffled = [...verbData].sort(() => 0.5 - Math.random());
+            questionQueue = shuffled.slice(0, limit);
+            initQuiz(name, questionQueue);
+        }
+
+        function initQuiz(name, queue) {
+            totalPracticeWords = queue.length;
+            mistakesCount = 0;
+            reviewedWords = [];
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (questionQueue.length === 0) {
+                finishQuiz();
+                return;
+            }
+            const q = questionQueue[0];
+            document.getElementById('progress-text').innerText = `${questionQueue.length} left`;
+            document.getElementById('meaning-clue').innerText = q.meaning;
+            const input = document.getElementById('answer-input');
+            input.value = '';
+            input.disabled = false;
+            input.className = "word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all uppercase";
+            input.focus();
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('ipa-display').innerText = "";
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            input.onkeypress = (e) => { 
+                if (e.key === 'Enter') {
+                    if(!document.getElementById('check-btn').classList.contains('hidden')) { checkAnswer(); } else { nextQuestion(); }
+                }
+            };
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const userAnswer = input.value.trim().toUpperCase();
+            const currentQ = questionQueue[0];
+            const correctAnswer = currentQ.word.toUpperCase();
+            const isCorrect = userAnswer === correctAnswer;
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackContent = document.getElementById('feedback-content');
+            const ipaDisplay = document.getElementById('ipa-display');
+            const retryMsg = document.getElementById('retry-msg');
+
+            feedbackBox.classList.remove('hidden');
+            input.disabled = true;
+
+            if (isCorrect) {
+                playSound('correct');
+                speakWord(currentQ.word);
+                input.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-green-100 border border-green-200";
+                feedbackTitle.innerHTML = "<span class='text-green-700 font-bold'>🎉 CORRECT!</span>";
+                feedbackContent.innerHTML = `Word: <span class="font-bold text-xl">${currentQ.word}</span>`;
+                ipaDisplay.innerHTML = `${currentQ.ipa}`;
+                if(!reviewedWords.find(w => w.id === currentQ.id)) { reviewedWords.push(currentQ); }
+                questionQueue.shift();
+            } else {
+                playSound('wrong');
+                mistakesCount++;
+                input.classList.add('border-red-500', 'bg-red-50', 'text-red-700', 'shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-red-100 border border-red-200";
+                feedbackTitle.innerHTML = "<span class='text-red-700 font-bold'>INCORRECT!</span>";
+                feedbackContent.innerHTML = `Correct answer: <span class="font-bold text-2xl text-red-600 block mt-2">${currentQ.word}</span>`;
+                ipaDisplay.innerHTML = `${currentQ.ipa}`;
+                retryMsg.classList.remove('hidden');
+                const wrongQ = questionQueue.shift();
+                questionQueue.push(wrongQ);
+            }
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('next-btn').focus();
+        }
+
+        function nextQuestion() {
+            loadNextQuestion();
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            document.getElementById('result-name').innerText = currentStudentName;
+            document.getElementById('total-words-count').innerText = totalPracticeWords;
+            const totalAttempts = totalPracticeWords + mistakesCount;
+            const accuracyVal = totalAttempts > 0 ? Math.round((totalPracticeWords / totalAttempts) * 100) : 100;
+            const accuracyStr = accuracyVal + "%";
+            document.getElementById('accuracy-rate').innerText = accuracyStr;
+            
+            const listContainer = document.getElementById('reviewed-list');
+            listContainer.innerHTML = '';
+            reviewedWords.sort((a,b) => a.id - b.id);
+            reviewedWords.forEach(word => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "bg-white p-3 rounded-lg border border-orange-100 shadow-sm flex items-center";
+                itemDiv.innerHTML = `<div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex-shrink-0 flex items-center justify-center font-bold text-xs mr-3">${word.id}</div>
+                    <div><div class="font-bold text-orange-900">${word.word} <span class="text-xs font-mono text-gray-400 font-normal ml-1">${word.ipa}</span></div><div class="text-xs text-gray-500 truncate max-w-[150px]">${word.meaning}</div></div>`;
+                listContainer.appendChild(itemDiv);
+            });
+            
+            const modeName = currentMode === 'range' ? "WORD RANGE" : "RANDOM MODE";
+            sendResultsToSheet("B1 Regular Verbs Master", currentStudentId, currentStudentName, modeName, totalPracticeWords, accuracyStr);
+        }
+
+        function quitQuiz() {
+            if(confirm("Quit session?")) {
+                document.getElementById('setup-screen').classList.remove('hidden');
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.add('hidden');
+                updateRangePreview();
+            }
+        }
+        updateRangePreview();
+    </script>
+</body>
+</html>

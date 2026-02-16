@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Reading Part 1 - Set 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Quicksand', sans-serif; background-color: #f0fdf4; }
+        .gap-slot { display: inline-block; min-width: 45px; border-bottom: 2px solid #cbd5e1; text-align: center; font-weight: bold; color: #64748b; padding: 0 6px; transition: all 0.3s; cursor: default; }
+        .filled-text { display: inline-block; padding: 0 6px; font-weight: 700; border-radius: 6px; transition: all 0.3s ease-in-out; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .filled-correct { color: #15803d; background-color: #dcfce7; border-bottom: 2px solid #16a34a; }
+        .filled-wrong { color: #b91c1c; background-color: #fee2e2; border-bottom: 2px solid #dc2626; text-decoration: line-through; }
+        .option-btn { transition: all 0.2s; }
+        .option-btn:disabled { cursor: not-allowed; }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        .penalty-bar { height: 4px; background-color: #ef4444; width: 100%; animation: shrink 10s linear forwards; }
+        @keyframes shrink { from { width: 100%; } to { width: 0%; } }
+        .global-lock-overlay { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.6); z-index: 10; display: flex; align-items: center; justify-content: center; border-radius: 1rem; backdrop-filter: blur(1px); }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="text-slate-800 h-screen flex flex-col overflow-hidden">
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="fixed inset-0 z-50 bg-white flex items-center justify-center p-4">
+        <div class="max-w-md w-full bg-white shadow-2xl rounded-2xl p-8 border-t-8 border-green-600 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-2">FCE Reading Part 1</h1>
+            <p class="text-slate-500 mb-2 font-semibold text-green-600">SET 1 (Tests 1 - 4)</p>
+            <div class="inline-block bg-orange-100 text-orange-800 text-xs font-bold px-3 py-1 rounded-full mb-6 border border-orange-200 uppercase tracking-wide">
+                Mastery Study Mode
+            </div>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-left text-sm font-semibold text-slate-700 mb-1">Your Name</label>
+                    <input type="text" id="username-input" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none transition" placeholder="Enter your full name...">
+                </div>
+                <button onclick="startApp()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1">
+                    Start Practice
+                </button>
+            </div>
+            
+            <!-- Mastery Rules -->
+            <div class="mt-6 text-sm text-slate-500 bg-slate-50 p-5 rounded-xl text-left border border-slate-200 shadow-inner">
+                <p class="font-bold mb-3 text-slate-700 flex items-center uppercase tracking-wider text-xs border-b pb-2 border-slate-200">
+                    <svg class="w-4 h-4 mr-2 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+                    Mastery Rules
+                </p>
+                <ul class="space-y-3 text-xs text-slate-600">
+                    <li class="flex items-start">
+                        <span class="text-green-600 font-bold mr-2">✓ 1st Try Correct:</span>
+                        <span>Full points (100%).</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-orange-500 font-bold mr-2">⚠ 1st Try Wrong:</span>
+                        <span>
+                            <strong>10s Penalty Wait</strong> + Global Lock.
+                            <br>Score reduced to 50%.
+                        </span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-red-500 font-bold mr-2">✕ 2nd Try Wrong:</span>
+                        <span>0 points. Answer revealed.</span>
+                    </li>
+                    <li class="flex items-start border-t border-slate-200 pt-2 mt-2">
+                        <span class="text-blue-600 font-bold mr-2">★ Target:</span>
+                        <span>You need <strong>85% score</strong> to pass.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Result Screen -->
+    <div id="result-screen" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="max-w-2xl w-full bg-white shadow-2xl rounded-2xl p-8 relative">
+                <!-- Status Bar -->
+                <div id="result-header-bar" class="absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-gray-300"></div>
+                
+                <h2 class="text-3xl font-bold text-center mb-2 text-slate-800">Study Mode Results</h2>
+                
+                <!-- Sending Status -->
+                <div id="saving-status" class="text-center text-xs font-semibold text-slate-400 mb-6 flex items-center justify-center p-2 bg-slate-50 rounded-lg">
+                    Waiting to submit...
+                </div>
+
+                <p id="result-message" class="text-center mb-8 font-semibold text-lg text-slate-500">---</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                        <p class="text-xs text-blue-500 font-bold uppercase tracking-wide">Candidate</p>
+                        <p class="text-xl font-bold text-slate-800 truncate" id="result-name">---</p>
+                    </div>
+                    <div id="score-card" class="bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <p class="text-xs text-slate-500 font-bold uppercase tracking-wide">Mastery Score</p>
+                        <div class="flex items-baseline">
+                            <span id="result-score" class="text-4xl font-black text-slate-700">0</span>
+                            <span class="text-lg text-slate-500 font-medium ml-1">/32</span>
+                            <span id="result-percentage" class="ml-auto text-lg font-bold px-2 py-1 rounded bg-white border">0%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pass/Fail Action Area -->
+                <div id="action-area" class="mb-8">
+                    <!-- Buttons will be injected here -->
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-slate-200 mb-8 shadow-sm">
+                    <h3 class="font-bold text-slate-700 mb-4 border-b pb-2 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Performance Stats
+                    </h3>
+                    <div class="flex justify-between items-center mb-2 text-sm">
+                        <span class="text-slate-500">Duration:</span>
+                        <span id="result-duration" class="text-slate-800 font-bold">---</span>
+                    </div>
+                    <div class="mt-4 space-y-3" id="result-details">
+                        <!-- Detailed breakdown -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="main-app" class="hidden flex-1 flex flex-col h-full bg-slate-100">
+        <!-- Header -->
+        <header class="bg-white shadow-sm z-20 border-b border-slate-200 h-16 flex items-center justify-between px-4 md:px-6">
+            <div class="flex items-center space-x-4">
+                <div class="bg-green-50 text-green-700 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center border border-green-200 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span id="timer-display" class="tabular-nums">00:00:00</span>
+                </div>
+                <h2 id="part-title" class="hidden md:block text-lg font-bold text-slate-700 truncate max-w-xs">Part 1</h2>
+            </div>
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <div class="text-sm font-medium text-slate-500 mr-2 flex flex-col items-end md:items-center md:flex-row">
+                    <span class="text-xs uppercase font-bold text-slate-400 md:mr-2">Progress</span>
+                    <span id="progress-text" class="text-slate-800 font-black text-xl">1/4</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button onclick="prevTest()" id="btn-prev" class="p-2 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                    </button>
+                    <button onclick="nextTest()" id="btn-next" class="p-2 rounded-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 disabled:opacity-30 disabled:cursor-not-allowed transition shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                    </button>
+                </div>
+                <button onclick="finishTest()" id="btn-finish" class="hidden ml-2 bg-green-600 hover:bg-green-700 text-white text-sm font-bold px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition transform active:scale-95 flex items-center">
+                    <span>FINISH</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 overflow-hidden flex flex-col md:flex-row">
+            
+            <!-- Left: Reading Text -->
+            <div class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50 border-r border-slate-200">
+                <div class="max-w-3xl mx-auto bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-slate-100 leading-loose text-lg text-slate-700" id="reading-text">
+                    <!-- Text content rendered here -->
+                </div>
+            </div>
+
+            <!-- Right: Questions -->
+            <div class="h-[50%] md:h-auto md:w-[480px] lg:w-[550px] flex flex-col bg-white shadow-[-4px_0_20px_-5px_rgba(0,0,0,0.1)] z-10">
+                <div class="p-4 bg-white border-b border-slate-100 font-bold text-slate-700 flex justify-between items-center shadow-sm z-10">
+                    <span class="flex items-center text-blue-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        QUESTIONS
+                    </span>
+                    <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded border border-orange-200 uppercase tracking-wider">Study Mode</span>
+                </div>
+                
+                <div class="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50" id="questions-container">
+                    <!-- Questions rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FIREBASE INTEGRATION (Module) -->
+    <script type="module">
+        // -------------------------------------------------------------
+        // ▼▼▼ KHU VỰC CẤU HÌNH (DÁN CONFIG CỦA BẠN VÀO ĐÂY) ▼▼▼
+        // -------------------------------------------------------------
+        
+        // Hướng dẫn:
+        // 1. Vào console.firebase.google.com -> Tạo project -> Tạo Web App
+        // 2. Copy toàn bộ nội dung trong const firebaseConfig = { ... }
+        // 3. Dán đè lên phần bên dưới.
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+             // ⚠️ DÁN CONFIG CỦA BẠN VÀO GIỮA 2 DẤU NGOẶC NÀY ⚠️
+        };
+
+        // -------------------------------------------------------------
+        // ▲▲▲ KẾT THÚC KHU VỰC CẤU HÌNH ▲▲▲
+        // -------------------------------------------------------------
+
+        let db;
+        let isFirebaseReady = false;
+
+        try {
+            if (firebaseConfig.apiKey) {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                isFirebaseReady = true;
+                console.log("Firebase initialized successfully");
+            } else {
+                console.warn("Firebase config is missing. Data will not be saved.");
+            }
+        } catch (e) {
+            console.error("Error initializing Firebase:", e);
+        }
+
+        // Expose function to global scope so main script can call it
+        window.saveResultToFirebase = async function(data) {
+            const statusEl = document.getElementById('saving-status');
+            
+            if (!isFirebaseReady) {
+                statusEl.innerHTML = '';
+                return;
+            }
+
+            statusEl.innerHTML = '<span class="animate-pulse text-blue-600 flex items-center justify-center"><svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Saving results to Firebase...</span>';
+
+            try {
+                // Save to collection 'exam_results'
+                await addDoc(collection(db, "exam_results_set1"), {
+                    name: data.name,
+                    score: data.score,          // e.g. "28/32"
+                    percentage: data.percentage, // e.g. 87.5
+                    duration: data.duration,
+                    timestamp: serverTimestamp(),
+                    userAgent: navigator.userAgent // Device info (optional)
+                });
+                
+                statusEl.innerHTML = '<span class="text-green-600 font-bold flex items-center justify-center"><svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Results Saved to Cloud!</span>';
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                statusEl.innerHTML = '<span class="text-red-500 font-bold">❌ Error saving. Check console.</span>';
+            }
+        }
+    </script>
+
+    <script>
+        // DATA SET 1 (TESTS 1-4)
+        const testsData = [
+            {
+                id: 1,
+                title: "Ballet for Children",
+                content: `It is generally accepted that young children (0) <span class="gap-slot filled-correct font-bold text-green-700">benefit</span> from physical activity. But is ballet suitable for them? Some parents think that ballet classes (1) <span id="gap-1-1" class="gap-slot">......</span> children with the opportunity to move to music, and is a fun way to get exercise. But others are (2) <span id="gap-1-2" class="gap-slot">......</span> that their children might injure themselves.<br><br>
+                Teachers of ballet say that if it is taught (3) <span id="gap-1-3" class="gap-slot">......</span> , there is no need for concern. A good teacher will (4) <span id="gap-1-4" class="gap-slot">......</span> that children warm up properly before they start dancing. They will also ensure that the movements are suitable for the age of the child. Young children should not be pushed too hard, as their bones are still (5) <span id="gap-1-5" class="gap-slot">......</span> .<br><br>
+                One of the main advantages of ballet is that it encourages children to be disciplined. They have to learn to follow instructions and to cooperate with other children. It also helps them to (6) <span id="gap-1-6" class="gap-slot">......</span> confidence. If a child enjoys ballet, it can become a lifelong passion. However, it is important to remember that very few children will go on to become professional dancers. For most, it will simply be a(n) (7) <span id="gap-1-7" class="gap-slot">......</span> hobby. So, parents should not put too much pressure on their children, but rather encourage them to (8) <span id="gap-1-8" class="gap-slot">......</span> themselves.`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "offer", B: "provide", C: "give", D: "make" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. provide</strong><br>Cấu trúc: <em>'provide someone with something'</em> (cung cấp cho ai cái gì).<br><strong>Tại sao sai:</strong><br>• A. offer: thường đi trực tiếp với danh từ (offer children the opportunity).<br>• C. give: give someone something (không có 'with').<br><strong>Ghi nhớ:</strong> Cấu trúc 'provide sb with sth'."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "anxious", B: "afraid", C: "scared", D: "worried" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. worried</strong><br><em>'Worried that'</em> là cách diễn đạt phổ biến để chỉ sự lo lắng về một khả năng xảy ra.<br><strong>Tại sao sai:</strong><br>• A. anxious: thường đi với 'about' hoặc 'for'.<br>• B. afraid: thường là 'afraid of' hoặc 'afraid that' nhưng mang nghĩa sợ hãi hơn là lo lắng.<br><strong>Ghi nhớ:</strong> Worried that + mệnh đề."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "correctly", B: "truly", C: "fairly", D: "virtually" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. correctly</strong><br>Nghĩa là 'được dạy đúng cách/chính xác'.<br><strong>Tại sao sai:</strong><br>• B. truly: thật sự.<br>• C. fairly: công bằng/khá.<br>• D. virtually: hầu như/ảo.<br><strong>Ghi nhớ:</strong> Từ vựng: 'do something correctly'."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "ensure", B: "make", C: "insist", D: "check" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. ensure</strong><br><em>'Ensure that'</em> nghĩa là đảm bảo rằng điều gì đó sẽ xảy ra.<br><strong>Tại sao sai:</strong><br>• B. make: phải là 'make sure that'.<br>• D. check: kiểm tra (không mạnh bằng ensure).<br><strong>Ghi nhớ:</strong> 'Ensure that' = 'Make sure that'."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "soft", B: "smooth", C: "gentle", D: "mild" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. soft</strong><br>Xương của trẻ em còn 'mềm' (soft) và đang phát triển.<br><strong>Tại sao sai:</strong><br>• B. smooth: trơn láng.<br>• C. gentle: dịu dàng.<br>• D. mild: ôn hòa/nhẹ.<br><strong>Ghi nhớ:</strong> Từ vựng: 'soft bones'."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "grow", B: "gain", C: "build", D: "rise" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. gain</strong><br>Cụm từ <em>'gain confidence'</em> (có được/tăng sự tự tin).<br><strong>Tại sao sai:</strong><br>• A. grow: phát triển (nội động từ).<br>• C. build: xây dựng (thường dùng build up confidence).<br><strong>Ghi nhớ:</strong> Collocation: 'gain/lose confidence'."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "pleasant", B: "delightful", C: "satisfying", D: "enjoyable" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. enjoyable</strong><br><em>'Enjoyable hobby'</em> là một sở thích mang lại niềm vui.<br><strong>Tại sao sai:</strong><br>• A. pleasant: dễ chịu.<br>• C. satisfying: thỏa mãn (về thành tựu).<br><strong>Ghi nhớ:</strong> Tính từ: 'enjoyable' (thú vị, vui vẻ)."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "please", B: "satisfy", C: "enjoy", D: "entertain" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. enjoy</strong><br>Cụm từ <em>'enjoy themselves'</em> nghĩa là vui vẻ, tận hưởng khoảng thời gian.<br><strong>Tại sao sai:</strong><br>• A. please: làm hài lòng.<br>• D. entertain: giải trí cho ai đó.<br><strong>Ghi nhớ:</strong> Cấu trúc phản thân: 'enjoy oneself'."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "The Kangaroo",
+                content: `The kangaroo is a symbol of Australia. It is famous for how it moves; it hops on its strong back legs. This is an efficient (0) <span class="gap-slot filled-correct font-bold text-green-700">way</span> of travelling, allowing it to cover large distances in search of food and water. Kangaroos are (1) <span id="gap-2-1" class="gap-slot">......</span> mainly in Australia, but some species live in New Guinea.<br><br>
+                Most people know that kangaroos carry their babies in a pouch. The baby kangaroo, called a joey, is born at a very early (2) <span id="gap-2-2" class="gap-slot">......</span> of development. It crawls into its mother's pouch and stays there until it is fully (3) <span id="gap-2-3" class="gap-slot">......</span> . It will continue to use the pouch for safety for many months.<br><br>
+                Kangaroos are herbivores, which means they eat plants. They are most (4) <span id="gap-2-4" class="gap-slot">......</span> at night or during the cooler parts of the day. They often live in groups, which helps protect them from predators. If a kangaroo senses danger, it will thump its feet on the ground to (5) <span id="gap-2-5" class="gap-slot">......</span> the others. Although they look cute, kangaroos can be dangerous if they feel threatened. They have strong legs and sharp claws, which they use to (6) <span id="gap-2-6" class="gap-slot">......</span> themselves. The kangaroo population has (7) <span id="gap-2-7" class="gap-slot">......</span> in recent years, and they are now a common sight in the Australian countryside. However, they are sometimes considered a pest by farmers because they compete with livestock for (8) <span id="gap-2-8" class="gap-slot">......</span> .`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "located", B: "placed", C: "found", D: "situated" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. found</strong><br>Động vật được 'tìm thấy' (found) ở một khu vực địa lý.<br><strong>Tại sao sai:</strong><br>• A. located/D. situated: thường dùng cho tòa nhà, địa điểm cố định.<br><strong>Ghi nhớ:</strong> Animals are found in..."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "stage", B: "step", C: "period", D: "level" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. stage</strong><br><em>'Stage of development'</em> là giai đoạn phát triển.<br><strong>Tại sao sai:</strong><br>• B. step: bước đi.<br>• C. period: khoảng thời gian.<br><strong>Ghi nhớ:</strong> Collocation: 'early stage'."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "done", B: "grown", C: "raised", D: "developed" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. developed</strong><br>'Fully developed' nghĩa là phát triển hoàn thiện.<br><strong>Tại sao sai:</strong><br>• B. grown: trưởng thành (thường là fully grown). Nhưng ngữ cảnh phát triển các bộ phận cơ thể thì 'developed' chính xác hơn.<br><strong>Ghi nhớ:</strong> 'Fully developed'."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "lively", B: "active", C: "busy", D: "energetic" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. active</strong><br>Động vật 'active' (hoạt động) vào ban đêm.<br><strong>Tại sao sai:</strong><br>• A. lively: sống động (tính cách).<br>• C. busy: bận rộn.<br><strong>Ghi nhớ:</strong> Nocturnal animals are active at night."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "warn", B: "tell", C: "say", D: "announce" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. warn</strong><br>Cảnh báo (warn) những con khác về nguy hiểm.<br><strong>Tại sao sai:</strong><br>• B. tell/C. say: truyền đạt thông tin bằng lời.<br>• D. announce: thông báo công khai.<br><strong>Ghi nhớ:</strong> Warn sb of danger."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "guard", B: "save", C: "defend", D: "cover" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. defend</strong><br><em>'Defend themselves'</em>: tự vệ.<br><strong>Tại sao sai:</strong><br>• A. guard: canh gác.<br>• B. save: cứu.<br><strong>Ghi nhớ:</strong> Collocation: 'defend oneself'."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "lifted", B: "raised", C: "grown", D: "increased" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. increased</strong><br>Dân số (population) tăng lên (increased).<br><strong>Tại sao sai:</strong><br>• B. raised: nuôi nấng hoặc nâng lên (cần tân ngữ).<br>• C. grown: phát triển (kích thước).<br><strong>Ghi nhớ:</strong> Population increases/decreases."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "grazing", B: "feeding", C: "eating", D: "dining" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. grazing</strong><br><em>'Grazing'</em> là đất chăn thả/cỏ cho gia súc ăn.<br><strong>Tại sao sai:</strong><br>• B. feeding: việc cho ăn.<br>• C. eating: việc ăn.<br><strong>Ghi nhớ:</strong> Từ vựng nông nghiệp: 'grazing land'."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "A Famous Artist",
+                content: `Pablo Picasso is one of the most famous artists of the 20th century. He was born in Spain in 1881. From a very young age, he showed a great (0) <span class="gap-slot filled-correct font-bold text-green-700">talent</span> for drawing. His father, who was an art teacher, recognized his son's ability and (1) <span id="gap-3-1" class="gap-slot">......</span> him to paint. By the time he was 13, Picasso's skill had already (2) <span id="gap-3-2" class="gap-slot">......</span> that of his father.<br><br>
+                Picasso spent much of his adult life in France. He experimented with many different styles of painting. He is perhaps best known for co-founding the Cubist movement. In Cubist paintings, objects are broken apart and reassembled in an abstract form. This was a (3) <span id="gap-3-3" class="gap-slot">......</span> new way of looking at the world, and it (4) <span id="gap-3-4" class="gap-slot">......</span> the art world. Not everyone liked his work at first; some people found it (5) <span id="gap-3-5" class="gap-slot">......</span> to understand.<br><br>
+                However, Picasso continued to create art until his death in 1973. He produced an estimated 50,000 artworks, including paintings, sculptures, ceramics, and drawings. His work has had a (6) <span id="gap-3-6" class="gap-slot">......</span> influence on modern art. Today, his paintings sell for millions of dollars and can be seen in museums all over the world. He is (7) <span id="gap-3-7" class="gap-slot">......</span> as a genius who changed the (8) <span id="gap-3-8" class="gap-slot">......</span> of art history forever.`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "taught", B: "learnt", C: "made", D: "suggested" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. taught</strong><br>Bố anh ấy 'dạy' (taught) anh ấy vẽ.<br><strong>Tại sao sai:</strong><br>• B. learnt: học.<br>• C. made: bắt buộc.<br><strong>Ghi nhớ:</strong> Teach someone to do something."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "passed", B: "overtaken", C: "beat", D: "surpassed" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. surpassed</strong><br><em>'Surpassed'</em> nghĩa là vượt trội hơn, giỏi hơn ai đó.<br><strong>Tại sao sai:</strong><br>• A. passed: đi ngang qua.<br>• C. beat: đánh bại (trong cuộc thi).<br><strong>Ghi nhớ:</strong> Từ vựng: 'surpass expectations/someone'."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "completely", B: "fully", C: "whole", D: "greatly" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. completely</strong><br>Một cách hoàn toàn mới (completely new way).<br><strong>Tại sao sai:</strong><br>• B. fully: đầy đủ.<br>• C. whole: toàn bộ.<br><strong>Ghi nhớ:</strong> Collocation: 'completely new/different'."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "shocked", B: "surprised", C: "amazed", D: "frightened" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. shocked</strong><br>Nó gây chấn động (shocked) giới nghệ thuật.<br><strong>Tại sao sai:</strong><br>• B. surprised: làm ngạc nhiên (nhẹ hơn shocked).<br>• D. frightened: làm sợ hãi.<br><strong>Ghi nhớ:</strong> Shock the world."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "hard", B: "stiff", C: "heavy", D: "strong" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. hard</strong><br><em>'Hard to understand'</em> = khó hiểu.<br><strong>Tại sao sai:</strong><br>• B. stiff: cứng.<br>• C. heavy: nặng.<br><strong>Ghi nhớ:</strong> Hard/Easy to do something."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "long", B: "lasting", C: "staying", D: "keeping" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. lasting</strong><br><em>'Lasting influence'</em> nghĩa là ảnh hưởng lâu dài/bền vững.<br><strong>Tại sao sai:</strong><br>• A. long: dài (về kích thước/thời gian nhưng ít dùng với influence).<br><strong>Ghi nhớ:</strong> Collocation: 'a lasting influence/impression'."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "thought", B: "known", C: "regarded", D: "believed" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. regarded</strong><br>Cấu trúc: <em>'regarded as'</em> (được xem như là).<br><strong>Tại sao sai:</strong><br>• A. thought: thought to be.<br>• B. known: known as (cũng đúng nhưng regarded trang trọng hơn trong ngữ cảnh đánh giá tài năng).<br><strong>Ghi nhớ:</strong> Regarded as a genius."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "way", B: "line", C: "route", D: "course" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. course</strong><br><em>'Course of history'</em> là dòng chảy lịch sử.<br><strong>Tại sao sai:</strong><br>• A. way: cách thức.<br>• C. route: tuyến đường.<br><strong>Ghi nhớ:</strong> Idiom: 'change the course of history'."
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Traffic Lights",
+                content: `The first traffic signal was invented by a railway signaling engineer. It was installed outside the Houses of Parliament in London in 1868. It looked like a railway signal, with red and green gas lamps for night use. However, it (0) <span class="gap-slot filled-correct font-bold text-green-700">exploded</span> shortly after it was installed, injuring the policeman who was operating it. It was not until the arrival of the automobile that traffic lights became truly (1) <span id="gap-4-1" class="gap-slot">......</span> .<br><br>
+                Modern traffic lights are an American invention. Red-green systems were installed in Cleveland in 1914. Three-colour signals, using amber to (2) <span id="gap-4-2" class="gap-slot">......</span> drivers that the signal was about to change, appeared in New York in 1918. The first lights of this type to be (3) <span id="gap-4-3" class="gap-slot">......</span> in Britain were in London, on the junction between St James's Street and Piccadilly, in 1925. Automatic signals, which changed after a set interval of time, were (4) <span id="gap-4-4" class="gap-slot">......</span> in Wolverhampton in 1927.<br><br>
+                Modern traffic lights are extremely sophisticated. They can (5) <span id="gap-4-5" class="gap-slot">......</span> the flow of traffic and change their timing accordingly. This helps to reduce (6) <span id="gap-4-6" class="gap-slot">......</span> and keep traffic moving. In some cities, lights are linked to a central computer which can coordinate them to create a 'green wave', allowing drivers to pass through several sets of lights without (7) <span id="gap-4-7" class="gap-slot">......</span> . Despite their usefulness, many drivers find traffic lights annoying, especially when they seem to stay red for no (8) <span id="gap-4-8" class="gap-slot">......</span> reason.`,
+                questions: [
+                    {
+                        id: 1,
+                        options: { A: "necessary", B: "compulsory", C: "required", D: "forced" },
+                        correct: "A",
+                        explanation: "<strong>Đáp án đúng: A. necessary</strong><br>Chỉ đến khi ô tô xuất hiện thì đèn giao thông mới thực sự 'cần thiết' (necessary).<br><strong>Tại sao sai:</strong><br>• B. compulsory: bắt buộc.<br>• D. forced: bị ép buộc.<br><strong>Ghi nhớ:</strong> Become necessary."
+                    },
+                    {
+                        id: 2,
+                        options: { A: "say", B: "warn", C: "threaten", D: "alarm" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. warn</strong><br>Đèn vàng dùng để 'cảnh báo' (warn) tài xế rằng tín hiệu sắp đổi.<br><strong>Tại sao sai:</strong><br>• A. say: nói.<br>• C. threaten: đe dọa.<br><strong>Ghi nhớ:</strong> Warn someone."
+                    },
+                    {
+                        id: 3,
+                        options: { A: "put", B: "set", C: "used", D: "kept" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. used</strong><br>Đèn loại này được 'sử dụng' (used) ở Anh.<br><strong>Tại sao sai:</strong><br>• A. put: đặt (thường là put up/installed).<br>• B. set: thiết lập (set up).<br><strong>Ghi nhớ:</strong> To be used."
+                    },
+                    {
+                        id: 4,
+                        options: { A: "invented", B: "discovered", C: "originated", D: "introduced" },
+                        correct: "D",
+                        explanation: "<strong>Đáp án đúng: D. introduced</strong><br>Hệ thống tự động được 'giới thiệu/đưa vào sử dụng' (introduced).<br><strong>Tại sao sai:</strong><br>• A. invented: phát minh (đã phát minh trước đó rồi).<br>• B. discovered: khám phá.<br><strong>Ghi nhớ:</strong> Introduce a system."
+                    },
+                    {
+                        id: 5,
+                        options: { A: "notice", B: "observe", C: "detect", D: "watch" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. detect</strong><br>Đèn giao thông hiện đại có thể 'phát hiện' (detect) luồng giao thông (nhờ cảm biến).<br><strong>Tại sao sai:</strong><br>• A. notice: nhận thấy (dùng cho người).<br>• D. watch: quan sát.<br><strong>Ghi nhớ:</strong> Detect movement/flow."
+                    },
+                    {
+                        id: 6,
+                        options: { A: "jam", B: "congestion", C: "crowds", D: "masses" },
+                        correct: "B",
+                        explanation: "<strong>Đáp án đúng: B. congestion</strong><br><em>'Traffic congestion'</em> là tắc nghẽn giao thông.<br><strong>Tại sao sai:</strong><br>• A. jam: traffic jam (đếm được, ở đây reduce congestion không đếm được hợp lý hơn).<br><strong>Ghi nhớ:</strong> Reduce congestion."
+                    },
+                    {
+                        id: 7,
+                        options: { A: "pausing", B: "waiting", C: "stopping", D: "braking" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. stopping</strong><br>Đi qua đèn mà không cần 'dừng lại' (stopping).<br><strong>Tại sao sai:</strong><br>• A. pausing: tạm dừng.<br>• B. waiting: chờ đợi.<br><strong>Ghi nhớ:</strong> Without stopping."
+                    },
+                    {
+                        id: 8,
+                        options: { A: "true", B: "actual", C: "apparent", D: "visible" },
+                        correct: "C",
+                        explanation: "<strong>Đáp án đúng: C. apparent</strong><br><em>'For no apparent reason'</em>: không có lý do rõ ràng.<br><strong>Tại sao sai:</strong><br>• A. true: thật.<br>• D. visible: có thể nhìn thấy.<br><strong>Ghi nhớ:</strong> Idiom: 'for no apparent reason'."
+                    }
+                ]
+            }
+        ];
+
+        // GLOBAL STATE
+        let state = {
+            currentTestIndex: 0,
+            userAnswers: {},
+            userName: "",
+            startTime: null,
+            endTime: null,
+            timerInterval: null,
+            lockedQuestions: {}, 
+            isGlobalPenaltyActive: false
+        };
+
+        // DOM ELEMENTS
+        const dom = {
+            welcomeScreen: document.getElementById('welcome-screen'),
+            mainApp: document.getElementById('main-app'),
+            resultScreen: document.getElementById('result-screen'),
+            usernameInput: document.getElementById('username-input'),
+            timerDisplay: document.getElementById('timer-display'),
+            partTitle: document.getElementById('part-title'),
+            progressText: document.getElementById('progress-text'),
+            readingText: document.getElementById('reading-text'),
+            questionsContainer: document.getElementById('questions-container'),
+            btnPrev: document.getElementById('btn-prev'),
+            btnNext: document.getElementById('btn-next'),
+            btnFinish: document.getElementById('btn-finish'),
+            savingStatus: document.getElementById('saving-status')
+        };
+
+        // FUNCTIONS
+        function startApp() {
+            const name = dom.usernameInput.value.trim();
+            if (!name) {
+                alert("Please enter your name!");
+                return;
+            }
+            state.userName = name;
+            state.startTime = new Date();
+            
+            dom.welcomeScreen.classList.add('hidden');
+            dom.mainApp.classList.remove('hidden');
+            dom.mainApp.classList.add('flex');
+
+            startTimer();
+            loadTest(0);
+        }
+
+        function startTimer() {
+            state.timerInterval = setInterval(() => {
+                const now = new Date();
+                const diff = now - state.startTime;
+                
+                const hours = Math.floor(diff / 3600000);
+                const minutes = Math.floor((diff % 3600000) / 60000);
+                const seconds = Math.floor((diff % 60000) / 1000);
+
+                dom.timerDisplay.textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        function loadTest(index) {
+            state.currentTestIndex = index;
+            const test = testsData[index];
+
+            // Update Header
+            dom.partTitle.textContent = `Test ${index + 1}: ${test.title}`;
+            dom.progressText.textContent = `${index + 1}/${testsData.length}`;
+            
+            // Render Text
+            dom.readingText.innerHTML = test.content;
+            
+            // Apply text gap fills
+            setTimeout(() => restoreTextGaps(index), 0);
+
+            // Render Questions
+            dom.questionsContainer.innerHTML = '';
+            test.questions.forEach(q => {
+                const qKey = `${test.id}-${q.id}`;
+                const answerState = state.userAnswers[qKey] || { attempts: 0, correct: null, selected: null };
+                const isTempLocked = state.lockedQuestions[qKey] === true;
+                const isGlobalLock = state.isGlobalPenaltyActive; 
+                
+                const qDiv = document.createElement('div');
+                let cardClass = "p-5 rounded-2xl border-2 transition-all duration-300 shadow-sm mb-4 relative overflow-hidden ";
+                
+                if (answerState.correct === true) cardClass += "border-green-200 bg-green-50/50";
+                else if (answerState.correct === false && answerState.attempts >= 2) cardClass += "border-red-100 bg-red-50/50";
+                else if (isTempLocked) cardClass += "border-orange-300 bg-orange-50"; 
+                else cardClass += "border-white bg-white hover:border-blue-200 hover:shadow-md";
+
+                qDiv.className = cardClass;
+                qDiv.id = `q-card-${q.id}`;
+
+                const isFinalLocked = answerState.correct === true || (answerState.correct === false && answerState.attempts >= 2);
+
+                let html = `
+                    ${isTempLocked ? '<div class="absolute top-0 left-0 penalty-bar"></div>' : ''}
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center">
+                            <span class="w-9 h-9 rounded-full bg-slate-800 text-white font-bold flex items-center justify-center mr-3 shadow-md border-2 border-slate-600 text-lg shadow-slate-300/50">
+                                ${q.id}
+                            </span>
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Answer</span>
+                        </div>
+                        ${answerState.attempts === 1 && !isFinalLocked && !isTempLocked && !isGlobalLock ? '<span class="text-[10px] text-orange-600 font-extrabold bg-orange-100 px-2 py-1 rounded-md border border-orange-200 animate-pulse uppercase tracking-wide">⚠️ Retry</span>' : ''}
+                        ${isTempLocked ? '<span class="text-[10px] text-orange-600 font-extrabold flex items-center"><svg class="w-3 h-3 mr-1 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Think again...</span>' : ''}
+                         ${isGlobalLock && !isTempLocked && !isFinalLocked ? '<span class="text-[10px] text-slate-500 font-bold bg-slate-100 px-2 py-1 rounded border border-slate-200"><svg class="w-3 h-3 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>Waiting...</span>' : ''}
+                    </div>
+                    
+                    ${isGlobalLock && !isTempLocked && !isFinalLocked ? '<div class="global-lock-overlay"><span class="text-sm font-bold text-slate-600 bg-white px-3 py-1 rounded shadow-sm border border-slate-200">Please finish the current question...</span></div>' : ''}
+
+                    <div class="grid grid-cols-2 gap-3 mb-2">
+                `;
+
+                for (const [key, value] of Object.entries(q.options)) {
+                    let btnClass = "option-btn w-full py-3 px-4 rounded-xl border-2 text-[15px] font-semibold text-left flex items-center shadow-sm relative overflow-hidden ";
+                    let disabled = false;
+                    let icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 text-xs mr-3 font-bold border border-slate-200 group-hover:bg-white group-hover:border-blue-300 transition-colors">${key}</span>`;
+
+                    if (isFinalLocked) {
+                        disabled = true;
+                        if (key === q.correct) {
+                            btnClass += "bg-green-600 text-white border-green-600 shadow-md ring-2 ring-green-200 ring-offset-1";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-white text-green-700 text-xs mr-3 font-bold">✓</span>`;
+                        } else if (key === answerState.selected && answerState.correct === false) {
+                            btnClass += "bg-red-500 text-white border-red-500 opacity-80";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-white text-red-600 text-xs mr-3 font-bold">✕</span>`;
+                        } else {
+                            btnClass += "bg-slate-50 text-slate-400 border-slate-100 opacity-40";
+                        }
+                    } else if (isTempLocked) {
+                        disabled = true;
+                        if (answerState.attempts === 1 && key === answerState.selected) {
+                            btnClass += "bg-red-50 text-red-400 border-red-100 cursor-not-allowed opacity-60";
+                            icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-400 text-xs mr-3 font-bold">✕</span>`;
+                        } else {
+                            btnClass += "bg-slate-100 text-slate-400 border-slate-200 opacity-70 cursor-wait";
+                        }
+                    } else if (isGlobalLock) {
+                         disabled = true;
+                         btnClass += "bg-slate-50 text-slate-300 border-slate-100 opacity-50 cursor-not-allowed grayscale";
+                    } else {
+                        if (answerState.attempts === 1 && key === answerState.selected) {
+                             btnClass += "bg-red-50 text-red-400 border-red-100 cursor-not-allowed opacity-60";
+                             icon = `<span class="w-6 h-6 flex items-center justify-center rounded-full bg-red-100 text-red-400 text-xs mr-3 font-bold">✕</span>`;
+                             disabled = true;
+                        } else {
+                             btnClass += "bg-white text-slate-600 border-slate-200 hover:bg-blue-50 hover:border-blue-400 hover:text-blue-700 hover:shadow-md group transition-all active:scale-[0.98]";
+                        }
+                    }
+
+                    html += `<button onclick="handleAnswer(${index}, ${q.id}, '${key}')" ${disabled ? 'disabled' : ''} class="${btnClass}">
+                        ${icon}
+                        ${value}
+                    </button>`;
+                }
+
+                html += `</div>`;
+
+                if (isFinalLocked) {
+                    html += `
+                        <div class="mt-4 text-sm p-4 rounded-xl border-l-4 shadow-sm animate-[fadeIn_0.5s] ${answerState.correct ? 'bg-green-100 border-green-500 text-green-900' : 'bg-red-50 border-red-500 text-red-900'}">
+                            <div class="flex items-center mb-2">
+                                <span class="font-bold text-lg mr-2">${answerState.correct ? '🎉 Correct!' : '😞 Correct answer is ' + q.correct}</span>
+                            </div>
+                            <div class="pt-3 border-t border-black/5 text-slate-700 leading-relaxed text-[15px]">
+                                <span class="font-bold text-slate-900 block mb-1 uppercase text-xs tracking-wider opacity-70">Detailed Explanation:</span>
+                                ${q.explanation}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                qDiv.innerHTML = html;
+                dom.questionsContainer.appendChild(qDiv);
+            });
+
+            dom.btnPrev.disabled = index === 0;
+            if (index === 0) dom.btnPrev.classList.add('opacity-30'); else dom.btnPrev.classList.remove('opacity-30');
+            
+            if (index === testsData.length - 1) {
+                dom.btnNext.classList.add('hidden');
+                dom.btnFinish.classList.remove('hidden');
+            } else {
+                dom.btnNext.classList.remove('hidden');
+                dom.btnFinish.classList.add('hidden');
+            }
+        }
+
+        function restoreTextGaps(testIndex) {
+            const test = testsData[testIndex];
+            test.questions.forEach(q => {
+                const qKey = `${test.id}-${q.id}`;
+                const stateAnswer = state.userAnswers[qKey];
+                const gapEl = document.getElementById(`gap-${test.id}-${q.id}`);
+
+                if (gapEl && stateAnswer) {
+                    gapEl.className = 'gap-slot filled-text'; 
+
+                    if (stateAnswer.attempts === 1 && stateAnswer.correct === null) {
+                        gapEl.textContent = q.options[stateAnswer.selected];
+                        gapEl.classList.add('filled-wrong');
+                    } else if (stateAnswer.correct === true) {
+                        gapEl.textContent = q.options[q.correct];
+                        gapEl.classList.add('filled-correct');
+                    } else if (stateAnswer.correct === false && stateAnswer.attempts >= 2) {
+                        gapEl.textContent = q.options[q.correct];
+                        gapEl.classList.add('filled-correct'); 
+                    }
+                }
+            });
+        }
+
+        function handleAnswer(testIndex, qId, selectedOption) {
+            const test = testsData[testIndex];
+            const q = test.questions.find(x => x.id === qId);
+            const qKey = `${test.id}-${qId}`;
+            
+            if (state.lockedQuestions[qKey] || state.isGlobalPenaltyActive) return;
+
+            if (!state.userAnswers[qKey]) {
+                state.userAnswers[qKey] = { attempts: 0, correct: null, selected: null };
+            }
+
+            const currentAnsState = state.userAnswers[qKey];
+
+            if (selectedOption === q.correct) {
+                currentAnsState.correct = true;
+                currentAnsState.attempts++;
+                currentAnsState.selected = selectedOption;
+                saveAndRender(testIndex);
+            } else {
+                currentAnsState.attempts++;
+                currentAnsState.selected = selectedOption;
+                
+                if (currentAnsState.attempts >= 2) {
+                    currentAnsState.correct = false; 
+                    saveAndRender(testIndex);
+                } else {
+                    currentAnsState.correct = null;
+                    state.lockedQuestions[qKey] = true;
+                    state.isGlobalPenaltyActive = true;
+                    saveAndRender(testIndex); 
+
+                    setTimeout(() => {
+                        state.lockedQuestions[qKey] = false;
+                        state.isGlobalPenaltyActive = false;
+                        saveAndRender(testIndex); 
+                    }, 10000);
+                }
+            }
+        }
+
+        function saveAndRender(testIndex) {
+            const scrollPos = dom.questionsContainer.scrollTop;
+            loadTest(testIndex);
+            dom.questionsContainer.scrollTop = scrollPos;
+        }
+
+        function prevTest() {
+            if (state.currentTestIndex > 0) loadTest(state.currentTestIndex - 1);
+        }
+
+        function nextTest() {
+            if (state.currentTestIndex < testsData.length - 1) loadTest(state.currentTestIndex + 1);
+        }
+
+        function finishTest() {
+            clearInterval(state.timerInterval);
+            state.endTime = new Date();
+            showResults();
+        }
+
+        function showResults() {
+            dom.mainApp.classList.add('hidden');
+            dom.mainApp.classList.remove('flex');
+            dom.resultScreen.classList.remove('hidden');
+
+            document.getElementById('result-name').textContent = state.userName;
+            
+            const startStr = state.startTime.toLocaleTimeString('en-US');
+            const endStr = state.endTime.toLocaleTimeString('en-US');
+            const diff = state.endTime - state.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            
+            const durationStr = `${minutes} min ${seconds} sec`;
+            document.getElementById('result-duration').textContent = durationStr;
+
+            let totalWeightedScore = 0;
+            let totalMax = 32; // 4 tests * 8 questions
+            let detailsHtml = '';
+
+            testsData.forEach(test => {
+                let testCorrectCount = 0;
+                let weightedScore = 0;
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const ans = state.userAnswers[key];
+                    if (ans && ans.correct === true) {
+                        testCorrectCount++;
+                        if (ans.attempts === 1) {
+                            weightedScore += 1;
+                        } else {
+                            weightedScore += 0.5;
+                        }
+                    }
+                });
+                totalWeightedScore += weightedScore;
+
+                detailsHtml += `
+                    <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                        <div class="flex flex-col">
+                             <span class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Test ${test.id}</span>
+                             <span class="font-bold text-slate-700 text-sm truncate w-40 md:w-auto">${test.title}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="font-bold text-slate-600 mr-2">${testCorrectCount}/8 correct</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // LOGIC 85% PASS/FAIL
+            const percentage = (totalWeightedScore / totalMax) * 100;
+            const percentageStr = percentage.toFixed(1) + '%';
+            
+            const scoreDisplay = document.getElementById('result-score');
+            const percentDisplay = document.getElementById('result-percentage');
+            const messageDisplay = document.getElementById('result-message');
+            const headerBar = document.getElementById('result-header-bar');
+            const scoreCard = document.getElementById('score-card');
+            const actionArea = document.getElementById('action-area');
+
+            scoreDisplay.textContent = totalWeightedScore;
+            percentDisplay.textContent = percentageStr;
+            document.getElementById('result-details').innerHTML = detailsHtml;
+
+            // Trigger saving to Firebase
+            // Assuming saveResultToFirebase is defined in the firebase script
+            if (window.saveResultToFirebase) {
+                window.saveResultToFirebase({
+                    name: state.userName,
+                    score: `${totalWeightedScore}/${totalMax}`,
+                    percentage: percentage,
+                    duration: durationStr
+                });
+            }
+
+            if (percentage >= 85) {
+                // PASSED
+                messageDisplay.textContent = "🏆 Mastery Achieved! Excellent Job.";
+                messageDisplay.className = "text-center mb-8 font-bold text-xl text-green-600";
+                
+                headerBar.className = "absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-green-500";
+                
+                scoreCard.className = "bg-green-50 p-5 rounded-2xl border border-green-200";
+                percentDisplay.className = "ml-auto text-lg font-bold px-2 py-1 rounded bg-white text-green-700 border border-green-200";
+                
+                actionArea.innerHTML = `
+                    <button onclick="location.reload()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1">
+                        Restart Set
+                    </button>
+                `;
+            } else {
+                // FAILED
+                messageDisplay.textContent = "⚠️ Not Passed. You need 85% to master this set.";
+                messageDisplay.className = "text-center mb-8 font-bold text-xl text-red-500";
+                
+                headerBar.className = "absolute top-0 left-0 w-full h-3 rounded-t-2xl bg-red-500";
+                
+                scoreCard.className = "bg-red-50 p-5 rounded-2xl border border-red-200";
+                percentDisplay.className = "ml-auto text-lg font-bold px-2 py-1 rounded bg-white text-red-700 border border-red-200";
+
+                actionArea.innerHTML = `
+                    <button onclick="location.reload()" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 rounded-xl shadow-lg transition transform hover:-translate-y-1 flex justify-center items-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        Retry This Set
+                    </button>
+                `;
+            }
+        }
+
+        dom.usernameInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                startApp();
+            }
+        });
+    </script>
+</body>
+</html>

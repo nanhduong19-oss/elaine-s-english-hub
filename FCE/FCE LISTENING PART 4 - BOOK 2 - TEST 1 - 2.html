@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Listening - High Security Exam</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        fce: { 
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 
+                            500: '#22c55e', 600: '#16a34a', 700: '#15803d', 
+                            800: '#166534', 900: '#14532d'
+                        }
+                    },
+                    fontFamily: { sans: ['Quicksand', 'sans-serif'] },
+                    animation: {
+                        'spin-slow': 'spin 3s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            /* FCE Green Gradient Background */
+            background-image: radial-gradient(#16a34a 0.5px, transparent 0.5px), radial-gradient(#16a34a 0.5px, #f0fdf4 0.5px);
+            background-size: 20px 20px;
+            overflow: hidden; 
+            height: 100vh;
+            user-select: none; /* Prevent text selection */
+        }
+
+        /* --- APP LAYOUT --- */
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            max-height: 100vh;
+        }
+
+        #quiz-header-wrapper {
+            flex: none;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 2px solid #bbf7d0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        #quiz-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        #quiz-footer-wrapper {
+            flex: none;
+            z-index: 50;
+            background: white;
+            border-top: 2px solid #f0fdf4;
+        }
+
+        /* Audio Player Styling */
+        audio { width: 100%; height: 40px; }
+        audio::-webkit-media-controls-enclosure { background-color: #f0fdf4; border-radius: 99px; }
+        audio::-webkit-media-controls-play-button { background-color: #16a34a; border-radius: 50%; color: white; }
+
+        /* UI Elements */
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .option-btn:active:not(:disabled) { transform: translateY(0); }
+        
+        /* Overlays */
+        #penalty-overlay, #fullscreen-blocker { backdrop-filter: blur(12px); }
+        
+        /* Spam Overlay - Modified for 50% opacity/blur */
+        #spam-overlay { backdrop-filter: blur(4px); } 
+        
+        /* Animations */
+        .evidence-box { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .evidence-box.show { max-height: 2000px; opacity: 1; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #bbf7d0; }
+        
+        .cheat-toast { animation: slideInDown 0.5s forwards; }
+        @keyframes slideInDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 20px); opacity: 1; } }
+
+        /* Custom Scrollbar */
+        #quiz-content-wrapper::-webkit-scrollbar { width: 8px; }
+        #quiz-content-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb { background: #86efac; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb:hover { background: #22c55e; }
+
+        /* SVG Circle Animation for Spam */
+        .timer-circle {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 1s linear;
+        }
+    </style>
+</head>
+<body class="flex justify-center items-center w-full">
+
+    <!-- SPAM/SPEED WARNING OVERLAY (UPDATED: 50% Opacity) -->
+    <div id="spam-overlay" class="fixed inset-0 z-[120] bg-white/50 hidden flex items-center justify-center">
+        <div class="flex flex-col items-center bg-white p-6 rounded-3xl shadow-2xl border border-gray-200">
+            <div class="relative w-40 h-40 mb-6">
+                <!-- SVG Circle Timer -->
+                <svg class="w-full h-full" viewBox="0 0 100 100">
+                    <!-- Background Circle -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#e5e7eb" stroke-width="8"></circle>
+                    <!-- Progress Circle -->
+                    <circle id="spam-progress-circle" cx="50" cy="50" r="45" fill="none" stroke="#ea580c" stroke-width="8" 
+                            stroke-linecap="round" 
+                            stroke-dasharray="283" 
+                            stroke-dashoffset="0"
+                            class="timer-circle"></circle>
+                </svg>
+                <!-- Icon in Center -->
+                <div class="absolute inset-0 flex items-center justify-center text-4xl">
+                    ⚡
+                </div>
+            </div>
+            <h3 class="text-3xl font-bold text-gray-800 mb-2">Too Fast!</h3>
+            <p class="text-gray-500 font-medium text-lg">Please take your time to think.</p>
+            <p class="text-orange-600 font-bold mt-2">System locked for <span id="spam-timer-text">10</span>s</p>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN BLOCKER OVERLAY -->
+    <div id="fullscreen-blocker" class="fixed inset-0 z-[110] bg-white/95 hidden flex flex-col items-center justify-center text-center p-8">
+        <div class="bg-red-50 p-8 rounded-3xl border-2 border-red-100 max-w-md w-full shadow-xl">
+            <div class="text-6xl mb-6">🖥️</div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Full Screen Required</h3>
+            <p id="fullscreen-msg" class="text-gray-600 mb-8 font-medium">Please do not minimize the window.<br>You must be in full screen mode to continue.</p>
+            <button onclick="resumeFullscreen()" class="w-full py-4 bg-fce-600 text-white font-bold rounded-2xl shadow-lg hover:bg-fce-700 transition transform hover:-translate-y-1 active:scale-95 text-lg flex items-center justify-center gap-2">
+                <span>Resume Full Screen</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="w-full max-w-[95%] xl:max-w-6xl bg-white md:rounded-3xl shadow-2xl relative border border-white overflow-hidden">
+        
+        <!-- === SCREEN: WELCOME (UPDATED TEXT) === -->
+        <div id="screen-welcome" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-8 text-center space-y-8">
+            <!-- Logo / Icon -->
+            <div class="relative mb-4">
+                <div class="absolute -inset-4 bg-green-100 rounded-full blur-lg opacity-70"></div>
+                <div class="relative bg-white p-6 rounded-3xl shadow-xl border border-gray-100">
+                    <span class="text-6xl">📝</span>
+                </div>
+            </div>
+            
+            <div class="space-y-3">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">Focused Listening Practice</h1>
+                <p class="text-fce-600 font-bold text-lg uppercase tracking-wide">English Test Mode</p>
+            </div>
+
+            <!-- Student Input -->
+            <div class="w-full max-w-sm space-y-4">
+                <div class="text-left">
+                    <label class="block text-sm font-bold text-gray-700 mb-1 ml-2">Full Name</label>
+                    <input type="text" id="student-name" placeholder="Ex: Nguyen Van A" class="w-full px-6 py-4 rounded-2xl border-2 border-gray-200 bg-gray-50 focus:bg-white focus:border-fce-500 focus:outline-none text-lg shadow-sm transition-all" autocomplete="off">
+                </div>
+            </div>
+
+            <!-- Warning Box -->
+            <div class="bg-yellow-50 p-5 rounded-xl border border-yellow-200 max-w-md w-full text-center space-y-3">
+                <p class="text-gray-800 font-semibold text-lg">
+                    Please stay focused and take the test seriously
+                </p>
+                <p class="text-red-600 font-bold text-sm bg-red-50 py-2 px-3 rounded-lg border border-red-100">
+                    ⚠️ Note: Violating the rules 3 times will automatically terminate the test and submit your current results.
+                </p>
+            </div>
+
+            <!-- Start Button -->
+            <button onclick="startApp()" class="w-full max-w-sm group relative flex items-center justify-center px-8 py-4 font-bold text-white transition-all duration-200 bg-fce-600 rounded-2xl hover:bg-fce-700 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+                <span class="text-xl">Start Exam</span>
+                <svg class="w-6 h-6 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+            </button>
+        </div>
+
+        <!-- === QUIZ INTERFACE === -->
+        <div id="quiz-interface" class="flex flex-col h-full hidden opacity-0 transition-opacity duration-500">
+            <!-- Header (Injected) -->
+            <div id="quiz-header-wrapper" class="px-6 py-3"></div>
+            <!-- Content (Injected) -->
+            <div id="quiz-content-wrapper" class="p-6">
+                <div id="quiz-content"></div>
+            </div>
+            <!-- Footer (Static Structure) -->
+            <div id="quiz-footer-wrapper" class="p-4 px-6 flex justify-between items-center bg-gray-50/80 backdrop-blur-sm">
+                <div class="text-sm font-semibold text-gray-500 flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span>Score:</span>
+                        <span id="current-score" class="text-fce-600 text-xl font-bold">0</span>
+                    </div>
+                    <span id="violation-display" class="text-xs text-fce-700 font-bold bg-fce-100 px-3 py-1 rounded-full border border-fce-200">Status: Good</span>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="submit-btn" onclick="submitPage()" class="px-8 py-3 bg-gray-800 text-white font-bold rounded-2xl shadow-lg hover:bg-black transition active:scale-95 flex items-center gap-2">
+                        <span>Submit Page</span>
+                    </button>
+                    <button id="next-btn" onclick="nextPage()" class="hidden px-8 py-3 bg-fce-600 text-white font-bold rounded-2xl shadow-lg hover:bg-fce-700 transition active:scale-95 flex items-center gap-2 animate-bounce-subtle">
+                        <span>Next Page</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- === SCREEN: RESULT === -->
+        <div id="screen-result" class="absolute inset-0 z-40 bg-white hidden flex-col items-center justify-center p-8 text-center space-y-6 overflow-y-auto">
+            <h2 class="text-3xl font-bold text-gray-800">Test Results</h2>
+            
+            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 w-full max-w-md shadow-sm text-left space-y-4">
+                <div class="border-b pb-4">
+                    <p class="text-gray-500 text-sm uppercase tracking-wide font-bold">Student</p>
+                    <p class="text-xl font-bold text-gray-900" id="res-name">--</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-500 text-sm">Start Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-start-time">--</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">End Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-end-time">--</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 bg-white p-3 rounded-xl border border-gray-100">
+                    <div>
+                        <p class="text-gray-500 text-sm">Score</p>
+                        <p class="text-2xl font-bold text-fce-600" id="res-score">0</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Percentage</p>
+                        <p class="text-2xl font-bold text-fce-600" id="res-percent">0%</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center justify-between">
+                    <span class="text-red-800 font-medium text-sm">Violations</span>
+                    <span class="font-bold text-red-600 text-xl" id="res-violations">0</span>
+                </div>
+            </div>
+            
+            <div id="result-message" class="text-lg font-bold px-6 py-2 rounded-lg text-center"></div>
+
+            <button onclick="location.reload()" class="px-8 py-3 border-2 border-gray-200 text-gray-600 font-bold rounded-full hover:border-fce-500 hover:text-fce-600 hover:bg-fce-50 transition">
+                New Test
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+        // --- DATA ---
+        const quizData = [
+            {
+                id: "page1",
+                title: "Test 5 - Part 4: Interview with Mark Phillips",
+                audio: "https://www.dropbox.com/scl/fi/gor52vtb9nnshnlqmoflb/First2_T5_P6.mp3?rlkey=i7ec920k2d52emukg6qddvuhh&st=sm2q9870&raw=1",
+                questions: [
+                    {
+                        id: 24,
+                        text: "Why did pottery not appeal to Mark when he was younger?",
+                        options: [
+                            "A. He was put off by his mother’s achievements.",
+                            "B. His many attempts always seemed to end in failure.",
+                            "C. He was too busy playing in a band to take an interest."
+                        ],
+                        correct: "C. He was too busy playing in a band to take an interest.",
+                        script: "<b>Mark:</b> ...I just remember thinking how on earth could I ever hope to reach that standard? I was more into playing music with my friends – we <b>had grand ideas about forming a band</b>. But you know, that was something we never got around to doing!"
+                    },
+                    {
+                        id: 25,
+                        text: "Why did Mark decide to take up pottery?",
+                        options: [
+                            "A. His business wasn’t as successful as he wanted it to be.",
+                            "B. He saw how enjoyable pottery classes could be.",
+                            "C. He realised he needed to be more creative."
+                        ],
+                        correct: "C. He realised he needed to be more creative.",
+                        script: "<b>Mark:</b> I was forty years old... and I was feeling a bit – you know – stuck. And I kind of reasoned with myself that the <b>artistic side of me had been buried</b> for quite long enough."
+                    },
+                    {
+                        id: 26,
+                        text: "What did Mark say about being a student again?",
+                        options: [
+                            "A. He missed having responsibility.",
+                            "B. He was made to feel that he was different.",
+                            "C. He felt physically challenged."
+                        ],
+                        correct: "C. He felt physically challenged.",
+                        script: "<b>Mark:</b> My brain was still working obviously, but <b>it was my body that was now being exercised</b> – and you need a lot of stamina to be a potter."
+                    },
+                    {
+                        id: 27,
+                        text: "Mark describes the pots he makes as",
+                        options: [
+                            "A. reflecting shapes in nature.",
+                            "B. objects that are to be used.",
+                            "C. similar to his mother’s in design."
+                        ],
+                        correct: "B. objects that are to be used.",
+                        script: "<b>Mark:</b> Like Mom’s, <b>my pots are practical things</b>. They shouldn’t just be on a shelf somewhere being admired in a sitting room."
+                    },
+                    {
+                        id: 28,
+                        text: "What has surprised Mark about the pottery community?",
+                        options: [
+                            "A. how supportive they have been to a newcomer",
+                            "B. how willing other potters are to share ideas",
+                            "C. how content they are with their lifestyle"
+                        ],
+                        correct: "A. how supportive they have been to a newcomer",
+                        script: "<b>Mark:</b> You mean, are they jealous? I’ve seen no evidence of that... they’ve been <b>nothing but helpful to me</b> on a practical level."
+                    },
+                    {
+                        id: 29,
+                        text: "What advice from his mother has Mark valued most?",
+                        options: [
+                            "A. to concentrate all his efforts on perfecting pottery",
+                            "B. to remember the skill of potters from the past",
+                            "C. to be realistic about the money-making possibilities of pottery"
+                        ],
+                        correct: "B. to remember the skill of potters from the past",
+                        script: "<b>Mark:</b> ...she’s always told me to <b>look at the pots made by potters in history</b>, sometimes going back thousands of years. If there’s one single thing that’s really inspired me, I guess that’d be it."
+                    },
+                    {
+                        id: 30,
+                        text: "In the future, Mark says he would like to be able to",
+                        options: [
+                            "A. develop some new colours for his pots.",
+                            "B. exhibit his pots in a gallery.",
+                            "C. explore different techniques for making pots."
+                        ],
+                        correct: "C. explore different techniques for making pots.",
+                        script: "<b>Mark:</b> ...really <b>big pots are what I want to make but I have to get to grips with learning how to do that</b>. Also the gallery tell me that some customers want pots in bright colours and that’s something I’ll pass on to my mother."
+                    }
+                ]
+            },
+            {
+                id: "page2",
+                title: "Test 6 - Part 4: Interview with Peter Crane (Ginkgo Tree)",
+                audio: "https://www.dropbox.com/scl/fi/je442vvs3zibzb7uwhedn/First2_T6_P6.mp3?rlkey=utjukvzdtkr6gg2p8l0uro7cw&st=jpde8rcv&raw=1",
+                questions: [
+                    {
+                        id: 24,
+                        text: "What first interested Peter about the ginkgo tree?",
+                        options: [
+                            "A. how its leaves grow",
+                            "B. the family it belongs to",
+                            "C. what’s known about its history"
+                        ],
+                        correct: "C. what’s known about its history",
+                        script: "<b>Peter:</b> ...what particularly fascinated me was the fact that it’s been <b>essentially unchanged for more than two hundred million years</b>."
+                    },
+                    {
+                        id: 25,
+                        text: "What does Peter say about the ginkgo tree in ancient China?",
+                        options: [
+                            "A. It wasn’t originally grown for its nuts.",
+                            "B. It wasn’t common before people started growing it.",
+                            "C. It was one of the earliest plants to be grown there."
+                        ],
+                        correct: "B. It wasn’t common before people started growing it.",
+                        script: "<b>Peter:</b> The evidence points to the fact that the ginkgo was <b>probably always a rather rare tree</b>, until it first attracted the attention of people about a thousand years ago..."
+                    },
+                    {
+                        id: 26,
+                        text: "When asked about the medicinal uses of ginkgo, Peter says",
+                        options: [
+                            "A. researchers in different parts of the world disagree about it.",
+                            "B. scientists have failed to identify any positive effects.",
+                            "C. some parts of the plant help the brain to function."
+                        ],
+                        correct: "B. scientists have failed to identify any positive effects.",
+                        script: "<b>Peter:</b> In the West, work has been done on the leaves to see whether they contain substances that might help improve people’s memories. The results, however, have <b>shown no strong evidence for such powers</b>."
+                    },
+                    {
+                        id: 27,
+                        text: "Why are there so many ginkgo trees in cities all over the world?",
+                        options: [
+                            "A. They don’t suffer from problems that usually affect trees there.",
+                            "B. Other trees can’t survive if they are too close to the species.",
+                            "C. People take more trouble to look after them than other trees."
+                        ],
+                        correct: "A. They don’t suffer from problems that usually affect trees there.",
+                        script: "<b>Peter:</b> It’s hard to know exactly why, but the <b>leaves are particularly unattractive to insects that harm other trees</b>. And it seems to survive in a street setting... relatively resistant."
+                    },
+                    {
+                        id: 28,
+                        text: "Peter says that street trees benefit people by providing",
+                        options: [
+                            "A. some protection from the sun.",
+                            "B. a reduction in traffic noise.",
+                            "C. increased privacy."
+                        ],
+                        correct: "A. some protection from the sun.",
+                        script: "<b>Peter:</b> And obviously they <b>provide shade</b>, making people feel a lot more comfortable; they don’t mind being outside if they can be in the shade."
+                    },
+                    {
+                        id: 29,
+                        text: "Peter says people can help other species of plant to survive by",
+                        options: [
+                            "A. leaving plants to grow in the wild.",
+                            "B. protecting them from plant-eating animals.",
+                            "C. growing them in many different places."
+                        ],
+                        correct: "C. growing them in many different places.",
+                        script: "<b>Peter:</b> I think <b>conservation through widespread cultivation</b> is essential for preserving plant diversity for the future."
+                    },
+                    {
+                        id: 30,
+                        text: "How does Peter’s work influence the way he thinks about the world?",
+                        options: [
+                            "A. It makes him feel concerned about the future of human beings.",
+                            "B. It reminds him that human beings are a relatively new species.",
+                            "C. It allows him to understand why human beings focus on the present."
+                        ],
+                        correct: "B. It reminds him that human beings are a relatively new species.",
+                        script: "<b>Peter:</b> So reflecting on a plant like ginkgo that was around in very different ecosystems hundreds of millions of years ago, really <b>makes our own species seem very young</b>."
+                    }
+                ]
+            }
+        ];
+
+        // --- STATE & VARIABLES ---
+        let currentPageIndex = 0;
+        let userAnswers = {}; 
+        let currentScore = 0;
+        let violationCount = 0;
+        let startTime = null;
+        let endTime = null;
+        let studentName = "";
+        
+        let lastClickTime = 0;
+        let isSpamLocked = false;
+        let isExamActive = false;
+        let fullscreenPollInterval = null;
+        
+        const SPAM_THRESHOLD = 3000; // 3s
+        const SPAM_LOCK_DURATION = 10; // 10s
+        const MAX_VIOLATIONS = 3;
+
+        // --- CORE FUNCTIONS ---
+        function startApp() {
+            // 1. IMMEDIATE FULLSCREEN REQUEST (Must be first line to catch user gesture)
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => console.log("Fullscreen failed:", err));
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            }
+
+            const nameInput = document.getElementById('student-name');
+            if (!nameInput.value.trim()) {
+                alert("Please enter your name.");
+                nameInput.focus();
+                return;
+            }
+            studentName = nameInput.value.trim();
+            isExamActive = true;
+            startTime = new Date();
+
+            // 2. Setup Monitoring
+            setupAntiCheat();
+
+            // 3. UI Transition
+            document.getElementById('screen-welcome').classList.add('hidden');
+            const quizInterface = document.getElementById('quiz-interface');
+            quizInterface.classList.remove('hidden');
+            setTimeout(() => quizInterface.classList.remove('opacity-0'), 50);
+            
+            renderPage(0);
+        }
+
+        function resumeFullscreen() {
+            const elem = document.documentElement;
+            const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+            if (req) {
+                req.call(elem).then(() => {
+                    document.getElementById('fullscreen-blocker').classList.add('hidden');
+                    // Reset Message
+                    document.getElementById('fullscreen-msg').innerHTML = "Please do not minimize the window.<br>You must be in full screen mode to continue.";
+                }).catch(err => {
+                    console.log("Fullscreen request failed:", err);
+                });
+            }
+        }
+
+        function setupAntiCheat() {
+            // 1. Visibility (Tabs)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden && isExamActive) recordViolation("Left quiz tab");
+            });
+            
+            // 2. Focus (Blur) - NEW: Detects Alt+Tab or Window Switching stricter
+            window.addEventListener('blur', () => {
+                if (isExamActive) recordViolation("Switched Window/App (Alt+Tab)");
+            });
+
+            // 3. API Fullscreen Event
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            // 4. RESIZE/MINIMIZE POLLING
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+            fullscreenPollInterval = setInterval(checkFullscreenState, 1000);
+        }
+
+        function handleFullscreenChange() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                 document.getElementById('fullscreen-blocker').classList.add('hidden');
+            } else if (isExamActive) {
+                recordViolation("Exited fullscreen");
+                document.getElementById('fullscreen-blocker').classList.remove('hidden');
+            }
+        }
+
+        function checkFullscreenState() {
+            if (!isExamActive) return;
+
+            const isApiFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            // Check dimensions (allow 10px buffer)
+            const isScreenFull = (window.innerWidth >= screen.width - 10) && (window.innerHeight >= screen.height - 10);
+
+            // If NOT in API Fullscreen AND NOT matching screen dimensions -> Violation
+            if (!isApiFullscreen && !isScreenFull) {
+                if (document.getElementById('fullscreen-blocker').classList.contains('hidden')) {
+                    recordViolation("Window resized/minimized");
+                    
+                    document.getElementById('fullscreen-msg').innerHTML = 
+                        "<strong class='text-red-600'>System Alert:</strong> Window resizing/minimizing detected.<br>Please return to full screen mode immediately.";
+                    
+                    document.getElementById('fullscreen-blocker').classList.remove('hidden');
+                }
+            }
+        }
+
+        function recordViolation(reason) {
+            violationCount++;
+            
+            if (violationCount >= MAX_VIOLATIONS) {
+                clearInterval(fullscreenPollInterval);
+                alert(`Violation limit reached (${violationCount}/${MAX_VIOLATIONS}). The exam is terminated.`);
+                showResult();
+                return;
+            }
+
+            const statusEl = document.getElementById('violation-display');
+            statusEl.innerText = `Violations: ${violationCount} / ${MAX_VIOLATIONS} ⚠️`;
+            statusEl.className = "text-xs text-red-600 font-bold bg-red-50 px-3 py-1 rounded-full border border-red-200 animate-pulse";
+            showToast(`Warning #${violationCount}: ${reason}`);
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'cheat-toast fixed top-6 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-2xl z-[100] font-bold text-sm border-2 border-white';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function formatTime(date) {
+            if (!date) return "--";
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(-2);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} - ${hours}:${minutes}`;
+        }
+
+        function renderPage(index) {
+            currentPageIndex = index;
+            const data = quizData[index];
+            const headerWrapper = document.getElementById('quiz-header-wrapper');
+            const content = document.getElementById('quiz-content');
+
+            // Header Content
+            headerWrapper.innerHTML = `
+                <div class="flex flex-col md:flex-row items-center gap-4">
+                    <div class="flex items-center gap-3 w-full md:w-auto min-w-[200px]">
+                        <span class="bg-fce-600 text-white font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm whitespace-nowrap">Part 4</span>
+                        <h2 class="text-lg font-bold text-gray-800 line-clamp-1">${data.title}</h2>
+                    </div>
+                    <div class="w-full flex-1">
+                        <audio id="audio-player" controls controlsList="nodownload" class="shadow-inner w-full">
+                            <source src="${data.audio}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+            `;
+
+            let html = `<div class="flex flex-col space-y-8 max-w-4xl mx-auto">`;
+            
+            data.questions.forEach(q => {
+                html += `
+                    <div id="q-box-${q.id}" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex gap-3 mb-4">
+                            <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-fce-100 text-fce-700 font-bold rounded-full text-sm border border-fce-200">${q.id}</span>
+                            <h3 class="font-bold text-gray-800 pt-1 text-lg">${q.text}</h3>
+                        </div>
+                        <div class="grid grid-cols-1 gap-3 mb-4 pl-11">
+                            ${q.options.map(opt => `
+                                <button onclick="selectOption(${q.id}, '${opt.replace(/'/g, "\\'")}')" 
+                                        id="btn-${q.id}-${opt.replace(/'/g, "\\'")}" 
+                                        class="option-btn w-full text-left py-3 px-4 rounded-xl border-2 border-gray-100 font-medium text-gray-600 hover:border-fce-300 hover:bg-fce-50 focus:outline-none bg-white">
+                                    ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                        <div id="feedback-${q.id}" class="hidden flex items-center gap-2 text-sm font-bold mb-3 pl-11 animate-pulse"></div>
+                        <div id="evidence-${q.id}" class="evidence-box bg-fce-50 rounded-xl ml-11">
+                            <div class="p-4 border-l-4 border-fce-500 text-sm text-gray-700 leading-relaxed text-justify">
+                                <span class="block text-xs uppercase font-bold text-fce-600 mb-2">Transcript Evidence</span>
+                                ${q.script}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            content.innerHTML = html;
+            document.getElementById('quiz-content-wrapper').scrollTop = 0;
+            
+            // Buttons logic
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // Re-assign Submit Button onclick handler based on page
+            const submitBtn = document.getElementById('submit-btn');
+            if(index === quizData.length - 1) {
+                 submitBtn.innerHTML = "<span>Submit & Finish</span>";
+                 // CRITICAL FIX: Ensure the button behaves correctly on last page
+                 submitBtn.onclick = submitPage; 
+            } else {
+                 submitBtn.innerHTML = "<span>Submit Page</span>";
+                 submitBtn.onclick = submitPage;
+            }
+        }
+
+        // --- INTERACTION LOGIC ---
+        function selectOption(qId, option) {
+            const stateKey = `${currentPageIndex}_${qId}`;
+            
+            // Checks: Global Lock (Blocker), Spam Lock, Question Locked
+            if (document.getElementById('fullscreen-blocker').classList.contains('hidden') === false) return;
+            if (isSpamLocked) return;
+            if (userAnswers[stateKey]?.locked) return;
+
+            // Spam Click Detection
+            const now = Date.now();
+            if (lastClickTime > 0 && (now - lastClickTime < SPAM_THRESHOLD)) {
+                triggerSpamLock(); 
+                return;
+            }
+            lastClickTime = now;
+
+            // Visual Selection
+            // 1. Reset all buttons for this question
+            document.querySelectorAll(`[id^="btn-${qId}-"]`).forEach(btn => 
+                btn.className = "option-btn w-full text-left py-3 px-4 rounded-xl border-2 border-gray-100 font-medium text-gray-600 hover:border-fce-300 hover:bg-fce-50 focus:outline-none bg-white");
+            
+            // 2. Highlight selected
+            const safeOption = option.replace(/'/g, "\\'"); 
+            const selectedBtn = document.getElementById(`btn-${qId}-${safeOption}`);
+            if(selectedBtn) {
+                selectedBtn.className = "option-btn w-full text-left py-3 px-4 rounded-xl border-2 border-fce-500 bg-fce-50 text-fce-800 font-bold shadow-sm transform scale-[1.01]";
+            }
+
+            // Save State
+            if (!userAnswers[stateKey]) userAnswers[stateKey] = { attempts: 0, pointsFlag: true };
+            userAnswers[stateKey].selected = option;
+        }
+
+        function triggerSpamLock() {
+            isSpamLocked = true;
+            const overlay = document.getElementById('spam-overlay');
+            const timerText = document.getElementById('spam-timer-text');
+            const progressCircle = document.getElementById('spam-progress-circle');
+            
+            let timeLeft = SPAM_LOCK_DURATION;
+            // Circumference of r=45 is ~283
+            const circumference = 283; 
+            
+            overlay.classList.remove('hidden');
+            timerText.innerText = timeLeft;
+            progressCircle.style.strokeDashoffset = '0'; // Start full
+            
+            // Start Animation
+            let startTime = Date.now();
+            const interval = setInterval(() => {
+                const elapsed = (Date.now() - startTime) / 1000;
+                timeLeft = Math.max(0, Math.ceil(SPAM_LOCK_DURATION - elapsed));
+                timerText.innerText = timeLeft;
+
+                // Update Circle
+                const offset = (elapsed / SPAM_LOCK_DURATION) * circumference;
+                progressCircle.style.strokeDashoffset = offset;
+
+                if (elapsed >= SPAM_LOCK_DURATION) {
+                    clearInterval(interval);
+                    overlay.classList.add('hidden');
+                    isSpamLocked = false;
+                    lastClickTime = 0;
+                }
+            }, 100);
+        }
+
+        function submitPage() {
+            const currentData = quizData[currentPageIndex];
+            let pageComplete = true; 
+            let hasUnanswered = false;
+            
+            // Check for unanswered
+            for (let q of currentData.questions) {
+                const key = `${currentPageIndex}_${q.id}`;
+                if ((!userAnswers[key] || !userAnswers[key].selected) && !userAnswers[key]?.locked) hasUnanswered = true;
+            }
+            if (hasUnanswered) { alert("Please answer all questions before submitting."); return; }
+
+            // Process Answers
+            currentData.questions.forEach(q => {
+                const key = `${currentPageIndex}_${q.id}`;
+                const record = userAnswers[key];
+                if (record.locked) return; // Already graded
+
+                const safeSelected = record.selected.replace(/'/g, "\\'");
+                const safeCorrect = q.correct.replace(/'/g, "\\'");
+
+                const btn = document.getElementById(`btn-${q.id}-${safeSelected}`);
+                const feedback = document.getElementById(`feedback-${q.id}`);
+                const evidence = document.getElementById(`evidence-${q.id}`);
+
+                // Compare strings
+                if (record.selected === q.correct) {
+                    // CORRECT
+                    btn.className = "w-full text-left py-3 px-4 rounded-xl border-2 border-green-500 bg-green-100 text-green-800 font-bold shadow-sm";
+                    feedback.innerHTML = `<span class="text-green-700 bg-green-50 px-2 py-1 rounded border border-green-200">✅ Correct</span>`;
+                    feedback.classList.remove('hidden');
+                    evidence.classList.add('show');
+                    record.locked = true;
+                    if (record.pointsFlag) { currentScore++; updateScore(); }
+                } else {
+                    // WRONG
+                    record.attempts++;
+                    record.pointsFlag = false;
+                    
+                    if (record.attempts < 2) {
+                        // 1st Fail -> Retry allowed
+                        btn.className = "w-full text-left py-3 px-4 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed opacity-60";
+                        btn.disabled = true;
+                        feedback.innerHTML = `<span class="text-orange-600 bg-orange-50 px-2 py-1 rounded border border-orange-200">⚠️ Incorrect. Try again!</span>`;
+                        feedback.classList.remove('hidden');
+                        pageComplete = false;
+                        record.selected = null; // Reset selection for next try
+                        lastClickTime = 0; // Reset spam timer to allow immediate click
+                    } else {
+                        // 2nd Fail -> Locked
+                        btn.className = "w-full text-left py-3 px-4 rounded-xl border-2 border-red-500 bg-red-100 text-red-800 font-bold";
+                        
+                        // Show Correct Answer
+                        const correctBtn = document.getElementById(`btn-${q.id}-${safeCorrect}`);
+                        if(correctBtn) correctBtn.className = "w-full text-left py-3 px-4 rounded-xl border-2 border-green-500 bg-white text-green-700 font-bold border-dashed";
+                        
+                        feedback.innerHTML = `<span class="text-red-600 bg-red-50 px-2 py-1 rounded border border-red-200">❌ Incorrect. Answer: ${q.correct.charAt(0)}</span>`;
+                        feedback.classList.remove('hidden');
+                        evidence.classList.add('show');
+                        record.locked = true;
+                    }
+                }
+            });
+
+            if (pageComplete) {
+                // If this is the last page, we change the button to "View Results"
+                if (currentPageIndex === quizData.length - 1) {
+                    const submitBtn = document.getElementById('submit-btn');
+                    // BUG FIX: Change styling and logic explicitly here
+                    submitBtn.innerHTML = `<span>View Results</span>`;
+                    submitBtn.classList.replace('bg-gray-800', 'bg-gray-900'); // Make it look distinct
+                    submitBtn.onclick = function() {
+                        showResult(); // Direct call
+                    };
+                } else {
+                    document.getElementById('submit-btn').classList.add('hidden');
+                    document.getElementById('next-btn').classList.remove('hidden');
+                }
+            }
+        }
+
+        function nextPage() { 
+            if (currentPageIndex < quizData.length - 1) {
+                renderPage(currentPageIndex + 1); 
+            }
+        }
+
+        function updateScore() { 
+            document.getElementById('current-score').innerText = currentScore; 
+        }
+        
+        function showResult() {
+            isExamActive = false; // Stop monitoring
+            endTime = new Date();
+            
+            // Stop polling
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+
+            // Hide Overlays
+            document.getElementById('fullscreen-blocker').classList.add('hidden');
+            document.getElementById('penalty-overlay')?.classList.add('hidden'); // Optional check
+            document.getElementById('spam-overlay').classList.add('hidden');
+            
+            document.getElementById('quiz-interface').classList.add('hidden');
+            const resScreen = document.getElementById('screen-result');
+            resScreen.classList.remove('hidden');
+            resScreen.style.display = 'flex';
+
+            // Calculate Stats
+            const totalQuestions = quizData.reduce((acc, curr) => acc + curr.questions.length, 0);
+            const pct = Math.round((currentScore/totalQuestions)*100);
+            
+            document.getElementById('res-name').innerText = studentName;
+            document.getElementById('res-score').innerText = `${currentScore}/${totalQuestions}`;
+            document.getElementById('res-percent').innerText = `${pct}%`;
+            document.getElementById('res-violations').innerText = violationCount;
+            document.getElementById('res-start-time').innerText = formatTime(startTime);
+            document.getElementById('res-end-time').innerText = formatTime(endTime);
+
+            const msg = document.getElementById('result-message');
+            // Changed logic for pass to 85%
+            if(pct >= 85) { 
+                msg.innerHTML = "🎉 Excellent! You passed.";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-green-100 text-green-800 border border-green-200";
+            } else {
+                msg.innerHTML = "You need 85% to pass";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-red-50 text-red-800 border border-red-100";
+            }
+        }
+    </script>
+</body>
+</html>

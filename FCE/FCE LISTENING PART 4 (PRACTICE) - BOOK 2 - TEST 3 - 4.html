@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Practice Session - Tests 7 & 8</title>
+    <style>
+        :root {
+            /* GREEN THEME PALETTE */
+            --primary: #2e7d32;      /* Green 800 */
+            --primary-dark: #1b5e20; /* Green 900 */
+            --primary-light: #a5d6a7;/* Green 200 */
+            --accent: #66bb6a;       /* Green 400 */
+            --text-dark: #1a1a1a;
+            --bg-light: #f1f8e9;     /* Light Green background */
+            --white: #ffffff;
+            --success: #2e7d32;
+            --error: #c62828;
+            --warning: #f57f17;      /* Orange for revealed answers */
+            --header-height: 70px;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { margin: 0; padding: 0; background-color: var(--bg-light); height: 100%; overflow-x: hidden; }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;
+            transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(46, 125, 50, 0.2);
+            text-transform: uppercase; letter-spacing: 0.5px; width: 100%; margin-top: 10px;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 6px 8px rgba(46, 125, 50, 0.3); }
+        .btn:disabled { background: #9e9e9e; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        .btn-secondary { background: #455a64; }
+        .btn-secondary:hover { background: #546e7a; }
+
+        input[type="text"] {
+            padding: 15px; border: 2px solid #c8e6c9; border-radius: 8px;
+            font-size: 16px; width: 100%; max-width: 300px; margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-color: var(--primary); outline: none; }
+
+        /* --- LAYOUT --- */
+        .app-container { max-width: 1400px; margin: 0 auto; min-height: 100vh; position: relative; padding: 0 10px; }
+        
+        /* Full screen pages (Welcome & Result) */
+        .full-screen {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: white; padding: 20px; z-index: 2000;
+        }
+        .hero-title { font-size: 2.5em; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .hero-desc { font-size: 1.1em; color: #555; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
+
+        /* Test Pages Container */
+        #app-pages { display: none; } 
+
+        .page-container { display: none; padding-bottom: 50px; opacity: 0; transition: opacity 0.5s; }
+        .page-container.active { display: block; opacity: 1; }
+
+        /* --- STICKY HEADER --- */
+        .sticky-wrapper {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            height: var(--header-height);
+            border-bottom: 4px solid var(--primary);
+            backdrop-filter: blur(8px);
+            display: flex; align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-content {
+            width: 100%; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; gap: 20px;
+            max-width: 1200px; margin: 0 auto;
+        }
+
+        .header-title { font-weight: 800; color: var(--primary); font-size: 1.4rem; white-space: nowrap; }
+        
+        /* --- AUDIO PLAYER --- */
+        .custom-player {
+            flex-grow: 1; display: flex; align-items: center; gap: 15px;
+            background: #e8f5e9; padding: 8px 20px; border-radius: 50px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;
+            border: 1px solid #c8e6c9;
+        }
+        .play-btn {
+            width: 40px; height: 40px; border-radius: 50%; border: none;
+            background: var(--primary); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s; flex-shrink: 0;
+        }
+        .play-btn:hover { background: var(--primary-dark); transform: scale(1.1); }
+        
+        .progress-container {
+            flex-grow: 1; height: 8px; background: #c8e6c9; border-radius: 4px;
+            cursor: pointer; position: relative; overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%; background: var(--primary); border-radius: 4px; width: 0%;
+            transition: width 0.1s linear;
+        }
+        .time-display { font-size: 0.9em; color: var(--primary-dark); font-weight: 700; min-width: 50px; text-align: right; }
+
+        /* --- GRID LAYOUT (60% - 40%) --- */
+        .content-split {
+            display: grid; 
+            grid-template-columns: 59% 39%; 
+            gap: 2%;
+            padding-top: 5px; align-items: start;
+        }
+
+        /* --- LEFT COLUMN: SCRIPT --- */
+        .script-panel {
+            background: white; padding: 25px 35px; border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e0e0e0;
+        }
+        .section-header {
+            background: var(--primary); color: white; padding: 10px 15px;
+            border-radius: 8px; margin: 25px 0 15px 0; font-weight: bold; font-size: 1.1rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .section-header::before { content: '📝'; }
+        
+        .dialogue-block {
+            margin-bottom: 15px; padding: 10px 15px;
+            border-left: 5px solid var(--primary-light);
+            background: #fafafa; border-radius: 0 8px 8px 0;
+            transition: background 0.2s;
+        }
+        .dialogue-block:hover { background: #f1f8e9; }
+        
+        .speaker { font-weight: 900; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; font-size: 0.8em; letter-spacing: 0.5px; }
+        .text { font-size: 1.1em; line-height: 1.8; color: #333; }
+        
+        /* GAPS Styles */
+        .gap-zone {
+            display: inline-block; min-width: 80px; height: 28px;
+            border-bottom: 2px dashed var(--primary); vertical-align: bottom;
+            margin: 0 4px; text-align: center; color: var(--primary); font-weight: bold;
+            background: rgba(232, 245, 233, 0.5); font-size: 1em; cursor: pointer;
+            padding: 0 5px; border-radius: 4px 4px 0 0; transition: all 0.2s;
+        }
+        .gap-zone:hover { background: #c8e6c9; }
+        /* States */
+        .gap-zone.filled { border-bottom: 2px solid var(--success); background: #e8f5e9; color: var(--success); cursor: default; pointer-events: none; }
+        .gap-zone.error { border-bottom: 2px solid var(--error); color: var(--error); background: #ffebee; }
+        .gap-zone.revealed { border-bottom: 2px solid var(--warning); background: #fff3e0; color: #e65100; cursor: default; pointer-events: none; }
+
+        /* --- RIGHT COLUMN: SIDEBAR TOOLS --- */
+        .sidebar-tools {
+            position: sticky;
+            top: calc(var(--header-height) + 15px);
+            height: calc(100vh - var(--header-height) - 30px);
+            overflow-y: auto;
+            padding-right: 5px;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+        /* Custom Scrollbar for sidebar */
+        .sidebar-tools::-webkit-scrollbar { width: 6px; }
+        .sidebar-tools::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 4px; }
+
+        .tool-box {
+            background: white; padding: 15px; border-radius: 12px;
+            border: 1px solid #e0e0e0; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .tool-title { font-weight: 800; color: var(--text-dark); margin-bottom: 10px; display: block; border-bottom: 2px solid var(--bg-light); padding-bottom: 5px; font-size: 1em; }
+
+        .word-bank {
+            display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-start;
+        }
+        .draggable {
+            background: var(--white); border: 2px solid var(--primary); color: var(--primary);
+            padding: 6px 12px; border-radius: 20px; cursor: grab; font-weight: 700; font-size: 0.85em;
+            user-select: none; transition: all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .draggable:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+        .draggable:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable.used { opacity: 0.3; pointer-events: none; border-color: #ccc; color: #ccc; box-shadow: none; } 
+
+        /* MCQs */
+        .question-block { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .q-text { font-weight: 700; font-size: 0.95em; display: block; margin-bottom: 8px; color: #2c3e50; line-height: 1.4; }
+        .option-label {
+            display: flex; align-items: flex-start; padding: 8px; margin: 4px 0; cursor: pointer;
+            border: 2px solid #f5f5f5; border-radius: 8px; font-size: 0.9em; transition: all 0.2s;
+        }
+        .option-label input { margin-top: 4px; margin-right: 8px; accent-color: var(--primary); }
+        .option-label:hover { background: #f1f8e9; border-color: var(--primary-light); }
+        .option-label.selected { border-color: var(--primary); background: #e8f5e9; font-weight: 600; }
+        
+        /* MCQ States */
+        .option-label.correct { border-color: var(--success); background: #c8e6c9; font-weight: bold; pointer-events: none; color: #1b5e20; }
+        .option-label.correct::after { content: '✓'; margin-left: auto; color: var(--success); font-weight: bold; }
+        .option-label.incorrect { border-color: var(--error); background: #ffebee; opacity: 0.8; }
+        .option-label.revealed { border-color: var(--warning); background: #fff3e0; font-weight: bold; pointer-events: none; }
+        .disabled-opts .option-label { pointer-events: none; opacity: 0.6; }
+
+        /* STATUS MESSAGE */
+        .status-msg {
+            margin-top: 15px; font-weight: bold; text-align: center; min-height: 24px; font-size: 0.9em; padding: 10px; border-radius: 6px;
+        }
+        .status-error { color: var(--error); background: #ffebee; }
+        .status-success { color: var(--success); background: #e8f5e9; }
+
+        /* RESULT STATS */
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
+            margin: 30px 0; width: 100%; max-width: 700px;
+        }
+        .stat-card {
+            background: #ffffff; padding: 20px; border-radius: 12px;
+            border-left: 6px solid var(--primary); text-align: left;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+        .stat-label { font-size: 0.85em; color: #7f8c8d; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .stat-value { font-size: 1.4em; font-weight: 800; color: #2c3e50; }
+        
+        .part-scores {
+            display: flex; justify-content: space-between; gap: 15px; margin-top: 15px;
+        }
+        .part-score-box {
+            flex: 1; background: var(--bg-light); border: 1px solid var(--primary-light);
+            padding: 15px; border-radius: 10px; text-align: center;
+        }
+        .ps-title { font-size: 0.8em; color: var(--primary); font-weight: bold; margin-bottom: 5px; }
+        .ps-val { font-size: 1.5em; font-weight: 900; color: var(--text-dark); }
+
+        .score-display { font-size: 5em; font-weight: 900; color: var(--primary); margin: 20px 0; text-shadow: 2px 2px 0px #c8e6c9; }
+        #canvas-confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        .result-actions { display: flex; gap: 15px; justify-content: center; width: 100%; max-width: 400px; margin-top: 30px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-split { grid-template-columns: 55% 43%; }
+        }
+        @media (max-width: 850px) {
+            .content-split { grid-template-columns: 1fr; }
+            .sidebar-tools { position: relative; top: 0; height: auto; overflow: visible; margin-top: 20px; }
+            .sticky-wrapper { position: relative; margin-bottom: 10px; }
+            .header-title { font-size: 1.1rem; }
+            .play-btn { width: 35px; height: 35px; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-confetti"></canvas>
+
+    <div class="app-container">
+        
+        <!-- WELCOME SCREEN -->
+        <div id="welcome-screen" class="full-screen">
+            <h1 class="hero-title">Listening Practice Session</h1>
+            
+            <p class="hero-desc">
+                Welcome to the FCE practice session.<br>
+                Enter your name to start tracking your progress.
+            </p>
+            <input type="text" id="student-name" placeholder="Enter Full Name (Required)" autocomplete="off">
+            <button class="btn" style="max-width: 250px;" onclick="app.startApp()">START SESSION</button>
+        </div>
+
+        <!-- APP PAGES RENDER HERE (Initially Hidden) -->
+        <div id="app-pages"></div>
+
+        <!-- RESULT SCREEN (Initially Hidden) -->
+        <div id="result-screen" class="full-screen" style="display:none; z-index:3000;">
+            <h2 class="hero-title">PERFORMANCE REPORT</h2>
+            
+            <div class="score-display" id="total-score">0%</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Student Name</div>
+                    <div class="stat-value" id="res-name">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Time Elapsed</div>
+                    <div class="stat-value" id="res-time">--</div>
+                </div>
+                <div class="stat-card" style="grid-column: span 2;">
+                    <div class="stat-label">Detailed Score Breakdown</div>
+                    <div class="part-scores">
+                        <div class="part-score-box">
+                            <div class="ps-title">TEST 7 (Jane Brown)</div>
+                            <div class="ps-val" id="score-p1">0/0</div>
+                        </div>
+                        <div class="part-score-box">
+                            <div class="ps-title">TEST 8 (Kitesurfing)</div>
+                            <div class="ps-val" id="score-p2">0/0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p id="feedback-text" class="hero-desc" style="font-weight:bold; font-size:1.3em;"></p>
+            
+            <div class="result-actions">
+                <button class="btn" onclick="location.reload()">START NEW SESSION</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- DATA & CONTENT ---
+        const tests = [
+            {
+                id: 1,
+                title: "Test 7 – Part 4: Jane Brown (Home Economist)",
+                audio: "https://www.dropbox.com/scl/fi/4x0yhg17ur8qpy02e7mw3/First2_T7_P6.mp3?rlkey=b42fgcex79pthekbhmckqomo1&st=59kx5gb1&raw=1",
+                // Distractors maintained (3 words)
+                distractors: ["cooking", "ingredients", "university"], 
+                script: [
+                    ["Instruction", "You will hear part of a radio interview with someone called Jane Brown, who is a home economist working in the food industry."],
+                    ["Interviewer", "In our series of interviews about people’s jobs, we’re delighted to welcome Jane Brown, who works in the food <gap>industry</gap>."],
+                    ["Jane", "Hi!"],
+                    ["Interviewer", "Now I know you studied home economics at Longley University, Jane. Why did you go there?"],
+                    ["Jane", "Well some of my <gap>friends</gap> also studied home economics, and they wanted me to go to the same university as them rather than to Longley. If I’d done that, I could have shared a <gap>flat</gap> with them – that would’ve been fun but being closer to home really appealed to me and made getting used to being a student that bit <gap>easier</gap>."],
+                    ["Interviewer", "And did you enjoy the course?"],
+                    ["Jane", "I loved it! I’ve always been interested in food <gap>chemistry</gap>, so that’s what I specialised in. The class sizes were small so the staff knew us all by <gap>name</gap> and all about us. I’d always enjoyed working with other people, and I did a lot of that on the course. The university also made sure we had plenty of opportunities to get out of the classroom and apply things we’d learnt in <gap>theory</gap> to real life."],
+                    ["Interviewer", "I suppose you also learned about things like food tasting?"],
+                    ["Jane", "A group of us would all have to taste the same <gap>dish</gap> and try to decide if the general public would like it. As the training got more complex it became harder to agree, and there were even conflicts at some <gap>moments</gap>. We had really long <gap>arguments</gap> about flavours, but it was worth it in the end."],
+                    ["Interviewer", "And what was your first job after university?"],
+                    ["Jane", "I worked for a large food company, in the sauces team, testing out new <gap>recipes</gap> and making sure the <gap>quality</gap> of the sauces they produced was consistent. When I applied, I knew I could do it, and it was really a step along the way to something more interesting. But there were a lot of applicants and the food industry isn’t always an easy one to get into, so I was very aware of how <gap>lucky</gap> I was."],
+                    ["Interviewer", "Is there anything you particularly remember about that first job?"],
+                    ["Jane", "Yes, I assisted in the development of a new <gap>product</gap>, a delicious <gap>cheese</gap> sauce! It was very different at first to be making decisions on my own and doing things without the support of the people I’d studied with for three years, but I coped pretty well, I think. The team I was in managed to reduce the <gap>salt</gap> content of the cheese sauce while keeping it tasty, which wasn’t straightforward. And then of course it was great to see it on <gap>supermarket</gap> shelves!"],
+                    ["Interviewer", "Yeah, it must have been exciting! So what did you do next?"],
+                    ["Jane", "Well that first company sent me to work in Denmark for two years. That was really interesting. Part of my job involved visiting local <gap>food</gap> companies, and that way I met lots of people I’m still in touch with who’ve helped me and taught me loads. And on a personal level, it was great to discover a new country and <gap>culture</gap>, as well as a whole new food culture."],
+                    ["Interviewer", "Out of all the different things you mentioned Jane, there must be some things you enjoy more than others?"],
+                    ["Jane", "There are lots of different things I have to do. For example I have to interview <gap>clients</gap>, to find out about and understand what they need. I taste food to assess its quality – rather a lot of that, which actually isn’t always that great when the food gets really unusual! And then there are reports to <gap>write</gap>, which some people hate but I never mind. And lots of other things too, so every day is different. I really think I have a fantastic <gap>job</gap> and would certainly recommend it to <gap>anyone</gap> who’s interested in food and how it’s produced."],
+                    ["Interviewer", "Thanks very much, Jane, that’s been really interesting … [fade]"]
+                ],
+                questions: [
+                    { q: "24. Why did Jane choose to study at Longley University?", options: ["A) The location suited her.", "B) She knew people there.", "C) The quality of the accommodation was good."], ans: 0 },
+                    { q: "25. What did Jane like about her course?", options: ["A) She gained practical experience.", "B) The teachers helped her a great deal.", "C) She learned to work with other people."], ans: 0 },
+                    { q: "26. What does Jane say about her food tasting training?", options: ["A) It was a little boring.", "B) It was rather time-consuming.", "C) It was sometimes stressful."], ans: 2 },
+                    { q: "27. How did Jane feel when she was offered her first job?", options: ["A) excited to be involved in a challenging area", "B) relieved to have been able to find employment", "C) concerned she might not do her work well enough"], ans: 1 },
+                    { q: "28. Jane is proud that in her first job she", options: ["A) came up with her own original idea for a product.", "B) proved that she was capable of working independently.", "C) succeeded in doing something nobody thought she could."], ans: 1 },
+                    { q: "29. How did working in Denmark help Jane’s career?", options: ["A) She made useful contacts.", "B) She came across new recipes.", "C) She found a better job."], ans: 0 },
+                    { q: "30. What aspect of her job does Jane enjoy?", options: ["A) the wide variety of activities she does", "B) the opportunity to meet new people", "C) the experience of trying new foods"], ans: 0 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Test 8 – Part 4: Maggie Wharton (Kitesurfing)",
+                audio: "https://www.dropbox.com/scl/fi/m9rsum8nme097g31wmzfk/First2_T8_P6.mp3?rlkey=gfqkd7brbqi354xjiq9dp44f4&st=8i42el6m&raw=1",
+                // Distractors maintained (3 words)
+                distractors: ["water", "beach", "waves"],
+                script: [
+                    ["Instruction", "You will hear an interview with a woman called Maggie Wharton who is skilled in the sport of kitesurfing."],
+                    ["Interviewer", "So Maggie, welcome to the studio. Tell us about the sport of kitesurfing. What is it and how did you get into it?"],
+                    ["Maggie", "Well, in kitesurfing your feet are strapped to a surfboard and you’re holding on to a big <gap>kite</gap> – and the wind takes you along on the water at tremendous <gap>speed</gap>. From the point when I started, a long time ago, it took me about a year to feel I could really call myself a kitesurfer. At least I was physically in good enough <gap>shape</gap> from the outset, though the lack of any really suitable <gap>instruction</gap> obstructed my <gap>progress</gap>. Having said that, it was straightforward to get everything you needed, but there wasn’t the range you see now – it’s become one of the fastest-growing sports in the country."],
+                    ["Interviewer", "So what’s changed in the sport during that time?"],
+                    ["Maggie", "Well, helmets have gained increasing <gap>popularity</gap>, and I guess they’re good, because if you fall off you could easily hit your <gap>head</gap>, but my generation never felt the need for one. On the other hand, the wind is the <gap>fundamental</gap> element that all kitesurfers have to learn about. For example, you should be wary of the water if the wind is coming from the land as you could be blown out to sea – and I’m not sure if kitesurfers now are as up on that as we were. Of course, they’ll know obvious things like not surfing in places near <gap>rocks</gap> or power lines – but sadly those hazards still aren’t as flagged up as they might be."],
+                    ["Interviewer", "Right – and you now take part in international events."],
+                    ["Maggie", "Yes, I’m going to Fiji soon for an eight-day <gap>competition</gap>. It’s a new event but the organisers are keen to get it as a regular <gap>fixture</gap> on the calendar. We’ll cover a hundred and fifty kilometres and perhaps a new world <gap>record</gap>’ll be set in distance kitesurfing. And it’ll be great if, as a result of seeing me take part, people will decide to give it a go. But it’s not just distance; we’ll be able to show off some <gap>freestyle</gap> tricks, too."],
+                    ["Interviewer", "But you’ve done some amazing distance events before."],
+                    ["Maggie", "Yeah, I’ve kitesurfed well over a hundred kilometres. That was tough – particularly on the feet and <gap>knees</gap>. And the <gap>fog</gap> meant my support <gap>boat</gap> was no longer visible for a while, which was an uncomfortable feeling. Then halfway across, I changed to a <gap>bigger</gap> kite so I could get more speed, and things went more smoothly after that. But apart from a few dolphins for company, we were out in the middle of the sea alone."],
+                    ["Interviewer", "An amazing achievement! So why’ve you done so well, do you think?"],
+                    ["Maggie", "Well, it was always likely that I’d take up some kind of water sport because I grew up near the sea and my parents taught me to swim at an early age. It was the unpredictability of kitesurfing that <gap>appealed</gap> to my nature, really – I’ve always gone for things that are less straightforward. But of course, you don’t get anywhere if you don’t practise."],
+                    ["Interviewer", "And kitesurfing’s a growing sport. What do you think about the people taking it up now?"],
+                    ["Maggie", "Well, kitesurfing’s a free-and-easy sport without many <gap>regulations</gap> that everyone has to follow. But, having said that, I’ve met a number of new people who are attracted to the sport because of the stuff you do up in the <gap>air</gap>, rather than on the water. What they don’t realise is that as dos and don’ts of the sport have to be mastered before they try something so ambitious – they’re too impatient – although one day they may well achieve great things once they’ve grasped those."],
+                    ["Interviewer", "What is there left for you to do in the sport?"],
+                    ["Maggie", "Enjoy it, mostly – I’ll leave the competition for the young guys. But I still need to set myself goals, and I’m keen to help bring a bit more <gap>sponsorship</gap> into the sport without making it too commercial. My partner’s also a kitesurfer – he teaches young <gap>kids</gap> in the local area, and I help him. So I might even do more of that one day – who knows?"],
+                    ["Interviewer", "Maggie, thanks … [fade]"]
+                ],
+                questions: [
+                    { q: "24. Maggie says it took her a long time to learn to kitesurf because", options: ["A) the equipment wasn’t widely available.", "B) it was hard to find the right assistance.", "C) she needed to build up her strength."], ans: 1 },
+                    { q: "25. In Maggie’s opinion, since she began kitesurfing", options: ["A) suitable locations have been more clearly identified.", "B) attitudes to some aspects of safety have changed.", "C) participants have become better informed about sea conditions."], ans: 1 },
+                    { q: "26. Maggie hopes that by competing in Fiji, she will", options: ["A) encourage others to take up the sport.", "B) have the chance to pick up some new moves.", "C) be invited to start organising future events."], ans: 0 },
+                    { q: "27. During one distance event, Maggie became slightly worried when", options: ["A) she had to switch to different equipment.", "B) she experienced a great deal of pain.", "C) she lost sight of the people helping her."], ans: 2 },
+                    { q: "28. Maggie thinks her success is due to the fact that", options: ["A) the sport suits her character very well.", "B) her family have given her a lot of support.", "C) she has the opportunity to practise regularly."], ans: 0 },
+                    { q: "29. Maggie says that some new kitesurfers she’s met", options: ["A) are likely to develop the sport in interesting ways.", "B) are unwilling to focus on basic techniques first of all.", "C) are too worried about the rules of the sport."], ans: 1 },
+                    { q: "30. What does Maggie hope to do in the future?", options: ["A) find sources of investment for her sport.", "B) continue to compete at a high level.", "C) set up a kitesurfing school."], ans: 0 }
+                ]
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                studentName: "",
+                startTime: null,
+                scores: { p1: 0, p2: 0 },
+                maxScores: { p1: 0, p2: 0 },
+                pageDone: { 1: false, 2: false },
+                attempts: { 1: 0, 2: 0 } // Tracks attempts for each test
+            },
+            
+            init: function() {
+                this.renderAppPages();
+                this.setupDragDrop();
+            },
+
+            // 1. RENDER PAGES
+            renderAppPages: function() {
+                const container = document.getElementById('app-pages');
+                
+                tests.forEach((test, index) => {
+                    const isLast = index === tests.length - 1;
+                    const pageDiv = document.createElement('div');
+                    pageDiv.id = `page-${test.id}`;
+                    pageDiv.className = 'page-container';
+                    
+                    pageDiv.innerHTML = `
+                        <div class="sticky-wrapper">
+                            <div class="header-content">
+                                <div class="header-title">${test.title}</div>
+                                <!-- Custom Audio Player -->
+                                <div class="custom-player" id="player-${test.id}">
+                                    <button class="play-btn" onclick="app.toggleAudio(${test.id})">▶</button>
+                                    <div class="progress-container" onclick="app.seekAudio(event, ${test.id})">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <div class="time-display">00:00</div>
+                                    <audio id="audio-${test.id}" src="${test.audio}" ontimeupdate="app.updateProgress(${test.id})"></audio>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-split">
+                            <!-- Left: Script -->
+                            <div class="script-panel" id="script-${test.id}"></div>
+                            
+                            <!-- Right: Sidebar Tools -->
+                            <div class="sidebar-tools">
+                                <div class="tool-box">
+                                    <span class="tool-title">🧠 Word Bank (Drag words to gaps)</span>
+                                    <div id="bank-${test.id}" class="word-bank"></div>
+                                </div>
+                                <div class="tool-box">
+                                    <span class="tool-title">❓ Multiple Choice Questions</span>
+                                    <form id="form-${test.id}"></form>
+                                    
+                                    <div id="status-${test.id}" class="status-msg"></div>
+
+                                    <div class="btn-group" style="margin-top:20px">
+                                        <button id="btn-check-${test.id}" class="btn" onclick="app.checkPage(${test.id})">CHECK ANSWERS</button>
+                                        <button id="btn-next-${test.id}" class="btn btn-secondary hidden" onclick="app.nextPage(${test.id})">
+                                            ${isLast ? 'VIEW RESULTS' : 'NEXT PART &rarr;'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(pageDiv);
+                    this.renderScriptAndGaps(test);
+                });
+            },
+
+            // 2. RENDER CONTENT
+            renderScriptAndGaps: function(test) {
+                const scriptEl = document.getElementById(`script-${test.id}`);
+                const bankEl = document.getElementById(`bank-${test.id}`);
+                const formEl = document.getElementById(`form-${test.id}`);
+                let gapCount = 0;
+                let bankWords = [];
+
+                test.script.forEach(line => {
+                    const type = line[0];
+                    let text = line[1];
+                    
+                    if (type === "Instruction") {
+                        const h = document.createElement('div');
+                        h.className = 'section-header';
+                        h.textContent = text;
+                        scriptEl.appendChild(h);
+                        return;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'dialogue-block';
+                    
+                    const parts = text.split(/(<gap>.*?<\/gap>)/g);
+                    let formattedText = "";
+                    
+                    parts.forEach(part => {
+                        if (part.startsWith("<gap>")) {
+                            const word = part.replace(/<\/?gap>/g, "");
+                            bankWords.push({ word: word, type: 'correct' });
+                            formattedText += `<span class="gap-zone" data-target="${word}" id="g-${test.id}-${gapCount}"></span>`;
+                            gapCount++;
+                            // Increment Max Score
+                            if(test.id === 1) this.state.maxScores.p1++;
+                            if(test.id === 2) this.state.maxScores.p2++;
+                        } else {
+                            formattedText += part;
+                        }
+                    });
+
+                    div.innerHTML = `<div class="speaker">${type}</div><div class="text">${formattedText}</div>`;
+                    scriptEl.appendChild(div);
+                });
+
+                // Add Distractors to Bank
+                if(test.distractors) test.distractors.forEach(w => bankWords.push({ word: w, type: 'distractor' }));
+                
+                // Shuffle Word Bank
+                bankWords.sort(() => Math.random() - 0.5);
+
+                bankWords.forEach((item, idx) => {
+                    const span = document.createElement('div');
+                    span.className = 'draggable';
+                    span.draggable = true;
+                    span.textContent = item.word;
+                    span.dataset.word = item.word;
+                    span.id = `drag-${test.id}-${idx}`;
+                    bankEl.appendChild(span);
+                });
+
+                test.questions.forEach((q, i) => {
+                    // Increment Max Score for MCQs
+                    if(test.id === 1) this.state.maxScores.p1++;
+                    if(test.id === 2) this.state.maxScores.p2++;
+                    
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'question-block';
+                    let opts = q.options.map((opt, idx) => `
+                        <label class="option-label" onclick="app.selectOpt(this)">
+                            <input type="radio" name="q-${test.id}-${i}" value="${idx}" data-correct="${q.ans}">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('');
+                    qDiv.innerHTML = `<span class="q-text">${q.q}</span>${opts}`;
+                    formEl.appendChild(qDiv);
+                });
+            },
+
+            // --- AUDIO PLAYER ---
+            toggleAudio: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                
+                // Stop other audios
+                document.querySelectorAll('audio').forEach(a => { if(a !== aud) { a.pause(); this.resetBtn(a.id); } });
+                
+                if (aud.paused) { aud.play(); btn.innerHTML = "❚❚"; } 
+                else { aud.pause(); btn.innerHTML = "▶"; }
+            },
+            resetBtn: function(audioId) {
+                const id = audioId.split('-')[1];
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                if(btn) btn.innerHTML = "▶";
+            },
+            updateProgress: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const bar = document.querySelector(`#player-${id} .progress-bar`);
+                const time = document.querySelector(`#player-${id} .time-display`);
+                if(aud.duration) {
+                    const pct = (aud.currentTime / aud.duration) * 100;
+                    bar.style.width = pct + "%";
+                    const m = Math.floor(aud.currentTime / 60);
+                    const s = Math.floor(aud.currentTime % 60);
+                    time.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+                }
+            },
+            seekAudio: function(e, id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const container = document.querySelector(`#player-${id} .progress-container`);
+                const rect = container.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                aud.currentTime = pos * aud.duration;
+            },
+
+            // --- MAIN LOGIC ---
+            startApp: function() {
+                const nameInput = document.getElementById('student-name');
+                if (!nameInput.value.trim()) { alert("Please enter your name to start."); return; }
+                this.state.studentName = nameInput.value;
+                this.state.startTime = new Date();
+                
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('app-pages').style.display = 'block';
+                const p1 = document.getElementById('page-1');
+                p1.style.display = 'block';
+                setTimeout(() => p1.classList.add('active'), 10);
+            },
+
+            selectOpt: function(label) {
+                if(label.classList.contains('correct') || label.classList.contains('revealed') || label.parentElement.parentElement.classList.contains('disabled-opts')) return;
+                
+                const siblings = label.parentElement.querySelectorAll('.option-label');
+                siblings.forEach(s => s.classList.remove('selected'));
+                label.classList.add('selected');
+                label.querySelector('input').checked = true;
+            },
+
+            checkPage: function(id) {
+                if(this.state.pageDone[id]) return; 
+                if(!this.validatePage(id)) { alert("Incomplete! Please fill all gaps and answer all questions."); return; }
+
+                // 1. Calculate Score
+                let currentScore = 0;
+                let totalItems = 0;
+
+                // Check Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                totalItems += gaps.length;
+                gaps.forEach(g => {
+                    g.classList.remove('error'); 
+                    if(g.dataset.filled === g.dataset.target) {
+                        currentScore++;
+                    } else {
+                        g.classList.add('error');
+                    }
+                });
+
+                // Check MCQs
+                const questions = tests[id-1].questions;
+                totalItems += questions.length;
+                for(let i=0; i<questions.length; i++) {
+                    const selected = document.querySelector(`input[name="q-${id}-${i}"]:checked`);
+                    
+                    // Visual feedback only (red/green) but NOT revealing correct yet
+                    if(selected.value == selected.dataset.correct) {
+                        currentScore++;
+                    } else {
+                        selected.parentElement.classList.add('incorrect');
+                    }
+                }
+
+                const pct = Math.round((currentScore / totalItems) * 100);
+                const msgEl = document.getElementById(`status-${id}`);
+                const maxRetries = 2; // Allow 2 retries (3 total attempts)
+                const attemptsUsed = this.state.attempts[id] || 0;
+
+                // LOGIC: ANTI-GUESSING
+                if (pct >= 75) {
+                    // PASS -> Reveal Answers & Unlock Next
+                    msgEl.textContent = `Excellent! Score: ${pct}% (${currentScore}/${totalItems})`;
+                    msgEl.className = "status-msg status-success";
+                    
+                    // Update UI: Correct answers green, reveal incorrect
+                    this.revealAnswers(id);
+                    this.finalizePage(id, currentScore);
+
+                } else {
+                    // FAIL -> Logic depends on attempts
+                    if (attemptsUsed < maxRetries) {
+                        // HAS ATTEMPTS LEFT -> Warn but DO NOT Reveal
+                        this.state.attempts[id] = attemptsUsed + 1;
+                        const left = maxRetries - attemptsUsed;
+                        msgEl.textContent = `Some answers are incorrect. Please listen again. (${left} attempt${left>1?'s':''} left)`;
+                        msgEl.className = "status-msg status-error";
+                        // Do NOT call revealAnswers()
+                        // User sees red marks but doesn't know the right answer
+                    } else {
+                        // NO ATTEMPTS LEFT -> Lock but DO NOT Reveal
+                        msgEl.textContent = `Maximum attempts reached. Score: ${pct}% (Pass requirement not met)`;
+                        msgEl.className = "status-msg status-error";
+                        
+                        // Just lock the page, do NOT reveal answers
+                        this.finalizePage(id, currentScore);
+                    }
+                }
+            },
+
+            revealAnswers: function(id) {
+                // Reveal Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                gaps.forEach(g => {
+                    // Only reveal if not already correct (fill with green text)
+                    if(!g.classList.contains('filled')) {
+                        if(g.dataset.filled !== g.dataset.target) {
+                            g.textContent = g.dataset.target;
+                            g.classList.remove('error');
+                            g.classList.add('revealed');
+                        } else {
+                            // If user got it right, lock it green
+                            g.classList.add('filled');
+                        }
+                    }
+                });
+
+                // Reveal MCQs
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    const qBlock = document.querySelectorAll(`#form-${id} .question-block`)[i];
+                    if(!qBlock.querySelector('.correct')) {
+                        const opts = qBlock.querySelectorAll('input');
+                        opts.forEach(opt => {
+                             if(opt.value == opt.dataset.correct) {
+                                 opt.parentElement.classList.add('revealed');
+                             }
+                             // Mark user selection as correct if it was right (though logic handles this above)
+                             if(opt.checked && opt.value == opt.dataset.correct) {
+                                 opt.parentElement.classList.add('correct');
+                             }
+                        });
+                    }
+                }
+            },
+
+            finalizePage: function(id, score) {
+                this.state.pageDone[id] = true;
+                if(id === 1) this.state.scores.p1 = score;
+                if(id === 2) this.state.scores.p2 = score;
+
+                document.getElementById(`btn-check-${id}`).classList.add('hidden');
+                document.getElementById(`btn-next-${id}`).classList.remove('hidden');
+                
+                const dragItems = document.querySelectorAll(`#bank-${id} .draggable`);
+                dragItems.forEach(d => d.classList.add('used'));
+                
+                const mcqLabels = document.querySelectorAll(`#form-${id} .option-label`);
+                mcqLabels.forEach(l => l.style.pointerEvents = 'none');
+                
+                // Also lock gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                gaps.forEach(g => g.style.pointerEvents = 'none');
+            },
+
+            nextPage: function(id) {
+                if(id === 2) {
+                    this.showResults();
+                    return;
+                }
+                
+                this.stopAllAudio();
+                const curr = document.getElementById(`page-${id}`);
+                const next = document.getElementById(`page-${id+1}`);
+                
+                curr.classList.remove('active');
+                setTimeout(() => {
+                    curr.style.display = 'none';
+                    next.style.display = 'block';
+                    setTimeout(() => next.classList.add('active'), 10);
+                    window.scrollTo(0, 0);
+                }, 400);
+            },
+
+            showResults: function() {
+                this.stopAllAudio();
+                const endTime = new Date();
+                const timeDiff = Math.round((endTime - this.state.startTime) / 1000);
+                const minutes = Math.floor(timeDiff / 60);
+                const seconds = timeDiff % 60;
+
+                const totalScore = this.state.scores.p1 + this.state.scores.p2;
+                const totalMax = this.state.maxScores.p1 + this.state.maxScores.p2;
+                const pct = Math.round((totalScore / totalMax) * 100);
+
+                document.getElementById('app-pages').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'flex';
+                
+                document.getElementById('total-score').textContent = pct + "%";
+                document.getElementById('res-name').textContent = this.state.studentName;
+                document.getElementById('res-time').textContent = `${minutes}m ${seconds}s`;
+                
+                document.getElementById('score-p1').textContent = `${this.state.scores.p1}/${this.state.maxScores.p1}`;
+                document.getElementById('score-p2').textContent = `${this.state.scores.p2}/${this.state.maxScores.p2}`;
+
+                const fb = document.getElementById('feedback-text');
+                
+                if(pct >= 80) {
+                    fb.textContent = "Outstanding Performance! You are ready for the FCE exam.";
+                    fb.style.color = "var(--success)";
+                    fireworks();
+                } else if (pct >= 60) {
+                    fb.textContent = "Good job! A little more practice on vocabulary would help.";
+                    fb.style.color = "var(--primary)";
+                } else {
+                    fb.textContent = "Keep practicing. Focus on listening for specific details.";
+                    fb.style.color = "var(--error)";
+                }
+            },
+
+            validatePage: function(id) {
+                // Check gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                for(let g of gaps) {
+                    if(!g.dataset.filled) return false;
+                }
+                // Check MCQs
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    if(!document.querySelector(`input[name="q-${id}-${i}"]:checked`)) return false;
+                }
+                return true;
+            },
+
+            // --- UTILS ---
+            stopAllAudio: function() {
+                document.querySelectorAll('audio').forEach(a => { a.pause(); this.resetBtn(a.id); });
+            },
+
+            setupDragDrop: function() {
+                let dragged = null;
+                document.addEventListener('dragstart', e => {
+                    if(e.target.classList.contains('draggable') && !e.target.classList.contains('used')) {
+                        dragged = e.target;
+                        e.dataTransfer.setData('text', e.target.dataset.word);
+                        setTimeout(() => e.target.style.opacity = '0.5', 0);
+                    }
+                });
+                document.addEventListener('dragend', e => {
+                    if(dragged) dragged.style.opacity = '1'; dragged = null;
+                });
+                document.addEventListener('dragover', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault(); e.target.style.background = "#c8e6c9";
+                    }
+                });
+                document.addEventListener('dragleave', e => {
+                    if(e.target.classList.contains('gap-zone')) e.target.style.background = "rgba(232, 245, 233, 0.5)";
+                });
+                document.addEventListener('drop', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault();
+                        e.target.style.background = "rgba(232, 245, 233, 0.5)";
+                        const word = e.dataTransfer.getData('text');
+                        
+                        if(e.target.classList.contains('filled') || e.target.classList.contains('revealed')) return;
+                        
+                        // Replace existing word logic
+                        if(e.target.dataset.filled) {
+                            const oldWord = e.target.dataset.filled;
+                             const banks = document.querySelectorAll('.draggable');
+                             for(let b of banks) {
+                                 if(b.dataset.word === oldWord) { b.classList.remove('used'); break; }
+                             }
+                        }
+
+                        e.target.textContent = word;
+                        e.target.dataset.filled = word;
+                        if(dragged) dragged.classList.add('used');
+                    }
+                });
+                
+                // Click to remove word from gap
+                document.addEventListener('click', e => {
+                    if(e.target.classList.contains('gap-zone') && e.target.dataset.filled && !e.target.classList.contains('filled') && !e.target.classList.contains('revealed')) {
+                        const word = e.target.dataset.filled;
+                        e.target.textContent = '';
+                        delete e.target.dataset.filled;
+                        const banks = document.querySelectorAll('.draggable');
+                        for(let b of banks) {
+                            if(b.dataset.word === word) {
+                                b.classList.remove('used'); break;
+                            }
+                        }
+                    }
+                });
+            }
+        };
+
+        function fireworks() {
+            const c = document.getElementById('canvas-confetti'), x = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            let p = [];
+            const add = (n, x, y) => { for(let i=0;i<n;i++) p.push({x:x,y:y,vx:(Math.random()-.5)*10,vy:(Math.random()-.5)*10,c:`hsl(${Math.random()*360},100%,50%)`,l:100}); }
+            const tick = () => {
+                x.clearRect(0,0,c.width,c.height);
+                p.forEach((i,idx) => { i.x+=i.vx; i.y+=i.vy; i.l--; x.fillStyle=i.c; x.fillRect(i.x,i.y,4,4); if(i.l<0) p.splice(idx,1); });
+                if(p.length) requestAnimationFrame(tick);
+            }
+            let t = setInterval(() => add(20, Math.random()*c.width, Math.random()*c.height/2), 200);
+            tick(); setTimeout(() => clearInterval(t), 4000);
+        }
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>

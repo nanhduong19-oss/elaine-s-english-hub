@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B1+ Vocabulary Assessment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --success: #34a853;
+            --warning: #fbbc04;
+            --danger: #ea4335;
+            --bg: #f8f9fa;
+            --text: #202124;
+        }
+
+        body {
+            font-family: 'Google Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            width: 100%;
+            max-width: 850px;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            position: relative;
+            text-align: center; /* Căn giữa mặc định */
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes popIn { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+        /* LOGIN SCREEN */
+        .screen-box { animation: fadeIn 0.5s; }
+        h1 { color: var(--primary); margin-bottom: 10px; }
+        p.subtitle { color: #5f6368; margin-bottom: 30px; font-size: 18px; }
+
+        input[type="text"] {
+            width: 70%;
+            padding: 16px;
+            font-size: 18px;
+            border: 2px solid #dadce0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 700;
+            text-transform: uppercase;
+            outline: none;
+            transition: 0.3s;
+        }
+        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(26,115,232,0.1); }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 4px 10px rgba(26,115,232,0.3);
+        }
+        .btn:hover { background: #1557b0; transform: translateY(-2px); }
+
+        /* QUIZ SCREEN */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #5f6368;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .progress-track {
+            height: 8px;
+            background: #f1f3f4;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-text {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            text-align: left; /* Câu hỏi căn trái cho dễ đọc */
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e8eaed;
+            padding: 20px;
+            font-size: 18px;
+            border-radius: 16px;
+            cursor: pointer;
+            text-align: left;
+            font-weight: 500;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .option-card:hover:not(.disabled) { background: #f8f9fa; border-color: #bdc1c6; }
+        
+        .correct { background: #e6f4ea !important; border-color: var(--success) !important; color: var(--success); font-weight: 700; }
+        .wrong { background: #fce8e6 !important; border-color: var(--danger) !important; color: var(--danger); font-weight: 700; }
+        .disabled { pointer-events: none; opacity: 0.8; }
+
+        /* FEEDBACK SECTION */
+        #feedback-section {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 16px;
+            border-left: 6px solid var(--primary);
+            text-align: left;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .feedback-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; display: block; }
+        .feedback-correct { color: var(--success); }
+        .feedback-wrong { color: var(--danger); }
+
+        /* STYLE CHO EMOJI */
+        .emoji-display {
+            font-size: 80px; /* Kích thước Emoji lớn */
+            display: block;
+            margin: 10px 0 20px 0;
+            text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1;
+        }
+
+        .vocab-box {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed #ccc;
+            margin-top: 15px;
+        }
+        .vocab-item { margin-bottom: 6px; font-size: 16px; color: #444; }
+        .vocab-hl { color: var(--primary); font-weight: 700; }
+
+        .btn-next {
+            width: 100%;
+            margin-top: 20px;
+            background: #333;
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* RESULT SCREEN */
+        .result-border {
+            border: 5px solid transparent; 
+            padding: 40px;
+            border-radius: 24px;
+        }
+        .score-display { font-size: 64px; font-weight: 800; margin: 10px 0; }
+        .score-percent { font-size: 24px; color: #555; font-weight: 600; }
+
+        .stats-table { width: 100%; margin-top: 30px; border-collapse: collapse; }
+        .stats-table td { padding: 12px 0; border-bottom: 1px solid #eee; font-size: 18px; text-align: left; }
+        .stats-table td:last-child { text-align: right; font-weight: 700; color: #202124; }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div id="login-screen" class="screen-box">
+        <h1>VOCABULARY CHALLENGE</h1>
+        <p class="subtitle">Level B1+ • 50 Questions • Randomized</p>
+        
+        <div style="margin: 40px 0;">
+            <label style="display:block; margin-bottom:10px; font-weight:600; font-size:14px; color:#555; text-transform:uppercase;">Enter Your Full Name</label>
+            <input type="text" id="username" placeholder="e.g. NGUYEN VAN AN" autocomplete="off">
+        </div>
+
+        <button class="btn" onclick="startQuiz()">START QUIZ</button>
+        <p id="error-msg" style="color: var(--danger); display: none; margin-top: 15px; font-weight:600;">⚠️ Please enter your name to proceed.</p>
+    </div>
+
+    <div id="quiz-screen" style="display: none; text-align: left;">
+        <div class="quiz-header">
+            <span id="player-name">Player Name</span>
+            <span id="timer-display">00:00</span>
+        </div>
+        
+        <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #888; font-size: 14px; font-weight: 600;">
+            <span>QUESTION <span id="q-current">1</span> of 50</span>
+        </div>
+
+        <div id="question-text" class="question-text">Loading...</div>
+        <div id="options-container" class="options-grid"></div>
+
+        <div id="feedback-section">
+            <span id="feedback-title" class="feedback-title"></span>
+            
+            <div id="emoji-display" class="emoji-display"></div>
+
+            <div class="vocab-box">
+                <div style="font-size: 14px; text-transform: uppercase; font-weight: 700; color: #888; margin-bottom: 10px;">📖 Vietnamese Definitions:</div>
+                <div id="vocab-definitions"></div>
+            </div>
+
+            <button class="btn-next" onclick="nextQuestion()">NEXT QUESTION ➜</button>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen-box" style="display: none;">
+        <div id="result-container" class="result-border">
+            <h2 id="result-msg" style="text-transform: uppercase; margin: 0;">RESULT</h2>
+            
+            <div id="result-emoji" class="emoji-display"></div>
+
+            <div class="score-display" id="final-score">0/50</div>
+            <div class="score-percent" id="final-percent">0%</div>
+
+            <table class="stats-table">
+                <tr><td style="color:#666;">Student Name</td><td id="res-name">---</td></tr>
+                <tr><td style="color:#666;">Date</td><td id="res-date">---</td></tr>
+                <tr><td style="color:#666;">Time Taken</td><td id="res-duration" style="color: var(--primary);">---</td></tr>
+                <tr><td style="color:#666;">Accuracy</td><td id="res-accuracy">---</td></tr>
+            </table>
+
+            <p style="margin-top: 30px; font-size: 14px; color: #999; font-style: italic;">(Please screenshot this page to submit your result)</p>
+            <button class="btn" style="background: #5f6368; margin-top: 15px;" onclick="location.reload()">Restart Quiz</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // --- 1. DATA: DICTIONARY ---
+    const dictionary = {
+        "ACCEPT": "Chấp nhận", "ACCOMPANY": "Đi cùng/Hộ tống", "ACHIEVE": "Đạt được", "ACT": "Hành động", "ADD": "Thêm vào",
+        "ADAPT": "Thích nghi", "AFFECT": "Ảnh hưởng", "ADMIRE": "Ngưỡng mộ", "ADMIT": "Thừa nhận", "ADVISE": "Khuyên bảo",
+        "AGREE": "Đồng ý", "AIM": "Mục đích", "ALLOW": "Cho phép", "ANNOY": "Làm phiền", "ANSWER": "Trả lời",
+        "APOLOGISE": "Xin lỗi", "APPEAR": "Xuất hiện", "APPLY": "Nộp đơn/Áp dụng", "APPROACH": "Tiếp cận", "APPROVE": "Tán thành",
+        "ARGUE": "Tranh cãi", "ARRANGE": "Sắp xếp", "ASK": "Hỏi", "ATTACH": "Đính kèm", "ATTEMPT": "Cố gắng",
+        "ATTEND": "Tham dự", "ATTRACT": "Thu hút", "AVOID": "Tránh", "BEAT": "Đánh bại", "BEHAVE": "Cư xử",
+        "BLAME": "Đổ lỗi", "BREAK": "Làm vỡ", "BREATHE": "Thở", "BURN": "Đốt cháy", "BURY": "Chôn cất",
+        "CALL": "Gọi", "CANCEL": "Hủy bỏ", "CARE": "Quan tâm", "CELEBRATE": "Ăn mừng", "CHANGE": "Thay đổi",
+        "CHARGE": "Tính phí", "CHECK": "Kiểm tra", "COMPLAIN": "Phàn nàn", "CONNECT": "Kết nối", "CONCENTRATE": "Tập trung",
+        "CONSIDER": "Cân nhắc", "CONTAIN": "Chứa đựng", "CONTINUE": "Tiếp tục", "CONTROL": "Kiểm soát", "CONVINCE": "Thuyết phục",
+        "CRASH": "Va chạm", "DAMAGE": "Làm hỏng", "DECORATE": "Trang trí", "DECREASE": "Giảm", "DEFEND": "Bảo vệ",
+        "DELAY": "Trì hoãn", "DELETE": "Xóa", "DELIVER": "Giao hàng", "DEMAND": "Đòi hỏi", "DEPART": "Khởi hành",
+        "DESERVE": "Xứng đáng", "DESIGN": "Thiết kế", "DESTROY": "Phá hủy", "DEVELOP": "Phát triển", "DIRECT": "Chỉ đạo",
+        "DISAGREE": "Không đồng ý", "DISAPPEAR": "Biến mất", "DISAPPOINT": "Gây thất vọng", "DISCOVER": "Khám phá", "DISPLAY": "Trưng bày",
+        "EMPLOY": "Thuê", "ENCOURAGE": "Khuyến khích", "ENTERTAIN": "Giải trí", "ESCAPE": "Trốn thoát", "EVALUATE": "Đánh giá",
+        "EXCHANGE": "Trao đổi", "EXCUSE": "Tha thứ", "EXIST": "Tồn tại", "EXPECT": "Mong đợi", "EXPERIENCE": "Trải nghiệm",
+        "FEED": "Cho ăn", "FEEL": "Cảm thấy", "FILL": "Lấp đầy", "FIX": "Sửa chữa", "FOLLOW": "Theo sau",
+        "FORGET": "Quên", "FORGIVE": "Tha thứ", "FREEZE": "Đóng băng", "GAIN": "Đạt được", "GET": "Nhận/Lấy",
+        "GIVE": "Cho", "GROW": "Phát triển", "GUESS": "Đoán", "HANDLE": "Xử lý", "HATE": "Ghét",
+        "HIDE": "Giấu/Trốn", "HIRE": "Thuê", "HIT": "Đánh/Va chạm", "HOLD": "Cầm", "HOPE": "Hy vọng",
+        "HURT": "Làm đau", "IGNORE": "Phớt lờ", "IMAGINE": "Tưởng tượng", "IMPROVE": "Cải thiện", "INCLUDE": "Bao gồm",
+        "INCREASE": "Tăng lên", "INFORM": "Thông báo", "INJURE": "Bị thương", "INSIST": "Khăng khăng", "INSTALL": "Cài đặt",
+        "INTEND": "Dự định", "INTRODUCE": "Giới thiệu", "INVITE": "Mời", "INVOLVE": "Liên quan", "JOIN": "Tham gia",
+        "KEEP": "Giữ", "KNOW": "Biết", "LAUGH": "Cười", "LEARN": "Học", "LEAVE": "Rời đi",
+        "LEND": "Cho mượn", "LIE": "Nói dối", "LISTEN": "Nghe", "LIVE": "Sống", "LOCK": "Khóa",
+        "LOSE": "Mất", "MAKE": "Làm", "MANAGE": "Quản lý", "MEAN": "Có nghĩa là", "MEET": "Gặp",
+        "MENTION": "Đề cập", "MISS": "Nhớ/Bỏ lỡ", "MOVE": "Di chuyển", "NEED": "Cần", "NOTICE": "Chú ý",
+        "OFFER": "Đề nghị", "OPEN": "Mở", "OPERATE": "Vận hành", "ORGANIZE": "Tổ chức", "OWN": "Sở hữu",
+        "PASS": "Vượt qua", "PAY": "Trả tiền", "PERFORM": "Biểu diễn", "PERSUADE": "Thuyết phục", "PICK": "Chọn",
+        "PLAN": "Lên kế hoạch", "PLAY": "Chơi", "POINT": "Chỉ trỏ", "POSTPONE": "Hoãn lại", "PRACTICE": "Luyện tập",
+        "PREPARE": "Chuẩn bị", "PRETEND": "Giả vờ", "PREVENT": "Ngăn chặn", "PRODUCE": "Sản xuất", "PROMISE": "Hứa",
+        "PROTECT": "Bảo vệ", "PROVE": "Chứng minh", "PROVIDE": "Cung cấp", "PUBLISH": "Xuất bản", "PUNISH": "Trừng phạt",
+        "QUIT": "Từ bỏ", "RAISE": "Nâng lên", "REALIZE": "Nhận ra", "REBUILD": "Xây lại", "RECOGNIZE": "Nhận diện",
+        "RECOVER": "Hồi phục", "REDUCE": "Giảm bớt", "REFUSE": "Từ chối", "REGRET": "Hối tiếc", "RELAX": "Thư giãn",
+        "REMIND": "Nhắc nhở", "REMOVE": "Loại bỏ", "REPAIR": "Sửa chữa", "REPLACE": "Thay thế", "REPLY": "Phản hồi",
+        "REPORT": "Báo cáo", "REQUEST": "Yêu cầu", "REQUIRE": "Yêu cầu", "RESCUE": "Giải cứu", "RESPECT": "Tôn trọng",
+        "RETURN": "Trở lại", "REVEAL": "Tiết lộ", "RING": "Reo chuông", "RISE": "Tăng lên", "RISK": "Mạo hiểm",
+        "RULE": "Cai trị", "RUN": "Chạy", "SATISFY": "Làm hài lòng", "SAVE": "Lưu/Cứu", "SAY": "Nói",
+        "SCARE": "Làm sợ", "SCORE": "Ghi điểm", "SCREAM": "Hét", "SEARCH": "Tìm kiếm", "SEE": "Nhìn thấy",
+        "SEEK": "Tìm kiếm", "SELECT": "Lựa chọn", "SELL": "Bán", "SEND": "Gửi", "SEPARATE": "Tách rời",
+        "SERVE": "Phục vụ", "SET": "Thiết lập", "SHAKE": "Lắc", "SHARE": "Chia sẻ", "SHIFT": "Chuyển đổi",
+        "SHOOT": "Bắn", "SHOUT": "Hét", "SHOW": "Chỉ ra", "SHUT": "Đóng", "SIGN": "Ký tên",
+        "SING": "Hát", "SINK": "Chìm", "SIT": "Ngồi", "SLEEP": "Ngủ", "SLIDE": "Trượt",
+        "SMELL": "Ngửi", "SMILE": "Mỉm cười", "SMOKE": "Hút thuốc", "SOLVE": "Giải quyết", "SOUND": "Nghe có vẻ",
+        "SPEAK": "Nói", "SPEND": "Chi tiêu/Dành", "SPILL": "Làm đổ", "SPOIL": "Làm hỏng", "SPREAD": "Lan truyền",
+        "STAND": "Đứng", "START": "Bắt đầu", "STARVE": "Chết đói", "STAY": "Ở lại", "STEAL": "Ăn trộm",
+        "STICK": "Dán", "STING": "Châm/Đốt", "STOP": "Dừng lại", "STRIKE": "Đình công", "STRUGGLE": "Đấu tranh",
+        "STUDY": "Học", "SUCCEED": "Thành công", "SUFFER": "Chịu đựng", "SUGGEST": "Gợi ý", "SUPPORT": "Ủng hộ",
+        "SUPPOSE": "Cho rằng", "SURPRISE": "Ngạc nhiên", "SURVIVE": "Sống sót", "SUSPECT": "Nghi ngờ", "SWEAR": "Thề",
+        "SWIM": "Bơi", "TAKE": "Cầm/Lấy", "TALK": "Nói chuyện", "TASTE": "Nếm", "TEACH": "Dạy",
+        "TEAR": "Xé", "TELL": "Kể/Bảo", "TEND": "Có khuynh hướng", "TEST": "Kiểm tra", "THANK": "Cảm ơn",
+        "THINK": "Nghĩ", "THREATEN": "Đe dọa", "THROW": "Ném", "TIE": "Buộc", "TOUCH": "Chạm",
+        "TRAIN": "Đào tạo", "TRANSLATE": "Dịch", "TRAVEL": "Du lịch", "TREAT": "Đối xử", "TRUST": "Tin tưởng",
+        "TRY": "Thử", "TURN": "Rẽ", "UNDERSTAND": "Hiểu", "UPDATE": "Cập nhật", "USE": "Sử dụng",
+        "VALUE": "Trân trọng", "VANISH": "Biến mất", "VISIT": "Thăm", "VOTE": "Bầu cử", "WAIT": "Chờ đợi",
+        "WAKE": "Thức dậy", "WALK": "Đi bộ", "WANT": "Muốn", "WARN": "Cảnh báo", "WASH": "Rửa",
+        "WASTE": "Lãng phí", "WATCH": "Xem", "WAVE": "Vẫy tay", "WEAR": "Mặc", "WEIGH": "Cân",
+        "WELCOME": "Chào đón", "WHISPER": "Thì thầm", "WIN": "Thắng", "WISH": "Ước", "WONDER": "Tự hỏi",
+        "WORK": "Làm việc", "WORRY": "Lo lắng", "WRITE": "Viết", "CHALLENGE": "Thử thách", "COMBINE": "Kết hợp",
+        "CONFIRM": "Xác nhận", "CONFUSE": "Làm rối trí", "CONSTRUCT": "Xây dựng", "CREATE": "Tạo ra",
+        "CRITICIZE": "Chỉ trích", "DEPEND": "Phụ thuộc", "DESCRIBE": "Mô tả", "DOUBT": "Nghi ngờ",
+        "EARN": "Kiếm tiền", "EMPHASIZE": "Nhấn mạnh", "ENABLE": "Cho phép", "ENCOUNTER": "Gặp phải"
+    };
+
+    const wordList = Object.keys(dictionary);
+
+    // --- 2. DATA: QUESTIONS (B1+) ---
+    const questionBank = [
+        {w: "ACHIEVE", s: "Despite facing many obstacles, she worked day and night to ______ her lifelong ambition."},
+        {w: "ADMIT", s: "It takes a lot of courage to ______ that you were wrong in front of so many people."},
+        {w: "ADVISE", s: "Given the current weather conditions, I strongly ______ you not to drive tonight."},
+        {w: "AGREE", s: "Although I understand your point of view, I'm afraid I cannot fully ______ with your conclusion."},
+        {w: "ALLOW", s: "The museum rules do not ______ visitors to take photographs with flash."},
+        {w: "ANNOY", s: "It really starts to ______ me when people talk loudly during a movie."},
+        {w: "APOLOGISE", s: "You should ______ to your colleague for the misunderstanding you caused yesterday."},
+        {w: "APPEAR", s: "Based on the evidence, it would ______ that the suspect left the country last week."},
+        {w: "APPLY", s: "To get this scholarship, you must ______ before the deadline at the end of the month."},
+        {w: "ARGUE", s: "It is pointless to ______ with him; he never listens to anyone else's opinion."},
+        {w: "ARRANGE", s: "Can you help me ______ a meeting with the director for next Tuesday morning?"},
+        {w: "ATTEMPT", s: "The rescuers will ______ to reach the stranded climbers as soon as the storm passes."},
+        {w: "AVOID", s: "To stay healthy, doctors suggest we should ______ eating processed foods high in sugar."},
+        {w: "BEHAVE", s: "The teacher expected the students to ______ responsibly during the school trip."},
+        {w: "BLAME", s: "It is unfair to ______ him for the mistake when he wasn't even in the office."},
+        {w: "BREATHE", s: "The air in the mountains is so fresh that it feels wonderful to ______ deeply."},
+        {w: "CANCEL", s: "Due to the unexpected strike, the airline had to ______ all flights to Paris."},
+        {w: "CELEBRATE", s: "We are planning a big party to ______ our parents' 25th wedding anniversary."},
+        {w: "COMPLAIN", s: "If the service in the hotel is poor, you have the right to ______ to the manager."},
+        {w: "CONCENTRATE", s: "I find it very difficult to ______ on my studies when the television is on."},
+        {w: "CONSIDER", s: "Before you make a final decision, you should ______ all the possible consequences."},
+        {w: "CONTAIN", s: "Please be careful with that box; it may ______ fragile glass items."},
+        {w: "CONTINUE", s: "Despite the rain, they decided to ______ their journey towards the summit."},
+        {w: "CONVINCE", s: "I tried to ______ him to join our team, but he had already made up his mind."},
+        {w: "DAMAGE", s: "The heavy storm caused significant ______ to the roof of the old building."},
+        {w: "DELAY", s: "Technical problems caused a three-hour ______ to the train schedule."},
+        {w: "DEMAND", s: "The workers went on strike to ______ better working conditions and higher wages."},
+        {w: "DESERVE", s: "After working so hard on this project, you definitely ______ a long holiday."},
+        {w: "DESTROY", s: "Pollution threatens to ______ the natural habitat of many rare species."},
+        {w: "DEVELOP", s: "Reading extensively helps children to ______ their vocabulary and imagination."},
+        {w: "DISAPPOINT", s: "I promised to help you move house, and I won't ______ you."},
+        {w: "DISCOVER", s: "Scientists are working hard to ______ a cure for this rare disease."},
+        {w: "ENCOURAGE", s: "A good teacher should ______ students to ask questions and express their ideas."},
+        {w: "ESCAPE", s: "The bird managed to ______ from its cage because the door was left open."},
+        {w: "EVALUATE", s: "We need more time to ______ the effectiveness of the new marketing strategy."},
+        {w: "EXCHANGE", s: "If the shirt doesn't fit, you can ______ it for a different size at the store."},
+        {w: "EXIST", s: "Many people wonder if life can ______ on other planets in the universe."},
+        {w: "EXPECT", s: "We didn't ______ the exam to be so difficult, so we were quite unprepared."},
+        {w: "EXPERIENCE", s: "Traveling alone is a great way to ______ different cultures and meet new people."},
+        {w: "FORGET", s: "I will never ______ the moment I saw the ocean for the first time."},
+        {w: "FORGIVE", s: "It can be very hard to ______ someone who has betrayed your trust."},
+        {w: "IMAGINE", s: "Can you ______ what the world would be like without the internet?"},
+        {w: "IMPROVE", s: "She is taking an intensive course to ______ her English speaking skills."},
+        {w: "INFORM", s: "Please ______ us immediately if there are any changes to your contact details."},
+        {w: "INSIST", s: "I must ______ that you let me pay for dinner this time."},
+        {w: "INTEND", s: "I didn't ______ to hurt your feelings with my comment; I was just joking."},
+        {w: "INVOLVE", s: "The new job will ______ a lot of international travel and meetings."},
+        {w: "MANAGE", s: "How did you ______ to finish all that work in such a short time?"},
+        {w: "MENTION", s: "Did he ______ anything about the upcoming conference during the meeting?"},
+        {w: "PERSUADE", s: "It took hours to ______ her to come to the party with us."},
+        {w: "POSTPONE", s: "We have to ______ the meeting until next week because the boss is ill."},
+        {w: "PREPARE", s: "You need to ______ thoroughly if you want to pass the entrance exam."},
+        {w: "PRETEND", s: "Don't ______ that you don't know what I'm talking about."},
+        {w: "PREVENT", s: "Regular exercise and a healthy diet can help ______ heart disease."},
+        {w: "PROMISE", s: "If you ______ to keep it a secret, I will tell you what happened."},
+        {w: "PROTECT", s: "It is our duty to ______ the environment for future generations."},
+        {w: "PROVIDE", s: "The government should ______ free education for all children."},
+        {w: "PUNISH", s: "The school has strict rules to ______ students who cheat in exams."},
+        {w: "RECOGNIZE", s: "She had changed so much that I didn't ______ her at first."},
+        {w: "RECOVER", s: "It took him a long time to ______ from the serious injury."},
+        {w: "REFUSE", s: "He is so stubborn that he will likely ______ any help we offer."},
+        {w: "REGRET", s: "You will ______ it later if you don't take this opportunity now."},
+        {w: "REMIND", s: "Could you please ______ me to call my mother later tonight?"},
+        {w: "REPLACE", s: "We need to ______ the old batteries in the remote control."},
+        {w: "REQUIRE", s: "This position will ______ you to work on weekends occasionally."},
+        {w: "RESCUE", s: "Firefighters managed to ______ the family from the burning building."},
+        {w: "SATISFY", s: "It is impossible to ______ everyone when making a group decision."},
+        {w: "SUCCEED", s: "To ______ in business, you need determination and a bit of luck."},
+        {w: "SUGGEST", s: "I ______ that we leave early to avoid the heavy traffic."},
+        {w: "SUPPORT", s: "My family has always been there to ______ me in my career choices."},
+        {w: "SURVIVE", s: "Plants cannot ______ without water and sunlight for long."},
+        {w: "THREATEN", s: "He started to ______ to call the police if they didn't leave."},
+        {w: "TRANSLATE", s: "Can you help me ______ this document from French into English?"},
+        {w: "WARN", s: "The signs are there to ______ drivers about the sharp turn ahead."},
+        {w: "WONDER", s: "I often ______ what happened to my old friends from primary school."},
+        {w: "INVESTIGATE", s: "The police arrived to ______ the scene of the crime."},
+        {w: "DECREASE", s: "We must try to ______ our energy consumption to save money."},
+        {w: "RECYCLE", s: "It is important to ______ plastic bottles to reduce waste."},
+        {w: "ADAPT", s: "It took him a while to ______ to the cold climate of the new country."},
+        {w: "AFFECT", s: "The bad weather will definitely ______ our plans for the weekend."},
+        {w: "ADMIRE", s: "I really ______ her for her courage and determination."},
+        {w: "ATTACH", s: "Don't forget to ______ your CV to the application email."},
+        {w: "ATTRACT", s: "The bright colors of the flowers ______ bees and butterflies."},
+        {w: "COMMUNICATE", s: "In a relationship, it is vital to ______ openly and honestly."},
+        {w: "COMPETE", s: "Athletes from all over the world come to ______ in the Olympics."},
+        {w: "CONNECT", s: "This train line will ______ the city center with the airport."},
+        {w: "CREATE", s: "The artist wants to ______ a sculpture that represents freedom."},
+        {w: "DEFEND", s: "A lawyer was hired to ______ the accused man in court."},
+        {w: "DELIVER", s: "The courier promised to ______ the package by tomorrow morning."},
+        {w: "DENY", s: "He continued to ______ the accusations despite the evidence."},
+        {w: "DESCRIBE", s: "Words cannot ______ how beautiful the sunset was yesterday."},
+        {w: "DESIGN", s: "Architects ______ buildings that are both functional and artistic."},
+        {w: "DIRECT", s: "Can you ______ me to the nearest train station?"},
+        {w: "DISCUSS", s: "We need to ______ the budget before approving the project."},
+        {w: "EARN", s: "She works two jobs to ______ enough money to support her family."},
+        {w: "EMPLOY", s: "The new factory is expected to ______ over 500 local workers."}
+    ];
+
+    // --- 3. EMOJI DATA (No More Broken Images!) ---
+    const sadEmojis = ["😢", "🤦‍♂️", "😿", "💔", "🤔", "🫣", "😭", "🥀", "🤕", "🤷"];
+    
+    // Result screen emojis
+    const resultEmojis = {
+        bad: "😭",
+        avg: "😎",
+        good: "🏆"
+    };
+
+    // --- 4. LOGIC ---
+    let quizSet = [];
+    let currentIdx = 0;
+    let score = 0;
+    let username = "";
+    let startTime, endTime;
+    let timerInterval;
+
+    function startQuiz() {
+        const inp = document.getElementById("username");
+        const name = inp.value.trim().toUpperCase();
+        if (!name) {
+            document.getElementById("error-msg").style.display = "block";
+            return;
+        }
+        username = name;
+
+        // Shuffle
+        const shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+        quizSet = shuffled.slice(0, 50);
+        currentIdx = 0;
+        score = 0;
+
+        // UI
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("quiz-screen").style.display = "block";
+        document.getElementById("player-name").innerText = username;
+
+        // Timer
+        startTime = new Date();
+        timerInterval = setInterval(updateTimer, 1000);
+
+        loadQuestion();
+    }
+
+    function updateTimer() {
+        const now = new Date();
+        const diff = Math.floor((now - startTime) / 1000);
+        const mins = Math.floor(diff / 60).toString().padStart(2, '0');
+        const secs = (diff % 60).toString().padStart(2, '0');
+        document.getElementById("timer-display").innerText = `${mins}:${secs}`;
+    }
+
+    function loadQuestion() {
+        document.getElementById("feedback-section").style.display = "none";
+        document.getElementById("emoji-display").innerText = ""; // Clear emoji
+        
+        const qData = quizSet[currentIdx];
+        const correctWord = qData.w;
+
+        document.getElementById("q-current").innerText = currentIdx + 1;
+        document.getElementById("progress-bar").style.width = `${((currentIdx) / 50) * 100}%`;
+        document.getElementById("question-text").innerText = qData.s;
+
+        const distractors = wordList.filter(w => w !== correctWord);
+        const randomDistractors = distractors.sort(() => 0.5 - Math.random()).slice(0, 3);
+        const options = [correctWord, ...randomDistractors].sort(() => 0.5 - Math.random());
+
+        const container = document.getElementById("options-container");
+        container.innerHTML = "";
+        container.style.pointerEvents = "auto";
+
+        options.forEach(opt => {
+            const btn = document.createElement("div");
+            btn.className = "option-card";
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(btn, opt, correctWord, options);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(btn, selected, correct, allOptions) {
+        document.getElementById("options-container").style.pointerEvents = "none";
+        const allBtns = document.querySelectorAll(".option-card");
+        const isCorrect = (selected === correct);
+
+        if (isCorrect) {
+            btn.classList.add("correct");
+            score++;
+            triggerConfetti();
+        } else {
+            btn.classList.add("wrong");
+            allBtns.forEach(b => { if (b.innerText === correct) b.classList.add("correct"); });
+            showSadEmoji(); // Show Static Emoji instead of Meme
+        }
+        allBtns.forEach(b => b.classList.add("disabled"));
+        showFeedback(isCorrect, correct, allOptions);
+    }
+
+    function showFeedback(isCorrect, correctWord, displayedOptions) {
+        const section = document.getElementById("feedback-section");
+        const title = document.getElementById("feedback-title");
+        const vocabDiv = document.getElementById("vocab-definitions");
+
+        if (isCorrect) {
+            title.innerHTML = "🎉 CORRECT!";
+            title.className = "feedback-title feedback-correct";
+        } else {
+            title.innerHTML = `❌ WRONG! The correct answer is: ${correctWord}`;
+            title.className = "feedback-title feedback-wrong";
+        }
+
+        let html = "";
+        displayedOptions.forEach(w => {
+            const mean = dictionary[w] || "Unknown definition";
+            const hlClass = (w === correctWord) ? "vocab-hl" : "";
+            html += `<div class="vocab-item ${hlClass}">• <strong>${w}</strong>: ${mean}</div>`;
+        });
+        vocabDiv.innerHTML = html;
+
+        section.style.display = "block";
+    }
+
+    function showSadEmoji() {
+        const emoji = sadEmojis[Math.floor(Math.random() * sadEmojis.length)];
+        document.getElementById("emoji-display").innerText = emoji;
+    }
+
+    function triggerConfetti() {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+    }
+
+    function nextQuestion() {
+        currentIdx++;
+        if (currentIdx < 50) {
+            loadQuestion();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        clearInterval(timerInterval);
+        endTime = new Date();
+        const durationSeconds = Math.floor((endTime - startTime) / 1000);
+        const mins = Math.floor(durationSeconds / 60);
+        const secs = durationSeconds % 60;
+        const timeString = `${mins}m ${secs}s`;
+
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+
+        const percent = Math.round((score / 50) * 100);
+        let color, msg, emojiChar;
+
+        if (percent < 50) {
+            color = "var(--danger)";
+            msg = "DON'T GIVE UP, TRY AGAIN!";
+            emojiChar = resultEmojis.bad;
+        } else if (percent < 80) {
+            color = "var(--warning)";
+            msg = "GOOD JOB! KEEP GOING!";
+            emojiChar = resultEmojis.avg;
+        } else {
+            color = "var(--success)";
+            msg = "EXCELLENT! SUPERSTAR!";
+            emojiChar = resultEmojis.good;
+        }
+
+        const border = document.getElementById("result-container");
+        border.style.borderColor = color;
+        const title = document.getElementById("result-msg");
+        title.innerText = msg;
+        title.style.color = color;
+        document.getElementById("final-score").innerText = `${score}/50`;
+        document.getElementById("final-score").style.color = color;
+        document.getElementById("final-percent").innerText = `(${percent}%)`;
+        
+        // Use Emoji for result too
+        document.getElementById("result-emoji").innerText = emojiChar;
+
+        const now = new Date();
+        document.getElementById("res-name").innerText = username;
+        document.getElementById("res-date").innerText = now.toLocaleDateString("en-GB");
+        document.getElementById("res-duration").innerText = timeString;
+        document.getElementById("res-accuracy").innerText = `${percent}%`;
+    }
+
+</script>
+</body>
+</html>

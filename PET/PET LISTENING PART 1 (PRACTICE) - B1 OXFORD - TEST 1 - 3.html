@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Listening Practice Session</title>
+    <style>
+        :root {
+            --primary: #d32f2f; /* Red 700 */
+            --primary-dark: #b71c1c;
+            --primary-light: #ffcdd2;
+            --accent: #ff5252;
+            --text-dark: #2c3e50;
+            --bg-light: #fff5f5;
+            --white: #ffffff;
+            --success: #2e7d32;
+            --error: #c62828;
+            --warning: #ff9800; /* Orange for revealed answers */
+            --header-height: 70px;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { margin: 0; padding: 0; background-color: var(--bg-light); height: 100%; overflow-x: hidden; }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;
+            transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3);
+            text-transform: uppercase; letter-spacing: 0.5px; width: 100%; margin-top: 10px;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        .btn-secondary { background: #2c3e50; }
+        .btn-secondary:hover { background: #34495e; }
+        
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); transform: translateY(-1px); }
+
+        input[type="text"] {
+            padding: 15px; border: 2px solid #ddd; border-radius: 8px;
+            font-size: 16px; width: 100%; max-width: 300px; margin-bottom: 20px;
+        }
+        input[type="text"]:focus { border-color: var(--primary); outline: none; }
+
+        /* --- LAYOUT --- */
+        .app-container { max-width: 98%; margin: 0 auto; min-height: 100vh; position: relative; }
+        
+        /* Full screen pages (Welcome & Result) */
+        .full-screen {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: white; padding: 20px; z-index: 2000;
+        }
+        .hero-title { font-size: 2.5em; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; }
+        .hero-desc { font-size: 1.1em; color: #555; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
+
+        /* Test Pages Container */
+        #app-pages { display: none; } /* Hidden by default */
+
+        .page-container { display: none; padding-bottom: 50px; opacity: 0; transition: opacity 0.5s; }
+        .page-container.active { display: block; opacity: 1; }
+
+        /* --- STICKY HEADER --- */
+        .sticky-wrapper {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            height: var(--header-height);
+            border-bottom: 3px solid var(--primary);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center;
+        }
+
+        .header-content {
+            width: 100%; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; gap: 20px;
+        }
+
+        .header-title { font-weight: 800; color: var(--primary); font-size: 1.4rem; white-space: nowrap; }
+        
+        /* --- AUDIO PLAYER --- */
+        .custom-player {
+            flex-grow: 1; display: flex; align-items: center; gap: 15px;
+            background: #f1f1f1; padding: 5px 15px; border-radius: 50px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;
+        }
+        .play-btn {
+            width: 36px; height: 36px; border-radius: 50%; border: none;
+            background: var(--primary); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s; flex-shrink: 0;
+        }
+        .play-btn:hover { background: var(--primary-dark); transform: scale(1.1); }
+        
+        .progress-container {
+            flex-grow: 1; height: 6px; background: #ddd; border-radius: 4px;
+            cursor: pointer; position: relative;
+        }
+        .progress-bar {
+            height: 100%; background: var(--primary); border-radius: 4px; width: 0%;
+            transition: width 0.1s linear;
+        }
+        .time-display { font-size: 0.85em; color: #666; font-weight: 600; min-width: 50px; text-align: right; }
+
+        /* --- GRID LAYOUT: 60% SCRIPT - 40% TOOLS --- */
+        .content-split {
+            display: grid; 
+            grid-template-columns: 60% 39%;
+            gap: 1%;
+            padding-top: 15px; align-items: start;
+        }
+
+        /* --- LEFT COLUMN: SCRIPT --- */
+        .script-panel {
+            background: white; padding: 20px 30px; border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .section-header {
+            background: var(--primary); color: white; padding: 8px 12px;
+            border-radius: 6px; margin: 20px 0 10px 0; font-weight: bold; font-size: 1rem;
+        }
+        .dialogue-block {
+            margin-bottom: 12px; padding: 8px 12px;
+            border-left: 4px solid var(--primary-light);
+            background: #fffbfb; border-radius: 0 6px 6px 0;
+        }
+        .speaker { font-weight: 800; color: var(--primary-dark); margin-bottom: 3px; text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.5px; }
+        .text { font-size: 1.05em; line-height: 1.7; color: #333; }
+        
+        .evidence-highlight {
+            background-color: #ffd54f; padding: 2px 4px; border-radius: 3px;
+        }
+        .evidence-hidden { background-color: transparent; padding: 0; }
+
+        .gap-zone {
+            display: inline-block; min-width: 60px; height: 24px;
+            border-bottom: 2px dashed var(--primary); vertical-align: bottom;
+            margin: 0 2px; text-align: center; color: var(--primary); font-weight: bold;
+            background: rgba(255, 255, 255, 0.5); font-size: 0.95em; cursor: pointer;
+        }
+        .gap-zone:hover { background: #ffebee; }
+        /* States */
+        .gap-zone.filled { border-bottom: 2px solid var(--success); background: #e8f5e9; color: var(--success); cursor: default; pointer-events: none; }
+        .gap-zone.error { border-bottom: 2px solid var(--error); color: var(--error); background: #ffebee; }
+        .gap-zone.revealed { border-bottom: 2px solid var(--warning); background: #fff3e0; color: #e65100; cursor: default; pointer-events: none; }
+
+        /* --- RIGHT COLUMN: SIDEBAR TOOLS --- */
+        .sidebar-tools {
+            position: sticky;
+            top: calc(var(--header-height) + 15px);
+            height: calc(100vh - var(--header-height) - 30px);
+            overflow-y: auto;
+            padding-right: 5px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        .tool-box {
+            background: white; padding: 15px; border-radius: 10px;
+            border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tool-title { font-weight: bold; color: var(--text-dark); margin-bottom: 10px; display: block; border-bottom: 2px solid var(--bg-light); padding-bottom: 5px; }
+
+        .word-bank {
+            display: flex; gap: 8px; flex-wrap: wrap; justify-content: start;
+        }
+        .draggable {
+            background: var(--white); border: 1px solid var(--primary); color: var(--primary);
+            padding: 6px 12px; border-radius: 6px; cursor: grab; font-weight: 600; font-size: 0.9em;
+            user-select: none; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .draggable:hover { background: var(--bg-light); transform: translateY(-1px); }
+        .draggable:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable.used { display: none; } 
+
+        /* MCQs */
+        .question-block { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .q-text { font-weight: 700; font-size: 0.95em; display: block; margin-bottom: 8px; color: #333; }
+        .option-label {
+            display: flex; align-items: center; padding: 8px; margin: 4px 0; cursor: pointer;
+            border: 1px solid #f0f0f0; border-radius: 6px; font-size: 0.9em; transition: all 0.2s;
+        }
+        .option-label:hover { background: #fff5f5; border-color: var(--primary-light); }
+        .option-label.selected { border-color: var(--primary); background: #fff5f5; }
+        /* MCQ States */
+        .option-label.correct { border-color: var(--success); background: #e8f5e9; font-weight: bold; pointer-events: none; }
+        .option-label.incorrect { border-color: var(--error); background: #ffebee; }
+        .option-label.revealed { border-color: var(--warning); background: #fff3e0; font-weight: bold; pointer-events: none; }
+        .disabled-opts .option-label { pointer-events: none; opacity: 0.7; }
+
+        /* STATUS MESSAGE */
+        .status-msg {
+            margin-top: 10px; font-weight: bold; text-align: center; min-height: 24px; font-size: 0.9em;
+        }
+        .status-error { color: var(--error); }
+        .status-success { color: var(--success); }
+        .status-info { color: #1976d2; }
+
+        /* RESULT STATS */
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin: 20px 0; width: 100%; max-width: 600px;
+        }
+        .stat-card {
+            background: #f8f9fa; padding: 15px; border-radius: 10px;
+            border-left: 5px solid var(--primary); text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .stat-label { font-size: 0.8em; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-value { font-size: 1.1em; font-weight: bold; color: #333; }
+        
+        .part-scores {
+            display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;
+        }
+        .part-score-box {
+            flex: 1; background: var(--bg-light); border: 1px solid var(--primary-light);
+            padding: 10px; border-radius: 8px; text-align: center;
+        }
+        .ps-title { font-size: 0.8em; color: var(--primary); font-weight: bold; }
+        .ps-val { font-size: 1.2em; font-weight: 800; color: var(--text-dark); }
+
+        .score-display { font-size: 4em; font-weight: 900; color: var(--primary); margin: 10px 0; }
+        #evidence-msg { background: #e3f2fd; color: #0d47a1; padding: 15px; border-radius: 10px; display: none; margin-top:15px; }
+        #canvas-confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        .result-actions { display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin-top: 20px; }
+
+        @media (max-width: 1024px) {
+            .content-split { grid-template-columns: 55% 43%; }
+        }
+        @media (max-width: 768px) {
+            .content-split { grid-template-columns: 1fr; }
+            .sidebar-tools { position: relative; top: 0; height: auto; overflow: visible; }
+            .sticky-wrapper { position: relative; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-confetti"></canvas>
+
+    <div class="app-container">
+        
+        <!-- WELCOME SCREEN -->
+        <div id="welcome-screen" class="full-screen">
+            <h1 class="hero-title">Listening Practice Session</h1>
+            <p class="hero-desc">
+                Welcome to the PET practice session.<br>
+                Enter your name to start tracking your progress.
+            </p>
+            <input type="text" id="student-name" placeholder="Enter Full Name (Required)" autocomplete="off">
+            <button class="btn" style="max-width: 200px;" onclick="app.startApp()">START SESSION</button>
+        </div>
+
+        <!-- APP PAGES RENDER HERE (Initially Hidden) -->
+        <div id="app-pages"></div>
+
+        <!-- RESULT SCREEN (Initially Hidden) -->
+        <div id="result-screen" class="full-screen" style="display:none; z-index:3000;">
+            <h2 class="hero-title">SESSION REPORT</h2>
+            
+            <div class="score-display" id="total-score">0%</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Student</div>
+                    <div class="stat-value" id="res-name">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Violations</div>
+                    <div class="stat-value" id="res-violations" style="color:var(--error)">0</div>
+                </div>
+                <div class="stat-card" style="grid-column: span 2;">
+                    <div class="stat-label">Detailed Breakdown</div>
+                    <div class="part-scores">
+                        <div class="part-score-box">
+                            <div class="ps-title">PART 1</div>
+                            <div class="ps-val" id="score-p1">0/0</div>
+                        </div>
+                        <div class="part-score-box">
+                            <div class="ps-title">PART 2</div>
+                            <div class="ps-val" id="score-p2">0/0</div>
+                        </div>
+                        <div class="part-score-box">
+                            <div class="ps-title">PART 3</div>
+                            <div class="ps-val" id="score-p3">0/0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Start Time</div>
+                    <div class="stat-value" id="res-start">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">End Time</div>
+                    <div class="stat-value" id="res-end">--</div>
+                </div>
+            </div>
+
+            <p id="feedback-text" class="hero-desc" style="font-weight:bold; font-size:1.3em;"></p>
+            
+            <!-- Removed Evidence Msg since review mode is gone -->
+            
+            <div class="result-actions">
+                <!-- Removed Review Button -->
+                <button class="btn" onclick="location.reload()">NEW SESSION</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- DATA & CONTENT ---
+        const tests = [
+            {
+                id: 1,
+                title: "Test 1 - Part 1 Practice",
+                audio: "https://www.dropbox.com/scl/fi/7pm0wyoo2xu3dugadoryz/OPP-Preliminary-for-Schools-Track-02.mp3?rlkey=w5jasuwqcpljougjqrgj4nkfu&st=bewvbgoe&raw=1",
+                distractors: ["holiday", "website", "diary"], 
+                script: [
+                    ["Header", "1 On which date did the boy’s grandparents get married?"],
+                    ["Girl", "Are you coming to the <gap>concert</gap> with us on the 14th?"],
+                    ["Boy", "I’m not sure. You see, I’m travelling to Edinburgh with my <gap>parents</gap> on the 15th. It’s for my grandparents’ wedding <gap>anniversary</gap>, and the train leaves early in the morning. I don’t want to be tired after a late night."],
+                    ["Boy", "Their anniversary is actually on the 17th, but we want to spend a bit of <gap>time</gap> in Edinburgh before we <gap>visit</gap> them.", null, true],
+                    ["Header", "2 What is the woman going to buy today?"],
+                    ["Man", "Can you get some <gap>milk</gap> and some <gap>butter</gap> when you go to the shop, please? I want to do some cooking later."],
+                    ["Woman", "I’ve done that already. Like I bought some yesterday. It’s in the <gap>fridge</gap>, on the bottom shelf. I’ll just get butter and bread."],
+                    ["Man", "We’ve got plenty of <gap>bread</gap>. I went to the new <gap>bakery</gap> on the corner this morning. Don’t buy any more.", null, true],
+                    ["Header", "3 What is the man going to do on Saturday?"],
+                    ["Woman", "I’m going to a <gap>basketball</gap> match on Saturday evening. Do you want to come with me? It’s going to be great."],
+                    ["Man", "I’d love to, but I’m so busy. I’m going to the <gap>cinema</gap> today, and I need to go <gap>shopping</gap> later. It must buy my mother a present. It’s her <gap>birthday</gap> on Sunday, you see."],
+                    ["Woman", "Well, why don’t you go shopping this evening instead? Then you can come to the basketball game with me."],
+                    ["Man", "OK. That’s a good idea. I’ll do that.", null, true],
+                    ["Header", "4 What did the woman do last Sunday?"],
+                    ["Man", "I went to the <gap>beach</gap> with my family last weekend. I had a great time."],
+                    ["Woman", "But it rained, didn’t it? I remember, because we were having a <gap>picnic</gap> in the park and we had to run home with all our things. We got <gap>soaked</gap>."],
+                    ["Man", "That was on Saturday. We went on Sunday when it was nice and sunny."],
+                    ["Woman", "Oh yes, you’re right. I remember now. I sat in the garden all day.", null, true],
+                    ["Header", "5 How did the man book his holiday?"],
+                    ["Man", "I’ve booked a fantastic <gap>holiday</gap> in Italy for next month. I can’t wait to go!"],
+                    ["Woman", "That sounds exciting! I’d love to go to Italy. Did you book it on the <gap>Internet</gap>?"],
+                    ["Man", "No, I don’t like booking things on the Internet. I phoned the <gap>travel agent</gap>, told her what I wanted and she found me just the right thing. I’m going there to pick up the <gap>tickets</gap> next week.", null, true],
+                    ["Header", "6 What time is the exam?"],
+                    ["Girl", "Why aren’t you ready to go? It’s nearly one o’clock. We need to hurry if we’re going to get to the exam hall in time. The <gap>traffic</gap> is really bad today."],
+                    ["Boy", "What’s the rush? The exam is not until 4.00."],
+                    ["Girl", "No, it starts at 2.00 and ends at 4.00. Check your exam <gap>timetable</gap>!", null, true],
+                    ["Boy", "Really? Oh no! How did I get that <gap>wrong</gap>? We’d better hurry up, then. I’ll just grab my things."],
+                    ["Header", "7 What happens as soon as the man answers his phone?"],
+                    ["Woman", "A man drives across a long <gap>bridge</gap>. He is lost. On the far side of the bridge, he parks and gets out of the car. Suddenly his <gap>mobile</gap> rings. He quickly grabs it and says, ‘Hello’."],
+                    ["Woman", "But the man accidentally lets the phone fall to the ground and it smashes.", null, true],
+                    ["Woman", "A few minutes later, a girl on a bicycle stops to talk to him. She gives him <gap>directions</gap>. It’s a pretty exciting film!"]
+                ],
+                questions: [
+                    { q: "1. On which date did the boy’s grandparents get married?", options: ["The 14th", "The 15th", "The 17th"], ans: 2 },
+                    { q: "2. What is the woman going to buy today?", options: ["Milk and Butter", "Just Butter", "Butter and Bread"], ans: 1 },
+                    { q: "3. What is the man going to do on Saturday?", options: ["Go shopping", "Go to a basketball match", "Go to the cinema"], ans: 1 },
+                    { q: "4. What did the woman do last Sunday?", options: ["Went to the beach", "Had a picnic", "Sat in the garden"], ans: 2 },
+                    { q: "5. How did the man book his holiday?", options: ["On the Internet", "Through a travel agent", "At the airport"], ans: 1 },
+                    { q: "6. What time is the exam?", options: ["1:00", "2:00", "4:00"], ans: 1 },
+                    { q: "7. What happens as soon as the man answers his phone?", options: ["He gets lost", "He drops it", "A girl talks to him"], ans: 1 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Test 2 - Part 1 Practice",
+                audio: "https://www.dropbox.com/scl/fi/gsjsgywxfxx2up3j06hwd/OPP-Preliminary-for-Schools-Track-11.mp3?rlkey=ms5agumevfptphmkmamh0k898&st=vcnwbxin&raw=1",
+                distractors: ["snowy", "hat", "cycling"],
+                script: [
+                    ["Header", "1 What is the weather forecast for tomorrow?"],
+                    ["Man", "Good afternoon. Well, it looks as if tomorrow’s weather won’t be quite what was expected. We had some <gap>storm</gap> warnings earlier, with a forecast of very heavy rain indeed.", null, true],
+                    ["Man", "It’s been <gap>cloudy</gap> this afternoon with a few showers. And we can expect more of the same tomorrow, although winds will be stronger than today, before the <gap>weekend</gap>. Sunnier weather arrives towards the weekend."],
+                    ["Header", "2 What does Paul look like?"],
+                    ["Teen boy", "You know that guy with long hair you were just talking to – is that Paul, your brother?"],
+                    ["Teen girl", "Oh, you mean Robbie? No, he’s a friend from <gap>school</gap>. My brother doesn’t look anything like that. He’s got shorter <gap>hair</gap> and would never wear such smart clothes! There he is over there!"],
+                    ["Teen boy", "Oh! I see him, in the <gap>sunglasses</gap>…", null, true],
+                    ["Teen girl", "That’s him. He thinks they make him look cool!"],
+                    ["Header", "3 What exercise does the girl do at the moment?"],
+                    ["Boy", "You always seem so healthy. How do you manage it?"],
+                    ["Girl", "Well, I used to do a lot of <gap>running</gap> and swimming, but I got tired of the <gap>jogging</gap> after a while."],
+                    ["Boy", "Oh, I know what you mean. I’m going to the <gap>gym</gap> again tonight, but it gets so boring. Why don’t we meet up afterwards and go to the cinema?"],
+                    ["Girl", "OK. I’ll be out of the pool by 7.00. I could meet you outside the gym at about 7.30.", null, true],
+                    ["Header", "4 What can teenagers do at the new club?"],
+                    ["Woman", "Turning to local news. Young people have been waiting for this since the Internet café closed last spring. The new <gap>club</gap> for teenagers finally opened today."],
+                    ["Woman", "It’s a fantastic place to listen to <gap>music</gap>, play table tennis and meet up with your friends.", null, true],
+                    ["Woman", "And there are plans to open a <gap>café</gap> next year. Why not go along and try it out?"],
+                    ["Header", "5 What equipment is missing?"],
+                    ["Man", "Hello. I’ve just received my new computer through the post this morning and it doesn’t seem to be all here… I’m just looking for the <gap>keyboard</gap>… Ah, here we are. But I can’t see the <gap>printer</gap> anywhere.", null, true],
+                    ["Woman", "That has to be ordered separately, I’m afraid."],
+                    ["Man", "Oh yes, sorry, I forgot about that. But there’s no <gap>mouse</gap> here either."],
+                    ["Woman", "That’s not the first time I’ve heard that. Give me your order number and we’ll send you one straightaway."],
+                    ["Header", "6 Where is the boy’s money?"],
+                    ["Boy", "Mum, where have you put the money for my lunch?"],
+                    ["Mum", "I thought you picked it up. It was on the table in the <gap>kitchen</gap>. Have you put it in the front <gap>pocket</gap> of your bag as usual?"],
+                    ["Boy", "No, I’ve looked there. It’s not in my jacket pocket either."],
+                    ["Mum", "Oh, I remember. Jenny took the money from the table, yours is by the front <gap>door</gap>. I put it there so you wouldn’t forget it on your way out.", null, true],
+                    ["Header", "7 How did Susie contact her friend?"],
+                    ["Girl", "Guess what? Susie can come camping after all."],
+                    ["Boy", "Oh good! Did she answer your email, then?"],
+                    ["Girl", "I don’t know if she ever got it. It was just lucky that I found an old address book with her number in. I left a <gap>message</gap> and she called me back this morning.", null, true],
+                    ["Girl", "I was texting her all last week, but she said she lost her <gap>mobile</gap> two weeks ago and she hasn’t bought a new one yet. It was <gap>lucky</gap> I found that number!"]
+                ],
+                questions: [
+                    { q: "1. What is the weather forecast for tomorrow?", options: ["Sunny", "Heavy rain and strong wind", "Snow"], ans: 1 },
+                    { q: "2. What does Paul look like?", options: ["Long hair", "Short hair and sunglasses", "Smart clothes"], ans: 1 },
+                    { q: "3. What exercise does the girl do at the moment?", options: ["Jogging", "Swimming", "Gym"], ans: 1 },
+                    { q: "4. What can teenagers do at the new club?", options: ["Use the internet", "Play table tennis", "Eat at the cafe"], ans: 1 },
+                    { q: "5. What equipment is missing?", options: ["Keyboard", "Mouse", "Printer"], ans: 2 },
+                    { q: "6. Where is the boy’s money?", options: ["In his bag", "In his jacket", "By the front door"], ans: 2 },
+                    { q: "7. How did Susie contact her friend?", options: ["By email", "By phone", "By text"], ans: 1 }
+                ]
+            },
+            {
+                id: 3,
+                title: "Practice Test 3",
+                audio: "https://www.dropbox.com/scl/fi/yfpeewzjedt6f2jue8or2/OPP-Preliminary-for-Schools-Track-15.mp3?rlkey=20s4v8dao9uewu3p6caetpooj&st=3ycuwaud&raw=1",
+                distractors: ["museum", "radio", "cleaning"],
+                script: [
+                    ["Header", "1 What is the girl going to do this morning?"],
+                    ["Girl", "I don’t feel very well today. Dad. My <gap>head</gap> hurts and I’m very tired. I wish I could just stay at home and rest."],
+                    ["Dad", "Oh, I’m going to make a <gap>doctor</gap> appointment for you right now. Maybe she can give you something to make you feel better."],
+                    ["Girl", "But I’ve got a big <gap>test</gap> this morning, Dad, and I really can’t miss it. Could we make a doctor’s appointment for this afternoon? Then maybe I could go there straight from the exam.", null, true],
+                    ["Header", "2 When is the man’s birthday?"],
+                    ["Man", "Can you come to my house for a <gap>meal</gap> on Tuesday evening? I’m inviting a few friends over to celebrate my birthday, and I’d love you to come."],
+                    ["Woman", "Oh, is it your birthday on Tuesday? I didn’t realize."],
+                    ["Man", "No, it’s actually on Thursday, but I’m going out to <gap>dinner</gap> with my parents on Thursday evening, and on Wednesday I’m meeting an old school friend in town, so I thought I’d have an early <gap>celebration</gap> with friends.", null, true],
+                    ["Header", "3 Where is the girl going to go this weekend?"],
+                    ["Boy", "I’m going to the new <gap>theme</gap> park with my family on Saturday. Would you like to come with us?"],
+                    ["Girl", "Oh, thanks, but I went there with my <gap>sister</gap> last weekend. It was good, but I don’t think I want to go there again, not just yet."],
+                    ["Girl", "I’ve been invited to my aunt’s house by the sea this Saturday, but I’ve said I can’t go. I really just want to have a <gap>quiet</gap> day in the park instead.", null, true],
+                    ["Header", "4 What happened yesterday?"],
+                    ["Woman", "Yesterday, St John’s School <gap>closed</gap> for the second time this month, after problems with <gap>flooding</gap> in the kitchens.", null, true],
+                    ["Woman", "Only two weeks ago, there was a <gap>fire</gap> in one of the science labs. The fire brigade was called, but luckily no one was hurt. It is believed that the school will be closed for a week while they deal with this new problem."],
+                    ["Header", "5 How did Ben find the information for his article?"],
+                    ["Woman", "This is a really interesting <gap>article</gap>, Ben. It’s full of great facts. Did you find this information on the Internet or did you go to the library?"],
+                    ["Man", "Well, I went to the <gap>library</gap>, but I couldn’t find any good books. So I had a quick look on the Internet, but then my friend Simon came in and suggested I look at some new history <gap>magazines</gap>. They were really good, and that’s what I used.", null, true],
+                    ["Header", "6 Where did the boy leave the passports?"],
+                    ["Boy", "Mum, it’s time to go to the airport, but I can’t find our <gap>passports</gap>! Have you seen them? Did I leave them on the kitchen table?"],
+                    ["Mum", "No, I’ve looked – they aren’t there. Maybe you left them upstairs. Have you looked on the bed?"],
+                    ["Boy", "No, they aren’t <gap>upstairs</gap>. Oh, I’ve just remembered! I put them in a small bag and I put it in the front <gap>door</gap> so I would not forget it. That’s where they are!", null, true],
+                    ["Header", "7 Where are the girl’s parents?"],
+                    ["Boy", "Hi, Angela. Do you want to meet us at the cinema in half an hour?"],
+                    ["Girl", "Thanks, Ted, but I can’t. Im <gap>babysitting</gap> my little brother this evening. My parents have gone out with my aunt who’s visiting from Canada."],
+                    ["Boy", "Oh, have they gone to that big <gap>concert</gap> in town?"],
+                    ["Girl", "Actually they couldn’t get tickets. They’re having dinner at that new Italian <gap>restaurant</gap> opposite the theatre. Lucky for them!", null, true]
+                ],
+                questions: [
+                    { q: "1. What is the girl going to do this morning?", options: ["Go to the doctor", "Stay at home", "Take an exam"], ans: 2 },
+                    { q: "2. When is the man’s birthday?", options: ["Tuesday", "Wednesday", "Thursday"], ans: 2 },
+                    { q: "3. Where is the girl going to go this weekend?", options: ["Theme park", "Aunt's house", "The park"], ans: 2 },
+                    { q: "4. What happened yesterday?", options: ["A flood in the kitchen", "A fire in the lab", "School closed for a week"], ans: 0 },
+                    { q: "5. How did Ben find the information?", options: ["Library", "Internet", "Magazines"], ans: 2 },
+                    { q: "6. Where did the boy leave the passports?", options: ["Kitchen table", "Upstairs", "In a bag by the door"], ans: 2 },
+                    { q: "7. Where are the girl’s parents?", options: ["At a concert", "At a restaurant", "At home"], ans: 1 }
+                ]
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                studentName: "",
+                startTime: null,
+                violations: 0,
+                scores: { p1: 0, p2: 0, p3: 0 },
+                maxScores: { p1: 0, p2: 0, p3: 0 },
+                attempts: { 1: 0, 2: 0, 3: 0 }, // Track attempts per page
+                pageDone: { 1: false, 2: false, 3: false } // Track if page is finished
+            },
+            
+            init: function() {
+                this.renderAppPages();
+                this.setupDragDrop();
+                this.setupViolationTracker();
+            },
+
+            // 1. RENDER PAGES
+            renderAppPages: function() {
+                const container = document.getElementById('app-pages');
+                
+                tests.forEach((test, index) => {
+                    const isLast = index === tests.length - 1;
+                    const pageDiv = document.createElement('div');
+                    pageDiv.id = `page-${test.id}`;
+                    pageDiv.className = 'page-container';
+                    
+                    pageDiv.innerHTML = `
+                        <div class="sticky-wrapper">
+                            <div class="header-content">
+                                <div class="header-title">${test.title}</div>
+                                <!-- Custom Audio Player -->
+                                <div class="custom-player" id="player-${test.id}">
+                                    <button class="play-btn" onclick="app.toggleAudio(${test.id})">▶</button>
+                                    <div class="progress-container" onclick="app.seekAudio(event, ${test.id})">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <div class="time-display">00:00</div>
+                                    <audio id="audio-${test.id}" src="${test.audio}" ontimeupdate="app.updateProgress(${test.id})"></audio>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-split">
+                            <!-- Left: Script -->
+                            <div class="script-panel" id="script-${test.id}"></div>
+                            
+                            <!-- Right: Sidebar Tools -->
+                            <div class="sidebar-tools">
+                                <div class="tool-box">
+                                    <span class="tool-title">Word Bank</span>
+                                    <div id="bank-${test.id}" class="word-bank"></div>
+                                </div>
+                                <div class="tool-box">
+                                    <span class="tool-title">Questions</span>
+                                    <form id="form-${test.id}"></form>
+                                    
+                                    <div id="status-${test.id}" class="status-msg"></div>
+
+                                    <div class="btn-group" style="margin-top:20px">
+                                        <button id="btn-check-${test.id}" class="btn" onclick="app.checkPage(${test.id})">CHECK ANSWERS</button>
+                                        <button id="btn-next-${test.id}" class="btn btn-secondary hidden" onclick="app.nextPage(${test.id})">
+                                            ${isLast ? 'VIEW RESULTS' : 'NEXT PART &rarr;'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(pageDiv);
+                    this.renderScriptAndGaps(test);
+                });
+            },
+
+            // 2. RENDER CONTENT
+            renderScriptAndGaps: function(test) {
+                const scriptEl = document.getElementById(`script-${test.id}`);
+                const bankEl = document.getElementById(`bank-${test.id}`);
+                const formEl = document.getElementById(`form-${test.id}`);
+                let gapCount = 0;
+                let bankWords = [];
+
+                test.script.forEach(line => {
+                    const type = line[0];
+                    let text = line[1];
+                    
+                    if (type === "Header") {
+                        const h = document.createElement('div');
+                        h.className = 'section-header';
+                        h.textContent = text;
+                        scriptEl.appendChild(h);
+                        return;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'dialogue-block';
+                    
+                    const parts = text.split(/(<gap>.*?<\/gap>)/g);
+                    let formattedText = "";
+                    
+                    parts.forEach(part => {
+                        if (part.startsWith("<gap>")) {
+                            const word = part.replace(/<\/?gap>/g, "");
+                            bankWords.push({ word: word, type: 'correct' });
+                            formattedText += `<span class="gap-zone" data-target="${word}" id="g-${test.id}-${gapCount}"></span>`;
+                            gapCount++;
+                            if(test.id === 1) this.state.maxScores.p1++;
+                            if(test.id === 2) this.state.maxScores.p2++;
+                            if(test.id === 3) this.state.maxScores.p3++;
+                        } else {
+                            formattedText += part;
+                        }
+                    });
+
+                    if (line[3]) formattedText = `<span class="evidence-highlight evidence-hidden">${formattedText}</span>`;
+                    div.innerHTML = `<div class="speaker">${type}</div><div class="text">${formattedText}</div>`;
+                    scriptEl.appendChild(div);
+                });
+
+                if(test.distractors) test.distractors.forEach(w => bankWords.push({ word: w, type: 'distractor' }));
+                bankWords.sort(() => Math.random() - 0.5);
+
+                bankWords.forEach((item, idx) => {
+                    const span = document.createElement('div');
+                    span.className = 'draggable';
+                    span.draggable = true;
+                    span.textContent = item.word;
+                    span.dataset.word = item.word;
+                    span.id = `drag-${test.id}-${idx}`;
+                    bankEl.appendChild(span);
+                });
+
+                test.questions.forEach((q, i) => {
+                    if(test.id === 1) this.state.maxScores.p1++;
+                    if(test.id === 2) this.state.maxScores.p2++;
+                    if(test.id === 3) this.state.maxScores.p3++;
+                    
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'question-block';
+                    let opts = q.options.map((opt, idx) => `
+                        <label class="option-label" onclick="app.selectOpt(this)">
+                            <input type="radio" name="q-${test.id}-${i}" value="${idx}" data-correct="${q.ans}" style="margin-right:8px;">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('');
+                    qDiv.innerHTML = `<span class="q-text">${i+1}. ${q.q}</span>${opts}`;
+                    formEl.appendChild(qDiv);
+                });
+            },
+
+            // --- AUDIO PLAYER ---
+            toggleAudio: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                document.querySelectorAll('audio').forEach(a => { if(a !== aud) { a.pause(); this.resetBtn(a.id); } });
+                if (aud.paused) { aud.play(); btn.innerHTML = "❚❚"; } else { aud.pause(); btn.innerHTML = "▶"; }
+            },
+            resetBtn: function(audioId) {
+                const id = audioId.split('-')[1];
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                if(btn) btn.innerHTML = "▶";
+            },
+            updateProgress: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const bar = document.querySelector(`#player-${id} .progress-bar`);
+                const time = document.querySelector(`#player-${id} .time-display`);
+                if(aud.duration) {
+                    const pct = (aud.currentTime / aud.duration) * 100;
+                    bar.style.width = pct + "%";
+                    const m = Math.floor(aud.currentTime / 60);
+                    const s = Math.floor(aud.currentTime % 60);
+                    time.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+                }
+            },
+            seekAudio: function(e, id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const container = document.querySelector(`#player-${id} .progress-container`);
+                const rect = container.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                aud.currentTime = pos * aud.duration;
+            },
+
+            // --- MAIN LOGIC ---
+            startApp: function() {
+                const nameInput = document.getElementById('student-name');
+                if (!nameInput.value.trim()) { alert("Please enter your name."); return; }
+                this.state.studentName = nameInput.value;
+                this.state.startTime = new Date();
+                
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('app-pages').style.display = 'block';
+                const p1 = document.getElementById('page-1');
+                p1.style.display = 'block';
+                setTimeout(() => p1.classList.add('active'), 10);
+            },
+
+            selectOpt: function(label) {
+                if(label.classList.contains('correct') || label.classList.contains('revealed') || label.parentElement.parentElement.classList.contains('disabled-opts')) return;
+                
+                const siblings = label.parentElement.querySelectorAll('.option-label');
+                siblings.forEach(s => s.classList.remove('selected'));
+                label.classList.add('selected');
+                label.querySelector('input').checked = true;
+            },
+
+            // CORE CHECK FUNCTION (UPDATED 75% THRESHOLD)
+            checkPage: function(id) {
+                if(this.state.pageDone[id]) return; 
+                if(!this.validatePage(id)) { alert("Please fill all gaps and answer all questions first."); return; }
+
+                const attempts = this.state.attempts[id];
+                const maxRetries = 2; 
+                
+                let currentScore = 0;
+                let totalItems = 0;
+
+                // 1. Check Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                totalItems += gaps.length;
+                gaps.forEach(g => {
+                    g.classList.remove('error'); 
+                    if (g.classList.contains('filled')) {
+                        currentScore++; 
+                        return; 
+                    }
+                    if(g.dataset.filled === g.dataset.target) {
+                        g.classList.add('filled');
+                        currentScore++;
+                    } else {
+                        g.classList.add('error');
+                    }
+                });
+
+                // 2. Check MCQs
+                const questions = tests[id-1].questions;
+                totalItems += questions.length;
+                for(let i=0; i<questions.length; i++) {
+                    const selected = document.querySelector(`input[name="q-${id}-${i}"]:checked`);
+                    const container = selected.parentElement.parentElement;
+
+                    if(container.querySelector('.correct')) {
+                         currentScore++; continue;
+                    }
+
+                    if(selected.value == selected.dataset.correct) {
+                        selected.parentElement.classList.add('correct');
+                        currentScore++;
+                    } else {
+                        selected.parentElement.classList.add('incorrect');
+                    }
+                }
+
+                // CHECK THRESHOLD 75%
+                const pct = Math.round((currentScore / totalItems) * 100);
+                const msgEl = document.getElementById(`status-${id}`);
+                
+                if (pct >= 75) {
+                    // PASS
+                    msgEl.textContent = `Completed! Score: ${pct}% (${currentScore}/${totalItems})`;
+                    msgEl.className = "status-msg status-success";
+                    this.revealAnswers(id);
+                    this.finalizePage(id, currentScore);
+                } else {
+                    // FAIL -> Check Attempts
+                    if (attempts < maxRetries) {
+                        this.state.attempts[id]++;
+                        const left = maxRetries - this.state.attempts[id] + 1;
+                        msgEl.textContent = `Incorrect answers found. Please listen again! (${left} attempt${left>1?'s':''} left)`;
+                        msgEl.className = "status-msg status-error";
+                    } else {
+                        msgEl.textContent = `Maximum attempts reached. Score: ${pct}%`;
+                        msgEl.className = "status-msg status-error";
+                        // Do NOT reveal answers if failed threshold
+                        this.finalizePage(id, currentScore);
+                    }
+                }
+            },
+
+            revealAnswers: function(id) {
+                // Reveal Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                gaps.forEach(g => {
+                    if(!g.classList.contains('filled')) {
+                        g.textContent = g.dataset.target;
+                        g.classList.remove('error');
+                        g.classList.add('revealed');
+                    }
+                });
+
+                // Reveal MCQs
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    const qBlock = document.querySelectorAll(`#form-${id} .question-block`)[i];
+                    if(!qBlock.querySelector('.correct')) {
+                        const opts = qBlock.querySelectorAll('input');
+                        opts.forEach(opt => {
+                             if(opt.value == opt.dataset.correct) {
+                                 opt.parentElement.classList.add('revealed');
+                             }
+                        });
+                    }
+                }
+            },
+
+            finalizePage: function(id, score) {
+                this.state.pageDone[id] = true;
+                if(id === 1) this.state.scores.p1 = score;
+                if(id === 2) this.state.scores.p2 = score;
+                if(id === 3) this.state.scores.p3 = score;
+
+                document.getElementById(`btn-check-${id}`).classList.add('hidden');
+                document.getElementById(`btn-next-${id}`).classList.remove('hidden');
+                
+                const dragItems = document.querySelectorAll(`#bank-${id} .draggable`);
+                dragItems.forEach(d => d.style.pointerEvents = 'none');
+                
+                const mcqLabels = document.querySelectorAll(`#form-${id} .option-label`);
+                mcqLabels.forEach(l => l.style.pointerEvents = 'none');
+            },
+
+            nextPage: function(id) {
+                if(id === 3) {
+                    this.showResults();
+                    return;
+                }
+                
+                this.stopAllAudio();
+                const curr = document.getElementById(`page-${id}`);
+                const next = document.getElementById(`page-${id+1}`);
+                
+                curr.classList.remove('active');
+                setTimeout(() => {
+                    curr.style.display = 'none';
+                    next.style.display = 'block';
+                    setTimeout(() => next.classList.add('active'), 10);
+                    window.scrollTo(0, 0);
+                }, 400);
+            },
+
+            showResults: function() {
+                this.stopAllAudio();
+                const endTime = new Date();
+                const totalScore = this.state.scores.p1 + this.state.scores.p2 + this.state.scores.p3;
+                const totalMax = this.state.maxScores.p1 + this.state.maxScores.p2 + this.state.maxScores.p3;
+                const pct = Math.round((totalScore / totalMax) * 100);
+
+                // HIDE APP PAGES, SHOW RESULT SCREEN
+                document.getElementById('app-pages').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'flex';
+                
+                document.getElementById('total-score').textContent = pct + "%";
+                document.getElementById('res-name').textContent = this.state.studentName;
+                document.getElementById('res-violations').textContent = this.state.violations;
+                
+                document.getElementById('score-p1').textContent = `${this.state.scores.p1}/${this.state.maxScores.p1}`;
+                document.getElementById('score-p2').textContent = `${this.state.scores.p2}/${this.state.maxScores.p2}`;
+                document.getElementById('score-p3').textContent = `${this.state.scores.p3}/${this.state.maxScores.p3}`;
+
+                const fmt = d => `${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`;
+                document.getElementById('res-start').textContent = fmt(this.state.startTime);
+                document.getElementById('res-end').textContent = fmt(endTime);
+
+                const fb = document.getElementById('feedback-text');
+                
+                // NO REVIEW MODE LOGIC OR EVIDENCE UNLOCKING
+
+                if(pct >= 85) {
+                    fb.textContent = "Excellent! You passed.";
+                    fb.style.color = "var(--success)";
+                    fireworks();
+                } else {
+                    fb.textContent = "You need 85% to pass.";
+                    fb.style.color = "var(--error)";
+                }
+            },
+
+            validatePage: function(id) {
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                for(let g of gaps) {
+                    if(!g.classList.contains('filled') && !g.dataset.filled) return false;
+                }
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    const qBlock = document.querySelectorAll(`#form-${id} .question-block`)[i];
+                    if(qBlock.querySelector('.correct')) continue;
+                    if(!document.querySelector(`input[name="q-${id}-${i}"]:checked`)) return false;
+                }
+                return true;
+            },
+
+            // --- UTILS ---
+            stopAllAudio: function() {
+                document.querySelectorAll('audio').forEach(a => { a.pause(); this.resetBtn(a.id); });
+            },
+
+            setupDragDrop: function() {
+                let dragged = null;
+                document.addEventListener('dragstart', e => {
+                    if(e.target.classList.contains('draggable')) {
+                        dragged = e.target;
+                        e.dataTransfer.setData('text', e.target.dataset.word);
+                        setTimeout(() => e.target.style.opacity = '0.5', 0);
+                    }
+                });
+                document.addEventListener('dragend', e => {
+                    if(dragged) dragged.style.opacity = '1'; dragged = null;
+                });
+                document.addEventListener('dragover', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault(); e.target.style.background = "#ffebee";
+                    }
+                });
+                document.addEventListener('dragleave', e => {
+                    if(e.target.classList.contains('gap-zone')) e.target.style.background = "rgba(255, 255, 255, 0.5)";
+                });
+                document.addEventListener('drop', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault();
+                        e.target.style.background = "rgba(255, 255, 255, 0.5)";
+                        const word = e.dataTransfer.getData('text');
+                        if(e.target.classList.contains('filled') || e.target.classList.contains('revealed')) return;
+                        if (!e.target.dataset.filled) {
+                            e.target.textContent = word;
+                            e.target.dataset.filled = word;
+                            if(dragged) dragged.style.display = 'none';
+                        }
+                    }
+                });
+                document.addEventListener('click', e => {
+                    if(e.target.classList.contains('gap-zone') && e.target.dataset.filled && !e.target.classList.contains('filled') && !e.target.classList.contains('revealed')) {
+                        const word = e.target.dataset.filled;
+                        e.target.textContent = '';
+                        delete e.target.dataset.filled;
+                        const banks = document.querySelectorAll('.draggable');
+                        for(let b of banks) {
+                            if(b.dataset.word === word && b.style.display === 'none') {
+                                b.style.display = 'inline-block'; break;
+                            }
+                        }
+                    }
+                });
+            },
+
+            setupViolationTracker: function() {
+                document.addEventListener("visibilitychange", () => {
+                    if (document.hidden && this.state.startTime) this.logViolation();
+                });
+                window.addEventListener("blur", () => {
+                    if (this.state.startTime && document.getElementById('result-screen').style.display === 'none') this.logViolation();
+                });
+            },
+            logViolation: function() {
+                if(!this.lastViolation || (Date.now() - this.lastViolation > 2000)) {
+                    this.state.violations++;
+                    this.lastViolation = Date.now();
+                    document.title = `⚠️ Alert (${this.state.violations})`;
+                }
+            }
+        };
+
+        function fireworks() {
+            const c = document.getElementById('canvas-confetti'), x = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            let p = [];
+            const add = (n, x, y) => { for(let i=0;i<n;i++) p.push({x:x,y:y,vx:(Math.random()-.5)*10,vy:(Math.random()-.5)*10,c:`hsl(${Math.random()*360},100%,50%)`,l:100}); }
+            const tick = () => {
+                x.clearRect(0,0,c.width,c.height);
+                p.forEach((i,idx) => { i.x+=i.vx; i.y+=i.vy; i.l--; x.fillStyle=i.c; x.fillRect(i.x,i.y,4,4); if(i.l<0) p.splice(idx,1); });
+                if(p.length) requestAnimationFrame(tick);
+            }
+            let t = setInterval(() => add(20, Math.random()*c.width, Math.random()*c.height/2), 200);
+            tick(); setTimeout(() => clearInterval(t), 4000);
+        }
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Reading Part 6 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Drag & Drop Styles */
+        
+        /* 1. Trạng thái ban đầu */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #f0fdf4; /* Green tint background */
+            border: 2px dashed #86efac; /* Green dashed border */
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #166534;
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+            transform: scale(1.1);
+        }
+
+        /* 2. Trạng thái đã điền */
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            background-color: #f8fafc; 
+            border: none;
+            border-bottom: 2px solid #64748b;
+            border-radius: 4px;
+            color: #0f172a;
+            font-size: 1em;
+            font-weight: 800;
+            text-align: left;
+            box-shadow: none;
+            white-space: normal; 
+            line-height: 1.6;
+        }
+        
+        .drop-zone.filled:hover {
+            background-color: #e2e8f0;
+            border-bottom-color: #0f172a; 
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        /* 3. Trạng thái ĐÚNG */
+        .drop-zone.correct {
+            background-color: #dcfce7 !important;
+            border-bottom: 2px solid #16a34a !important;
+            color: #15803d !important;
+            pointer-events: none;
+        }
+        
+        /* 4. Trạng thái SAI */
+        .drop-zone.wrong {
+            background-color: #fee2e2 !important;
+            border-bottom: 2px solid #dc2626 !important;
+            color: #b91c1c !important;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+        }
+
+        /* Reading Text Styles */
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.0; 
+            text-align: justify; 
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-green-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">FCE Reading Part 6</h1>
+                <p class="text-slate-500 mb-6 font-medium">Test 5 & Test 6</p>
+                <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-green-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-green-50 border border-green-200 rounded-lg text-green-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 5</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/2</span>
+                    
+                    <!-- Control Buttons -->
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-green-600 text-white font-bold text-sm shadow hover:bg-green-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Split View) -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                
+                <!-- LEFT: TEXT (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose">
+                            <!-- Content Injected Here -->
+                        </div>
+                        
+                        <!-- Explanation Box (Hidden initially) -->
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-green-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: OPTIONS (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-green-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-G
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20">
+                        <!-- Draggable Options Injected Here -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-green-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/12</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span></span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">
+                        Waiting to send...
+                    </div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "06.02.26"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbxnooez5uPo81V0vDfAmSHpU9MEpA_mbIYUjO4ElKdLXRtCekBp_dnqd7g5_WYIe9TWZA/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                id: "test5",
+                title: "College students need their sleep!",
+                content_html: `
+                    <p>Research into the connection between sleep and learning suggests that sleep is even more important than previously thought.</p>
+                    <p>Only a month and a half into her first semester at college, Liz, a student at Harvard University, already wishes she had more time for sleep. Several mornings each week, Liz rises before six to join her teammates for rowing practice. On days like these she seldom sleeps more than seven hours per night, but it’s not as if she doesn’t try.</p>
+                    <p><span class="drop-zone" data-id="37">[37]</span> She often misses opportunities to socialize in order to get her coursework done and still get to bed at a reasonable time. Even without knowing just how important sleep is to learning, she tries to make time for it.</p>
+                    <p>This is not always easy, however. The many demands on her time include her chosen sport, as well as activities like studying optional extra subjects. <span class="drop-zone" data-id="38">[38]</span> She and other students who think the same way as her sacrifice sleep to fit everything in. It isn’t surprising to learn, therefore, that students represent one of the most sleep-deprived segments of the population. Coursework, sports and new-found independence all contribute to the problem.</p>
+                    <p>Studies have found that only eleven percent of college students sleep well consistently, while seventy-three percent experience at least occasional sleep issues, as Liz does. Forty percent of students felt well-rested no more than two days per week. Poor sleep is no longer considered a harmless aspect of college. <span class="drop-zone" data-id="39">[39]</span> The results of this show that it has significant impact on memory and learning.</p>
+                    <p>Inadequate sleep negatively affects our learning processes. It is simply more difficult to concentrate when we are sleep deprived; this affects our ability to focus on and gather information presented to us, and our ability to remember even those things we know we have learned in the past. <span class="drop-zone" data-id="40">[40]</span> That is, the effect that many sleep researchers think it has on memory consolidation, the process by which connections in the brain strengthen and form into something more permanent.</p>
+                    <p>A number of studies have shown that poor quality sleep can negatively impact on a person’s ability to turn factual information or processes they’ve just learned into long-term memories. <span class="drop-zone" data-id="41">[41]</span> And if this opportunity is missed – such as when a student stays awake all night – it generally can’t be made up. Even if sleep is ‘recovered’ on subsequent nights, the brain will be less able to retain and make use of information gathered on the day before. These findings shed new light on the importance of making time for sleep, not only for college students like Liz, but for anyone who wants to continue to learn.</p>
+                    <p>Early in her first semester at Harvard, Liz feels like she is maintaining a healthy balance, but only just. Trying hard to get the most out of her time in college, she admits it’s sometimes hard to see sleep as an important part of her athletic and scholastic objectives. <span class="drop-zone" data-id="42">[42]</span> Rather than thinking of sleep as wasted time or even time off, we should, they say, instead view it as the time when our brain is doing some of its most important work.</p>
+                `,
+                options: [
+                    { id: "A", text: "Although it may seem unnecessary to do these, Liz views them as essential." },
+                    { id: "B", text: "It also has a less obvious but possibly even more profound impact." },
+                    { id: "C", text: "Liz knows that she must nevertheless do her best to avoid it." },
+                    { id: "D", text: "Research suggests that the most critical period of sleep for this to happen is the one on the same day." },
+                    { id: "E", text: "In fact, Liz’s behaviour is not at all like that of other college students her age." },
+                    { id: "F", text: "But that’s exactly what many researchers say it is." },
+                    { id: "G", text: "Quite the opposite, actually, as research into its effects progresses." }
+                ],
+                answers: { 37: "E", 38: "A", 39: "G", 40: "B", 41: "D", 42: "F" },
+                explanations: `
+                    <strong>37. E:</strong> 'In fact, Liz’s behaviour is not at all like that of other college students her age' contrasts her effort to sleep with the typical student, leading into 'She often misses opportunities...'.<br>
+                    <strong>38. A:</strong> 'Although it may seem unnecessary to do these [optional extra subjects], Liz views them as essential.' explains why she sacrifices sleep.<br>
+                    <strong>39. G:</strong> 'Quite the opposite, actually...' contrasts with 'harmless aspect' mentioned before, introducing the negative results of research.<br>
+                    <strong>40. B:</strong> 'It also has a less obvious but possibly even more profound impact.' introduces the deeper effect on memory consolidation mentioned next.<br>
+                    <strong>41. D:</strong> 'Research suggests that the most critical period... is the one on the same day.' connects 'long-term memories' with 'if this opportunity is missed'.<br>
+                    <strong>42. F:</strong> 'But that’s exactly what many researchers say it is [an important part].' contrasts with Liz's view that it's hard to see sleep as important.
+                `
+            },
+            {
+                id: "test6",
+                title: "Has one of the mysteries of the ancient pyramids been solved?",
+                content_html: `
+                    <p>A painting in a 3000-year-old tomb suggests how the Ancient Egyptians may have transported the heavy stones used to build the pyramids.</p>
+                    <p>Ever since the discovery of the first pyramid, scientists have wondered how ancient Egyptians built these monumental structures that are visible even from space.</p>
+                    <p>There are a number of theories about the construction techniques they used. <span class="drop-zone" data-id="37">[37]</span> Egyptologists had always wondered how workers were able to move the giant limestone blocks. These weigh as much as 2.5 tons each, and the stone quarries from which they were cut were often located hundreds of kilometres away from the pyramid sites.</p>
+                    <p>Dragging them on basic wooden sledges, similar to those people use to slide down snow-covered slopes in winter, was the obvious answer. <span class="drop-zone" data-id="38">[38]</span> It now turns out that the workers probably did have some assistance – from ordinary water! What is even more amazing is that the answer to the Egyptologists’ puzzle has been staring them in the face for many years, in a wall painting in the tomb of an ancient Egyptian king, or pharaoh.</p>
+                    <p>The artwork, which depicts a pharaoh being pulled along by a large team of workers, has one significant detail that had so far been misinterpreted – a man pouring water in front of the sledge the pharaoh is being dragged upon. Egyptologists had always thought that the man was performing some kind of religious ritual. However, some scientists now believe that the water was being poured for a totally different reason. <span class="drop-zone" data-id="39">[39]</span></p>
+                    <p>This revelation was made by researchers from the University of Amsterdam and the Foundation for Fundamental Research on Matter. The scientists arrived at this conclusion after conducting extensive testing in their laboratory, by sliding a weighted tray across both dry sand and sand that had been mixed with varying amounts of water. In dry sand, heaps formed in front of the tray as it was dragged along. <span class="drop-zone" data-id="40">[40]</span></p>
+                    <p>However, as the researchers added water, the sand hardened, which helped reduce both the force needed to pull the tray and the friction against it. That’s because the water helps form tiny water bridges, known as capillary bridges, between the sand particles, causing them to stick together. <span class="drop-zone" data-id="41">[41]</span> The force required to pull the sledge would have been reduced by as much as 50% as the sand became stiffer, which meant that half as many workers were needed to move the heavy stones.</p>
+                    <p>There was a tipping point, though. After the moisture exceeded a certain amount, the stiffness started to decrease and the capillary bridges melted away, causing the sand to clump up around the tray once again. According to the researchers, the perfect balance appears to be when the volume of the water is between 2–5% of the volume of sand. <span class="drop-zone" data-id="42">[42]</span> And so another step has been taken towards understanding the incredible feat achieved by these ancient engineers. Now if we could only find a painting that would tell us how the workers erected these impressive structures without access to modern mechanics, that would be amazing!</p>
+                `,
+                options: [
+                    { id: "A", text: "However, to do so would have required superhuman strength against the friction of the desert sand." },
+                    { id: "B", text: "This allowed them to work out exactly how much of it had been used every time." },
+                    { id: "C", text: "This slowed it down dramatically." },
+                    { id: "D", text: "One question, however, had been left unanswered." },
+                    { id: "E", text: "The pyramid builders seem to have realised that this was the correct proportion." },
+                    { id: "F", text: "The effect of this turns out to be significant." },
+                    { id: "G", text: "It was to help the sledge move more easily across the sand." }
+                ],
+                answers: { 37: "D", 38: "A", 39: "G", 40: "C", 41: "F", 42: "E" },
+                explanations: `
+                    <strong>37. D:</strong> 'One question, however, had been left unanswered.' refers to the question of moving the giant blocks mentioned next.<br>
+                    <strong>38. A:</strong> 'However, to do so would have required superhuman strength...' counters the 'obvious answer' of dragging sledges.<br>
+                    <strong>39. G:</strong> 'It was to help the sledge move more easily across the sand.' explains the 'totally different reason' for pouring water.<br>
+                    <strong>40. C:</strong> 'This slowed it down dramatically.' refers to the heaps of dry sand forming in front of the tray.<br>
+                    <strong>41. F:</strong> 'The effect of this turns out to be significant.' introduces the 50% force reduction mentioned next.<br>
+                    <strong>42. E:</strong> 'The pyramid builders seem to have realised that this was the correct proportion.' connects the scientific 2-5% finding to the ancient workers.
+                `
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                if (!name) { alert("Please enter your name!"); return; }
+                this.state.userName = name;
+                this.state.startTime = new Date();
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 5}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                // Reset Explanation
+                document.getElementById('explanation-box').classList.add('hidden');
+                document.getElementById('explanation-content').innerHTML = '';
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                // Render Content
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.innerHTML.trim() === "" || contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+                
+                // Re-bind events and fill UI
+                const gaps = contentDiv.querySelectorAll('.drop-zone');
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const key = `${test.id}-${qId}`;
+                    const savedAns = this.state.userAnswers[key];
+                    
+                    if (savedAns) {
+                        this.fillGapUI(gap, savedAns);
+                    } else {
+                         gap.className = 'drop-zone';
+                         gap.innerHTML = `[${qId}]`;
+                         gap.ondragover = (e) => this.allowDrop(e);
+                         gap.ondrop = (e) => this.drop(e);
+                    }
+                    
+                    if (!this.state.testCompleted) {
+                         gap.onclick = () => this.handleGapClick(test.id, qId);
+                    } else {
+                        gap.onclick = null;
+                        gap.ondragover = null;
+                        gap.ondrop = null;
+                    }
+                });
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-green-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    
+                    container.appendChild(div);
+                });
+            },
+
+            // --- DRAG & DROP ---
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                
+                target.classList.remove('hovered');
+                target.classList.remove('wrong'); 
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                // Keep wrong status visible if exists
+                if(!gapEl.classList.contains('wrong') && !gapEl.classList.contains('correct')){
+                     gapEl.className = 'drop-zone filled';
+                } else {
+                     gapEl.classList.add('filled');
+                }
+                
+                gapEl.innerHTML = `<span class="font-bold mr-2">[${optId}]</span>${optText}`;
+            },
+
+            // --- CHECK LOGIC ---
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const gaps = document.querySelectorAll('.drop-zone');
+
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns) {
+                        answeredCount++;
+                        if (userAns === test.answers[qId]) correctCount++;
+                    }
+                });
+
+                if (answeredCount < 6) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                // PASS Condition: >= 5 Correct (Relaxed for 6 questions)
+                if (correctCount >= 5) {
+                    this.showFeedback(true);
+                } else {
+                    // FAIL Condition
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrors(); 
+                        this.renderTest(); 
+                    } else {
+                        // No attempts left
+                        this.showFeedback(false);
+                    }
+                }
+            },
+
+            highlightErrors() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong');
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                const test = db[this.state.currentTestIdx];
+                
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                expBox.classList.remove('hidden');
+                expContent.innerHTML = test.explanations;
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.classList.remove('wrong');
+                    gap.classList.remove('filled');
+                    
+                    if (userAns === correctAns) {
+                        gap.classList.add('correct');
+                        gap.innerHTML = `<span class="font-bold mr-2">[${correctAns}]</span>${test.options.find(o => o.id === correctAns).text}`;
+                    } else {
+                        gap.classList.add('wrong');
+                        const correctOpt = test.options.find(o => o.id === correctAns);
+                        gap.innerHTML += `<div class="text-xs text-green-700 mt-2 p-2 bg-green-50 rounded border border-green-200 font-normal"><i class="fas fa-check"></i> Correct: [${correctAns}] ${correctOpt.text}</div>`;
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test.");
+                } else {
+                    alert("Out of attempts. Review the correct answers below.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.renderTest();
+            },
+
+            // --- FINAL SUBMISSION ---
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                // Calculate Total Score
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    for (let qId = 37; qId <= 42; qId++) {
+                        totalQ++;
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key] || "-";
+                        const correctAns = test.answers[qId];
+                        if (userAns === correctAns) {
+                            score++;
+                        }
+                    }
+                });
+
+                const percent = Math.round((score / totalQ) * 100);
+
+                // Send to Google Sheet
+                if (typeof nopBaiLenSheet === 'function') {
+                    document.getElementById('sheet-status').textContent = "Sending results to Google Sheet...";
+                    nopBaiLenSheet(
+                        this.state.userName, 
+                        durationStr, 
+                        `${score} / ${totalQ}`, 
+                        `${percent}%`
+                    );
+                }
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#22c55e');
+            }
+        };
+
+        // --- GOOGLE SHEET SEND FUNCTION ---
+        var thoiGianBatDau = new Date(); 
+
+        function nopBaiLenSheet(tenHocSinh, thoiGianLam, diemSo, phanTram) {
+            if (!LINK_APP_SCRIPT) return;
+
+            var gioBatDauString = thoiGianBatDau.getHours() + ":" + thoiGianBatDau.getMinutes() + ":" + thoiGianBatDau.getSeconds();
+            var duLieu = {
+                tenSheet: TEN_SHEET_NAY,
+                ten: tenHocSinh,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLam,
+                diemSo: diemSo,
+                phanTram: phanTram
+            };
+
+            fetch(LINK_APP_SCRIPT, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(duLieu)
+            })
+            .then(() => {
+                console.log("✅ Sent to Sheet");
+                document.getElementById('sheet-status').innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results sent successfully!</span>';
+            })
+            .catch(err => {
+                console.error("❌ Error:", err);
+                document.getElementById('sheet-status').innerHTML = '<span class="text-red-500">Error sending results. Check console.</span>';
+            });
+        }
+    </script>
+</body>
+</html>

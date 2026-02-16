@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Family Practice (Full 210 Words)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        body { font-family: 'Nunito', sans-serif; }
+        
+        .shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .word-input:focus { 
+            border-color: #f59e0b; 
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2); 
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fffbeb; }
+        ::-webkit-scrollbar-thumb { background: #fbbf24; border-radius: 4px; }
+
+        .tag-enter { animation: popIn 0.3s ease-out forwards; opacity: 0; transform: scale(0.9); }
+        @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+    </style>
+</head>
+<body class="bg-yellow-50 min-h-screen pb-10 flex flex-col items-center">
+
+    <div id="app" class="w-full max-w-3xl px-4 py-8">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <div class="inline-block p-3 bg-yellow-400 rounded-full text-white text-3xl mb-3 shadow-lg">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="text-4xl font-extrabold text-yellow-900 mb-2 tracking-tight">Word Family Master</h1>
+            <p class="text-yellow-700 font-medium">Practice English Word Forms</p>
+        </header>
+
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="bg-white rounded-3xl shadow-xl p-8 border-b-4 border-yellow-200">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-800">Welcome! 👋</h2>
+                <p class="text-gray-500 text-sm mt-1">Setup your study session below.</p>
+            </div>
+            
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Student Name</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="student-name" placeholder="Enter your name..." 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-yellow-400 transition-all font-semibold text-lg outline-none">
+                    </div>
+                </div>
+
+                <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100">
+                    <label class="block text-sm font-bold text-yellow-800 mb-4 uppercase tracking-wide">
+                        <i class="fas fa-list-ol mr-1"></i> Select Word Range (1 - 210)
+                    </label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">From No.</span>
+                            <input type="number" id="start-range" value="1" min="1" max="210" oninput="updatePreview()"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 outline-none text-center text-xl font-bold text-gray-800">
+                        </div>
+                        <div>
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">To No.</span>
+                            <input type="number" id="end-range" value="10" min="1" max="210" oninput="updatePreview()"
+                                class="w-full px-4 py-3 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 outline-none text-center text-xl font-bold text-gray-800">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-5 pt-4 border-t border-yellow-200">
+                        <div class="flex justify-between items-end mb-2">
+                            <span class="text-xs font-bold text-gray-400 uppercase">Selected Words List:</span>
+                            <span id="preview-count" class="text-xs font-bold text-yellow-600">0 words</span>
+                        </div>
+                        <div id="range-preview" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-yellow-50/50 rounded-lg">
+                            <!-- Tags will be injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-5 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
+                    Start Quiz <i class="fas fa-rocket ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden w-full">
+            <div class="flex justify-between items-center mb-6 bg-white px-5 py-3 rounded-2xl shadow-sm border border-yellow-100">
+                <div class="flex items-center text-gray-700 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 text-xs">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="display-name">Student</span>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-gray-400 uppercase font-bold">Progress</div>
+                    <div class="text-yellow-600 font-bold" id="progress-text">0/0</div>
+                </div>
+            </div>
+
+            <div id="question-card" class="bg-white rounded-3xl shadow-xl border-b-8 border-gray-100 overflow-hidden relative w-full">
+                <!-- Type Badge -->
+                <div class="absolute top-0 right-0 mt-6 mr-6">
+                     <span id="target-type" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-extrabold uppercase tracking-wider shadow-sm border border-yellow-200">Noun</span>
+                </div>
+
+                <div class="p-8 pt-12">
+                    
+                    <h2 class="text-xl md:text-3xl font-bold text-gray-800 mb-2 text-center mt-4">
+                        Meaning: <span id="meaning-clue" class="text-yellow-600 italic font-medium">...</span>
+                    </h2>
+                    
+                    <div class="relative mt-8">
+                        <input type="text" id="answer-input" placeholder="Type the English word..." autocomplete="off"
+                            class="word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all">
+                        
+                        <div id="feedback-icon" class="hidden absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl"></div>
+                    </div>
+
+                    <div id="feedback-box" class="hidden mt-6 p-5 rounded-xl text-center animate-fade-in-up">
+                        <div id="feedback-title" class="font-bold text-lg mb-1"></div>
+                        <div id="feedback-content" class="text-gray-700"></div>
+                        <div id="retry-msg" class="text-xs mt-2 font-semibold uppercase tracking-wide opacity-75 hidden">
+                            <i class="fas fa-redo mr-1"></i> Added to queue for review
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 flex gap-4 border-t border-gray-100">
+                    <button id="check-btn" onclick="checkAnswer()" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Check Answer
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                 <button onclick="quitQuiz()" class="text-gray-400 hover:text-red-500 text-sm font-semibold transition-colors">
+                    <i class="fas fa-times mr-1"></i> Quit Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center w-full">
+            <div class="bg-white rounded-3xl shadow-xl p-10 border-b-4 border-yellow-200 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400"></div>
+
+                <div class="w-20 h-20 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
+                    <i class="fas fa-crown"></i>
+                </div>
+                
+                <h2 class="text-2xl font-extrabold text-gray-800 mb-1">Excellent, <span id="result-name">Student</span>!</h2>
+                <p class="text-gray-500 mb-6 text-base">You have mastered all selected words.</p>
+                
+                <div class="grid grid-cols-2 gap-4 mb-6">
+                    <div class="bg-gray-50 p-3 rounded-xl">
+                        <div class="text-2xl font-bold text-yellow-500" id="total-words-count">0</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase">Questions</div>
+                    </div>
+                    <div class="bg-gray-50 p-3 rounded-xl">
+                        <div class="text-2xl font-bold text-green-500" id="accuracy-rate">100%</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase">Accuracy</div>
+                    </div>
+                </div>
+
+                <!-- NEW: Reviewed List -->
+                <div class="mb-6 text-left">
+                     <h3 class="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
+                        <i class="fas fa-book mr-1"></i> Word Families Completed
+                    </h3>
+                    <div id="reviewed-list" class="bg-yellow-50 rounded-xl p-4 max-h-48 overflow-y-auto border border-yellow-100 text-sm space-y-3">
+                        <!-- Content -->
+                    </div>
+                </div>
+
+                <button onclick="quitQuiz()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-lg uppercase">
+                    New Session
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="sound-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
+    <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+
+    <script>
+        // --- DATA SOURCE: FULL 210 WORDS ---
+        const wordBank = [
+            { id: 1, root: "able", forms: [ { word: "enable", meaning: "cho phép", type: "Verb" }, { word: "disable", meaning: "làm mất khả năng", type: "Verb" }, { word: "ability", meaning: "khả năng", type: "Noun" }, { word: "disability", meaning: "sự khuyết tật", type: "Noun" }, { word: "able", meaning: "có khả năng", type: "Adj" }, { word: "unable", meaning: "không thể", type: "Adj" } ] },
+            { id: 2, root: "academy", forms: [ { word: "academy", meaning: "học viện", type: "Noun" }, { word: "academic", meaning: "học thuật", type: "Adj" }, { word: "academically", meaning: "về mặt học thuật", type: "Adv" } ] },
+            { id: 3, root: "accept", forms: [ { word: "accept", meaning: "chấp nhận", type: "Verb" }, { word: "acceptance", meaning: "sự chấp nhận", type: "Noun" }, { word: "acceptable", meaning: "có thể chấp nhận", type: "Adj" }, { word: "unacceptable", meaning: "không thể chấp nhận", type: "Adj" }, { word: "acceptably", meaning: "ở mức chấp nhận được", type: "Adv" } ] },
+            { id: 4, root: "accurate", forms: [ { word: "accuracy", meaning: "độ chính xác", type: "Noun" }, { word: "inaccuracy", meaning: "sự không chính xác", type: "Noun" }, { word: "accurate", meaning: "chính xác", type: "Adj" }, { word: "inaccurate", meaning: "không chính xác", type: "Adj" }, { word: "accurately", meaning: "một cách chính xác", type: "Adv" }, { word: "inaccurately", meaning: "không chính xác", type: "Adv" } ] },
+            { id: 5, root: "accuse", forms: [ { word: "accuse", meaning: "buộc tội", type: "Verb" }, { word: "accusation", meaning: "lời buộc tội", type: "Noun" }, { word: "accused", meaning: "bị buộc tội", type: "Adj" } ] },
+            { id: 6, root: "achieve", forms: [ { word: "achieve", meaning: "đạt được", type: "Verb" }, { word: "achievement", meaning: "thành tựu", type: "Noun" } ] },
+            { id: 7, root: "act", forms: [ { word: "act", meaning: "hành động / diễn xuất", type: "Verb" }, { word: "action", meaning: "hành động", type: "Noun" }, { word: "activity", meaning: "hoạt động", type: "Noun" }, { word: "actor", meaning: "nam diễn viên", type: "Noun" }, { word: "actress", meaning: "nữ diễn viên", type: "Noun" }, { word: "active", meaning: "năng động", type: "Adj" }, { word: "inactive", meaning: "không hoạt động", type: "Adj" }, { word: "actively", meaning: "năng động (adv)", type: "Adv" } ] },
+            { id: 8, root: "add", forms: [ { word: "add", meaning: "thêm vào", type: "Verb" }, { word: "addition", meaning: "sự bổ sung", type: "Noun" }, { word: "additional", meaning: "thêm vào (tính từ)", type: "Adj" }, { word: "additionally", meaning: "ngoài ra", type: "Adv" } ] },
+            { id: 9, root: "addict", forms: [ { word: "addict", meaning: "gây nghiện (hành động)", type: "Verb" }, { word: "addiction", meaning: "sự nghiện ngập", type: "Noun" }, { word: "addictive", meaning: "gây nghiện", type: "Adj" } ] },
+            { id: 10, root: "advertise", forms: [ { word: "advertise", meaning: "quảng cáo", type: "Verb" }, { word: "advertisement", meaning: "mục quảng cáo", type: "Noun" }, { word: "advertising", meaning: "ngành quảng cáo", type: "Adj" }, { word: "advertiser", meaning: "nhà quảng cáo", type: "Noun" } ] },
+            { id: 11, root: "allergy", forms: [ { word: "allergy", meaning: "dị ứng", type: "Noun" }, { word: "allergic", meaning: "bị dị ứng", type: "Adj" } ] },
+            { id: 12, root: "allow", forms: [ { word: "allow", meaning: "cho phép", type: "Verb" }, { word: "allowance", meaning: "sự cho phép / trợ cấp", type: "Noun" }, { word: "allowable", meaning: "được phép", type: "Adj" }, { word: "disallow", meaning: "không cho phép", type: "Verb" } ] },
+            { id: 13, root: "amuse", forms: [ { word: "amuse", meaning: "làm vui", type: "Verb" }, { word: "amusement", meaning: "sự giải trí", type: "Noun" }, { word: "amusing", meaning: "vui, gây cười", type: "Adj" }, { word: "amusingly", meaning: "một cách vui", type: "Adv" }, { word: "unamusing", meaning: "không vui", type: "Adj" } ] },
+            { id: 14, root: "announce", forms: [ { word: "announce", meaning: "thông báo", type: "Verb" }, { word: "announcement", meaning: "thông báo (danh từ)", type: "Noun" }, { word: "announced", meaning: "được công bố", type: "Adj" }, { word: "unannounced", meaning: "không báo trước", type: "Adj" } ] },
+            { id: 15, root: "anxious", forms: [ { word: "anxiety", meaning: "sự lo lắng", type: "Noun" }, { word: "anxious", meaning: "lo lắng", type: "Adj" }, { word: "anxiously", meaning: "một cách lo lắng", type: "Adv" } ] },
+            { id: 16, root: "appear", forms: [ { word: "appear", meaning: "xuất hiện", type: "Verb" }, { word: "appearance", meaning: "sự xuất hiện / vẻ ngoài", type: "Noun" }, { word: "apparent", meaning: "rõ ràng", type: "Adj" }, { word: "apparently", meaning: "dường như", type: "Adv" } ] },
+            { id: 17, root: "apply", forms: [ { word: "apply", meaning: "nộp đơn / áp dụng", type: "Verb" }, { word: "application", meaning: "đơn xin / ứng dụng", type: "Noun" }, { word: "applicable", meaning: "có thể áp dụng", type: "Adj" }, { word: "applicant", meaning: "người nộp đơn", type: "Noun" }, { word: "inapplicable", meaning: "không áp dụng được", type: "Adj" } ] },
+            { id: 18, root: "appreciate", forms: [ { word: "appreciate", meaning: "đánh giá cao", type: "Verb" }, { word: "appreciation", meaning: "sự trân trọng", type: "Noun" }, { word: "appreciative", meaning: "biết ơn", type: "Adj" }, { word: "unappreciative", meaning: "không biết ơn", type: "Adj" } ] },
+            { id: 19, root: "argue", forms: [ { word: "argue", meaning: "tranh luận", type: "Verb" }, { word: "argument", meaning: "lập luận", type: "Noun" }, { word: "argumentative", meaning: "hay tranh cãi", type: "Adj" } ] },
+            { id: 20, root: "arrange", forms: [ { word: "arrange", meaning: "sắp xếp", type: "Verb" }, { word: "arrangement", meaning: "sự sắp xếp", type: "Noun" }, { word: "rearrange", meaning: "sắp xếp lại", type: "Verb" } ] },
+            { id: 21, root: "arrive", forms: [ { word: "arrive", meaning: "đến", type: "Verb" }, { word: "arrival", meaning: "sự đến", type: "Noun" } ] },
+            { id: 22, root: "assist", forms: [ { word: "assist", meaning: "hỗ trợ", type: "Verb" }, { word: "assistance", meaning: "sự hỗ trợ", type: "Noun" }, { word: "assistant", meaning: "trợ lý", type: "Noun" } ] },
+            { id: 23, root: "associate", forms: [ { word: "associate", meaning: "liên kết", type: "Verb" }, { word: "association", meaning: "hiệp hội", type: "Noun" }, { word: "associated", meaning: "có liên quan", type: "Adj" }, { word: "disassociate", meaning: "tách rời", type: "Verb" } ] },
+            { id: 24, root: "attend", forms: [ { word: "attend", meaning: "tham dự", type: "Verb" }, { word: "attention", meaning: "sự chú ý", type: "Noun" }, { word: "attentive", meaning: "chú ý", type: "Adj" }, { word: "attendance", meaning: "sự có mặt", type: "Noun" }, { word: "inattentive", meaning: "không chú ý", type: "Adj" } ] },
+            { id: 25, root: "attract", forms: [ { word: "attract", meaning: "thu hút", type: "Verb" }, { word: "attraction", meaning: "sự thu hút", type: "Noun" }, { word: "attractive", meaning: "hấp dẫn", type: "Adj" }, { word: "unattractive", meaning: "không hấp dẫn", type: "Adj" } ] },
+            { id: 26, root: "aware", forms: [ { word: "awareness", meaning: "sự nhận thức", type: "Noun" }, { word: "aware", meaning: "nhận thức", type: "Adj" }, { word: "unaware", meaning: "không nhận thức", type: "Adj" } ] },
+            { id: 27, root: "beauty", forms: [ { word: "beauty", meaning: "vẻ đẹp", type: "Noun" }, { word: "beautiful", meaning: "đẹp", type: "Adj" }, { word: "beautifully", meaning: "một cách đẹp", type: "Adv" } ] },
+            { id: 28, root: "behave", forms: [ { word: "behave", meaning: "cư xử", type: "Verb" }, { word: "behaviour", meaning: "hành vi", type: "Noun" } ] },
+            { id: 29, root: "belief", forms: [ { word: "believe", meaning: "tin", type: "Verb" }, { word: "belief", meaning: "niềm tin", type: "Noun" }, { word: "believable", meaning: "đáng tin", type: "Adj" }, { word: "unbelievable", meaning: "khó tin", type: "Adj" } ] },
+            { id: 30, root: "benefit", forms: [ { word: "benefit", meaning: "mang lại lợi ích", type: "Verb" }, { word: "benefit", meaning: "lợi ích", type: "Noun" }, { word: "beneficial", meaning: "có lợi", type: "Adj" } ] },
+            { id: 31, root: "bore", forms: [ { word: "bore", meaning: "làm chán", type: "Verb" }, { word: "boredom", meaning: "sự chán nản", type: "Noun" }, { word: "boring", meaning: "nhàm chán", type: "Adj" }, { word: "bored", meaning: "buồn chán (cảm xúc)", type: "Adj" } ] },
+            { id: 32, root: "broad", forms: [ { word: "broaden", meaning: "mở rộng", type: "Verb" }, { word: "breadth", meaning: "bề rộng", type: "Noun" }, { word: "broad", meaning: "rộng", type: "Adj" }, { word: "broadly", meaning: "một cách rộng", type: "Adv" } ] },
+            { id: 33, root: "build", forms: [ { word: "build", meaning: "xây dựng", type: "Verb" }, { word: "builder", meaning: "thợ xây", type: "Noun" }, { word: "building", meaning: "tòa nhà", type: "Noun" } ] },
+            { id: 34, root: "care", forms: [ { word: "care", meaning: "quan tâm", type: "Verb" }, { word: "caring", meaning: "sự quan tâm/chu đáo", type: "Adj" }, { word: "careful", meaning: "cẩn thận", type: "Adj" }, { word: "careless", meaning: "bất cẩn", type: "Adj" }, { word: "carefully", meaning: "cẩn thận (adv)", type: "Adv" } ] },
+            { id: 35, root: "certify", forms: [ { word: "certify", meaning: "chứng nhận", type: "Verb" }, { word: "certificate", meaning: "chứng chỉ", type: "Noun" }, { word: "certified", meaning: "được chứng nhận", type: "Adj" } ] },
+            { id: 36, root: "comfort", forms: [ { word: "comfort", meaning: "an ủi", type: "Verb" }, { word: "comfort", meaning: "sự thoải mái", type: "Noun" }, { word: "comfortable", meaning: "thoải mái", type: "Adj" }, { word: "uncomfortable", meaning: "không thoải mái", type: "Adj" } ] },
+            { id: 37, root: "commerce", forms: [ { word: "commerce", meaning: "thương mại", type: "Noun" }, { word: "commercial", meaning: "thuộc thương mại", type: "Adj" }, { word: "commercially", meaning: "về mặt thương mại", type: "Adv" } ] },
+            { id: 38, root: "communicate", forms: [ { word: "communicate", meaning: "giao tiếp", type: "Verb" }, { word: "communication", meaning: "sự giao tiếp", type: "Noun" }, { word: "communicative", meaning: "cởi mở/hay giao tiếp", type: "Adj" } ] },
+            { id: 39, root: "compete", forms: [ { word: "compete", meaning: "cạnh tranh", type: "Verb" }, { word: "competition", meaning: "cuộc thi", type: "Noun" }, { word: "competitor", meaning: "đối thủ", type: "Noun" }, { word: "competitive", meaning: "có tính cạnh tranh", type: "Adj" } ] },
+            { id: 40, root: "contain", forms: [ { word: "contain", meaning: "chứa đựng", type: "Verb" }, { word: "container", meaning: "vật chứa", type: "Noun" }, { word: "content", meaning: "nội dung", type: "Noun" } ] },
+            { id: 41, root: "converse", forms: [ { word: "converse", meaning: "trò chuyện", type: "Verb" }, { word: "conversation", meaning: "cuộc trò chuyện", type: "Noun" } ] },
+            { id: 42, root: "convict", forms: [ { word: "convict", meaning: "kết án", type: "Verb" }, { word: "conviction", meaning: "sự kết tội", type: "Noun" }, { word: "convicted", meaning: "bị kết án", type: "Adj" } ] },
+            { id: 43, root: "convince", forms: [ { word: "convince", meaning: "thuyết phục", type: "Verb" }, { word: "convincing", meaning: "có sức thuyết phục", type: "Adj" }, { word: "unconvincing", meaning: "không thuyết phục", type: "Adj" }, { word: "convinced", meaning: "tin chắc", type: "Adj" } ] },
+            { id: 44, root: "correspond", forms: [ { word: "correspond", meaning: "tương ứng / trao đổi thư", type: "Verb" }, { word: "correspondence", meaning: "thư từ / sự tương ứng", type: "Noun" } ] },
+            { id: 45, root: "create", forms: [ { word: "create", meaning: "tạo ra", type: "Verb" }, { word: "creation", meaning: "sự sáng tạo", type: "Noun" }, { word: "creator", meaning: "người sáng tạo", type: "Noun" }, { word: "creative", meaning: "sáng tạo", type: "Adj" }, { word: "creativity", meaning: "óc sáng tạo", type: "Noun" } ] },
+            { id: 46, root: "crime", forms: [ { word: "crime", meaning: "tội phạm (hành động)", type: "Noun" }, { word: "criminal", meaning: "tội phạm (người) / thuộc hình sự", type: "Noun" } ] },
+            { id: 47, root: "culture", forms: [ { word: "culture", meaning: "văn hóa", type: "Noun" }, { word: "cultural", meaning: "thuộc văn hóa", type: "Adj" }, { word: "uncultured", meaning: "thiếu văn hóa", type: "Adj" } ] },
+            { id: 48, root: "current", forms: [ { word: "current", meaning: "hiện tại / dòng chảy", type: "Noun" }, { word: "currently", meaning: "hiện nay", type: "Adv" } ] },
+            { id: 49, root: "danger", forms: [ { word: "endanger", meaning: "gây nguy hiểm", type: "Verb" }, { word: "danger", meaning: "nguy hiểm", type: "Noun" }, { word: "dangerous", meaning: "nguy hiểm", type: "Adj" }, { word: "endangered", meaning: "bị đe dọa (tuyệt chủng)", type: "Adj" } ] },
+            { id: 50, root: "day", forms: [ { word: "day", meaning: "ngày", type: "Noun" }, { word: "daily", meaning: "hằng ngày", type: "Adj" }, { word: "everyday", meaning: "thường ngày", type: "Adj" } ] },
+            { id: 51, root: "decide", forms: [{word: "decide", meaning: "quyết định", type: "Verb"}, {word: "decision", meaning: "quyết định (n)", type: "Noun"}, {word: "decisive", meaning: "quyết đoán", type: "Adj"}] },
+            { id: 52, root: "dedicate", forms: [{word: "dedicate", meaning: "cống hiến", type: "Verb"}, {word: "dedication", meaning: "sự cống hiến", type: "Noun"}, {word: "dedicated", meaning: "tận tâm", type: "Adj"}] },
+            { id: 53, root: "desire", forms: [{word: "desire", meaning: "mong muốn", type: "Verb"}, {word: "desirable", meaning: "đáng mong muốn", type: "Adj"}, {word: "undesirable", meaning: "không đáng mong muốn", type: "Adj"}] },
+            { id: 54, root: "develop", forms: [{word: "develop", meaning: "phát triển", type: "Verb"}, {word: "development", meaning: "sự phát triển", type: "Noun"}, {word: "developed", meaning: "đã phát triển", type: "Adj"}, {word: "developing", meaning: "đang phát triển", type: "Adj"}] },
+            { id: 55, root: "differ", forms: [{word: "differ", meaning: "khác nhau", type: "Verb"}, {word: "difference", meaning: "sự khác biệt", type: "Noun"}, {word: "different", meaning: "khác nhau", type: "Adj"}] },
+            { id: 56, root: "direct", forms: [{word: "direct", meaning: "chỉ đạo/trực tiếp", type: "Verb"}, {word: "direction", meaning: "phương hướng", type: "Noun"}, {word: "director", meaning: "giám đốc", type: "Noun"}, {word: "directly", meaning: "trực tiếp", type: "Adv"}] },
+            { id: 57, root: "discover", forms: [{word: "discover", meaning: "khám phá", type: "Verb"}, {word: "discovery", meaning: "sự khám phá", type: "Noun"}] },
+            { id: 58, root: "discuss", forms: [{word: "discuss", meaning: "thảo luận", type: "Verb"}, {word: "discussion", meaning: "cuộc thảo luận", type: "Noun"}] },
+            { id: 59, root: "disgust", forms: [{word: "disgust", meaning: "làm ghê tởm", type: "Verb"}, {word: "disgusting", meaning: "ghê tởm", type: "Adj"}, {word: "disgusted", meaning: "cảm thấy ghê tởm", type: "Adj"}] },
+            { id: 60, root: "distant", forms: [{word: "distance", meaning: "khoảng cách", type: "Noun"}, {word: "distant", meaning: "xa xôi", type: "Adj"}, {word: "distantly", meaning: "từ xa", type: "Adv"}] },
+            { id: 61, root: "economy", forms: [{word: "economy", meaning: "nền kinh tế", type: "Noun"}, {word: "economic", meaning: "thuộc kinh tế", type: "Adj"}, {word: "economical", meaning: "tiết kiệm", type: "Adj"}] },
+            { id: 62, root: "edit", forms: [{word: "edit", meaning: "chỉnh sửa", type: "Verb"}, {word: "editor", meaning: "biên tập viên", type: "Noun"}, {word: "edition", meaning: "phiên bản", type: "Noun"}] },
+            { id: 63, root: "educate", forms: [{word: "educate", meaning: "giáo dục", type: "Verb"}, {word: "education", meaning: "nền giáo dục", type: "Noun"}, {word: "educational", meaning: "mang tính giáo dục", type: "Adj"}, {word: "educator", meaning: "nhà giáo dục", type: "Noun"}] },
+            { id: 64, root: "effect", forms: [{word: "effect", meaning: "tác động/hiệu quả", type: "Noun"}, {word: "effective", meaning: "hiệu quả", type: "Adj"}, {word: "ineffective", meaning: "không hiệu quả", type: "Adj"}] },
+            { id: 65, root: "emphasis", forms: [{word: "emphasise", meaning: "nhấn mạnh", type: "Verb"}, {word: "emphasis", meaning: "sự nhấn mạnh", type: "Noun"}, {word: "emphatic", meaning: "dứt khoát/mạnh mẽ", type: "Adj"}] },
+            { id: 66, root: "employ", forms: [{word: "employ", meaning: "thuê", type: "Verb"}, {word: "employment", meaning: "việc làm", type: "Noun"}, {word: "employer", meaning: "chủ lao động", type: "Noun"}, {word: "employee", meaning: "nhân viên", type: "Noun"}, {word: "unemployed", meaning: "thất nghiệp", type: "Adj"}] },
+            { id: 67, root: "end", forms: [{word: "end", meaning: "kết thúc", type: "Verb"}, {word: "ending", meaning: "cái kết", type: "Noun"}, {word: "endless", meaning: "bất tận", type: "Adj"}] },
+            { id: 68, root: "enjoy", forms: [{word: "enjoy", meaning: "thưởng thức/thích", type: "Verb"}, {word: "enjoyment", meaning: "sự thích thú", type: "Noun"}, {word: "enjoyable", meaning: "thú vị", type: "Adj"}] },
+            { id: 69, root: "enter", forms: [{word: "enter", meaning: "đi vào", type: "Verb"}, {word: "entrance", meaning: "lối vào", type: "Noun"}, {word: "entry", meaning: "sự đi vào", type: "Noun"}] },
+            { id: 70, root: "entertain", forms: [{word: "entertain", meaning: "giải trí", type: "Verb"}, {word: "entertainment", meaning: "sự giải trí", type: "Noun"}, {word: "entertaining", meaning: "thú vị/giải trí", type: "Adj"}] },
+            { id: 71, root: "enthuse", forms: [{word: "enthuse", meaning: "tỏ ra nhiệt tình", type: "Verb"}, {word: "enthusiasm", meaning: "sự nhiệt tình", type: "Noun"}, {word: "enthusiastic", meaning: "nhiệt tình", type: "Adj"}] },
+            { id: 72, root: "environment", forms: [{word: "environment", meaning: "môi trường", type: "Noun"}, {word: "environmental", meaning: "thuộc môi trường", type: "Adj"}] },
+            { id: 73, root: "equip", forms: [{word: "equip", meaning: "trang bị", type: "Verb"}, {word: "equipment", meaning: "thiết bị", type: "Noun"}] },
+            { id: 74, root: "evident", forms: [{word: "evidence", meaning: "bằng chứng", type: "Noun"}, {word: "evident", meaning: "rõ ràng", type: "Adj"}, {word: "evidently", meaning: "hiển nhiên", type: "Adv"}] },
+            { id: 75, root: "excite", forms: [{word: "excite", meaning: "làm phấn khích", type: "Verb"}, {word: "excitement", meaning: "sự phấn khích", type: "Noun"}, {word: "exciting", meaning: "thú vị", type: "Adj"}, {word: "excited", meaning: "hào hứng", type: "Adj"}] },
+            { id: 76, root: "expect", forms: [{word: "expect", meaning: "mong đợi", type: "Verb"}, {word: "expectation", meaning: "sự mong đợi", type: "Noun"}, {word: "unexpected", meaning: "bất ngờ", type: "Adj"}] },
+            { id: 77, root: "expense", forms: [{word: "expense", meaning: "chi phí", type: "Noun"}, {word: "expensive", meaning: "đắt đỏ", type: "Adj"}, {word: "inexpensive", meaning: "rẻ", type: "Adj"}] },
+            { id: 78, root: "explain", forms: [{word: "explain", meaning: "giải thích", type: "Verb"}, {word: "explanation", meaning: "lời giải thích", type: "Noun"}] },
+            { id: 79, root: "extreme", forms: [{word: "extreme", meaning: "cực độ/thái quá", type: "Adj"}, {word: "extremely", meaning: "cực kỳ", type: "Adv"}] },
+            { id: 80, root: "fail", forms: [{word: "fail", meaning: "thất bại/trượt", type: "Verb"}, {word: "failure", meaning: "sự thất bại", type: "Noun"}] },
+            { id: 81, root: "faith", forms: [{word: "faith", meaning: "niềm tin", type: "Noun"}, {word: "faithful", meaning: "trung thành", type: "Adj"}, {word: "faithfully", meaning: "một cách trung thành", type: "Adv"}] },
+            { id: 82, root: "fame", forms: [{word: "fame", meaning: "danh tiếng", type: "Noun"}, {word: "famous", meaning: "nổi tiếng", type: "Adj"}, {word: "infamous", meaning: "khét tiếng", type: "Adj"}] },
+            { id: 83, root: "fashion", forms: [{word: "fashion", meaning: "thời trang", type: "Noun"}, {word: "fashionable", meaning: "hợp thời trang", type: "Adj"}] },
+            { id: 84, root: "finance", forms: [{word: "finance", meaning: "tài chính/cấp vốn", type: "Verb"}, {word: "finance", meaning: "tài chính", type: "Noun"}, {word: "financial", meaning: "thuộc tài chính", type: "Adj"}] },
+            { id: 85, root: "fit", forms: [{word: "fit", meaning: "vừa vặn", type: "Verb"}, {word: "fitness", meaning: "thể lực", type: "Noun"}, {word: "unfit", meaning: "không khỏe/không vừa", type: "Adj"}] },
+            { id: 86, root: "forge", forms: [{word: "forge", meaning: "rèn/làm giả", type: "Verb"}, {word: "forgery", meaning: "sự làm giả", type: "Noun"}] },
+            { id: 87, root: "fortune", forms: [{word: "fortune", meaning: "vận may/gia tài", type: "Noun"}, {word: "fortunate", meaning: "may mắn", type: "Adj"}, {word: "unfortunate", meaning: "không may", type: "Adj"}] },
+            { id: 88, root: "freeze", forms: [{word: "freeze", meaning: "đóng băng", type: "Verb"}, {word: "freezer", meaning: "tủ đông", type: "Noun"}, {word: "frozen", meaning: "đông lạnh", type: "Adj"}] },
+            { id: 89, root: "friend", forms: [{word: "friend", meaning: "bạn bè", type: "Noun"}, {word: "friendship", meaning: "tình bạn", type: "Noun"}, {word: "friendly", meaning: "thân thiện", type: "Adj"}] },
+            { id: 90, root: "globe", forms: [{word: "globe", meaning: "địa cầu", type: "Noun"}, {word: "global", meaning: "toàn cầu", type: "Adj"}] },
+            { id: 91, root: "great", forms: [{word: "great", meaning: "tuyệt vời/vĩ đại", type: "Adj"}, {word: "greatness", meaning: "sự vĩ đại", type: "Noun"}] },
+            { id: 92, root: "grow", forms: [{word: "grow", meaning: "phát triển/lớn lên", type: "Verb"}, {word: "growth", meaning: "sự tăng trưởng", type: "Noun"}, {word: "growing", meaning: "đang phát triển", type: "Adj"}] },
+            { id: 93, root: "happy", forms: [{word: "happiness", meaning: "hạnh phúc", type: "Noun"}, {word: "happy", meaning: "vui vẻ", type: "Adj"}, {word: "unhappy", meaning: "bất hạnh", type: "Adj"}] },
+            { id: 94, root: "harm", forms: [{word: "harm", meaning: "làm hại", type: "Verb"}, {word: "harmful", meaning: "có hại", type: "Adj"}, {word: "harmless", meaning: "vô hại", type: "Adj"}] },
+            { id: 95, root: "help", forms: [{word: "help", meaning: "giúp đỡ", type: "Verb"}, {word: "helper", meaning: "người giúp đỡ", type: "Noun"}, {word: "helpful", meaning: "hữu ích", type: "Adj"}, {word: "helpless", meaning: "bất lực", type: "Adj"}] },
+            { id: 96, root: "honest", forms: [{word: "honesty", meaning: "sự trung thực", type: "Noun"}, {word: "honest", meaning: "trung thực", type: "Adj"}, {word: "dishonest", meaning: "không trung thực", type: "Adj"}] },
+            { id: 97, root: "humour", forms: [{word: "humour", meaning: "sự hài hước", type: "Noun"}, {word: "humorous", meaning: "hài hước", type: "Adj"}] },
+            { id: 98, root: "ill", forms: [{word: "ill", meaning: "ốm/bệnh", type: "Adj"}, {word: "illness", meaning: "căn bệnh", type: "Noun"}] },
+            { id: 99, root: "important", forms: [{word: "importance", meaning: "tầm quan trọng", type: "Noun"}, {word: "important", meaning: "quan trọng", type: "Adj"}] },
+            { id: 100, root: "improve", forms: [{word: "improve", meaning: "cải thiện", type: "Verb"}, {word: "improvement", meaning: "sự cải thiện", type: "Noun"}] },
+            { id: 101, root: "industry", forms: [{word: "industry", meaning: "công nghiệp", type: "Noun"}, {word: "industrial", meaning: "thuộc công nghiệp", type: "Adj"}, {word: "industrious", meaning: "cần cù", type: "Adj"}] },
+            { id: 102, root: "inform", forms: [{word: "inform", meaning: "thông báo", type: "Verb"}, {word: "information", meaning: "thông tin", type: "Noun"}, {word: "informative", meaning: "nhiều thông tin bổ ích", type: "Adj"}] },
+            { id: 103, root: "inhabit", forms: [{word: "inhabit", meaning: "cư trú", type: "Verb"}, {word: "inhabitant", meaning: "cư dân", type: "Noun"}] },
+            { id: 104, root: "inject", forms: [{word: "inject", meaning: "tiêm", type: "Verb"}, {word: "injection", meaning: "mũi tiêm", type: "Noun"}] },
+            { id: 105, root: "injure", forms: [{word: "injure", meaning: "làm bị thương", type: "Verb"}, {word: "injury", meaning: "chấn thương", type: "Noun"}, {word: "injured", meaning: "bị thương", type: "Adj"}] },
+            { id: 106, root: "intense", forms: [{word: "intensify", meaning: "tăng cường", type: "Verb"}, {word: "intensity", meaning: "cường độ", type: "Noun"}, {word: "intense", meaning: "dữ dội", type: "Adj"}] },
+            { id: 107, root: "interest", forms: [{word: "interest", meaning: "làm quan tâm", type: "Verb"}, {word: "interesting", meaning: "thú vị", type: "Adj"}, {word: "interested", meaning: "quan tâm/hứng thú", type: "Adj"}] },
+            { id: 108, root: "introduce", forms: [{word: "introduce", meaning: "giới thiệu", type: "Verb"}, {word: "introduction", meaning: "sự giới thiệu", type: "Noun"}] },
+            { id: 109, root: "invent", forms: [{word: "invent", meaning: "phát minh", type: "Verb"}, {word: "invention", meaning: "phát minh (n)", type: "Noun"}, {word: "inventor", meaning: "nhà phát minh", type: "Noun"}] },
+            { id: 110, root: "invest", forms: [{word: "invest", meaning: "đầu tư", type: "Verb"}, {word: "investment", meaning: "khoản đầu tư", type: "Noun"}, {word: "investor", meaning: "nhà đầu tư", type: "Noun"}] },
+            { id: 111, root: "investigate", forms: [{word: "investigate", meaning: "điều tra", type: "Verb"}, {word: "investigation", meaning: "cuộc điều tra", type: "Noun"}, {word: "investigator", meaning: "điều tra viên", type: "Noun"}] },
+            { id: 112, root: "involve", forms: [{word: "involve", meaning: "liên quan/bao gồm", type: "Verb"}, {word: "involvement", meaning: "sự tham gia", type: "Noun"}] },
+            { id: 113, root: "isolate", forms: [{word: "isolate", meaning: "cô lập", type: "Verb"}, {word: "isolation", meaning: "sự cô lập", type: "Noun"}, {word: "isolated", meaning: "bị cô lập", type: "Adj"}] },
+            { id: 114, root: "jealous", forms: [{word: "jealousy", meaning: "sự ghen tị", type: "Noun"}, {word: "jealous", meaning: "ghen tị", type: "Adj"}] },
+            { id: 115, root: "journal", forms: [{word: "journal", meaning: "tạp chí/nhật ký", type: "Noun"}, {word: "journalist", meaning: "nhà báo", type: "Noun"}, {word: "journalism", meaning: "ngành báo chí", type: "Noun"}] },
+            { id: 116, root: "kind", forms: [{word: "kindness", meaning: "lòng tốt", type: "Noun"}, {word: "kind", meaning: "tốt bụng", type: "Adj"}, {word: "unkind", meaning: "không tốt bụng", type: "Adj"}] },
+            { id: 117, root: "know", forms: [{word: "know", meaning: "biết", type: "Verb"}, {word: "knowledge", meaning: "kiến thức", type: "Noun"}, {word: "knowledgeable", meaning: "am hiểu", type: "Adj"}] },
+            { id: 118, root: "law", forms: [{word: "law", meaning: "pháp luật", type: "Noun"}, {word: "lawyer", meaning: "luật sư", type: "Noun"}, {word: "lawful", meaning: "hợp pháp", type: "Adj"}] },
+            { id: 119, root: "like", forms: [{word: "like", meaning: "thích", type: "Verb"}, {word: "dislike", meaning: "không thích", type: "Verb"}, {word: "alike", meaning: "giống nhau", type: "Adj"}] },
+            { id: 120, root: "likely", forms: [{word: "likelihood", meaning: "khả năng xảy ra", type: "Noun"}, {word: "likely", meaning: "có khả năng", type: "Adj"}, {word: "unlikely", meaning: "không có khả năng", type: "Adj"}] },
+            { id: 121, root: "literate", forms: [{word: "literacy", meaning: "sự biết chữ", type: "Noun"}, {word: "literate", meaning: "biết chữ", type: "Adj"}, {word: "illiterate", meaning: "mù chữ", type: "Adj"}, {word: "literature", meaning: "văn học", type: "Noun"}] },
+            { id: 122, root: "lose", forms: [{word: "lose", meaning: "mất/thua", type: "Verb"}, {word: "loss", meaning: "sự mất mát", type: "Noun"}, {word: "lost", meaning: "bị lạc/mất", type: "Adj"}] },
+            { id: 123, root: "low", forms: [{word: "lower", meaning: "hạ thấp", type: "Verb"}, {word: "low", meaning: "thấp", type: "Adj"}] },
+            { id: 124, root: "luxury", forms: [{word: "luxury", meaning: "sự sang trọng", type: "Noun"}, {word: "luxurious", meaning: "xa xỉ", type: "Adj"}] },
+            { id: 125, root: "machine", forms: [{word: "machine", meaning: "máy móc (đơn lẻ)", type: "Noun"}, {word: "machinery", meaning: "máy móc (hệ thống)", type: "Noun"}] },
+            { id: 126, root: "maintain", forms: [{word: "maintain", meaning: "duy trì/bảo dưỡng", type: "Verb"}, {word: "maintenance", meaning: "sự bảo trì", type: "Noun"}] },
+            { id: 127, root: "manage", forms: [{word: "manage", meaning: "quản lý", type: "Verb"}, {word: "management", meaning: "sự quản lý", type: "Noun"}, {word: "manager", meaning: "người quản lý", type: "Noun"}] },
+            { id: 128, root: "marry", forms: [{word: "marry", meaning: "kết hôn", type: "Verb"}, {word: "marriage", meaning: "hôn nhân", type: "Noun"}, {word: "married", meaning: "đã kết hôn", type: "Adj"}] },
+            { id: 129, root: "medal", forms: [{word: "medal", meaning: "huy chương", type: "Noun"}, {word: "medalist", meaning: "người nhận huy chương", type: "Noun"}] },
+            { id: 130, root: "meet", forms: [{word: "meet", meaning: "gặp gỡ", type: "Verb"}, {word: "meeting", meaning: "cuộc họp", type: "Noun"}] },
+            { id: 131, root: "mix", forms: [{word: "mix", meaning: "trộn", type: "Verb"}, {word: "mixture", meaning: "hỗn hợp", type: "Noun"}] },
+            { id: 132, root: "murder", forms: [{word: "murder", meaning: "giết người", type: "Verb"}, {word: "murderer", meaning: "kẻ giết người", type: "Noun"}] },
+            { id: 133, root: "nature", forms: [{word: "nature", meaning: "thiên nhiên", type: "Noun"}, {word: "natural", meaning: "tự nhiên", type: "Adj"}] },
+            { id: 134, root: "neighbour", forms: [{word: "neighbour", meaning: "hàng xóm", type: "Noun"}, {word: "neighbourhood", meaning: "khu vực lân cận", type: "Noun"}] },
+            { id: 135, root: "nerve", forms: [{word: "nerve", meaning: "dây thần kinh", type: "Noun"}, {word: "nervous", meaning: "lo lắng", type: "Adj"}] },
+            { id: 136, root: "obey", forms: [{word: "obey", meaning: "vâng lời", type: "Verb"}, {word: "obedience", meaning: "sự vâng lời", type: "Noun"}, {word: "obedient", meaning: "ngoan ngoãn", type: "Adj"}, {word: "disobey", meaning: "không vâng lời", type: "Verb"}] },
+            { id: 137, root: "observe", forms: [{word: "observe", meaning: "quan sát", type: "Verb"}, {word: "observation", meaning: "sự quan sát", type: "Noun"}, {word: "observer", meaning: "người quan sát", type: "Noun"}] },
+            { id: 138, root: "offence", forms: [{word: "offend", meaning: "xúc phạm", type: "Verb"}, {word: "offence", meaning: "sự xúc phạm/vi phạm", type: "Noun"}, {word: "offensive", meaning: "phản cảm", type: "Adj"}] },
+            { id: 139, root: "operate", forms: [{word: "operate", meaning: "vận hành", type: "Verb"}, {word: "operation", meaning: "ca phẫu thuật/hoạt động", type: "Noun"}, {word: "operator", meaning: "người điều hành", type: "Noun"}] },
+            { id: 140, root: "oppose", forms: [{word: "oppose", meaning: "phản đối", type: "Verb"}, {word: "opposition", meaning: "sự đối lập", type: "Noun"}, {word: "opposite", meaning: "đối diện/ngược lại", type: "Adj"}] },
+            { id: 141, root: "origin", forms: [{word: "originate", meaning: "bắt nguồn", type: "Verb"}, {word: "origin", meaning: "nguồn gốc", type: "Noun"}, {word: "original", meaning: "nguyên bản/độc đáo", type: "Adj"}] },
+            { id: 142, root: "pay", forms: [{word: "pay", meaning: "trả tiền", type: "Verb"}, {word: "payment", meaning: "sự thanh toán", type: "Noun"}, {word: "payable", meaning: "phải trả", type: "Adj"}] },
+            { id: 143, root: "perform", forms: [{word: "perform", meaning: "biểu diễn/thực hiện", type: "Verb"}, {word: "performance", meaning: "màn trình diễn", type: "Noun"}, {word: "performer", meaning: "người biểu diễn", type: "Noun"}] },
+            { id: 144, root: "person", forms: [{word: "person", meaning: "người", type: "Noun"}, {word: "personality", meaning: "tính cách", type: "Noun"}, {word: "personal", meaning: "cá nhân", type: "Adj"}] },
+            { id: 145, root: "photograph", forms: [{word: "photograph", meaning: "chụp ảnh", type: "Verb"}, {word: "photographer", meaning: "nhiếp ảnh gia", type: "Noun"}, {word: "photography", meaning: "nhiếp ảnh", type: "Noun"}] },
+            { id: 146, root: "poison", forms: [{word: "poison", meaning: "đầu độc", type: "Verb"}, {word: "poison", meaning: "chất độc", type: "Noun"}, {word: "poisonous", meaning: "có độc", type: "Adj"}] },
+            { id: 147, root: "polite", forms: [{word: "politeness", meaning: "sự lịch sự", type: "Noun"}, {word: "polite", meaning: "lịch sự", type: "Adj"}, {word: "impolite", meaning: "bất lịch sự", type: "Adj"}] },
+            { id: 148, root: "politics", forms: [{word: "politics", meaning: "chính trị", type: "Noun"}, {word: "politician", meaning: "chính trị gia", type: "Noun"}, {word: "political", meaning: "thuộc chính trị", type: "Adj"}] },
+            { id: 149, root: "pollute", forms: [{word: "pollute", meaning: "gây ô nhiễm", type: "Verb"}, {word: "pollution", meaning: "sự ô nhiễm", type: "Noun"}, {word: "polluted", meaning: "bị ô nhiễm", type: "Adj"}] },
+            { id: 150, root: "poor", forms: [{word: "poverty", meaning: "sự nghèo đói", type: "Noun"}, {word: "poor", meaning: "nghèo", type: "Adj"}] },
+            { id: 151, root: "popular", forms: [{word: "popularize", meaning: "phổ cập", type: "Verb"}, {word: "popularity", meaning: "sự phổ biến", type: "Noun"}, {word: "popular", meaning: "phổ biến", type: "Adj"}] },
+            { id: 152, root: "possible", forms: [{word: "possibility", meaning: "khả năng", type: "Noun"}, {word: "possible", meaning: "có thể", type: "Adj"}, {word: "impossible", meaning: "không thể", type: "Adj"}] },
+            { id: 153, root: "power", forms: [{word: "empower", meaning: "trao quyền", type: "Verb"}, {word: "power", meaning: "sức mạnh", type: "Noun"}, {word: "powerful", meaning: "mạnh mẽ", type: "Adj"}] },
+            { id: 154, root: "practice", forms: [{word: "practise", meaning: "luyện tập", type: "Verb"}, {word: "practice", meaning: "sự luyện tập", type: "Noun"}, {word: "practical", meaning: "thực tế", type: "Adj"}] },
+            { id: 155, root: "prepare", forms: [{word: "prepare", meaning: "chuẩn bị", type: "Verb"}, {word: "preparation", meaning: "sự chuẩn bị", type: "Noun"}] },
+            { id: 156, root: "prison", forms: [{word: "imprison", meaning: "bỏ tù", type: "Verb"}, {word: "prison", meaning: "nhà tù", type: "Noun"}, {word: "prisoner", meaning: "tù nhân", type: "Noun"}] },
+            { id: 157, root: "produce", forms: [{word: "produce", meaning: "sản xuất", type: "Verb"}, {word: "product", meaning: "sản phẩm", type: "Noun"}, {word: "production", meaning: "sự sản xuất", type: "Noun"}, {word: "productive", meaning: "năng suất", type: "Adj"}] },
+            { id: 158, root: "profession", forms: [{word: "profession", meaning: "nghề nghiệp", type: "Noun"}, {word: "professional", meaning: "chuyên nghiệp", type: "Adj"}] },
+            { id: 159, root: "prove", forms: [{word: "prove", meaning: "chứng minh", type: "Verb"}, {word: "proof", meaning: "bằng chứng", type: "Noun"}] },
+            { id: 160, root: "psychology", forms: [{word: "psychology", meaning: "tâm lý học", type: "Noun"}, {word: "psychologist", meaning: "nhà tâm lý học", type: "Noun"}, {word: "psychological", meaning: "thuộc tâm lý", type: "Adj"}] },
+            { id: 161, root: "qualify", forms: [{word: "qualify", meaning: "đủ điều kiện", type: "Verb"}, {word: "qualification", meaning: "bằng cấp/trình độ", type: "Noun"}, {word: "qualified", meaning: "có trình độ", type: "Adj"}] },
+            { id: 162, root: "real", forms: [{word: "realize", meaning: "nhận ra", type: "Verb"}, {word: "reality", meaning: "thực tế", type: "Noun"}, {word: "real", meaning: "thật", type: "Adj"}, {word: "realistic", meaning: "thực tế (tính cách)", type: "Adj"}] },
+            { id: 163, root: "reason", forms: [{word: "reason", meaning: "lý do/lý luận", type: "Noun"}, {word: "reasonable", meaning: "hợp lý", type: "Adj"}, {word: "unreasonable", meaning: "vô lý", type: "Adj"}] },
+            { id: 164, root: "recognise", forms: [{word: "recognise", meaning: "nhận ra", type: "Verb"}, {word: "recognition", meaning: "sự công nhận", type: "Noun"}, {word: "recognizable", meaning: "có thể nhận ra", type: "Adj"}] },
+            { id: 165, root: "recover", forms: [{word: "recover", meaning: "hồi phục", type: "Verb"}, {word: "recovery", meaning: "sự hồi phục", type: "Noun"}] },
+            { id: 166, root: "relate", forms: [{word: "relate", meaning: "liên quan", type: "Verb"}, {word: "relationship", meaning: "mối quan hệ", type: "Noun"}, {word: "relative", meaning: "họ hàng/tương đối", type: "Noun"}] },
+            { id: 167, root: "research", forms: [{word: "research", meaning: "nghiên cứu", type: "Verb"}, {word: "researcher", meaning: "nhà nghiên cứu", type: "Noun"}] },
+            { id: 168, root: "reside", forms: [{word: "reside", meaning: "cư trú", type: "Verb"}, {word: "resident", meaning: "cư dân", type: "Noun"}, {word: "residential", meaning: "thuộc khu dân cư", type: "Adj"}] },
+            { id: 169, root: "responsible", forms: [{word: "responsibility", meaning: "trách nhiệm", type: "Noun"}, {word: "responsible", meaning: "có trách nhiệm", type: "Adj"}, {word: "irresponsible", meaning: "vô trách nhiệm", type: "Adj"}] },
+            { id: 170, root: "revise", forms: [{word: "revise", meaning: "ôn tập", type: "Verb"}, {word: "revision", meaning: "sự ôn tập", type: "Noun"}] },
+            { id: 171, root: "revolution", forms: [{word: "revolution", meaning: "cuộc cách mạng", type: "Noun"}, {word: "revolutionary", meaning: "mang tính cách mạng", type: "Adj"}] },
+            { id: 172, root: "ridicule", forms: [{word: "ridicule", meaning: "chế giễu", type: "Verb"}, {word: "ridiculous", meaning: "lố bịch", type: "Adj"}] },
+            { id: 173, root: "rob", forms: [{word: "rob", meaning: "cướp", type: "Verb"}, {word: "robber", meaning: "tên cướp", type: "Noun"}, {word: "robbery", meaning: "vụ cướp", type: "Noun"}] },
+            { id: 174, root: "safe", forms: [{word: "save", meaning: "cứu/tiết kiệm", type: "Verb"}, {word: "safety", meaning: "sự an toàn", type: "Noun"}, {word: "safe", meaning: "an toàn", type: "Adj"}] },
+            { id: 175, root: "say", forms: [{word: "say", meaning: "nói", type: "Verb"}, {word: "saying", meaning: "tục ngữ/câu nói", type: "Noun"}] },
+            { id: 176, root: "scholar", forms: [{word: "scholar", meaning: "học giả", type: "Noun"}, {word: "scholarship", meaning: "học bổng", type: "Noun"}] },
+            { id: 177, root: "science", forms: [{word: "science", meaning: "khoa học", type: "Noun"}, {word: "scientist", meaning: "nhà khoa học", type: "Noun"}, {word: "scientific", meaning: "thuộc khoa học", type: "Adj"}] },
+            { id: 178, root: "second", forms: [{word: "second", meaning: "thứ hai", type: "Adj"}, {word: "secondary", meaning: "thứ cấp/trung học", type: "Adj"}] },
+            { id: 179, root: "secure", forms: [{word: "secure", meaning: "bảo đảm", type: "Verb"}, {word: "security", meaning: "an ninh", type: "Noun"}, {word: "secure", meaning: "an toàn", type: "Adj"}] },
+            { id: 180, root: "similar", forms: [{word: "similarity", meaning: "sự tương đồng", type: "Noun"}, {word: "similar", meaning: "tương tự", type: "Adj"}] },
+            { id: 181, root: "solve", forms: [{word: "solve", meaning: "giải quyết", type: "Verb"}, {word: "solution", meaning: "giải pháp", type: "Noun"}] },
+            { id: 182, root: "strong", forms: [{word: "strengthen", meaning: "tăng cường", type: "Verb"}, {word: "strength", meaning: "sức mạnh", type: "Noun"}, {word: "strong", meaning: "mạnh", type: "Adj"}] },
+            { id: 183, root: "study", forms: [{word: "study", meaning: "học/nghiên cứu", type: "Verb"}, {word: "student", meaning: "học sinh", type: "Noun"}, {word: "studious", meaning: "chăm học", type: "Adj"}] },
+            { id: 184, root: "style", forms: [{word: "style", meaning: "phong cách", type: "Noun"}, {word: "stylish", meaning: "sành điệu", type: "Adj"}] },
+            { id: 185, root: "succeed", forms: [{word: "succeed", meaning: "thành công", type: "Verb"}, {word: "success", meaning: "sự thành công", type: "Noun"}, {word: "successful", meaning: "thành công", type: "Adj"}] },
+            { id: 186, root: "suggest", forms: [{word: "suggest", meaning: "gợi ý", type: "Verb"}, {word: "suggestion", meaning: "lời gợi ý", type: "Noun"}] },
+            { id: 187, root: "sun", forms: [{word: "sun", meaning: "mặt trời", type: "Noun"}, {word: "sunny", meaning: "có nắng", type: "Adj"}] },
+            { id: 188, root: "supervise", forms: [{word: "supervise", meaning: "giám sát", type: "Verb"}, {word: "supervision", meaning: "sự giám sát", type: "Noun"}, {word: "supervisor", meaning: "người giám sát", type: "Noun"}] },
+            { id: 189, root: "surgery", forms: [{word: "surgery", meaning: "phẫu thuật", type: "Noun"}, {word: "surgeon", meaning: "bác sĩ phẫu thuật", type: "Noun"}, {word: "surgical", meaning: "thuộc phẫu thuật", type: "Adj"}] },
+            { id: 190, root: "surprise", forms: [{word: "surprise", meaning: "làm ngạc nhiên", type: "Verb"}, {word: "surprise", meaning: "sự ngạc nhiên", type: "Noun"}, {word: "surprised", meaning: "bị ngạc nhiên", type: "Adj"}, {word: "surprising", meaning: "đáng ngạc nhiên", type: "Adj"}] },
+            { id: 191, root: "sweet", forms: [{word: "sweeten", meaning: "làm ngọt", type: "Verb"}, {word: "sweetness", meaning: "sự ngọt ngào", type: "Noun"}, {word: "sweet", meaning: "ngọt", type: "Adj"}] },
+            { id: 192, root: "teach", forms: [{word: "teach", meaning: "dạy", type: "Verb"}, {word: "teacher", meaning: "giáo viên", type: "Noun"}] },
+            { id: 193, root: "technology", forms: [{word: "technology", meaning: "công nghệ", type: "Noun"}, {word: "technological", meaning: "thuộc công nghệ", type: "Adj"}] },
+            { id: 194, root: "theft", forms: [{word: "theft", meaning: "trộm cắp", type: "Noun"}, {word: "thief", meaning: "kẻ trộm", type: "Noun"}] },
+            { id: 195, root: "think", forms: [{word: "think", meaning: "nghĩ", type: "Verb"}, {word: "thought", meaning: "suy nghĩ", type: "Noun"}, {word: "thoughtful", meaning: "chu đáo", type: "Adj"}] },
+            { id: 196, root: "thorough", forms: [{word: "thorough", meaning: "kỹ lưỡng", type: "Adj"}, {word: "thoroughness", meaning: "sự kỹ lưỡng", type: "Noun"}] },
+            { id: 197, root: "time", forms: [{word: "time", meaning: "thời gian", type: "Noun"}, {word: "timetable", meaning: "thời khóa biểu", type: "Noun"}, {word: "timely", meaning: "kịp thời", type: "Adj"}] },
+            { id: 198, root: "tour", forms: [{word: "tour", meaning: "đi du lịch", type: "Verb"}, {word: "tourism", meaning: "ngành du lịch", type: "Noun"}, {word: "tourist", meaning: "khách du lịch", type: "Noun"}] },
+            { id: 199, root: "train", forms: [{word: "train", meaning: "đào tạo", type: "Verb"}, {word: "training", meaning: "sự đào tạo", type: "Noun"}, {word: "trainer", meaning: "huấn luyện viên", type: "Noun"}] },
+            { id: 200, root: "treat", forms: [{word: "treat", meaning: "đối xử/điều trị", type: "Verb"}, {word: "treatment", meaning: "sự điều trị", type: "Noun"}] },
+            { id: 201, root: "understand", forms: [{word: "understand", meaning: "hiểu", type: "Verb"}, {word: "understanding", meaning: "sự hiểu biết", type: "Noun"}, {word: "misunderstand", meaning: "hiểu lầm", type: "Verb"}] },
+            { id: 202, root: "use", forms: [{word: "use", meaning: "sử dụng", type: "Verb"}, {word: "usage", meaning: "cách dùng", type: "Noun"}, {word: "useful", meaning: "hữu ích", type: "Adj"}, {word: "useless", meaning: "vô dụng", type: "Adj"}] },
+            { id: 203, root: "value", forms: [{word: "value", meaning: "đánh giá", type: "Verb"}, {word: "value", meaning: "giá trị", type: "Noun"}, {word: "valuable", meaning: "có giá trị", type: "Adj"}] },
+            { id: 204, root: "vary", forms: [{word: "vary", meaning: "thay đổi", type: "Verb"}, {word: "variety", meaning: "sự đa dạng", type: "Noun"}, {word: "various", meaning: "đa dạng", type: "Adj"}] },
+            { id: 205, root: "wealth", forms: [{word: "wealth", meaning: "sự giàu có", type: "Noun"}, {word: "wealthy", meaning: "giàu có", type: "Adj"}] },
+            { id: 206, root: "willing", forms: [{word: "willingness", meaning: "sự sẵn lòng", type: "Noun"}, {word: "willing", meaning: "sẵn lòng", type: "Adj"}, {word: "unwilling", meaning: "không sẵn lòng", type: "Adj"}] },
+            { id: 207, root: "wood", forms: [{word: "wood", meaning: "gỗ", type: "Noun"}, {word: "wooden", meaning: "bằng gỗ", type: "Adj"}] },
+            { id: 208, root: "work", forms: [{word: "work", meaning: "làm việc", type: "Verb"}, {word: "worker", meaning: "công nhân", type: "Noun"}] },
+            { id: 209, root: "world", forms: [{word: "world", meaning: "thế giới", type: "Noun"}, {word: "worldwide", meaning: "toàn cầu", type: "Adj"}] },
+            { id: 210, root: "write", forms: [{word: "write", meaning: "viết", type: "Verb"}, {word: "writer", meaning: "nhà văn", type: "Noun"}, {word: "writing", meaning: "bài viết", type: "Noun"}, {word: "written", meaning: "được viết (văn bản)", type: "Adj"}] }
+        ];
+
+        // --- GLOBAL STATE ---
+        let questionQueue = [];
+        let totalOriginalQuestions = 0;
+        let mistakesCount = 0;
+        let currentSessionRoots = []; // To store practiced roots for summary
+
+        // --- PREVIEW LOGIC ---
+        function updatePreview() {
+            const start = parseInt(document.getElementById('start-range').value) || 0;
+            const end = parseInt(document.getElementById('end-range').value) || 0;
+            const previewBox = document.getElementById('range-preview');
+            const countBox = document.getElementById('preview-count');
+
+            if (start > end) {
+                previewBox.innerHTML = "<span class='text-red-500 font-bold'>Invalid Range: Start > End</span>";
+                countBox.innerText = "0 words";
+                return;
+            }
+
+            const selected = wordBank.filter(w => w.id >= start && w.id <= end);
+            countBox.innerText = `${selected.length} words`;
+            
+            if (selected.length === 0) {
+                previewBox.innerHTML = "<span class='text-gray-400 italic p-2'>No words found in this range. Please check your IDs.</span>";
+            } else {
+                const tags = selected.map((w, index) => 
+                    `<span class="tag-enter inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 border border-yellow-200 shadow-sm mb-1 mr-1" style="animation-delay: ${index * 0.05}s">
+                        <span class="mr-1 text-yellow-500 opacity-50">${w.id}.</span> ${w.root}
+                    </span>`
+                ).join('');
+                previewBox.innerHTML = tags;
+            }
+        }
+
+        // --- TTS & SOUND ---
+        function playSound(type) {
+            const audio = document.getElementById(type === 'correct' ? 'sound-correct' : 'sound-wrong');
+            if(audio) {
+                audio.currentTime = 0;
+                audio.play().catch(e => console.log("Audio Error - User interaction needed"));
+            }
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                const cleanText = text.replace(/\(.*\)/g, '').replace(/\//g, ' or ').trim();
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        // --- CORE FUNCTIONS ---
+        function startQuiz() {
+            const name = document.getElementById('student-name').value.trim();
+            if (!name) {
+                alert("Please enter your name!");
+                document.getElementById('student-name').focus();
+                return;
+            }
+
+            const start = parseInt(document.getElementById('start-range').value);
+            const end = parseInt(document.getElementById('end-range').value);
+
+            const selectedRoots = wordBank.filter(item => item.id >= start && item.id <= end);
+            currentSessionRoots = selectedRoots; // Store for final summary
+            
+            if (selectedRoots.length === 0) {
+                alert(`No words found between ${start} and ${end}.`);
+                return;
+            }
+
+            questionQueue = [];
+            selectedRoots.forEach(rootItem => {
+                rootItem.forms.forEach(form => {
+                    questionQueue.push({
+                        ...form,
+                        root: rootItem.root
+                    });
+                });
+            });
+
+            questionQueue.sort(() => Math.random() - 0.5);
+
+            totalOriginalQuestions = questionQueue.length;
+            mistakesCount = 0;
+            
+            document.getElementById('display-name').innerText = name;
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            
+            loadNextQuestion();
+        }
+
+        function loadNextQuestion() {
+            if (questionQueue.length === 0) {
+                finishQuiz();
+                return;
+            }
+
+            const q = questionQueue[0];
+            
+            document.getElementById('progress-text').innerText = `${questionQueue.length} remaining`;
+            document.getElementById('target-type').innerText = q.type;
+            document.getElementById('meaning-clue').innerText = q.meaning;
+            
+            const input = document.getElementById('answer-input');
+            input.value = '';
+            input.disabled = false;
+            input.className = "word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all";
+            input.focus();
+
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('feedback-icon').classList.add('hidden');
+            document.getElementById('retry-msg').classList.add('hidden');
+            
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+
+            input.onkeypress = (e) => { 
+                if (e.key === 'Enter') {
+                    if(!document.getElementById('check-btn').classList.contains('hidden')) {
+                        checkAnswer();
+                    } else {
+                        nextQuestion();
+                    }
+                }
+            };
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const userAnswer = input.value.trim().toLowerCase();
+            const currentQ = questionQueue[0];
+            const correctAnswers = currentQ.word.toLowerCase().split('/').map(w => w.trim());
+            const cleanUser = userAnswer.replace(/\(.*\)/g, '').trim();
+            
+            const isCorrect = correctAnswers.some(ans => {
+                const cleanAns = ans.replace(/\(.*\)/g, '').trim();
+                return cleanAns === cleanUser || ans === userAnswer;
+            });
+
+            const feedbackBox = document.getElementById('feedback-box');
+            const feedbackTitle = document.getElementById('feedback-title');
+            const feedbackContent = document.getElementById('feedback-content');
+            const feedbackIcon = document.getElementById('feedback-icon');
+            const retryMsg = document.getElementById('retry-msg');
+
+            feedbackBox.classList.remove('hidden');
+            feedbackIcon.classList.remove('hidden');
+            input.disabled = true;
+
+            if (isCorrect) {
+                playSound('correct');
+                speakWord(currentQ.word);
+
+                input.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-green-100 border border-green-200";
+                feedbackTitle.innerHTML = "<span class='text-green-700'>🎉 Correct!</span>";
+                feedbackContent.innerHTML = `Answer: <span class="font-bold text-xl">${currentQ.word}</span>`;
+                feedbackIcon.innerHTML = '<i class="fas fa-check-circle text-green-500"></i>';
+                
+                questionQueue.shift();
+            } else {
+                playSound('wrong');
+                mistakesCount++;
+
+                input.classList.add('border-red-500', 'bg-red-50', 'text-red-700', 'shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-red-100 border border-red-200";
+                feedbackTitle.innerHTML = "<span class='text-red-700'>Not quite!</span>";
+                feedbackContent.innerHTML = `Correct answer: <br><span class="font-bold text-2xl text-red-600 mt-2 block">${currentQ.word}</span><br><span class="text-sm text-gray-500">(${currentQ.meaning})</span>`;
+                
+                feedbackIcon.innerHTML = '<i class="fas fa-times-circle text-red-500"></i>';
+                retryMsg.classList.remove('hidden');
+
+                const wrongQ = questionQueue.shift();
+                questionQueue.push(wrongQ);
+            }
+
+            document.getElementById('check-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('next-btn').focus();
+        }
+
+        function nextQuestion() {
+            loadNextQuestion();
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            
+            const name = document.getElementById('student-name').value;
+            document.getElementById('result-name').innerText = name;
+            document.getElementById('total-words-count').innerText = totalOriginalQuestions;
+            
+            const totalAttempts = totalOriginalQuestions + mistakesCount;
+            const accuracy = totalAttempts > 0 ? Math.round((totalOriginalQuestions / totalAttempts) * 100) : 100;
+            
+            document.getElementById('accuracy-rate').innerText = `${accuracy}%`;
+
+            // Populate Review List (New Feature)
+            const listContainer = document.getElementById('reviewed-list');
+            listContainer.innerHTML = '';
+
+            currentSessionRoots.forEach(rootItem => {
+                const formsText = rootItem.forms.map(f => `<span class="inline-block bg-white px-2 py-1 rounded border border-gray-100 shadow-sm mr-1 mb-1 text-gray-600">${f.word}</span>`).join('');
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "border-b border-yellow-200 pb-2 last:border-0";
+                itemDiv.innerHTML = `
+                    <div class="font-bold text-yellow-800 mb-1 flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-yellow-200 text-yellow-700 flex items-center justify-center text-xs mr-2">${rootItem.id}</span>
+                        ${rootItem.root}
+                    </div>
+                    <div class="text-xs leading-relaxed pl-7">
+                        ${formsText}
+                    </div>
+                `;
+                listContainer.appendChild(itemDiv);
+            });
+        }
+
+        function quitQuiz() {
+            if(confirm("Are you sure you want to quit? Progress will be lost.")) {
+                document.getElementById('setup-screen').classList.remove('hidden');
+                document.getElementById('quiz-screen').classList.add('hidden');
+                document.getElementById('result-screen').classList.add('hidden');
+                updatePreview();
+            }
+        }
+
+        window.onload = updatePreview;
+    </script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2 Verb Master - Practice English Verbs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --primary-orange: #ef6c33;
+            --bg-cream: #faf7f0;
+        }
+
+        body { 
+            font-family: 'Lexend', sans-serif; 
+            background-color: var(--bg-cream);
+        }
+        
+        .shake { animation: shake 0.5s; }
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            50% { transform: translateX(8px); }
+            75% { transform: translateX(-8px); }
+            100% { transform: translateX(0); }
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #f06d34, #e74c3c);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .card-shadow {
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .input-style {
+            background-color: #f8f9fb;
+            border: 2px solid #f1f2f4;
+            transition: all 0.2s ease;
+        }
+
+        .input-style:focus {
+            border-color: #ffd8c7;
+            background-color: white;
+            outline: none;
+        }
+
+        .tab-btn {
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .tab-active {
+            border-color: var(--primary-orange);
+            background-color: white;
+            color: #833515;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.4s ease-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center py-10 px-4">
+
+    <div id="app" class="w-full max-w-3xl">
+        <!-- Logo & Title -->
+        <header class="text-center mb-8 flex flex-col items-center">
+            <div class="w-16 h-16 bg-[#ef6c33] rounded-2xl flex items-center justify-center text-white text-3xl mb-4 shadow-lg shadow-orange-200">
+                <i class="fas fa-fire-alt"></i>
+            </div>
+            <h1 class="text-[2.5rem] font-bold text-[#5c3d2e] leading-tight">B2 Verb Master</h1>
+            <p class="text-[#ef6c33] font-semibold text-lg">Master 298 Common Verbs</p>
+        </header>
+
+        <!-- Setup Screen -->
+        <div id="setup-screen" class="bg-white rounded-[2.5rem] p-10 card-shadow border border-gray-50">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label class="block text-xs font-bold text-[#5c3d2e] mb-3 uppercase tracking-wider">Student ID</label>
+                    <div class="relative">
+                        <i class="far fa-id-card absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="student-id" placeholder="Ex: 71031BT" 
+                            class="w-full pl-14 pr-5 py-5 rounded-2xl input-style font-bold text-[#5c3d2e]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-[#5c3d2e] mb-3 uppercase tracking-wider">Full Name</label>
+                    <div class="relative">
+                        <i class="far fa-user absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg"></i>
+                        <input type="text" id="student-name" placeholder="Ex: NGUYỄN THỊ BẢO THƯƠNG" 
+                            class="w-full pl-14 pr-5 py-5 rounded-2xl input-style font-bold text-[#5c3d2e]">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="grid grid-cols-2 gap-3 mb-8 bg-[#fff3ec] p-2 rounded-[1.5rem]">
+                <button onclick="setMode('range')" id="btn-range" class="tab-btn flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-sm tab-active">
+                    <i class="fas fa-list-ol"></i> Range Mode
+                </button>
+                <button onclick="setMode('random')" id="btn-random" class="tab-btn flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-sm text-[#833515]">
+                    <i class="fas fa-dice"></i> Random Mode
+                </button>
+            </div>
+            
+            <!-- Range Selection -->
+            <div id="range-options" class="mb-8 p-6 bg-[#fffbf8] rounded-[2rem] border border-[#fdf2e9]">
+                <label class="block text-xs font-bold text-[#ef6c33] mb-5 uppercase tracking-widest">Select Word Range (1 - 298)</label>
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex-1">
+                        <span class="text-[11px] font-bold text-gray-400 block mb-2">From No.</span>
+                        <input type="number" id="range-start" value="1" min="1" max="298" oninput="updatePreview()" 
+                            class="w-full p-5 rounded-2xl bg-white border-2 border-orange-50 text-center text-2xl font-bold text-[#5c3d2e] outline-none focus:border-[#ef6c33]/20">
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-[11px] font-bold text-gray-400 block mb-2">To No.</span>
+                        <input type="number" id="range-end" value="30" min="1" max="298" oninput="updatePreview()" 
+                            class="w-full p-5 rounded-2xl bg-white border-2 border-orange-50 text-center text-2xl font-bold text-[#5c3d2e] outline-none focus:border-[#ef6c33]/20">
+                    </div>
+                </div>
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Word List Preview:</span>
+                    <span id="preview-count" class="text-[11px] font-bold text-[#ef6c33]">30 words</span>
+                </div>
+                <div id="preview-list" class="flex flex-wrap gap-2 p-4 bg-white rounded-2xl border border-orange-50 min-h-[60px] max-h-32 overflow-y-auto"></div>
+            </div>
+
+            <!-- Random Mode Settings -->
+            <div id="random-options" class="hidden mb-8 p-8 bg-[#fffbf8] rounded-[2rem] border border-[#fdf2e9] text-center">
+                <label class="block text-xs font-bold text-[#ef6c33] mb-6 uppercase tracking-widest">Total Questions</label>
+                <div class="flex justify-center items-center gap-6">
+                    <button onclick="adjustLimit(-5)" class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-orange-50 text-2xl text-[#ef6c33] hover:bg-orange-50">-</button>
+                    <input type="number" id="random-limit" value="20" min="1" max="298" class="w-24 text-4xl font-bold bg-transparent text-[#5c3d2e] text-center outline-none">
+                    <button onclick="adjustLimit(5)" class="w-14 h-14 rounded-2xl bg-white shadow-sm border border-orange-50 text-2xl text-[#ef6c33] hover:bg-orange-50">+</button>
+                </div>
+            </div>
+
+            <button onclick="startQuiz()" class="btn-primary w-full text-white font-bold py-6 rounded-[1.5rem] shadow-xl shadow-orange-100 text-xl uppercase tracking-widest flex items-center justify-center gap-3">
+                START LEARNING <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden w-full animate-fade-in">
+            <div class="flex justify-between items-center mb-6 bg-white px-5 py-3 rounded-2xl shadow-sm border border-orange-100">
+                <div class="flex items-center text-gray-700 font-bold">
+                    <div class="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center mr-2 text-sm">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span id="display-name">Student</span>
+                </div>
+                <div class="text-right">
+                    <div class="text-xs text-gray-400 uppercase font-bold">Progress</div>
+                    <div class="text-orange-600 font-bold" id="progress-text">0/0</div>
+                </div>
+            </div>
+
+            <div id="question-card" class="bg-white rounded-3xl shadow-xl border-b-8 border-gray-100 overflow-hidden relative w-full">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fas fa-language text-6xl text-orange-500"></i>
+                </div>
+
+                <div class="p-8 pt-12 text-center">
+                    <span class="inline-block px-3 py-1 bg-orange-50 text-orange-400 text-xs font-bold rounded-full uppercase tracking-wider mb-2">Meaning</span>
+                    <h2 id="meaning-clue" class="text-2xl md:text-3xl font-bold text-gray-800 leading-tight">...</h2>
+                    
+                    <div class="relative mt-8">
+                        <input type="text" id="answer-input" placeholder="Type the English verb..." autocomplete="off"
+                            class="w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all uppercase">
+                        <div id="feedback-icon" class="hidden absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl"></div>
+                    </div>
+
+                    <div id="feedback-box" class="hidden mt-6 p-5 rounded-xl text-center animate-fade-in-up">
+                        <div id="feedback-title" class="font-bold text-lg mb-1"></div>
+                        <div id="feedback-content" class="text-gray-700"></div>
+                        <div id="ipa-display" class="mt-2 text-orange-600 font-mono text-lg font-semibold"></div>
+                        <div id="retry-msg" class="text-xs mt-3 font-semibold uppercase tracking-wide opacity-75 hidden text-red-500 bg-red-50 inline-block px-2 py-1 rounded">
+                            <i class="fas fa-redo mr-1"></i> Mistake -> Review at the end
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-6 flex gap-4 border-t border-gray-100">
+                    <button id="check-btn" onclick="checkAnswer()" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Check Answer (Enter)
+                    </button>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
+                        Next (Enter) <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-center">
+                 <button onclick="quitQuiz()" class="text-gray-400 hover:text-red-500 text-sm font-semibold transition-colors">
+                    <i class="fas fa-times mr-1"></i> Quit Session
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen" class="hidden text-center w-full animate-fade-in">
+            <div class="bg-white rounded-[3rem] p-12 card-shadow border border-gray-50">
+                <div class="w-24 h-24 bg-[#ef6c33] text-white rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-4xl shadow-xl shadow-orange-100">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="text-4xl font-bold text-[#5c3d2e] mb-4">Great Job!</h2>
+                <p id="result-user" class="text-[#ef6c33] font-bold mb-10 text-xl"></p>
+                
+                <div class="grid grid-cols-2 gap-6 mb-10">
+                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100">
+                        <div class="text-5xl font-bold text-[#5c3d2e]" id="res-correct">0</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest">Words Mastered</div>
+                    </div>
+                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100">
+                        <div class="text-5xl font-bold text-[#2ecc71]" id="res-accuracy">0%</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest">Accuracy</div>
+                    </div>
+                </div>
+
+                <!-- ADDED REVIEW LIST SECTION -->
+                <div class="mb-10 text-left">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase mb-4 tracking-widest flex items-center">
+                        <i class="fas fa-clipboard-list mr-2"></i> Review List
+                    </h3>
+                    <div id="reviewed-list" class="bg-[#fffbf8] rounded-[2rem] p-6 max-h-80 overflow-y-auto border border-[#fdf2e9] grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Review items will be injected here -->
+                    </div>
+                </div>
+                
+                <button onclick="location.reload()" class="btn-primary w-full text-white font-bold py-6 rounded-2xl shadow-xl text-xl uppercase tracking-widest">PRACTICE AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Effects -->
+    <audio id="sound-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
+
+    <script>
+        // 1. BIẾN LƯU THỜI GIAN BẮT ĐẦU
+        var thoiGianBatDauHoc = new Date();
+
+        const verbData = [
+{id:1,word:"abandon",ipa:"/əˈbændən/",meaning:"(v) từ bỏ, bỏ rơi",example:"He decided to abandon the trip because of the weather."},
+{id:2,word:"absorb",ipa:"/əbˈzɔːb/",meaning:"(v) tiếp thu, hấp thụ",example:"It takes time to absorb new vocabulary."},
+{id:3,word:"accommodate",ipa:"/əˈkɒmədeɪt/",meaning:"(v) cung cấp chỗ ở, đáp ứng",example:"The hotel can accommodate 200 guests."},
+{id:4,word:"accompany",ipa:"/əˈkʌmpəni/",meaning:"(v) đi cùng, đi kèm",example:"Strong winds often accompany heavy rain."},
+{id:5,word:"accomplish",ipa:"/əˈkʌmplɪʃ/",meaning:"(v) hoàn thành, đạt được",example:"He finally accomplished his task."},
+{id:6,word:"account for",ipa:"/əˈkaʊnt fɔː/",meaning:"(v) giải thích, chiếm tỷ lệ",example:"Online sales account for 40% of total income."},
+{id:7,word:"accuse",ipa:"/əˈkjuːz/",meaning:"(v) buộc tội, cáo buộc",example:"He was accused of cheating in the exam."},
+{id:8,word:"acknowledge",ipa:"/əkˈnɒlɪdʒ/",meaning:"(v) thừa nhận, công nhận",example:"She acknowledged her mistake."},
+{id:9,word:"acquire",ipa:"/əˈkwaɪə(r)/",meaning:"(v) đạt được, học được",example:"Children acquire language naturally."},
+{id:10,word:"activate",ipa:"/ˈæktɪveɪt/",meaning:"(v) kích hoạt",example:"You need to activate the app first."},
+{id:11,word:"adapt",ipa:"/əˈdæpt/",meaning:"(v) thích nghi, điều chỉnh",example:"Students must adapt to new environments."},
+{id:12,word:"address",ipa:"/əˈdres/",meaning:"(v) giải quyết (vấn đề)",example:"The issue must be addressed immediately."},
+{id:13,word:"adjust",ipa:"/əˈdʒʌst/",meaning:"(v) điều chỉnh, thích nghi",example:"You may need to adjust your study plan."},
+{id:14,word:"adopt",ipa:"/əˈdɒpt/",meaning:"(v) áp dụng, nhận nuôi",example:"The company adopted a new strategy."},
+{id:15,word:"advance",ipa:"/ədˈvɑːns/",meaning:"(v) tiến bộ, tiến lên",example:"Technology has advanced rapidly in recent years."},
+{id:16,word:"aid",ipa:"/eɪd/",meaning:"(v) giúp đỡ",example:"Volunteers aided the victims after the flood."},
+{id:17,word:"alarm",ipa:"/əˈlɑːm/",meaning:"(v) làm hoảng sợ",example:"The sudden noise alarmed the passengers."},
+{id:18,word:"alter",ipa:"/ˈɔːltə(r)/",meaning:"(v) thay đổi",example:"The plan was slightly altered."},
+{id:19,word:"analyse",ipa:"/ˈænəlaɪz/",meaning:"(v) phân tích",example:"Students are asked to analyse the data carefully."},
+{id:20,word:"anticipate",ipa:"/ænˈtɪsɪpeɪt/",meaning:"(v) dự đoán",example:"We anticipated a rise in demand."},
+{id:21,word:"appeal",ipa:"/əˈpiːl/",meaning:"(v) thu hút, kêu gọi",example:"The idea appeals to young people."},
+{id:22,word:"approach",ipa:"/əˈprəʊtʃ/",meaning:"(v) tiếp cận",example:"She approached the problem calmly."},
+{id:23,word:"approve",ipa:"/əˈpruːv/",meaning:"(v) chấp thuận",example:"The manager approved the proposal."},
+{id:24,word:"arise",ipa:"/əˈraɪz/",meaning:"(v) phát sinh",example:"Problems may arise if we delay the decision."},
+{id:25,word:"assess",ipa:"/əˈses/",meaning:"(v) đánh giá",example:"Teachers assess students’ progress regularly."},
+{id:26,word:"assign",ipa:"/əˈsaɪn/",meaning:"(v) phân công",example:"The task was assigned to a small team."},
+{id:27,word:"associate",ipa:"/əˈsəʊʃieɪt/",meaning:"(v) liên hệ, gắn với",example:"Many people associate success with hard work."},
+{id:28,word:"assume",ipa:"/əˈsjuːm/",meaning:"(v) cho rằng",example:"I assumed he had already finished."},
+{id:29,word:"assure",ipa:"/əˈʃʊə(r)/",meaning:"(v) cam đoan",example:"She assured us that everything was ready."},
+{id:30,word:"attempt",ipa:"/əˈtempt/",meaning:"(v) cố gắng",example:"He attempted to solve the problem alone."},
+{id:31,word:"bear",ipa:"/beə(r)/",meaning:"(v) chịu đựng",example:"She can’t bear the pressure anymore."},
+{id:32,word:"beg",ipa:"/beɡ/",meaning:"(v) cầu xin",example:"He begged his parents for permission."},
+{id:33,word:"bet",ipa:"/bet/",meaning:"(v) cá cược, tin rằng",example:"I bet she will agree with the idea."},
+{id:34,word:"bid",ipa:"/bɪd/",meaning:"(v) trả giá, đấu giá",example:"She bid for the painting online."},
+{id:35,word:"blame",ipa:"/bleɪm/",meaning:"(v) đổ lỗi",example:"Don’t blame others for your mistakes."},
+{id:36,word:"boost",ipa:"/buːst/",meaning:"(v) thúc đẩy, tăng cường",example:"The new policy boosted the economy."},
+{id:37,word:"broadcast",ipa:"/ˈbrɔːdkɑːst/",meaning:"(v) phát sóng",example:"The event was broadcast live on television."},
+{id:38,word:"calculate",ipa:"/ˈkælkjʊleɪt/",meaning:"(v) tính toán",example:"You need to calculate the total cost carefully."},
+{id:39,word:"cancel",ipa:"/ˈkænsəl/",meaning:"(v) hủy bỏ",example:"They decided to cancel the meeting."},
+{id:40,word:"capture",ipa:"/ˈkæptʃə(r)/",meaning:"(v) bắt giữ, ghi lại",example:"The photo captures the moment perfectly."},
+{id:298,word:"wrap",ipa:"/ræp/",meaning:"(v) gói",example:"She wrapped the gift carefully."}
+        ];
+
+        let questionQueue = [];
+        let currentIndex = 0;
+        let mistakesCount = 0;
+        let currentMode = 'range';
+        let studentInfo = { id: '', name: '' };
+        let reviewedWords = []; // Biến lưu danh sách từ đã học
+
+        // 2. HÀM GỬI KẾT QUẢ GOOGLE SHEET
+        function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDA2JO5j-aXbvYBIVBYVg4wvQEvLrafuoyPq_XglM-siz1eGQRJcXSMDcuhfBoTCw/exec"; 
+            const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
+
+            var gio = thoiGianBatDauHoc.getHours();
+            var phut = thoiGianBatDauHoc.getMinutes();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut);
+
+            var duLieu = {
+                tenSheet: TEN_SHEET_LUU,
+                tenBai: tenBaiHoc,
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                cheDoHoc: cheDo,
+                soTuLam: soTuDaLam,
+                phanTramDung: phanTramKetQua
+            };
+
+            console.log("Đang gửi dữ liệu...", duLieu);
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                // Đã gửi thành công (do no-cors nên không check response text được)
+                console.log("Gửi thành công");
+            }).catch(err => {
+                console.error("Lỗi gửi sheet:", err);
+            });
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('btn-range').classList.toggle('tab-active', mode === 'range');
+            document.getElementById('btn-random').classList.toggle('tab-active', mode === 'random');
+            document.getElementById('range-options').classList.toggle('hidden', mode !== 'range');
+            document.getElementById('random-options').classList.toggle('hidden', mode !== 'random');
+            updatePreview();
+        }
+
+        function updatePreview() {
+            if (currentMode !== 'range') return;
+            const start = parseInt(document.getElementById('range-start').value) || 1;
+            const end = parseInt(document.getElementById('range-end').value) || 1;
+            const filtered = verbData.filter(v => v.id >= start && v.id <= end);
+            document.getElementById('preview-count').innerText = `${filtered.length} words`;
+            document.getElementById('preview-list').innerHTML = filtered.map(v => 
+                `<span class="bg-[#fff3ec] text-[#ef6c33] px-3 py-1.5 rounded-xl font-bold text-[11px]">#${v.id} ${v.word.toUpperCase()}</span>`
+            ).join('');
+        }
+
+        function adjustLimit(delta) {
+            const el = document.getElementById('random-limit');
+            let val = parseInt(el.value) + delta;
+            el.value = Math.max(1, Math.min(298, val));
+        }
+
+        function speakWord(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const msg = new SpeechSynthesisUtterance(text);
+                msg.lang = 'en-US';
+                msg.rate = 0.8;
+                window.speechSynthesis.speak(msg);
+            }
+        }
+
+        function playSfx(id) {
+            const audio = document.getElementById(id);
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+        }
+
+        function startQuiz() {
+            studentInfo.id = document.getElementById('student-id').value.trim();
+            studentInfo.name = document.getElementById('student-name').value.trim();
+
+            if (!studentInfo.id || !studentInfo.name) {
+                alert("Please fill in Student ID and Full Name!");
+                return;
+            }
+
+            let pool = [];
+            if (currentMode === 'range') {
+                const s = parseInt(document.getElementById('range-start').value);
+                const e = parseInt(document.getElementById('range-end').value);
+                pool = verbData.filter(v => v.id >= s && v.id <= e);
+            } else {
+                const limit = parseInt(document.getElementById('random-limit').value);
+                pool = [...verbData].sort(() => 0.5 - Math.random()).slice(0, limit);
+            }
+
+            if (pool.length === 0) return;
+
+            document.getElementById('display-name').innerText = studentInfo.name;
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            questionQueue = [...pool].sort(() => 0.5 - Math.random());
+            currentIndex = 0;
+            mistakesCount = 0;
+            reviewedWords = []; // Reset danh sách
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= questionQueue.length) {
+                finishQuiz();
+                return;
+            }
+
+            const q = questionQueue[currentIndex];
+            document.getElementById('progress-text').innerText = `${questionQueue.length - currentIndex} left`;
+            document.getElementById('meaning-clue').innerText = q.meaning;
+            
+            const input = document.getElementById('answer-input');
+            input.value = '';
+            input.disabled = false;
+            input.className = "w-full text-center text-3xl font-bold py-6 px-8 rounded-2xl border-2 border-[#f1f2f4] bg-[#f8f9fb] text-[#2d3436] focus:bg-white focus:border-[#ef6c33]/30 transition-all uppercase placeholder-gray-200";
+            
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('check-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            // Auto focus
+            setTimeout(() => {
+                input.focus();
+            }, 50);
+        }
+
+        function checkAnswer() {
+            const input = document.getElementById('answer-input');
+            const user = input.value.trim().toLowerCase();
+            const q = questionQueue[currentIndex];
+
+            if (!user) {
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+                return;
+            }
+
+            input.disabled = true;
+            const isCorrect = user === q.word.toLowerCase();
+            
+            const box = document.getElementById('feedback-box');
+            const title = document.getElementById('feedback-title');
+            const content = document.getElementById('feedback-content');
+            const ipa = document.getElementById('ipa-display');
+            const checkBtn = document.getElementById('check-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const retryMsg = document.getElementById('retry-msg');
+
+            box.classList.remove('hidden');
+            checkBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+
+            content.innerHTML = `Word: <span class="font-black uppercase">${q.word}</span>`;
+            ipa.innerText = q.ipa;
+
+            if (isCorrect) {
+                playSfx('sound-correct');
+                speakWord(q.word); 
+                input.classList.add('border-[#2ecc71]', 'text-[#27ae60]');
+                box.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-[#f0fff4] border border-[#c6f6d5]";
+                title.innerHTML = `<i class="fas fa-check-circle mr-2"></i> CORRECT!`;
+                title.className = "font-bold text-lg mb-1 uppercase tracking-widest text-[#27ae60]";
+                retryMsg.classList.add('hidden');
+                
+                // Thêm vào danh sách đã học nếu chưa có
+                if (!reviewedWords.some(w => w.id === q.id)) {
+                    reviewedWords.push(q);
+                }
+            } else {
+                mistakesCount++;
+                playSfx('sound-wrong');
+                input.classList.add('border-[#e74c3c]', 'text-[#c0392b]', 'shake');
+                box.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-[#fff5f5] border border-[#fed7d7]";
+                title.innerHTML = `<i class="fas fa-times-circle mr-2"></i> INCORRECT!`;
+                title.className = "font-bold text-lg mb-1 uppercase tracking-widest text-[#c0392b]";
+                retryMsg.classList.remove('hidden');
+                
+                const current = questionQueue.splice(currentIndex, 1)[0];
+                questionQueue.push(current);
+                currentIndex--;
+            }
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            loadQuestion();
+        }
+
+        function quitQuiz() {
+            if (confirm("Are you sure you want to quit this session?")) {
+                location.reload();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('result-user').innerText = studentInfo.name;
+            
+            // Tính toán kết quả
+            const totalWordsDone = questionQueue.length; // Số câu hỏi ban đầu
+            document.getElementById('res-correct').innerText = totalWordsDone;
+            
+            // Tổng lượt trả lời = số câu hỏi + số lần sai
+            const totalAttempts = questionQueue.length + mistakesCount;
+            const accuracy = Math.round((questionQueue.length / totalAttempts) * 100) || 0;
+            const accuracyStr = `${accuracy}%`;
+            document.getElementById('res-accuracy').innerText = accuracyStr;
+
+            // HIỂN THỊ REVIEW LIST
+            const listContainer = document.getElementById('reviewed-list');
+            listContainer.innerHTML = '';
+            // Sắp xếp theo ID
+            reviewedWords.sort((a,b) => a.id - b.id);
+            
+            reviewedWords.forEach(word => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = "bg-white p-4 rounded-2xl border border-orange-50 shadow-sm flex items-center gap-3";
+                itemDiv.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-[#fff3ec] text-[#ef6c33] flex-shrink-0 flex items-center justify-center font-bold text-xs shadow-inner">
+                        ${word.id}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-bold text-[#5c3d2e] uppercase text-sm truncate">
+                            ${word.word} 
+                            <span class="text-xs font-normal text-gray-400 normal-case ml-1 font-mono">${word.ipa}</span>
+                        </div>
+                        <div class="text-xs text-gray-500 truncate" title="${word.meaning}">${word.meaning}</div>
+                    </div>
+                `;
+                listContainer.appendChild(itemDiv);
+            });
+
+            // Gửi dữ liệu về Google Sheet
+            const modeLabel = currentMode === 'range' ? 
+                `Range ${document.getElementById('range-start').value}-${document.getElementById('range-end').value}` : 
+                `Random (${document.getElementById('random-limit').value})`;
+
+            guiKetQuaTuVung(
+                "B2 Verb Master",
+                studentInfo.id,
+                studentInfo.name,
+                modeLabel,
+                totalWordsDone,
+                accuracyStr
+            );
+        }
+
+        // --- XỬ LÝ PHÍM ENTER TOÀN CỤC ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Ngăn chặn hành vi mặc định (như click button đang focus)
+
+                const setup = document.getElementById('setup-screen');
+                const quiz = document.getElementById('quiz-screen');
+                const result = document.getElementById('result-screen');
+                
+                // 1. Màn hình Setup
+                if (!setup.classList.contains('hidden')) {
+                    startQuiz();
+                    return;
+                } 
+                
+                // 2. Màn hình Quiz
+                if (!quiz.classList.contains('hidden')) {
+                    const checkBtn = document.getElementById('check-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    
+                    // Nếu nút Check đang hiện -> Gọi hàm Check
+                    if (checkBtn && !checkBtn.classList.contains('hidden')) {
+                        checkAnswer();
+                    } 
+                    // Nếu nút Next đang hiện -> Gọi hàm Next
+                    else if (nextBtn && !nextBtn.classList.contains('hidden')) {
+                        nextQuestion();
+                    }
+                    return;
+                }
+
+                // 3. Màn hình Result (Optional: Bấm Enter để làm lại)
+                if (!result.classList.contains('hidden')) {
+                    location.reload();
+                }
+            }
+        });
+
+        updatePreview();
+    </script>
+</body>
+</html>

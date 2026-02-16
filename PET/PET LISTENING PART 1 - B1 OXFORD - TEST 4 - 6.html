@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Listening - Focused Practice</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pet: { 50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 800: '#9f1239' }
+                    },
+                    fontFamily: { sans: ['Quicksand', 'sans-serif'] }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-image: radial-gradient(#e11d48 0.5px, transparent 0.5px), radial-gradient(#e11d48 0.5px, #fff1f2 0.5px);
+            background-size: 20px 20px;
+            /* Prevent body scroll, handle scroll inside #quiz-content */
+            overflow: hidden; 
+            height: 100vh;
+        }
+
+        /* --- LAYOUT ARCHITECTURE --- */
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            max-height: 100vh;
+        }
+
+        /* Header stays fixed at top */
+        #quiz-header-wrapper {
+            flex: none;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.98);
+            border-bottom: 1px solid #fce7f3;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Content area SCROLLS independently */
+        #quiz-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* Footer stays fixed at bottom */
+        #quiz-footer-wrapper {
+            flex: none;
+            z-index: 50;
+            background: white;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        /* Audio Player Styling */
+        audio { width: 100%; height: 40px; }
+        audio::-webkit-media-controls-enclosure { background-color: #f3f4f6; border-radius: 99px; }
+
+        /* Animation & UI Elements */
+        .option-btn { transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .option-btn:active:not(:disabled) { transform: translateY(0); }
+        
+        #penalty-overlay, #fullscreen-blocker { backdrop-filter: blur(8px); }
+        .progress-ring__circle { transition: stroke-dashoffset 0.1s linear; transform: rotate(-90deg); transform-origin: 50% 50%; }
+
+        .evidence-box { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .evidence-box.show { max-height: 1000px; opacity: 1; margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed #fecdd3; }
+
+        .cheat-toast { animation: slideInDown 0.5s forwards; }
+        @keyframes slideInDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 20px); opacity: 1; } }
+
+        /* Custom Scrollbar */
+        #quiz-content-wrapper::-webkit-scrollbar { width: 8px; }
+        #quiz-content-wrapper::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        #quiz-content-wrapper::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="flex justify-center items-center w-full">
+
+    <!-- SPAM PENALTY OVERLAY -->
+    <div id="penalty-overlay" class="fixed inset-0 z-[100] bg-gray-900/80 hidden flex items-center justify-center">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl text-center max-w-sm mx-4 border border-gray-200 relative overflow-hidden animate-bounce-subtle">
+            <div class="absolute inset-0 bg-red-50 animate-pulse opacity-50 z-0"></div>
+            <div class="relative z-10">
+                <div class="text-6xl mb-4">🚫</div>
+                <h3 class="text-2xl font-bold text-red-600 mb-2">Slow Down!</h3>
+                <p class="text-gray-600 mb-6 text-sm">Irregular activity detected.</p>
+                <div class="relative w-32 h-32 mx-auto">
+                    <svg class="w-full h-full" width="120" height="120">
+                        <circle class="text-gray-200" stroke-width="8" stroke="currentColor" fill="transparent" r="52" cx="64" cy="64"/>
+                        <circle id="penalty-ring" class="text-red-500 progress-ring__circle" stroke-width="8" stroke-linecap="round" stroke="currentColor" fill="transparent" r="52" cx="64" cy="64" stroke-dasharray="326.72" stroke-dashoffset="0"/>
+                    </svg>
+                    <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                        <span id="penalty-timer" class="text-4xl font-bold text-gray-800 font-mono">10</span>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-4 uppercase tracking-widest font-bold">System Locked</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN BLOCKER OVERLAY -->
+    <div id="fullscreen-blocker" class="fixed inset-0 z-[110] bg-white/95 hidden flex flex-col items-center justify-center text-center p-8">
+        <div class="bg-red-50 p-8 rounded-3xl border-2 border-red-100 max-w-md w-full shadow-xl">
+            <div class="text-6xl mb-6">🖥️</div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-3">Full Screen Required</h3>
+            <p id="fullscreen-msg" class="text-gray-600 mb-8 font-medium">Please do not minimize the window.<br>You must be in full screen mode to continue.</p>
+            <button onclick="resumeFullscreen()" class="w-full py-4 bg-pet-600 text-white font-bold rounded-2xl shadow-lg hover:bg-pet-700 transition transform hover:-translate-y-1 active:scale-95 text-lg flex items-center justify-center gap-2">
+                <span>Resume Full Screen</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="app" class="w-full max-w-[95%] xl:max-w-7xl bg-white md:rounded-3xl shadow-2xl relative border border-white overflow-hidden">
+        
+        <!-- === SCREEN: WELCOME === -->
+        <div id="screen-welcome" class="absolute inset-0 z-50 bg-white flex flex-col items-center justify-center p-8 text-center space-y-8">
+            <div class="relative group">
+                <div class="absolute inset-0 bg-pet-200 rounded-full blur-xl opacity-50 animate-pulse group-hover:opacity-70 transition"></div>
+                <div class="relative w-32 h-32 bg-gradient-to-br from-pet-500 to-pet-600 rounded-full flex items-center justify-center shadow-lg text-6xl transform group-hover:rotate-12 transition duration-500 text-white">
+                    🎧
+                </div>
+            </div>
+            
+            <div class="space-y-2">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-tight">Focused Listening Practice</h1>
+                <p class="text-pet-600 font-bold text-lg uppercase tracking-wide">English Test Mode</p>
+            </div>
+
+            <!-- Student Input -->
+            <div class="w-full max-w-md">
+                <input type="text" id="student-name" placeholder="Enter your full name..." class="w-full px-6 py-4 rounded-2xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-pet-500 focus:outline-none text-lg text-center shadow-sm transition-all" autocomplete="off">
+            </div>
+
+            <div class="bg-blue-50/80 p-4 rounded-xl border border-blue-100 max-w-md w-full text-center">
+                <p class="text-blue-800 font-semibold text-lg flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Please stay focused and take the test seriously
+                </p>
+                <!-- Warning Note -->
+                <p class="text-red-500 text-sm font-semibold mt-3">
+                    ⚠️ Note: Violating the rules 3 times will automatically terminate the test and submit your current results.
+                </p>
+            </div>
+
+            <button onclick="startApp()" class="group relative inline-flex items-center justify-center px-12 py-4 font-bold text-white transition-all duration-200 bg-gray-900 font-lg rounded-full hover:bg-pet-600 hover:shadow-xl hover:-translate-y-1 active:scale-95">
+                Start Test
+                <svg class="w-5 h-5 ml-2 -mr-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+
+        <!-- === QUIZ INTERFACE (Hidden by default) === -->
+        <div id="quiz-interface" class="flex flex-col h-full hidden opacity-0 transition-opacity duration-500">
+            
+            <!-- 1. FIXED HEADER -->
+            <div id="quiz-header-wrapper" class="px-6 py-3">
+                <!-- Content injected via JS -->
+            </div>
+            
+            <!-- 2. SCROLLABLE CONTENT -->
+            <div id="quiz-content-wrapper" class="p-6">
+                <div id="quiz-content">
+                    <!-- Questions injected via JS -->
+                </div>
+            </div>
+
+            <!-- 3. FIXED FOOTER -->
+            <div id="quiz-footer-wrapper" class="p-4 px-6 flex justify-between items-center bg-gray-50/80 backdrop-blur-sm">
+                <div class="text-sm font-semibold text-gray-500 flex flex-col">
+                    <div class="flex items-center gap-2">
+                        <span>Score:</span>
+                        <span id="current-score" class="text-pet-600 text-xl font-bold">0</span>
+                    </div>
+                    <span id="violation-display" class="text-xs text-green-600 font-bold bg-green-50 px-2 py-0.5 rounded-full border border-green-100">Status: Good</span>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button id="submit-btn" onclick="submitPage()" class="px-8 py-3 bg-gray-800 text-white font-bold rounded-2xl shadow-lg hover:bg-black transition active:scale-95 flex items-center gap-2">
+                        <span>Submit Page</span>
+                    </button>
+                    
+                    <button id="next-btn" onclick="nextPage()" class="hidden px-8 py-3 bg-pet-600 text-white font-bold rounded-2xl shadow-lg hover:bg-pet-700 transition active:scale-95 flex items-center gap-2 animate-bounce-subtle">
+                        <span>Next Page</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- === SCREEN: RESULT === -->
+        <div id="screen-result" class="absolute inset-0 z-40 bg-white hidden flex-col items-center justify-center p-8 text-center space-y-6 overflow-y-auto">
+            <h2 class="text-3xl font-bold text-gray-800">Test Results</h2>
+            
+            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-200 w-full max-w-md shadow-sm text-left space-y-4">
+                <div class="border-b pb-4">
+                    <p class="text-gray-500 text-sm uppercase tracking-wide font-bold">Student</p>
+                    <p class="text-xl font-bold text-gray-900" id="res-name">--</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-gray-500 text-sm">Start Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-start-time">--</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">End Time</p>
+                        <p class="text-md font-medium text-gray-800" id="res-end-time">--</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 bg-white p-3 rounded-xl border border-gray-100">
+                    <div>
+                        <p class="text-gray-500 text-sm">Score</p>
+                        <p class="text-2xl font-bold text-pet-600" id="res-score">0/21</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Percentage</p>
+                        <p class="text-2xl font-bold text-pet-600" id="res-percent">0%</p>
+                    </div>
+                </div>
+
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100 flex items-center justify-between">
+                    <span class="text-red-800 font-medium text-sm">Distraction Count</span>
+                    <span class="font-bold text-red-600 text-xl" id="res-violations">0</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 w-full max-w-md">
+                <div class="bg-green-50 p-4 rounded-xl border border-green-100">
+                    <div class="text-green-600 text-xs font-bold uppercase">Correct</div>
+                    <div id="stats-correct" class="text-3xl font-bold text-green-700">0</div>
+                </div>
+                <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+                    <div class="text-red-600 text-xs font-bold uppercase">Wrong</div>
+                    <div id="stats-wrong" class="text-3xl font-bold text-red-700">0</div>
+                </div>
+            </div>
+            
+            <div id="result-message" class="text-lg font-bold px-6 py-2 rounded-lg"></div>
+
+            <button onclick="location.reload()" class="px-8 py-3 border-2 border-gray-200 text-gray-600 font-bold rounded-full hover:border-pet-500 hover:text-pet-600 hover:bg-pet-50 transition">
+                Retry
+            </button>
+        </div>
+
+    </div>
+
+    <!-- LIGHTBOX MODAL -->
+    <div id="lightbox" class="fixed inset-0 z-[100] bg-black/95 hidden flex flex-col items-center justify-center p-4 cursor-pointer" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" class="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl transition-transform duration-300">
+        <p class="text-white/70 mt-4 text-sm font-medium">Click anywhere to close</p>
+    </div>
+
+    <!-- LOGIC -->
+    <script>
+       // --- DATA CẬP NHẬT FULL SCRIPT & TÔ ĐẬM ĐÁP ÁN ---
+const quizData = [
+    {
+        id: "page4",
+        title: "PART 1: Practice Test 4",
+        audio: "https://www.dropbox.com/scl/fi/gpmhm7k08g0tougtvexmb/OPP-Preliminary-for-Schools-Track-19.mp3?rlkey=rsyu2lcw24808ea4838hqo922&st=6m4wlivd&raw=1",
+        images: [
+            { src: "https://www.dropbox.com/scl/fi/jsqqpk49m5x13kr1me3gb/test-5-1-4.png?rlkey=zv748ggwe18gpcqmpfc3akymv&st=2e9ppmjp&raw=1", startQ: 1, endQ: 4 }, 
+            { src: "https://www.dropbox.com/scl/fi/snmg95qq2tnc7znjb08k0/test-5-5-7.png?rlkey=ry84h6v8vhun1wub1eea84e3e&st=fk9aq5io&raw=1", startQ: 5, endQ: 7 }
+        ],
+        questions: [
+            { id: 1, text: "What did the boy have to drink?", options: ["A", "B", "C"], correct: "C", script: "Girl: Have you been to that new café on the High Street?<br>Boy: Yes, I’ve been there a few times.<br>Girl: What kinds of tea do they have?<br>Boy: I don’t know. I don’t drink tea. I usually have a milkshake or something like that when I go to a café.<br>Girl: Oh well, are the milkshakes any good?<br>Boy: I don’t know that either, I’m afraid, because they don’t sell them. <b>The orange juice is OK. It’s nothing exciting, though.</b>" },
+            { id: 2, text: "On which date will the author sign books?", options: ["A", "B", "C"], correct: "C", script: "Man: We’re very pleased to announce an exciting new event at our bookshop. World-famous author Karabo Drumbo is going to be here next month! She’ll be reading from her latest novel, Philo and Burke, at 7 p.m. on April 24th. There’s a separate book-signing event with Karabo on the 25th. <b>Tickets for both can be purchased from the 21st.</b> We recommend booking early to avoid disappointment. This is going to be very special indeed. Don’t miss it!" },
+            { id: 3, text: "What was the weather like in the afternoon?", options: ["A", "B", "C"], correct: "C", script: "Mum: Well, are you all having fun at the beach today?<br>Girl: Oh, hi Mum. Well, it started out great because the weather was amazing. It was really sunny early this morning so everyone went for a swim in the sea. That was lovely. A couple of hours later, we decided to play beach volleyball, but it was a disaster because the weather completely changed! The wind was incredibly strong and no one could control the ball. It was funny, though. <b>After lunch, it started to rain so we all went to the beach café for some cake. That’s where I am now!</b>" },
+            { id: 4, text: "What time is the English exam?", options: ["A", "B", "C"], correct: "B", script: "Woman: Can you all please remember that the date of your English exam has changed. It’s no longer on Friday at nine o’clock. <b>It’s now on the following Monday. The time remains the same</b>, but don’t forget to get here half an hour earlier so that you can be calm and ready to begin. Don’t forget French is still on Monday afternoon at one o’clock, so you’re all going to have a busy day." },
+            { id: 5, text: "What does the girl’s new friend look like?", options: ["A", "B", "C"], correct: "C", script: "Girl: Is it OK if I invite Sara to come shopping with us? She’s a new girl at my gym. You’ve seen her. She works out on the running machines a lot.<br>Boy: Sure, that’s fine. It’s always nice to meet new people. Is Sara the girl with short dark hair?<br>Girl: <b>She’s got dark hair, but it’s long and she always ties it back.</b><br>Boy: Oh yeah. I know who you mean. Yes, bring her along. I look forward to meeting her." },
+            { id: 6, text: "Where is the man going tomorrow?", options: ["A", "B", "C"], correct: "B", script: "Woman: I’m going shopping and then to the cinema tomorrow. Do you fancy coming? It should be a fun day.<br>Man: I’d love to, but I’ve already arranged to meet some friends in town.<br>Woman: Are you having lunch or something? I’ve heard that the new burger place is quite good.<br>Man: <b>Yeah, that’s where we’re meeting, actually. We all wanted to try it out.</b> It’s right next to the cinema, so maybe you could come along after the film and join us." },
+            { id: 7, text: "Where is the magazine?", options: ["A", "B", "C"], correct: "C", script: "Boy: Have you finished reading the magazine I lent you?<br>Girl: Oh yeah, thanks. It was great. Do you want it back? I’ve left it upstairs, in my room.<br>Boy: Yes, please. There’s an article I wanted to read in it. Can I go up to your room and get it? Is it in your bag?<br>Girl: <b>I took it out of there and put it on my desk. It’s on top of my English book.</b> And that reminds me. I need to do my homework. Can you bring my book down with you, please?" }
+        ]
+    },
+    {
+        id: "page5",
+        title: "PART 1: Practice Test 5",
+        audio: "https://www.dropbox.com/scl/fi/07hmkb30m2sun87uwx15i/OPP-Preliminary-for-Schools-Track-23.mp3?rlkey=on9jegkabcnxuyp3ui1jblxf0&st=5qlbc718&raw=1",
+        images: [
+            { src: "https://www.dropbox.com/scl/fi/qqczhxvahny1own3gtd9o/test-6-1-4.png?rlkey=b7l7oj8iwtm1peononcelnr38&st=o7sem0bx&raw=1", startQ: 1, endQ: 4 },
+            { src: "https://www.dropbox.com/scl/fi/2c0a51z9cx0dmuorct0sp/test-6-5-7.png?rlkey=d0pycavy9j1mex4cs369ngfyi&st=0z9v1hd8&raw=1", startQ: 5, endQ: 7 }
+        ],
+        questions: [
+            { id: 1, text: "What date does the woman’s holiday begin?", options: ["A", "B", "C"], correct: "C", script: "Man: Hi! Are you all ready for your holiday? I heard that you’re going next Friday!<br>Woman: On the 18th? No. We were planning to leave then, but my cousin isn’t free that weekend, so <b>we’re going the following Friday now.</b><br>Man: Oh! <b>That’ll be the 25th</b>, the day before I leave, too. I can’t wait to get away. How long are you going for?<br>Woman: Only ten days, but I’m really looking forward to it." },
+            { id: 2, text: "Where did the boy first find out about the festival?", options: ["A", "B", "C"], correct: "B", script: "Boy: Look at this! The City Festival’s on next weekend. Do you want to go?<br>Girl: Oh yes, I really want to go, but I didn’t know it was on so soon. There was an ad on TV the other day, but I didn’t notice the dates.<br>Boy: <b>Well, I only realized it was on because my dad had last Sunday’s newspaper.</b> Here, have a look at the website and we can decide what to get tickets for." },
+            { id: 3, text: "What does the boy ask the girl to buy?", options: ["A", "B", "C"], correct: "A", script: "Girl: I’m going to the shops to get some milk. Do you want me to get you anything?<br>Boy: <b>Yeah, can you get me some eggs, please?</b> I’m going to make a cake for Mum’s birthday.<br>Girl: No problem. Shall I get some flour, too?<br>Boy: Don’t worry, we’ve got plenty in the cupboard. I was thinking of doing something different to my usual chocolate cake. Could you get a lemon and I’ll try this new recipe? It looks very tasty." },
+            { id: 4, text: "How do you get to the bookshop?", options: ["A", "B", "C"], correct: "C", script: "Woman: The bookshop? Oh yes, it’s just off Bridge Street, next to the museum. Go straight across this roundabout and then after about 500 metres you’ll have to turn right at the crossroads. Sorry, I mean left, into Bridge Street. Go down the road a little way and you’ll see the museum on the corner. It’s a big building with columns at the entrance. <b>The bookshop is down a small side turning beside the museum – you can’t miss it.</b>" },
+            { id: 5, text: "How many people live next door?", options: ["A", "B", "C"], correct: "B", script: "Boy: Hi! Where have you been?<br>Girl: Oh, hi! I’ve just been chatting with our new neighbours. <b>The mum and dad seem really nice. And there’s a girl called Monica who’s about my age.</b><br>Boy: Oh! I thought I saw an older girl there yesterday.<br>Girl: <b>Actually, Monica’s got two older sisters, but one’s already left home.</b> (Gia đình gồm 4 người ở tại nhà: Bố, mẹ, Monica và 1 người chị)." },
+            { id: 6, text: "Where are they going on holiday?", options: ["A", "B", "C"], correct: "B", script: "Boy: So, are you looking forward to going on holiday with your parents?<br>Girl: No. We’re still arguing about it! Dad wants to rent this quiet house in the countryside, but Mum says it’s way too far from the coast. She’s seen những great apartments online; they’re right beside the beach.<br>Boy: Those apartments sound pretty amazing to me. Is that where you’d like to go as well?<br>Girl: No way. I’d much prefer a city break! ... <b>But Mum has won this time. She really loves the seaside.</b>" },
+            { id: 7, text: "What does the girl decide to wear to the concert?", options: ["A", "B", "C"], correct: "B", script: "Girl: ...I was planning to wear những dark jeans with a black shirt. Do you think đó smart enough?<br>Boy: How would I know? If you want to look smarter, there’s that blue dress you got from the market?<br>Girl: <b>Brilliant idea! Much better than trousers.</b>" }
+        ]
+    },
+    {
+        id: "page6",
+        title: "PART 1: Practice Test 6",
+        audio: "https://www.dropbox.com/scl/fi/tnncuvsc93i2n6apueofa/OPP-Preliminary-for-Schools-Track-27.mp3?rlkey=rc81f0o4ir8px7yaevx2g0ghs&st=t5l4d3gz&raw=1",
+        images: [
+            { src: "https://www.dropbox.com/scl/fi/iar8ac7xue1dl9rq7x0y5/test-7-1-4.png?rlkey=mibh7yci6cyajyws6i0ft0wii&st=gcdpe6e5&raw=1", startQ: 1, endQ: 4 },
+            { src: "https://www.dropbox.com/scl/fi/9esztovsjl78jilysjgzk/test-7-5-7.png?rlkey=hdlin6poy9ikxb5pho77suv1l&st=3abg9v98&raw=1", startQ: 5, endQ: 7 }
+        ],
+        questions: [
+            { id: 1, text: "What is the woman going to buy today?", options: ["A", "B", "C"], correct: "B", script: "Woman: I’m going shopping in town this afternoon. I need to get a present for Jan.<br>Man: Oh, really? What are you thinking of getting her?<br>Woman: I’ve already got her a bag and I thought about buying her a book or a scarf, too. What do you think?<br>Man: I don’t think she reads much, so <b>I think a scarf would probably be better.</b><br>Woman: <b>OK. Thanks. I’ll see if I can find something she’ll like.</b>" },
+            { id: 2, text: "What time did Clara finish band practice?", options: ["A", "B", "C"], correct: "A", script: "Mum: You’re home late, Clara! I was starting to get worried about you. It’s nine o’clock!<br>Girl: Yes, I know, Mum. I didn’t catch a train cho đến 8.00.<br>Mum: Were you at band practice all that time?<br>Girl: <b>No, I left at 6.00</b>, nhưng I met Eva on my way to the station. We got chatting and decided to go to a café." },
+            { id: 3, text: "Which piece of equipment was missing?", options: ["A", "B", "C"], correct: "C", script: "Dad: Gosh, you’re back very early from cricket, Anthony... Why not? Did you forget your bat?<br>Boy: No, I remembered to bring it. Actually, Toby forgot his helmet nhưng, luckily, I had an extra one, so he was fine.<br>Dad: Right. Then why on earth didn’t you play?<br>Boy: <b>No one had a ball, Dad!</b> We were all there, ready to play, and …" },
+            { id: 4, text: "What is the weather going to be like this afternoon?", options: ["A", "B", "C"], correct: "A", script: "Woman: After a bright and sunny morning, clouds are beginning to form and <b>it looks like we’re going to see some rain later today, probably from around two o’clock</b>, so don’t forget your umbrellas." },
+            { id: 5, text: "How did the man find out about the play?", options: ["A", "B", "C"], correct: "C", script: "Woman: That was a fantastic play. How did you hear about it? Did you read a review about it?<br>Man: No, I know there have been some good reviews in the newspapers, nhưng I didn’t see them. <b>My friend John heard about it on the radio and emailed me and suggested I went to see it.</b>" },
+            { id: 6, text: "When is the man’s first guitar lesson?", options: ["A", "B", "C"], correct: "B", script: "Man: Not yet. They’ve been delayed... she’s going to give two lessons in one week this week to catch up. <b>The first one will be on the 21st</b> and the second will be on the 23rd." },
+            { id: 7, text: "How does the woman usually keep fit?", options: ["A", "B", "C"], correct: "A", script: "Man: Hi, Sally... I didn’t know you liked running!<br>Woman: I don’t! <b>I go to the gym most days</b>, nhưng it’s closed at the moment... I’ve got to do something while it’s closed and I haven’t got a bike, so I thought I’d better try running." }
+        ]
+    }
+];
+        // --- STATE & VARIABLES ---
+        let currentPageIndex = 0;
+        let userAnswers = {}; 
+        let currentScore = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let currentAudioPlayer = null;
+        let startTime = null;
+        let endTime = null;
+        let studentName = "";
+        let violationCount = 0;
+        let lastClickTime = 0;
+        let isGlobalLocked = false;
+        let isExamActive = false;
+        const SPAM_THRESHOLD = 3000;
+        const PENALTY_DURATION = 10;
+        const totalQuestions = 21;
+        const MAX_VIOLATIONS = 3; 
+
+        // Interval for polling fullscreen status
+        let fullscreenPollInterval = null;
+
+        // --- CORE FUNCTIONS ---
+        function startApp() {
+            const nameInput = document.getElementById('student-name');
+            if (!nameInput.value.trim()) {
+                alert("Please enter your name.");
+                nameInput.focus();
+                return;
+            }
+            studentName = nameInput.value.trim();
+            isExamActive = true;
+            startTime = new Date();
+
+            // 1. Trigger Fullscreen
+            resumeFullscreen();
+
+            // 2. Setup Monitoring
+            setupAntiCheat();
+
+            // 3. UI Transition
+            document.getElementById('screen-welcome').classList.add('hidden');
+            const quizInterface = document.getElementById('quiz-interface');
+            quizInterface.classList.remove('hidden');
+            setTimeout(() => quizInterface.classList.remove('opacity-0'), 50);
+            
+            renderPage(0);
+        }
+
+        function resumeFullscreen() {
+            const elem = document.documentElement;
+            const req = elem.requestFullscreen || elem.webkitRequestFullscreen || elem.msRequestFullscreen;
+            if (req) {
+                req.call(elem).then(() => {
+                    document.getElementById('fullscreen-blocker').classList.add('hidden');
+                    // Reset text
+                    document.getElementById('fullscreen-msg').innerHTML = "Please do not minimize the window.<br>You must be in full screen mode to continue.";
+                }).catch(err => {
+                    console.log("Fullscreen request denied/failed:", err);
+                });
+            }
+        }
+
+        function setupAntiCheat() {
+            // 1. Visibility Check (Tabs)
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden && isExamActive) recordViolation("Left quiz tab");
+            });
+            
+            // 2. Focus Check (Clicks outside)
+            window.addEventListener('blur', () => {
+                if (isExamActive) recordViolation("Lost focus (Clicked outside/Alt-Tab)");
+            });
+
+            // 3. Fullscreen Event Check (Standard)
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            // 4. POLLING CHECK (The Fix for macOS Minimize/Green Button)
+            // Checks every second if we are really in fullscreen or if dimensions are wrong
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+            fullscreenPollInterval = setInterval(checkFullscreenState, 1000);
+        }
+
+        function handleFullscreenChange() {
+            if (document.fullscreenElement || document.webkitFullscreenElement) {
+                 document.getElementById('fullscreen-blocker').classList.add('hidden');
+            } else if (isExamActive) {
+                recordViolation("Exited fullscreen");
+                document.getElementById('fullscreen-blocker').classList.remove('hidden');
+            }
+        }
+
+        function checkFullscreenState() {
+            if (!isExamActive) return;
+
+            const isApiFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            
+            // Check screen dimensions as backup (allow small variance for scrollbars)
+            const isScreenFull = (window.innerWidth >= screen.width - 10) && (window.innerHeight >= screen.height - 10);
+
+            // If API says no, AND dimensions say no, then we are definitely out.
+            if (!isApiFullscreen && !isScreenFull) {
+                // If the blocker is ALREADY visible, don't spam violations
+                if (document.getElementById('fullscreen-blocker').classList.contains('hidden')) {
+                    
+                    // --- EXPLICIT NOTIFICATION LOGIC ---
+                    recordViolation("System detected window resizing/minimizing");
+                    
+                    // Update blocker message to be specific about the detection
+                    document.getElementById('fullscreen-msg').innerHTML = 
+                        "<strong class='text-red-600'>System Alert:</strong> Window resizing/minimizing detected.<br>Please return to full screen mode immediately.";
+                    
+                    document.getElementById('fullscreen-blocker').classList.remove('hidden');
+                }
+            }
+        }
+
+        function recordViolation(reason) {
+            violationCount++;
+            
+            if (violationCount >= MAX_VIOLATIONS) {
+                // Stop the polling
+                clearInterval(fullscreenPollInterval);
+                alert(`Violation limit reached (${violationCount}/${MAX_VIOLATIONS}). The exam is terminated.`);
+                showResult();
+                return;
+            }
+
+            const statusEl = document.getElementById('violation-display');
+            statusEl.innerText = `Warning: ${violationCount} / ${MAX_VIOLATIONS} ⚠️`;
+            statusEl.className = "text-xs text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded-full border border-red-100 animate-pulse";
+            showToast(`Warning #${violationCount}: ${reason}`);
+        }
+
+        function showToast(msg) {
+            const toast = document.createElement('div');
+            toast.className = 'cheat-toast fixed top-6 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-full shadow-2xl z-[100] font-bold text-sm border-2 border-white';
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        function formatTime(date) {
+            if (!date) return "--";
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = String(date.getFullYear()).slice(-2);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} - ${hours}:${minutes}`;
+        }
+
+        function renderPage(index) {
+            currentPageIndex = index;
+            const data = quizData[index];
+            const headerWrapper = document.getElementById('quiz-header-wrapper');
+            const content = document.getElementById('quiz-content');
+
+            if (currentAudioPlayer) { currentAudioPlayer.pause(); currentAudioPlayer.currentTime = 0; }
+
+            headerWrapper.innerHTML = `
+                <div class="flex flex-col md:flex-row items-center gap-4 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex items-center gap-3 w-full md:w-auto min-w-[200px]">
+                        <span class="bg-pet-600 text-white font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm whitespace-nowrap">Page ${index + 1}/3</span>
+                        <h2 class="text-lg font-bold text-gray-800 line-clamp-1">${data.title}</h2>
+                    </div>
+                    <div class="w-full flex-1">
+                        <audio id="audio-player" controls controlsList="nodownload" class="shadow-inner">
+                            <source src="${data.audio}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                </div>
+            `;
+            currentAudioPlayer = document.getElementById('audio-player');
+
+            let html = '';
+            data.images.forEach(imgGroup => {
+                html += `<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12 border-b border-gray-100 pb-10 last:border-0">`;
+                
+                html += `
+                    <div class="flex flex-col">
+                        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-2 shadow-sm lg:sticky lg:top-4 group cursor-zoom-in" onclick="openLightbox('${imgGroup.src}')">
+                            <div class="flex justify-between items-center mb-2 px-2">
+                                 <span class="text-xs font-bold text-gray-400 uppercase">Image</span>
+                                 <span class="text-xs text-pet-600 font-bold bg-white px-2 py-0.5 rounded border border-pet-100 shadow-sm">Questions ${imgGroup.startQ} - ${imgGroup.endQ}</span>
+                            </div>
+                            <div class="relative rounded-xl overflow-hidden border border-gray-200">
+                                <img src="${imgGroup.src}" class="w-full h-auto object-contain transition-transform duration-500 group-hover:scale-105" onerror="this.src='https://placehold.co/600x400?text=Error'">
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                    <span class="opacity-0 group-hover:opacity-100 bg-black/70 text-white text-xs px-3 py-1 rounded-full backdrop-blur transition-opacity">🔍 Zoom</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                html += `<div class="flex flex-col space-y-6">`;
+                const questions = data.questions.filter(q => q.id >= imgGroup.startQ && q.id <= imgGroup.endQ);
+                questions.forEach(q => {
+                    html += `
+                        <div id="q-box-${q.id}" class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
+                            <div class="flex gap-3 mb-4">
+                                <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-pet-50 text-pet-700 font-bold rounded-full text-sm">${q.id}</span>
+                                <h3 class="font-bold text-gray-800 pt-1">${q.text}</h3>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                                ${q.options.map(opt => `
+                                    <button onclick="selectOption(${q.id}, '${opt}')" id="btn-${q.id}-${opt}" class="option-btn py-3 px-2 rounded-xl border-2 border-gray-100 font-bold text-gray-500 hover:border-pet-200 hover:bg-pet-50 focus:outline-none bg-white">${opt}</button>
+                                `).join('')}
+                            </div>
+                            <div id="feedback-${q.id}" class="hidden flex items-center gap-2 text-sm font-bold mb-3 animate-pulse"></div>
+                            <div id="evidence-${q.id}" class="evidence-box bg-gray-50 rounded-xl">
+                                <div class="p-3 border-l-4 border-pet-500 text-sm text-gray-700 leading-relaxed text-justify">
+                                    <span class="block text-xs uppercase font-bold text-gray-400 mb-1">Explanation</span>
+                                    ${q.script}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`; 
+            });
+
+            content.innerHTML = html;
+            document.getElementById('quiz-content-wrapper').scrollTop = 0;
+            
+            document.getElementById('submit-btn').classList.remove('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            if(index === 2) {
+                 document.getElementById('submit-btn').innerHTML = "<span>Submit & View Results</span>";
+            } else {
+                 document.getElementById('submit-btn').innerHTML = "<span>Submit Page</span>";
+            }
+        }
+
+        // --- CORE LOGIC ---
+        function selectOption(qId, option) {
+            const stateKey = `${currentPageIndex}_${qId}`;
+            if (isGlobalLocked || userAnswers[stateKey]?.locked) return;
+
+            const now = Date.now();
+            if (lastClickTime > 0 && (now - lastClickTime < SPAM_THRESHOLD)) {
+                triggerGlobalLock(); return;
+            }
+            lastClickTime = now;
+
+            document.querySelectorAll(`[id^="btn-${qId}-"]`).forEach(btn => 
+                btn.className = "option-btn py-3 px-2 rounded-xl border-2 border-gray-100 font-bold text-gray-500 hover:border-pet-200 hover:bg-pet-50 focus:outline-none bg-white");
+            
+            const selectedBtn = document.getElementById(`btn-${qId}-${option}`);
+            selectedBtn.className = "option-btn py-3 px-2 rounded-xl border-2 border-pet-500 bg-pet-500 text-white font-bold shadow-md transform scale-[1.02]";
+
+            if (!userAnswers[stateKey]) userAnswers[stateKey] = { attempts: 0, pointsFlag: true };
+            userAnswers[stateKey].selected = option;
+        }
+
+        function triggerGlobalLock() {
+            isGlobalLocked = true;
+            const overlay = document.getElementById('penalty-overlay');
+            const timerEl = document.getElementById('penalty-timer');
+            const ringEl = document.getElementById('penalty-ring');
+            
+            let timeLeft = PENALTY_DURATION;
+            overlay.classList.remove('hidden');
+            timerEl.innerText = timeLeft;
+            
+            ringEl.style.transition = 'none'; ringEl.style.strokeDashoffset = '0';
+            void ringEl.offsetWidth; // force reflow
+            ringEl.style.transition = `stroke-dashoffset ${PENALTY_DURATION}s linear`;
+            ringEl.style.strokeDashoffset = 326.72; // circumference
+
+            const interval = setInterval(() => {
+                timeLeft--;
+                timerEl.innerText = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    overlay.classList.add('hidden');
+                    isGlobalLocked = false;
+                    lastClickTime = 0;
+                }
+            }, 1000);
+        }
+
+        function submitPage() {
+            const currentData = quizData[currentPageIndex];
+            let pageComplete = true; 
+            let hasUnanswered = false;
+            
+            for (let q of currentData.questions) {
+                const key = `${currentPageIndex}_${q.id}`;
+                if ((!userAnswers[key] || !userAnswers[key].selected) && !userAnswers[key]?.locked) hasUnanswered = true;
+            }
+            if (hasUnanswered) { alert("You have unanswered questions!"); return; }
+
+            currentData.questions.forEach(q => {
+                const key = `${currentPageIndex}_${q.id}`;
+                const record = userAnswers[key];
+                if (record.locked) return;
+
+                const btn = document.getElementById(`btn-${q.id}-${record.selected}`);
+                const feedback = document.getElementById(`feedback-${q.id}`);
+                const evidence = document.getElementById(`evidence-${q.id}`);
+
+                if (record.selected === q.correct) {
+                    btn.className = "py-3 px-2 rounded-xl border-2 border-green-500 bg-green-500 text-white font-bold shadow-md";
+                    feedback.innerHTML = `<span class="text-green-700 bg-green-100 px-2 py-0.5 rounded">Correct</span>`;
+                    feedback.classList.remove('hidden');
+                    evidence.classList.add('show');
+                    record.locked = true;
+                    if (record.pointsFlag) { currentScore++; correctCount++; updateScore(); }
+                } else {
+                    record.attempts++;
+                    record.pointsFlag = false;
+                    if (record.attempts < 2) {
+                        btn.className = "py-3 px-2 rounded-xl border-2 border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-60";
+                        btn.disabled = true;
+                        feedback.innerHTML = `<span class="text-orange-700 bg-orange-100 px-2 py-0.5 rounded">Wrong. Try again!</span>`;
+                        feedback.classList.remove('hidden');
+                        pageComplete = false;
+                        record.selected = null;
+                        lastClickTime = 0;
+                    } else {
+                        btn.className = "py-3 px-2 rounded-xl border-2 border-red-500 bg-red-500 text-white font-bold";
+                        document.getElementById(`btn-${q.id}-${q.correct}`).className = "py-3 px-2 rounded-xl border-2 border-green-500 bg-white text-green-600 font-bold border-dashed";
+                        feedback.innerHTML = `<span class="text-red-700 bg-red-100 px-2 py-0.5 rounded">Wrong. Answer: ${q.correct}</span>`;
+                        feedback.classList.remove('hidden');
+                        evidence.classList.add('show');
+                        wrongCount++;
+                        record.locked = true;
+                    }
+                }
+            });
+
+            if (pageComplete) {
+                document.getElementById('submit-btn').classList.add('hidden');
+                document.getElementById('next-btn').classList.remove('hidden');
+                if (currentPageIndex === quizData.length - 1) {
+                    const nextBtn = document.getElementById('next-btn');
+                    nextBtn.innerHTML = `<span>View Results</span>`;
+                    nextBtn.classList.replace('bg-pet-600', 'bg-gray-900');
+                    nextBtn.onclick = showResult;
+                }
+            }
+        }
+
+        function nextPage() { if (currentPageIndex < quizData.length - 1) renderPage(currentPageIndex + 1); }
+        function updateScore() { document.getElementById('current-score').innerText = currentScore; }
+        
+        function showResult() {
+            if (currentAudioPlayer) currentAudioPlayer.pause();
+            isExamActive = false;
+            endTime = new Date();
+            
+            // Stop polling
+            if (fullscreenPollInterval) clearInterval(fullscreenPollInterval);
+
+            // Hide Overlays
+            document.getElementById('fullscreen-blocker').classList.add('hidden');
+            document.getElementById('penalty-overlay').classList.add('hidden');
+            
+            document.getElementById('quiz-interface').classList.add('hidden');
+            const resScreen = document.getElementById('screen-result');
+            resScreen.classList.remove('hidden');
+            resScreen.style.display = 'flex';
+
+            const pct = Math.round((currentScore/totalQuestions)*100);
+            
+            document.getElementById('res-name').innerText = studentName;
+            document.getElementById('res-score').innerText = `${currentScore}/${totalQuestions}`;
+            document.getElementById('res-percent').innerText = `${pct}%`;
+            document.getElementById('res-violations').innerText = violationCount;
+            document.getElementById('stats-correct').innerText = correctCount;
+            document.getElementById('stats-wrong').innerText = wrongCount;
+            document.getElementById('res-start-time').innerText = formatTime(startTime);
+            document.getElementById('res-end-time').innerText = formatTime(endTime);
+
+            const msg = document.getElementById('result-message');
+            if(pct >= 85) {
+                msg.innerHTML = "🎉 Excellent! You passed.";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-green-100 text-green-800";
+            } else {
+                msg.innerHTML = "💪 Keep trying! You need 85% to pass.";
+                msg.className = "text-lg font-bold px-6 py-2 rounded-lg bg-red-100 text-red-800";
+            }
+        }
+
+        function openLightbox(src) {
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+    </script>
+</body>
+</html>

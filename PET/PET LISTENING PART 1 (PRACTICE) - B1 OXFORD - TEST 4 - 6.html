@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Listening Practice Session - Tests 4, 5, 6</title>
+    <style>
+        :root {
+            --primary: #d32f2f; /* Red 700 */
+            --primary-dark: #b71c1c;
+            --primary-light: #ffcdd2;
+            --accent: #ff5252;
+            --text-dark: #2c3e50;
+            --bg-light: #fff5f5;
+            --white: #ffffff;
+            --success: #2e7d32;
+            --error: #c62828;
+            --warning: #ff9800; /* Orange for revealed answers */
+            --header-height: 70px;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body, html { margin: 0; padding: 0; background-color: var(--bg-light); height: 100%; overflow-x: hidden; }
+
+        /* --- UTILS --- */
+        .hidden { display: none !important; }
+        .btn {
+            background: var(--primary); color: white; border: none; padding: 12px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: bold;
+            transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(211, 47, 47, 0.3);
+            text-transform: uppercase; letter-spacing: 0.5px; width: 100%; margin-top: 10px;
+        }
+        .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; transform: none; }
+        
+        .btn-secondary { background: #2c3e50; }
+        .btn-secondary:hover { background: #34495e; }
+        
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary-light); transform: translateY(-1px); }
+
+        input[type="text"] {
+            padding: 15px; border: 2px solid #ddd; border-radius: 8px;
+            font-size: 16px; width: 100%; max-width: 300px; margin-bottom: 20px;
+        }
+        input[type="text"]:focus { border-color: var(--primary); outline: none; }
+
+        /* --- LAYOUT --- */
+        .app-container { max-width: 98%; margin: 0 auto; min-height: 100vh; position: relative; }
+        
+        /* Full screen pages (Welcome & Result) */
+        .full-screen {
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; background: white; padding: 20px; z-index: 2000;
+        }
+        .hero-title { font-size: 2.5em; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; }
+        .hero-desc { font-size: 1.1em; color: #555; max-width: 600px; margin-bottom: 30px; line-height: 1.6; }
+
+        /* Test Pages Container */
+        #app-pages { display: none; } /* Hidden by default */
+
+        .page-container { display: none; padding-bottom: 50px; opacity: 0; transition: opacity 0.5s; }
+        .page-container.active { display: block; opacity: 1; }
+
+        /* --- STICKY HEADER --- */
+        .sticky-wrapper {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            height: var(--header-height);
+            border-bottom: 3px solid var(--primary);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center;
+        }
+
+        .header-content {
+            width: 100%; padding: 0 20px;
+            display: flex; justify-content: space-between; align-items: center; gap: 20px;
+        }
+
+        .header-title { font-weight: 800; color: var(--primary); font-size: 1.4rem; white-space: nowrap; }
+        
+        /* --- AUDIO PLAYER --- */
+        .custom-player {
+            flex-grow: 1; display: flex; align-items: center; gap: 15px;
+            background: #f1f1f1; padding: 5px 15px; border-radius: 50px;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto;
+        }
+        .play-btn {
+            width: 36px; height: 36px; border-radius: 50%; border: none;
+            background: var(--primary); color: white; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s; flex-shrink: 0;
+        }
+        .play-btn:hover { background: var(--primary-dark); transform: scale(1.1); }
+        
+        .progress-container {
+            flex-grow: 1; height: 6px; background: #ddd; border-radius: 4px;
+            cursor: pointer; position: relative;
+        }
+        .progress-bar {
+            height: 100%; background: var(--primary); border-radius: 4px; width: 0%;
+            transition: width 0.1s linear;
+        }
+        .time-display { font-size: 0.85em; color: #666; font-weight: 600; min-width: 50px; text-align: right; }
+
+        /* --- GRID LAYOUT: 75% SCRIPT - 25% TOOLS --- */
+        .content-split {
+            display: grid; 
+            grid-template-columns: 74% 25%; /* 74% + 25% + 1% gap = 100% */
+            gap: 1%;
+            padding-top: 15px; align-items: start;
+        }
+
+        /* --- LEFT COLUMN: SCRIPT --- */
+        .script-panel {
+            background: white; padding: 20px 30px; border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        .section-header {
+            background: var(--primary); color: white; padding: 8px 12px;
+            border-radius: 6px; margin: 20px 0 10px 0; font-weight: bold; font-size: 1rem;
+        }
+        .dialogue-block {
+            margin-bottom: 12px; padding: 8px 12px;
+            border-left: 4px solid var(--primary-light);
+            background: #fffbfb; border-radius: 0 6px 6px 0;
+        }
+        .speaker { font-weight: 800; color: var(--primary-dark); margin-bottom: 3px; text-transform: uppercase; font-size: 0.75em; letter-spacing: 0.5px; }
+        .text { font-size: 1.05em; line-height: 1.7; color: #333; }
+        
+        .evidence-highlight {
+            background-color: #ffd54f; padding: 2px 4px; border-radius: 3px;
+        }
+        .evidence-hidden { background-color: transparent; padding: 0; }
+
+        .gap-zone {
+            display: inline-block; min-width: 60px; height: 24px;
+            border-bottom: 2px dashed var(--primary); vertical-align: bottom;
+            margin: 0 2px; text-align: center; color: var(--primary); font-weight: bold;
+            background: rgba(255, 255, 255, 0.5); font-size: 0.95em; cursor: pointer;
+        }
+        .gap-zone:hover { background: #ffebee; }
+        /* States */
+        .gap-zone.filled { border-bottom: 2px solid var(--success); background: #e8f5e9; color: var(--success); cursor: default; pointer-events: none; }
+        .gap-zone.error { border-bottom: 2px solid var(--error); color: var(--error); background: #ffebee; }
+        .gap-zone.revealed { border-bottom: 2px solid var(--warning); background: #fff3e0; color: #e65100; cursor: default; pointer-events: none; }
+
+        /* --- RIGHT COLUMN: SIDEBAR TOOLS --- */
+        .sidebar-tools {
+            position: sticky;
+            top: calc(var(--header-height) + 15px);
+            height: calc(100vh - var(--header-height) - 30px);
+            overflow-y: auto;
+            padding-right: 5px;
+            display: flex; flex-direction: column; gap: 15px;
+        }
+
+        .tool-box {
+            background: white; padding: 15px; border-radius: 10px;
+            border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tool-title { font-weight: bold; color: var(--text-dark); margin-bottom: 10px; display: block; border-bottom: 2px solid var(--bg-light); padding-bottom: 5px; }
+
+        .word-bank {
+            display: flex; gap: 8px; flex-wrap: wrap; justify-content: start;
+        }
+        .draggable {
+            background: var(--white); border: 1px solid var(--primary); color: var(--primary);
+            padding: 6px 12px; border-radius: 6px; cursor: grab; font-weight: 600; font-size: 0.9em;
+            user-select: none; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .draggable:hover { background: var(--bg-light); transform: translateY(-1px); }
+        .draggable:active { cursor: grabbing; transform: scale(0.95); }
+        .draggable.used { display: none; } 
+
+        /* MCQs */
+        .question-block { margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; }
+        .q-text { font-weight: 700; font-size: 0.95em; display: block; margin-bottom: 8px; color: #333; }
+        .option-label {
+            display: flex; align-items: center; padding: 8px; margin: 4px 0; cursor: pointer;
+            border: 1px solid #f0f0f0; border-radius: 6px; font-size: 0.9em; transition: all 0.2s;
+        }
+        .option-label:hover { background: #fff5f5; border-color: var(--primary-light); }
+        .option-label.selected { border-color: var(--primary); background: #fff5f5; }
+        /* MCQ States */
+        .option-label.correct { border-color: var(--success); background: #e8f5e9; font-weight: bold; pointer-events: none; }
+        .option-label.incorrect { border-color: var(--error); background: #ffebee; }
+        .option-label.revealed { border-color: var(--warning); background: #fff3e0; font-weight: bold; pointer-events: none; }
+        .disabled-opts .option-label { pointer-events: none; opacity: 0.7; }
+
+        /* STATUS MESSAGE */
+        .status-msg {
+            margin-top: 10px; font-weight: bold; text-align: center; min-height: 24px; font-size: 0.9em;
+        }
+        .status-error { color: var(--error); }
+        .status-success { color: var(--success); }
+        .status-info { color: #1976d2; }
+
+        /* RESULT STATS */
+        .stats-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin: 20px 0; width: 100%; max-width: 600px;
+        }
+        .stat-card {
+            background: #f8f9fa; padding: 15px; border-radius: 10px;
+            border-left: 5px solid var(--primary); text-align: left;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .stat-label { font-size: 0.8em; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-value { font-size: 1.1em; font-weight: bold; color: #333; }
+        
+        .part-scores {
+            display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;
+        }
+        .part-score-box {
+            flex: 1; background: var(--bg-light); border: 1px solid var(--primary-light);
+            padding: 10px; border-radius: 8px; text-align: center;
+        }
+        .ps-title { font-size: 0.8em; color: var(--primary); font-weight: bold; }
+        .ps-val { font-size: 1.2em; font-weight: 800; color: var(--text-dark); }
+
+        .score-display { font-size: 4em; font-weight: 900; color: var(--primary); margin: 10px 0; }
+        #evidence-msg { background: #e3f2fd; color: #0d47a1; padding: 15px; border-radius: 10px; display: none; margin-top:15px; }
+        #canvas-confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+        .result-actions { display: flex; gap: 10px; justify-content: center; width: 100%; max-width: 400px; margin-top: 20px; }
+
+        @media (max-width: 1024px) {
+            .content-split { grid-template-columns: 65% 33%; }
+        }
+        @media (max-width: 768px) {
+            .content-split { grid-template-columns: 1fr; }
+            .sidebar-tools { position: relative; top: 0; height: auto; overflow: visible; }
+            .sticky-wrapper { position: relative; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas-confetti"></canvas>
+
+    <div class="app-container">
+        
+        <!-- WELCOME SCREEN -->
+        <div id="welcome-screen" class="full-screen">
+            <h1 class="hero-title">Listening Practice Session</h1>
+            <p class="hero-desc">
+                Welcome to the PET practice session.<br>
+                Enter your name to start tracking your progress.
+            </p>
+            <input type="text" id="student-name" placeholder="Enter Full Name (Required)" autocomplete="off">
+            <button class="btn" style="max-width: 200px;" onclick="app.startApp()">START SESSION</button>
+        </div>
+
+        <!-- APP PAGES RENDER HERE (Initially Hidden) -->
+        <div id="app-pages"></div>
+
+        <!-- RESULT SCREEN (Initially Hidden) -->
+        <div id="result-screen" class="full-screen" style="display:none; z-index:3000;">
+            <h2 class="hero-title">SESSION REPORT</h2>
+            
+            <div class="score-display" id="total-score">0%</div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Student</div>
+                    <div class="stat-value" id="res-name">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Violations</div>
+                    <div class="stat-value" id="res-violations" style="color:var(--error)">0</div>
+                </div>
+                <div class="stat-card" style="grid-column: span 2;">
+                    <div class="stat-label">Detailed Breakdown</div>
+                    <div class="part-scores">
+                        <div class="part-score-box">
+                            <div class="ps-title">TEST 4</div>
+                            <div class="ps-val" id="score-p1">0/0</div>
+                        </div>
+                        <div class="part-score-box">
+                            <div class="ps-title">TEST 5</div>
+                            <div class="ps-val" id="score-p2">0/0</div>
+                        </div>
+                        <div class="part-score-box">
+                            <div class="ps-title">TEST 6</div>
+                            <div class="ps-val" id="score-p3">0/0</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Start Time</div>
+                    <div class="stat-value" id="res-start">--</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">End Time</div>
+                    <div class="stat-value" id="res-end">--</div>
+                </div>
+            </div>
+
+            <p id="feedback-text" class="hero-desc" style="font-weight:bold; font-size:1.3em;"></p>
+            
+            <div class="result-actions">
+                <button class="btn" onclick="location.reload()">NEW SESSION</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // --- DATA & CONTENT ---
+        const tests = [
+            {
+                id: 1,
+                title: "Test 4 - Listening Part 1",
+                audio: "https://www.dropbox.com/scl/fi/gpmhm7k08g0tougtvexmb/OPP-Preliminary-for-Schools-Track-19.mp3?rlkey=rsyu2lcw24808ea4838hqo922&st=6m4wlivd&raw=1",
+                distractors: ["water", "coffee", "meeting"], 
+                script: [
+                    ["Header", "1 What did the boy have to drink?"],
+                    ["Girl", "Have you been to that new <gap>café</gap> on the High Street?"],
+                    ["Boy", "Yes, I’ve been there a few times."],
+                    ["Girl", "What kinds of tea do they have?"],
+                    ["Boy", "I don’t know. I don’t drink tea. I usually have a <gap>milkshake</gap> or something like that when I go to a café."],
+                    ["Girl", "Oh well, are the milkshakes any good?"],
+                    ["Boy", "I don’t know that either, I’m afraid, because they don’t sell them. The <gap>orange juice</gap> is OK. It’s nothing exciting, though.", null, true],
+                    
+                    ["Header", "2 On which date will the author sign books?"],
+                    ["Man", "We’re very pleased to announce an exciting new <gap>event</gap> at our bookshop. World-famous author Karabo Drumbo is going to be here next month!"],
+                    ["Man", "She’ll be reading from her latest <gap>novel</gap>, Philo and Burke, at 7 p.m. on April 24th."],
+                    ["Man", "There’s a separate book-signing event with Karabo on the 25th. <gap>Tickets</gap> for both can be purchased from the 21st. We recommend booking early to avoid disappointment. This is going to be very special indeed. Don’t miss it!", null, true],
+
+                    ["Header", "3 What was the weather like in the afternoon?"],
+                    ["Mum", "Well, are you all having fun at the <gap>beach</gap> today?"],
+                    ["Girl", "Oh, hi Mum. Well, it started out great because the weather was amazing. It was really sunny early this morning so everyone went for a <gap>swim</gap> in the sea. That was lovely."],
+                    ["Girl", "A couple of hours later, we decided to play beach volleyball, but it was a disaster because the weather completely changed! The wind was incredibly strong and no one could control the ball. It was funny, though."],
+                    ["Girl", "After lunch, it started to <gap>rain</gap> so we all went to the beach café for some cake. That’s where I am now!", null, true],
+
+                    ["Header", "4 What time is the English exam?"],
+                    ["Woman", "Can you all please remember that the <gap>date</gap> of your English exam has changed. It’s no longer on Friday at nine o’clock."],
+                    ["Woman", "It’s now on the following <gap>Monday</gap>. The time remains the same, but don’t forget to get here half an hour earlier so that you can be calm and ready to begin.", null, true],
+                    ["Woman", "Don’t forget French is still on Monday <gap>afternoon</gap> at one o’clock, so you’re all going to have a busy day. Make sure you get plenty of rest on Saturday and Sunday."],
+
+                    ["Header", "5 What does the girl’s new friend look like?"],
+                    ["Girl", "Is it OK if I invite Sara to come shopping with us? She’s a new girl at my <gap>gym</gap>. You’ve seen her. She works out on the running machines a lot."],
+                    ["Boy", "Sure, that’s fine. It’s always nice to meet new <gap>people</gap>. Is Sara the girl with short dark hair?"],
+                    ["Girl", "She’s got dark <gap>hair</gap>, but it’s long and she always ties it back.", null, true],
+                    ["Boy", "Oh yeah. I know who you mean. Yes, bring her along. I look forward to meeting her."],
+
+                    ["Header", "6 Where is the man going tomorrow?"],
+                    ["Woman", "I’m going shopping and then to the <gap>cinema</gap> tomorrow. Do you fancy coming? It should be a fun day."],
+                    ["Man", "I’d love to, but I’ve already arranged to meet some <gap>friends</gap> in town."],
+                    ["Woman", "Are you having lunch or something? I’ve heard that the new burger place is quite good."],
+                    ["Man", "Yeah, that’s where we’re meeting, actually. We all wanted to try it out. It’s right next to the cinema, so maybe you could come along after the film and join us.", null, true],
+
+                    ["Header", "7 Where is the magazine?"],
+                    ["Boy", "Have you finished reading the <gap>magazine</gap> I lent you?"],
+                    ["Girl", "Oh yeah, thanks. It was great. Do you want it back? I’ve left it upstairs, in my <gap>room</gap>."],
+                    ["Boy", "Yes, please. There’s an article I wanted to read in it. Can I go up to your room and get it? Is it in your bag?"],
+                    ["Girl", "I took it out of there and put it on my <gap>desk</gap>. It’s on top of my English book. And that reminds me. I need to do my homework. Can you bring my book down with you, please?", null, true]
+                ],
+                questions: [
+                    { q: "1. What did the boy have to drink?", options: ["Milkshake", "Tea", "Orange juice"], ans: 2 },
+                    { q: "2. On which date will the author sign books?", options: ["24th", "25th", "21st"], ans: 1 },
+                    { q: "3. What was the weather like in the afternoon?", options: ["Sunny", "Windy", "Rainy"], ans: 2 },
+                    { q: "4. What time is the English exam?", options: ["9:00", "1:00", "4:00"], ans: 0 },
+                    { q: "5. What does the girl’s new friend look like?", options: ["Short dark hair", "Long dark hair tied back", "Blonde hair"], ans: 1 },
+                    { q: "6. Where is the man going tomorrow?", options: ["Cinema", "Shopping", "Burger place"], ans: 2 },
+                    { q: "7. Where is the magazine?", options: ["In the bag", "On the desk", "In her room"], ans: 1 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Test 5 - Listening Part 1",
+                audio: "https://www.dropbox.com/scl/fi/07hmkb30m2sun87uwx15i/OPP-Preliminary-for-Schools-Track-23.mp3?rlkey=on9jegkabcnxuyp3ui1jblxf0&st=5qlbc718&raw=1",
+                distractors: ["market", "party", "school"],
+                script: [
+                    ["Header", "1 What date does the woman’s holiday begin?"],
+                    ["Man", "Hi! Are you all ready for your <gap>holiday</gap>? I heard that you’re going next Friday!"],
+                    ["Woman", "On the 18th? No. We were planning to leave then, but my cousin isn’t free that <gap>weekend</gap>, so we’re going the following <gap>Friday</gap> now.", null, true],
+                    ["Man", "Oh! That’ll be the 25th, the day before I leave, too. I can’t wait to get away."],
+                    ["Woman", "Only ten days, but I’m really looking forward to it."],
+
+                    ["Header", "2 Where did the boy first find out about the festival?"],
+                    ["Boy", "Look at this! The City <gap>festival</gap> is on next weekend. Do you want to go?"],
+                    ["Girl", "Oh yes, I really want to go, but I didn’t know it was on so soon. There was an ad on <gap>TV</gap> the other day, but I didn’t notice the dates."],
+                    ["Boy", "Well, I only realized it was on because my dad had last Sunday’s <gap>newspaper</gap>. Here, have a look at the website and we can decide what to get tickets for.", null, true],
+
+                    ["Header", "3 What does the boy ask the girl to buy?"],
+                    ["Girl", "I’m going to the shops to get some <gap>milk</gap>. Do you want me to get you anything?"],
+                    ["Boy", "Yeah, can you get me some <gap>eggs</gap>, please? I’m going to make a cake for Mum’s birthday."],
+                    ["Girl", "No problem. Shall I get some flour, too?"],
+                    ["Boy", "Don’t worry, we’ve got plenty in the cupboard. I was thinking of doing something different to my usual chocolate cake. Could you get a <gap>lemon</gap> and I’ll try this new recipe? It looks very tasty.", null, true],
+
+                    ["Header", "4 How do you get to the bookshop?"],
+                    ["Woman", "The bookshop? Oh yes, it’s just off Bridge Street, next to the <gap>museum</gap>."],
+                    ["Woman", "Go straight across this <gap>roundabout</gap> and then after about 500 metres you’ll have to turn right at the crossroads. Sorry, I mean left, into Bridge Street."],
+                    ["Woman", "Go down the road a little way and you’ll see the museum on the corner. It’s a big building with columns at the entrance. The bookshop is down a small side turning beside the museum – you can’t miss it.", null, true],
+
+                    ["Header", "5 How many people live next door?"],
+                    ["Boy", "Hi! Where have you been?"],
+                    ["Girl", "Oh, hi! I’ve just been chatting with our new <gap>neighbours</gap>. The mum and dad seem really nice. And there’s a girl called Monica who’s about my age. Maybe we’ll be able to hang out together."],
+                    ["Boy", "Oh! I thought I saw an older girl there yesterday."],
+                    ["Girl", "Actually, Monica’s got two older <gap>sisters</gap>, but one’s already left <gap>home</gap>. Anyway, you should call in and say hi!", null, true],
+
+                    ["Header", "6 Where are they going on holiday?"],
+                    ["Boy", "So, are you looking forward to going on holiday with your parents?"],
+                    ["Girl", "No. We’re still arguing about it! Dad wants to rent this quiet house in the <gap>countryside</gap>, but Mum says it’s way too far from the coast."],
+                    ["Girl", "She’s seen these great <gap>apartments</gap> online; they’re right beside the beach.", null, true],
+                    ["Boy", "Those apartments sound pretty amazing to me. Is that where you’d like to go as well?"],
+                    ["Girl", "No way. I’d much prefer a city break! There are so many fun things you can do in a new city, and we could rent a really cool flat in the city centre, you know? But Mum has won this time. She really loves the <gap>seaside</gap>."],
+
+                    ["Header", "7 What does the girl decide to wear to the concert?"],
+                    ["Girl", "Well, it’s a shame you can’t come to the <gap>concert</gap> tonight. I’ll have to go on my own. I was planning to wear those dark jeans with a black shirt. Do you think that’s smart enough?"],
+                    ["Boy", "How would I know? If you want to look smarter, there’s that blue <gap>dress</gap> you got from the market?"],
+                    ["Girl", "Brilliant idea! Much better than <gap>trousers</gap>.", null, true],
+                    ["Boy", "Well, whatever you think, but I’m sure it would be fine to just wear jeans and a T-shirt if you wanted. It’s only a small concert."]
+                ],
+                questions: [
+                    { q: "1. What date does the woman’s holiday begin?", options: ["18th", "25th", "26th"], ans: 1 },
+                    { q: "2. Where did the boy first find out about the festival?", options: ["TV", "Newspaper", "Website"], ans: 1 },
+                    { q: "3. What does the boy ask the girl to buy?", options: ["Milk", "Eggs and Lemon", "Flour"], ans: 1 },
+                    { q: "4. How do you get to the bookshop?", options: ["Right at crossroads", "Left at crossroads", "Straight at crossroads"], ans: 1 },
+                    { q: "5. How many people live next door?", options: ["3", "4", "5"], ans: 1 },
+                    { q: "6. Where are they going on holiday?", options: ["Countryside", "City break", "Apartments by beach"], ans: 2 },
+                    { q: "7. What does the girl decide to wear?", options: ["Jeans and shirt", "Blue dress", "T-shirt"], ans: 1 }
+                ]
+            },
+            {
+                id: 3,
+                title: "Test 6 - Listening Part 1",
+                audio: "https://www.dropbox.com/scl/fi/tnncuvsc93i2n6apueofa/OPP-Preliminary-for-Schools-Track-27.mp3?rlkey=rc81f0o4ir8px7yaevx2g0ghs&st=t5l4d3gz&raw=1",
+                distractors: ["shoes", "bus", "tennis"],
+                script: [
+                    ["Header", "1 What is the woman going to buy today?"],
+                    ["Woman", "I’m going shopping in town this afternoon. I need to get a <gap>present</gap> for Jan. It’s her birthday next week."],
+                    ["Man", "Oh, really? What are you thinking of getting her?"],
+                    ["Woman", "I’ve already got her a bag and I thought about buying her a <gap>book</gap> or a scarf, too. What do you think?"],
+                    ["Man", "I don’t think she reads much, so I think a <gap>scarf</gap> would probably be better.", null, true],
+                    ["Woman", "OK. Thanks. I’ll see if I can find something she’ll like."],
+
+                    ["Header", "2 What time did Clara finish band practice?"],
+                    ["Mum", "You’re home late, Clara! I was starting to get worried about you. It’s nine o’clock!"],
+                    ["Girl", "Yes, I know, Mum. I didn’t catch a <gap>train</gap> until 8.00."],
+                    ["Mum", "Were you at band <gap>practice</gap> all that time? That was a long rehearsal!"],
+                    ["Girl", "No, I left at 6.00, but I met Eva on my way to the station. We got chatting and decided to go to a <gap>café</gap>. I hadn’t seen her for ages, so we had a lot to talk about.", null, true],
+
+                    ["Header", "3 Which piece of equipment was missing?"],
+                    ["Dad", "Gosh, you’re back very early from <gap>cricket</gap>, Anthony. Do you not feel well?"],
+                    ["Boy", "No, I’m OK. But I didn’t get to play cricket today."],
+                    ["Dad", "Why not? Did you forget your bat?"],
+                    ["Boy", "No, I remembered to bring it. Actually, Toby forgot his <gap>helmet</gap> but, luckily, I had an extra one, so he was fine."],
+                    ["Dad", "Right. Then why on earth didn’t you play?"],
+                    ["Boy", "No one had a <gap>ball</gap>, Dad! We were all there, ready to play, and …", null, true],
+                    ["Dad", "Oh no! Sorry, Anthony."],
+
+                    ["Header", "4 What is the weather going too be like this afternoon?"],
+                    ["Woman", "After a bright and sunny morning, <gap>clouds</gap> are beginning to form and it looks like we’re going to see some <gap>rain</gap> later today, probably from around two o’clock, so don’t forget your umbrellas.", null, true],
+                    ["Woman", "The rain will be light, however, and no thunderstorms are expected. It will clear up in the evening, and there’ll be light cloud for the rest of the night, with a clear day tomorrow."],
+
+                    ["Header", "5 How did the man find out about the play?"],
+                    ["Woman", "That was a fantastic <gap>play</gap>. Thank you for recommending it."],
+                    ["Man", "You’re very welcome. I’m glad you enjoyed it."],
+                    ["Woman", "How did you hear about it? Did you read a review about it?"],
+                    ["Man", "No, I know there have been some good <gap>reviews</gap> in the newspapers, but I didn’t see them. My friend John heard about it on the <gap>radio</gap> and emailed me and suggested I went to see it. He’ll be pleased to hear that we both enjoyed it.", null, true],
+
+                    ["Header", "6 When is the man’s first guitar lesson?"],
+                    ["Woman", "Have you started <gap>guitar</gap> lessons yet?"],
+                    ["Man", "Not yet. They’ve been delayed. They were going to start on the 15th, but the <gap>teacher</gap> was ill."],
+                    ["Woman", "Oh dear. I hope she’s better now."],
+                    ["Man", "Yes, she is, and she’s going to give two <gap>lessons</gap> in one week this week to catch up. The first one will be on the 21st and the second will be on the 23rd.", null, true],
+                    ["Woman", "Great! I look forward to hearing you play something soon."],
+                    ["Man", "Haha! It might be a while before I can play a song!"],
+
+                    ["Header", "7 How does the woman usually keep fit?"],
+                    ["Man", "Hi, Sally. It’s great seeing you here. I didn’t know you liked <gap>running</gap>!"],
+                    ["Woman", "I don’t! I go to the <gap>gym</gap> most days, but it’s closed at the moment.", null, true],
+                    ["Woman", "They’re doing some <gap>building</gap> work. I’ve got to do something while it’s closed and I haven’t got a bike, so I thought I’d better try running."],
+                    ["Man", "Oh well, why don’t you join me? I’m here every morning, and it’ll be good to have some company."]
+                ],
+                questions: [
+                    { q: "1. What is the woman going to buy today?", options: ["Bag", "Book", "Scarf"], ans: 2 },
+                    { q: "2. What time did Clara finish band practice?", options: ["6:00", "8:00", "9:00"], ans: 0 },
+                    { q: "3. Which piece of equipment was missing?", options: ["Bat", "Helmet", "Ball"], ans: 2 },
+                    { q: "4. Weather this afternoon?", options: ["Sunny", "Light rain", "Thunderstorms"], ans: 1 },
+                    { q: "5. How did the man find out about the play?", options: ["Newspaper", "Radio", "Email from friend"], ans: 2 },
+                    { q: "6. When is the first guitar lesson?", options: ["15th", "21st", "23rd"], ans: 1 },
+                    { q: "7. How does the woman usually keep fit?", options: ["Running", "Gym", "Cycling"], ans: 1 }
+                ]
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                studentName: "",
+                startTime: null,
+                violations: 0,
+                scores: { p1: 0, p2: 0, p3: 0 },
+                maxScores: { p1: 0, p2: 0, p3: 0 },
+                attempts: { 1: 0, 2: 0, 3: 0 }, // Track attempts per page
+                pageDone: { 1: false, 2: false, 3: false } // Track if page is finished
+            },
+            
+            init: function() {
+                this.renderAppPages();
+                this.setupDragDrop();
+                this.setupViolationTracker();
+            },
+
+            // 1. RENDER PAGES
+            renderAppPages: function() {
+                const container = document.getElementById('app-pages');
+                
+                tests.forEach((test, index) => {
+                    const isLast = index === tests.length - 1;
+                    const pageDiv = document.createElement('div');
+                    pageDiv.id = `page-${test.id}`;
+                    pageDiv.className = 'page-container';
+                    
+                    pageDiv.innerHTML = `
+                        <div class="sticky-wrapper">
+                            <div class="header-content">
+                                <div class="header-title">${test.title}</div>
+                                <!-- Custom Audio Player -->
+                                <div class="custom-player" id="player-${test.id}">
+                                    <button class="play-btn" onclick="app.toggleAudio(${test.id})">▶</button>
+                                    <div class="progress-container" onclick="app.seekAudio(event, ${test.id})">
+                                        <div class="progress-bar"></div>
+                                    </div>
+                                    <div class="time-display">00:00</div>
+                                    <audio id="audio-${test.id}" src="${test.audio}" ontimeupdate="app.updateProgress(${test.id})"></audio>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="content-split">
+                            <!-- Left: Script -->
+                            <div class="script-panel" id="script-${test.id}"></div>
+                            
+                            <!-- Right: Sidebar Tools -->
+                            <div class="sidebar-tools">
+                                <div class="tool-box">
+                                    <span class="tool-title">Word Bank</span>
+                                    <div id="bank-${test.id}" class="word-bank"></div>
+                                </div>
+                                <div class="tool-box">
+                                    <span class="tool-title">Questions</span>
+                                    <form id="form-${test.id}"></form>
+                                    
+                                    <div id="status-${test.id}" class="status-msg"></div>
+
+                                    <div class="btn-group" style="margin-top:20px">
+                                        <button id="btn-check-${test.id}" class="btn" onclick="app.checkPage(${test.id})">CHECK ANSWERS</button>
+                                        <button id="btn-next-${test.id}" class="btn btn-secondary hidden" onclick="app.nextPage(${test.id})">
+                                            ${isLast ? 'VIEW RESULTS' : 'NEXT PART &rarr;'}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(pageDiv);
+                    this.renderScriptAndGaps(test);
+                });
+            },
+
+            // 2. RENDER CONTENT
+            renderScriptAndGaps: function(test) {
+                const scriptEl = document.getElementById(`script-${test.id}`);
+                const bankEl = document.getElementById(`bank-${test.id}`);
+                const formEl = document.getElementById(`form-${test.id}`);
+                let gapCount = 0;
+                let bankWords = [];
+
+                test.script.forEach(line => {
+                    const type = line[0];
+                    let text = line[1];
+                    
+                    if (type === "Header") {
+                        const h = document.createElement('div');
+                        h.className = 'section-header';
+                        h.textContent = text;
+                        scriptEl.appendChild(h);
+                        return;
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = 'dialogue-block';
+                    
+                    const parts = text.split(/(<gap>.*?<\/gap>)/g);
+                    let formattedText = "";
+                    
+                    parts.forEach(part => {
+                        if (part.startsWith("<gap>")) {
+                            const word = part.replace(/<\/?gap>/g, "");
+                            bankWords.push({ word: word, type: 'correct' });
+                            formattedText += `<span class="gap-zone" data-target="${word}" id="g-${test.id}-${gapCount}"></span>`;
+                            gapCount++;
+                            if(test.id === 1) this.state.maxScores.p1++;
+                            if(test.id === 2) this.state.maxScores.p2++;
+                            if(test.id === 3) this.state.maxScores.p3++;
+                        } else {
+                            formattedText += part;
+                        }
+                    });
+
+                    if (line[3]) formattedText = `<span class="evidence-highlight evidence-hidden">${formattedText}</span>`;
+                    div.innerHTML = `<div class="speaker">${type}</div><div class="text">${formattedText}</div>`;
+                    scriptEl.appendChild(div);
+                });
+
+                if(test.distractors) test.distractors.forEach(w => bankWords.push({ word: w, type: 'distractor' }));
+                bankWords.sort(() => Math.random() - 0.5);
+
+                bankWords.forEach((item, idx) => {
+                    const span = document.createElement('div');
+                    span.className = 'draggable';
+                    span.draggable = true;
+                    span.textContent = item.word;
+                    span.dataset.word = item.word;
+                    span.id = `drag-${test.id}-${idx}`;
+                    bankEl.appendChild(span);
+                });
+
+                test.questions.forEach((q, i) => {
+                    if(test.id === 1) this.state.maxScores.p1++;
+                    if(test.id === 2) this.state.maxScores.p2++;
+                    if(test.id === 3) this.state.maxScores.p3++;
+                    
+                    const qDiv = document.createElement('div');
+                    qDiv.className = 'question-block';
+                    let opts = q.options.map((opt, idx) => `
+                        <label class="option-label" onclick="app.selectOpt(this)">
+                            <input type="radio" name="q-${test.id}-${i}" value="${idx}" data-correct="${q.ans}" style="margin-right:8px;">
+                            <span>${opt}</span>
+                        </label>
+                    `).join('');
+                    qDiv.innerHTML = `<span class="q-text">${i+1}. ${q.q}</span>${opts}`;
+                    formEl.appendChild(qDiv);
+                });
+            },
+
+            // --- AUDIO PLAYER ---
+            toggleAudio: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                document.querySelectorAll('audio').forEach(a => { if(a !== aud) { a.pause(); this.resetBtn(a.id); } });
+                if (aud.paused) { aud.play(); btn.innerHTML = "❚❚"; } else { aud.pause(); btn.innerHTML = "▶"; }
+            },
+            resetBtn: function(audioId) {
+                const id = audioId.split('-')[1];
+                const btn = document.querySelector(`#player-${id} .play-btn`);
+                if(btn) btn.innerHTML = "▶";
+            },
+            updateProgress: function(id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const bar = document.querySelector(`#player-${id} .progress-bar`);
+                const time = document.querySelector(`#player-${id} .time-display`);
+                if(aud.duration) {
+                    const pct = (aud.currentTime / aud.duration) * 100;
+                    bar.style.width = pct + "%";
+                    const m = Math.floor(aud.currentTime / 60);
+                    const s = Math.floor(aud.currentTime % 60);
+                    time.textContent = `${m}:${s < 10 ? '0'+s : s}`;
+                }
+            },
+            seekAudio: function(e, id) {
+                const aud = document.getElementById(`audio-${id}`);
+                const container = document.querySelector(`#player-${id} .progress-container`);
+                const rect = container.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                aud.currentTime = pos * aud.duration;
+            },
+
+            // --- MAIN LOGIC ---
+            startApp: function() {
+                const nameInput = document.getElementById('student-name');
+                if (!nameInput.value.trim()) { alert("Please enter your name."); return; }
+                this.state.studentName = nameInput.value;
+                this.state.startTime = new Date();
+                
+                document.getElementById('welcome-screen').classList.add('hidden');
+                document.getElementById('app-pages').style.display = 'block';
+                const p1 = document.getElementById('page-1');
+                p1.style.display = 'block';
+                setTimeout(() => p1.classList.add('active'), 10);
+            },
+
+            selectOpt: function(label) {
+                if(label.classList.contains('correct') || label.classList.contains('revealed') || label.parentElement.parentElement.classList.contains('disabled-opts')) return;
+                
+                const siblings = label.parentElement.querySelectorAll('.option-label');
+                siblings.forEach(s => s.classList.remove('selected'));
+                label.classList.add('selected');
+                label.querySelector('input').checked = true;
+            },
+
+            // CORE CHECK FUNCTION (UPDATED 75% THRESHOLD)
+            checkPage: function(id) {
+                if(this.state.pageDone[id]) return; 
+                if(!this.validatePage(id)) { alert("Please fill all gaps and answer all questions first."); return; }
+
+                const attempts = this.state.attempts[id];
+                const maxRetries = 2; 
+                
+                let currentScore = 0;
+                let totalItems = 0;
+
+                // 1. Check Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                totalItems += gaps.length;
+                gaps.forEach(g => {
+                    g.classList.remove('error'); 
+                    if (g.classList.contains('filled')) {
+                        currentScore++; 
+                        return; 
+                    }
+                    if(g.dataset.filled === g.dataset.target) {
+                        g.classList.add('filled');
+                        currentScore++;
+                    } else {
+                        g.classList.add('error');
+                    }
+                });
+
+                // 2. Check MCQs
+                const questions = tests[id-1].questions;
+                totalItems += questions.length;
+                for(let i=0; i<questions.length; i++) {
+                    const selected = document.querySelector(`input[name="q-${id}-${i}"]:checked`);
+                    const container = selected.parentElement.parentElement;
+
+                    if(container.querySelector('.correct')) {
+                         currentScore++; continue;
+                    }
+
+                    if(selected.value == selected.dataset.correct) {
+                        selected.parentElement.classList.add('correct');
+                        currentScore++;
+                    } else {
+                        selected.parentElement.classList.add('incorrect');
+                    }
+                }
+
+                // CHECK THRESHOLD 75%
+                const pct = Math.round((currentScore / totalItems) * 100);
+                const msgEl = document.getElementById(`status-${id}`);
+                
+                if (pct >= 75) {
+                    // PASS
+                    msgEl.textContent = `Completed! Score: ${pct}% (${currentScore}/${totalItems})`;
+                    msgEl.className = "status-msg status-success";
+                    this.revealAnswers(id);
+                    this.finalizePage(id, currentScore);
+                } else {
+                    // FAIL -> Check Attempts
+                    if (attempts < maxRetries) {
+                        this.state.attempts[id]++;
+                        const left = maxRetries - this.state.attempts[id] + 1;
+                        msgEl.textContent = `Incorrect answers found. Please listen again! (${left} attempt${left>1?'s':''} left)`;
+                        msgEl.className = "status-msg status-error";
+                    } else {
+                        msgEl.textContent = `Maximum attempts reached. Score: ${pct}%`;
+                        msgEl.className = "status-msg status-error";
+                        // Do NOT reveal answers if failed threshold
+                        this.finalizePage(id, currentScore);
+                    }
+                }
+            },
+
+            revealAnswers: function(id) {
+                // Reveal Gaps
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                gaps.forEach(g => {
+                    if(!g.classList.contains('filled')) {
+                        g.textContent = g.dataset.target;
+                        g.classList.remove('error');
+                        g.classList.add('revealed');
+                    }
+                });
+
+                // Reveal MCQs
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    const qBlock = document.querySelectorAll(`#form-${id} .question-block`)[i];
+                    if(!qBlock.querySelector('.correct')) {
+                        const opts = qBlock.querySelectorAll('input');
+                        opts.forEach(opt => {
+                             if(opt.value == opt.dataset.correct) {
+                                 opt.parentElement.classList.add('revealed');
+                             }
+                        });
+                    }
+                }
+            },
+
+            finalizePage: function(id, score) {
+                this.state.pageDone[id] = true;
+                if(id === 1) this.state.scores.p1 = score;
+                if(id === 2) this.state.scores.p2 = score;
+                if(id === 3) this.state.scores.p3 = score;
+
+                document.getElementById(`btn-check-${id}`).classList.add('hidden');
+                document.getElementById(`btn-next-${id}`).classList.remove('hidden');
+                
+                const dragItems = document.querySelectorAll(`#bank-${id} .draggable`);
+                dragItems.forEach(d => d.style.pointerEvents = 'none');
+                
+                const mcqLabels = document.querySelectorAll(`#form-${id} .option-label`);
+                mcqLabels.forEach(l => l.style.pointerEvents = 'none');
+            },
+
+            nextPage: function(id) {
+                if(id === 3) {
+                    this.showResults();
+                    return;
+                }
+                
+                this.stopAllAudio();
+                const curr = document.getElementById(`page-${id}`);
+                const next = document.getElementById(`page-${id+1}`);
+                
+                curr.classList.remove('active');
+                setTimeout(() => {
+                    curr.style.display = 'none';
+                    next.style.display = 'block';
+                    setTimeout(() => next.classList.add('active'), 10);
+                    window.scrollTo(0, 0);
+                }, 400);
+            },
+
+            showResults: function() {
+                this.stopAllAudio();
+                const endTime = new Date();
+                const totalScore = this.state.scores.p1 + this.state.scores.p2 + this.state.scores.p3;
+                const totalMax = this.state.maxScores.p1 + this.state.maxScores.p2 + this.state.maxScores.p3;
+                const pct = Math.round((totalScore / totalMax) * 100);
+
+                // HIDE APP PAGES, SHOW RESULT SCREEN
+                document.getElementById('app-pages').style.display = 'none';
+                document.getElementById('result-screen').style.display = 'flex';
+                
+                document.getElementById('total-score').textContent = pct + "%";
+                document.getElementById('res-name').textContent = this.state.studentName;
+                document.getElementById('res-violations').textContent = this.state.violations;
+                
+                document.getElementById('score-p1').textContent = `${this.state.scores.p1}/${this.state.maxScores.p1}`;
+                document.getElementById('score-p2').textContent = `${this.state.scores.p2}/${this.state.maxScores.p2}`;
+                document.getElementById('score-p3').textContent = `${this.state.scores.p3}/${this.state.maxScores.p3}`;
+
+                const fmt = d => `${d.getHours()}:${d.getMinutes().toString().padStart(2,'0')}`;
+                document.getElementById('res-start').textContent = fmt(this.state.startTime);
+                document.getElementById('res-end').textContent = fmt(endTime);
+
+                const fb = document.getElementById('feedback-text');
+                
+                // NO REVIEW MODE LOGIC OR EVIDENCE UNLOCKING
+
+                if(pct >= 85) {
+                    fb.textContent = "Excellent! You passed.";
+                    fb.style.color = "var(--success)";
+                    fireworks();
+                } else {
+                    fb.textContent = "You need 85% to pass.";
+                    fb.style.color = "var(--error)";
+                }
+            },
+
+            validatePage: function(id) {
+                const gaps = document.querySelectorAll(`#script-${id} .gap-zone`);
+                for(let g of gaps) {
+                    if(!g.classList.contains('filled') && !g.dataset.filled) return false;
+                }
+                const questions = tests[id-1].questions;
+                for(let i=0; i<questions.length; i++) {
+                    const qBlock = document.querySelectorAll(`#form-${id} .question-block`)[i];
+                    if(qBlock.querySelector('.correct')) continue;
+                    if(!document.querySelector(`input[name="q-${id}-${i}"]:checked`)) return false;
+                }
+                return true;
+            },
+
+            // --- UTILS ---
+            stopAllAudio: function() {
+                document.querySelectorAll('audio').forEach(a => { a.pause(); this.resetBtn(a.id); });
+            },
+
+            setupDragDrop: function() {
+                let dragged = null;
+                document.addEventListener('dragstart', e => {
+                    if(e.target.classList.contains('draggable')) {
+                        dragged = e.target;
+                        e.dataTransfer.setData('text', e.target.dataset.word);
+                        setTimeout(() => e.target.style.opacity = '0.5', 0);
+                    }
+                });
+                document.addEventListener('dragend', e => {
+                    if(dragged) dragged.style.opacity = '1'; dragged = null;
+                });
+                document.addEventListener('dragover', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault(); e.target.style.background = "#ffebee";
+                    }
+                });
+                document.addEventListener('dragleave', e => {
+                    if(e.target.classList.contains('gap-zone')) e.target.style.background = "rgba(255, 255, 255, 0.5)";
+                });
+                document.addEventListener('drop', e => {
+                    if(e.target.classList.contains('gap-zone')) {
+                        e.preventDefault();
+                        e.target.style.background = "rgba(255, 255, 255, 0.5)";
+                        const word = e.dataTransfer.getData('text');
+                        if(e.target.classList.contains('filled') || e.target.classList.contains('revealed')) return;
+                        if (!e.target.dataset.filled) {
+                            e.target.textContent = word;
+                            e.target.dataset.filled = word;
+                            if(dragged) dragged.style.display = 'none';
+                        }
+                    }
+                });
+                document.addEventListener('click', e => {
+                    if(e.target.classList.contains('gap-zone') && e.target.dataset.filled && !e.target.classList.contains('filled') && !e.target.classList.contains('revealed')) {
+                        const word = e.target.dataset.filled;
+                        e.target.textContent = '';
+                        delete e.target.dataset.filled;
+                        const banks = document.querySelectorAll('.draggable');
+                        for(let b of banks) {
+                            if(b.dataset.word === word && b.style.display === 'none') {
+                                b.style.display = 'inline-block'; break;
+                            }
+                        }
+                    }
+                });
+            },
+
+            setupViolationTracker: function() {
+                document.addEventListener("visibilitychange", () => {
+                    if (document.hidden && this.state.startTime) this.logViolation();
+                });
+                window.addEventListener("blur", () => {
+                    if (this.state.startTime && document.getElementById('result-screen').style.display === 'none') this.logViolation();
+                });
+            },
+            logViolation: function() {
+                if(!this.lastViolation || (Date.now() - this.lastViolation > 2000)) {
+                    this.state.violations++;
+                    this.lastViolation = Date.now();
+                    document.title = `⚠️ Alert (${this.state.violations})`;
+                }
+            }
+        };
+
+        function fireworks() {
+            const c = document.getElementById('canvas-confetti'), x = c.getContext('2d');
+            c.width = window.innerWidth; c.height = window.innerHeight;
+            let p = [];
+            const add = (n, x, y) => { for(let i=0;i<n;i++) p.push({x:x,y:y,vx:(Math.random()-.5)*10,vy:(Math.random()-.5)*10,c:`hsl(${Math.random()*360},100%,50%)`,l:100}); }
+            const tick = () => {
+                x.clearRect(0,0,c.width,c.height);
+                p.forEach((i,idx) => { i.x+=i.vx; i.y+=i.vy; i.l--; x.fillStyle=i.c; x.fillRect(i.x,i.y,4,4); if(i.l<0) p.splice(idx,1); });
+                if(p.length) requestAnimationFrame(tick);
+            }
+            let t = setInterval(() => add(20, Math.random()*c.width, Math.random()*c.height/2), 200);
+            tick(); setTimeout(() => clearInterval(t), 4000);
+        }
+
+        window.onload = () => app.init();
+    </script>
+</body>
+</html>

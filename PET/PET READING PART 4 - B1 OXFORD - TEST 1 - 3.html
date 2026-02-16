@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Part 4 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Drag & Drop Styles */
+        
+        /* 1. Trạng thái ban đầu */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 40px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #94a3b8;
+            font-weight: 700;
+            font-size: 0.8em;
+            padding: 0 5px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #e0f2fe;
+            border-color: #38bdf8;
+            transform: scale(1.1);
+        }
+
+        /* 2. Trạng thái đã điền */
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            background-color: #f8fafc; 
+            border: none;
+            border-bottom: 2px solid #64748b;
+            border-radius: 4px;
+            color: #0f172a;
+            font-size: 1em;
+            font-weight: 800;
+            text-align: left;
+            box-shadow: none;
+            white-space: normal; 
+            line-height: 1.6;
+        }
+        
+        .drop-zone.filled:hover {
+            background-color: #e2e8f0;
+            border-bottom-color: #0f172a; 
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        /* 3. Trạng thái ĐÚNG */
+        .drop-zone.correct {
+            background-color: #dcfce7 !important;
+            border-bottom: 2px solid #16a34a !important;
+            color: #15803d !important;
+            pointer-events: none;
+        }
+        
+        /* 4. Trạng thái SAI */
+        .drop-zone.wrong {
+            background-color: #fee2e2 !important;
+            border-bottom: 2px solid #dc2626 !important;
+            color: #b91c1c !important;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+        }
+
+        /* Reading Text Styles */
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.0; 
+            text-align: justify; 
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-500 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">PET Reading Part 4</h1>
+                <p class="text-slate-500 mb-6 font-medium">Practice Tests 1 - 3</p>
+                <div class="inline-block bg-indigo-100 text-indigo-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Student</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/3</span>
+                    
+                    <!-- Control Buttons -->
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-indigo-600 text-white font-bold text-sm shadow hover:bg-indigo-700 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Split View) -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                
+                <!-- LEFT: TEXT (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-3xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Text</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Test Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose">
+                            <!-- Content Injected Here -->
+                        </div>
+                        
+                        <!-- Explanation Box (Hidden initially) -->
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-green-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: OPTIONS (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-600 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Options
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20">
+                        <!-- Draggable Options Injected Here -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-rose-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/15</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span></span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">
+                        Waiting to send...
+                    </div>
+                </div>
+                
+                <!-- Không hiển thị chi tiết đáp án ở đây theo yêu cầu -->
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "06.02.26"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbxnooez5uPo81V0vDfAmSHpU9MEpA_mbIYUjO4ElKdLXRtCekBp_dnqd7g5_WYIe9TWZA/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                id: "test1",
+                title: "An Amazing Journey",
+                content_html: `
+                    <p>I was walking my dog near my home in San Francisco last spring when I saw a large black Labrador on its own. It was wearing a blue collar, but there was no sign of an owner anywhere. <span class="drop-zone" data-id="16">[16]</span> I was only joking, but it came running to me and stood by my side, ready to leave. I knew that this was someone’s lost pet.</p>
+                    <p>I fed and bathed the dog and checked its collar. There was a tag on it with a phone number. It turned out that the dog’s name was Banjo, and sure enough, he had an owner and a home. The trouble was that his home was in Chicago – over 2,000 miles away! <span class="drop-zone" data-id="17">[17]</span> Banjo had been missing for over a year, and they had no idea how he had got all the way across the country. They also had no idea how to get him back again because they had a newborn baby at home and couldn’t make the long journey to San Francisco.</p>
+                    <p>I used social media to ask for help. It wasn’t long before we had a long list of volunteers who wanted to help Banjo to get home. <span class="drop-zone" data-id="18">[18]</span> It was important that they knew how to take care of Banjo. Banjo set off on his journey, and met new people in California, Arizona, New Mexico, Texas, Oklahoma, Arkansas and Missouri before he reached his home state of Illinois.</p>
+                    <p><span class="drop-zone" data-id="19">[19]</span> Banjo was delighted to meet the new baby and to be back home. His owners were thrilled to have him back. <span class="drop-zone" data-id="20">[20]</span> Banjo’s story just goes to show what people can achieve when they all work together!</p>
+                `,
+                options: [
+                    { id: "A", text: "I made sure that all of them were pet owners." },
+                    { id: "B", text: "I decided to travel to Chicago with Banjo." },
+                    { id: "C", text: "It took 20 drivers four days to reunite Banjo with his family." },
+                    { id: "D", text: "I asked the dog if it wanted to come home with me." },
+                    { id: "E", text: "I hope he won’t go wandering again." },
+                    { id: "F", text: "His owners, Tina and Dan, were amazed to hear from me." },
+                    { id: "G", text: "It was clearly hungry, and needed to rest." },
+                    { id: "H", text: "I didn’t know who the dog belonged to." }
+                ],
+                answers: { 16: "D", 17: "F", 18: "A", 19: "C", 20: "E" },
+                explanations: `
+                    <strong>16. D:</strong> "I asked the dog..." connects with "I was only joking" in the next sentence.<br>
+                    <strong>17. F:</strong> "His owners..." matches the context of contacting the owners and their surprise.<br>
+                    <strong>18. A:</strong> "I made sure that all of them were pet owners" explains why they knew "how to take care of Banjo".<br>
+                    <strong>19. C:</strong> Describes the end of the journey ("reunite Banjo") before mentioning his arrival.<br>
+                    <strong>20. E:</strong> A concluding thought about the dog not wandering again after such a long journey.
+                `
+            },
+            {
+                id: "test2",
+                title: "A Helping Hand",
+                content_html: `
+                    <p>Lee Newton was sitting on a station platform under an old blanket when he saw a young couple talking. <span class="drop-zone" data-id="16">[16]</span> It was a freezing night in January, and the couple were clearly cold. Lee called to them and asked them if they wanted to share his blanket. The three of them started chatting, and Lee learned that their names were Karen and Mark.</p>
+                    <p><span class="drop-zone" data-id="17">[17]</span> Lee told them that he’d lost his job and then his flat when he could no longer pay the rent. He had no family to help him, and nowhere to go. <span class="drop-zone" data-id="18">[18]</span> Karen and Mark felt terrible. They couldn’t imagine sleeping on the icy platform for even one night. As they spent their night in the station chatting to Lee, they realized that anyone could end up in his situation. <span class="drop-zone" data-id="19">[19]</span></p>
+                    <p>When morning came, Karen and Mark bought an extra train ticket and invited Lee to come home with them. Lee accepted, and gratefully moved into Karen and Mark’s spare bedroom. Once he had an address, Lee was able to apply for jobs. <span class="drop-zone" data-id="20">[20]</span> He saved up to buy a small motorbike, then got an evening job delivering pizzas. After a few months, Lee had saved up enough money to rent a small flat of his own.</p>
+                    <p>‘When times get tough, you need friends and family,’ Lee says. ‘Karen and Mark became that for me.’ An act of kindness was all Lee needed to help him get his life back.</p>
+                `,
+                options: [
+                    { id: "A", text: "He offered to drive them home." },
+                    { id: "B", text: "He’d been sleeping in the train station for three months." },
+                    { id: "C", text: "They’d missed the last train, and they seemed upset." },
+                    { id: "D", text: "They enjoyed living together, so Lee decided to stay." },
+                    { id: "E", text: "He soon found work in a local factory." },
+                    { id: "F", text: "They felt very lucky to have jobs and a home." },
+                    { id: "G", text: "It wasn’t a big problem because he bought a flat." },
+                    { id: "H", text: "Karen explained that they lived two hours away and they couldn’t afford a taxi home." }
+                ],
+                answers: { 16: "C", 17: "H", 18: "B", 19: "F", 20: "E" },
+                explanations: `
+                    <strong>16. C:</strong> Explains why the couple was on the platform late at night.<br>
+                    <strong>17. H:</strong> They explained their situation first, before Lee shared his.<br>
+                    <strong>18. B:</strong> Describes Lee's difficult situation of homelessness.<br>
+                    <strong>19. F:</strong> Karen and Mark reflected on their own luck compared to Lee's situation.<br>
+                    <strong>20. E:</strong> Fits the timeline: applied for jobs -> found work -> saved money.
+                `
+            },
+            {
+                id: "test3",
+                title: "Lost Luggage",
+                content_html: `
+                    <p>Two years ago, I went on holiday to Rome with my family. It was a four-hour train journey from our home, and we all helped to plan the trip. We were looking forward to seeing the famous sights! Everything went really well and we had a great time visiting the amazing tourist attractions. I was in charge of taking all the photos with my brand new phone, which had an excellent camera. We stayed in Rome for two weeks, and it was really incredible.</p>
+                    <p>On the train journey back home, I decided to open my backpack, but I couldn’t find it. <span class="drop-zone" data-id="16">[16]</span> I was very upset because I’d packed my phone in that backpack, along with my travel journal. <span class="drop-zone" data-id="17">[17]</span> Weeks passed, and then months. At first, I contacted the train company every week, but after some time, it was clear that my backpack was never going to be found. After a while, I forgot all about it.</p>
+                    <p>Last month, I took the train to Florence on a school trip. Incredibly, my backpack went missing again! <span class="drop-zone" data-id="18">[18]</span> After Rome, I always kept my phone and other important items in my pockets.</p>
+                    <p>Two weeks after the Florence trip, I received a phone call from the train company. They told me they had my backpack, and they would send it to my local station. I assumed it was my backpack from the school trip. <span class="drop-zone" data-id="19">[19]</span> Someone from the train company had found the backpack from Rome in a dusty old storeroom! Everything inside it was safe, and I finally got to share the photos with my family. <span class="drop-zone" data-id="20">[20]</span> I decided we should all go back to Rome for another holiday … but this time, I would be much more careful with my things!</p>
+                `,
+                options: [
+                    { id: "A", text: "I never travelled with the same train company again." },
+                    { id: "B", text: "When I arrived at the station, I couldn’t believe my eyes!" },
+                    { id: "C", text: "All my memories of Rome were in that backpack." },
+                    { id: "D", text: "I couldn’t leave the station without my bag." },
+                    { id: "E", text: "It was so wonderful to see them." },
+                    { id: "F", text: "I knew I would never see my new phone again." },
+                    { id: "G", text: "I searched and searched, but it was nowhere to be seen!" },
+                    { id: "H", text: "But, this time, there were no precious memories inside." }
+                ],
+                answers: { 16: "G", 17: "C", 18: "H", 19: "B", 20: "E" },
+                explanations: `
+                    <strong>16. G:</strong> "Searched and searched" follows "couldn't find it".<br>
+                    <strong>17. C:</strong> Explains why the loss was so upsetting (memories, journal).<br>
+                    <strong>18. H:</strong> Contrasts the second loss with the first - nothing valuable inside this time.<br>
+                    <strong>19. B:</strong> Reacts to the surprise that it was the OLD backpack, not the new one.<br>
+                    <strong>20. E:</strong> "See them" refers to the photos mentioned in the previous sentence.
+                `
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                if (!name) { alert("Please enter your name!"); return; }
+                this.state.userName = name;
+                this.state.startTime = new Date();
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = test.title;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                // Reset Explanation
+                document.getElementById('explanation-box').classList.add('hidden');
+                document.getElementById('explanation-content').innerHTML = '';
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                // Render Content
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.innerHTML.trim() === "" || contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+                
+                // Re-bind events and fill UI
+                const gaps = contentDiv.querySelectorAll('.drop-zone');
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const key = `${test.id}-${qId}`;
+                    const savedAns = this.state.userAnswers[key];
+                    
+                    if (savedAns) {
+                        this.fillGapUI(gap, savedAns);
+                    } else {
+                         gap.className = 'drop-zone';
+                         gap.innerHTML = `[${qId}]`;
+                         gap.ondragover = (e) => this.allowDrop(e);
+                         gap.ondrop = (e) => this.drop(e);
+                    }
+                    
+                    if (!this.state.testCompleted) {
+                         gap.onclick = () => this.handleGapClick(test.id, qId);
+                    } else {
+                        gap.onclick = null;
+                        gap.ondragover = null;
+                        gap.ondrop = null;
+                    }
+                });
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-rose-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    
+                    container.appendChild(div);
+                });
+            },
+
+            // --- DRAG & DROP ---
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                
+                target.classList.remove('hovered');
+                target.classList.remove('wrong'); // Reset wrong state on new interaction
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                // Keep wrong status visible if exists
+                if(!gapEl.classList.contains('wrong') && !gapEl.classList.contains('correct')){
+                     gapEl.className = 'drop-zone filled';
+                } else {
+                     gapEl.classList.add('filled');
+                }
+                
+                gapEl.innerHTML = `<span class="font-bold mr-2">[${optId}]</span>${optText}`;
+            },
+
+            // --- CHECK LOGIC ---
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const gaps = document.querySelectorAll('.drop-zone');
+
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns) {
+                        answeredCount++;
+                        if (userAns === test.answers[qId]) correctCount++;
+                    }
+                });
+
+                if (answeredCount < 5) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                // PASS Condition: >= 4 Correct
+                if (correctCount >= 4) {
+                    this.showFeedback(true);
+                } else {
+                    // FAIL Condition
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrors(); // Highlight in RED
+                        this.renderTest(); // Re-render logic
+                    } else {
+                        // No attempts left
+                        this.showFeedback(false);
+                    }
+                }
+            },
+
+            highlightErrors() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong');
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                const test = db[this.state.currentTestIdx];
+                
+                // Reveal Explanations
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                expBox.classList.remove('hidden');
+                expContent.innerHTML = test.explanations;
+
+                // Color gaps
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.classList.remove('wrong');
+                    gap.classList.remove('filled');
+                    
+                    if (userAns === correctAns) {
+                        gap.classList.add('correct');
+                        gap.innerHTML = `<span class="font-bold mr-2">[${correctAns}]</span>${test.options.find(o => o.id === correctAns).text}`;
+                    } else {
+                        gap.classList.add('wrong');
+                        const correctOpt = test.options.find(o => o.id === correctAns);
+                        gap.innerHTML += `<div class="text-xs text-green-700 mt-2 p-2 bg-green-50 rounded border border-green-200 font-normal"><i class="fas fa-check"></i> Correct: [${correctAns}] ${correctOpt.text}</div>`;
+                    }
+                });
+
+                if (passed) {
+                    alert("Awesome! You passed this test.");
+                } else {
+                    alert("Out of attempts. Review the correct answers below.");
+                }
+
+                this.renderTest(); // Updates buttons to "Next"
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; // Reset attempts for next test
+                this.state.testCompleted = false;
+                this.renderTest();
+            },
+
+            // --- FINAL SUBMISSION ---
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                // Calculate Total Score
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    for (let qId = 16; qId <= 20; qId++) {
+                        totalQ++;
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key] || "-";
+                        const correctAns = test.answers[qId];
+                        if (userAns === correctAns) {
+                            score++;
+                        }
+                    }
+                });
+
+                const percent = Math.round((score / totalQ) * 100);
+
+                // Send to Google Sheet
+                if (typeof nopBaiLenSheet === 'function') {
+                    document.getElementById('sheet-status').textContent = "Sending results to Google Sheet...";
+                    nopBaiLenSheet(
+                        this.state.userName, 
+                        durationStr, 
+                        `${score} / ${totalQ}`, 
+                        `${percent}%`
+                    );
+                }
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#fb7185');
+            }
+        };
+
+        // --- GOOGLE SHEET SEND FUNCTION ---
+        var thoiGianBatDau = new Date(); 
+
+        function nopBaiLenSheet(tenHocSinh, thoiGianLam, diemSo, phanTram) {
+            if (!LINK_APP_SCRIPT) return;
+
+            var gioBatDauString = thoiGianBatDau.getHours() + ":" + thoiGianBatDau.getMinutes() + ":" + thoiGianBatDau.getSeconds();
+            var duLieu = {
+                tenSheet: TEN_SHEET_NAY,
+                ten: tenHocSinh,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLam,
+                diemSo: diemSo,
+                phanTram: phanTram
+            };
+
+            // Use text/plain to avoid CORS preflight check on GAS
+            fetch(LINK_APP_SCRIPT, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(duLieu)
+            })
+            .then(() => {
+                console.log("✅ Sent to Sheet");
+                document.getElementById('sheet-status').innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results sent successfully!</span>';
+            })
+            .catch(err => {
+                console.error("❌ Error:", err);
+                document.getElementById('sheet-status').innerHTML = '<span class="text-red-500">Error sending results. Check console.</span>';
+            });
+        }
+    </script>
+</body>
+</html>

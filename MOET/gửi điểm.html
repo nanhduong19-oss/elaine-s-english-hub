@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listening Practice: Test 3 & 4 (Final Fix)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root { --primary: #1a73e8; --success: #34a853; --warning: #fbbc04; --danger: #ea4335; --bg-color: #f0f2f5; --text-color: #202124; }
+        body { font-family: 'Open Sans', sans-serif; background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
+        h1, h2, h3 { font-family: 'Google Sans', sans-serif; }
+        
+        /* LAYOUT */
+        .screen { max-width: 900px; width: 95%; margin: 30px auto; background: white; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: none; animation: fadeIn 0.4s ease-out; padding-bottom: 100px; }
+        .active-screen { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* BUTTONS & INPUTS */
+        .btn { background-color: var(--primary); color: white; padding: 12px 30px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.2s; font-family: 'Google Sans', sans-serif; display: inline-block; margin-top: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .btn:hover { background-color: #1558b0; transform: translateY(-2px); }
+        .input-name { width: 60%; padding: 15px; font-size: 1.2rem; border: 2px solid #dfe1e5; border-radius: 8px; margin: 20px 0; text-align: center; text-transform: uppercase; font-weight: bold; color: var(--primary); outline: none; }
+        
+        /* STICKY HEADER (TITLE + AUDIO + WORD BANK) */
+        .sticky-wrapper {
+            position: sticky; top: 0; z-index: 1000;
+            background: rgba(255,255,255,0.98);
+            border-bottom: 3px solid #1a73e8;
+            margin: -40px -40px 40px -40px; /* Bù trừ padding container */
+            padding: 15px 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .sticky-title {
+            margin: 0 0 10px 0;
+            color: var(--primary);
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Audio Controls */
+        .audio-wrapper { display: flex; flex-direction: column; align-items: center; margin-bottom: 10px; }
+        .audio-main { width: 100%; max-width: 500px; height: 36px; outline: none; }
+        .audio-upload-btn { font-size: 0.8rem; margin-top: 5px; color: #1a73e8; text-decoration: underline; cursor: pointer; background: none; border: none; }
+        
+        /* Word Bank */
+        .word-bank { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; }
+        .draggable { background: white; color: var(--primary); padding: 5px 12px; border-radius: 20px; font-weight: 600; cursor: pointer; user-select: none; border: 1px solid #dadce0; transition: all 0.2s; font-size: 0.9rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .draggable:hover { transform: translateY(-2px); background: #e8f0fe; }
+        .draggable.selected { background-color: var(--primary); color: white; transform: scale(1.05); box-shadow: 0 4px 8px rgba(26,115,232,0.3); }
+        .draggable.used { opacity: 0.4; cursor: default; background: #f1f3f4; color: #999; pointer-events: none; border-color: transparent; box-shadow: none; }
+
+        /* DIALOGUE & DROPZONES */
+        .script-container { margin-bottom: 40px; }
+        .dialogue-block { margin-bottom: 20px; background: #fafafa; padding: 15px 20px; border-radius: 8px; border-left: 5px solid #1a73e8; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .speaker-name { font-weight: 800; color: #1a73e8; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .dialogue-text { line-height: 2.5; font-size: 1.1rem; color: #333; text-align: justify; }
+
+        .dropzone { display: inline-block; min-width: 80px; height: 28px; border-bottom: 2px solid #bdc3c7; margin: 0 3px; vertical-align: bottom; text-align: center; color: var(--primary); font-weight: bold; cursor: pointer; background: #fff; border-radius: 4px 4px 0 0; padding: 0 5px; transition: 0.2s; }
+        .dropzone:hover, .dropzone.active-target { background: #d2e3fc; border-bottom-color: var(--primary); }
+        .dropzone.correct { border-bottom-color: var(--success); color: var(--success); background: rgba(52, 168, 83, 0.1); }
+        .dropzone.incorrect { border-bottom-color: var(--danger); color: var(--danger); background: rgba(234, 67, 53, 0.1); }
+        .ans-key { font-size: 0.75rem; color: white; background: var(--success); padding: 1px 4px; border-radius: 4px; margin-left: 5px; vertical-align: middle; }
+
+        /* MCQ & RESULTS */
+        .mcq-section { background: #fff; padding: 25px; border-radius: 12px; border: 1px solid #eee; margin-top: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .mcq-item { margin-bottom: 30px; }
+        .mcq-question { font-weight: bold; font-size: 1.05rem; margin-bottom: 12px; display: block; }
+        .mcq-options label { display: block; margin-bottom: 8px; cursor: pointer; padding: 10px; border-radius: 8px; transition: 0.2s; border: 1px solid transparent; }
+        .mcq-options label:hover { background: #f8f9fa; border-color: #ddd; }
+        .evidence-box { margin-top: 12px; padding: 12px 15px; background: #e6f4ea; border-left: 5px solid var(--success); font-size: 0.95rem; color: #0d652d; display: none; line-height: 1.5; }
+        
+        .mcq-correct-label { background: #e6f4ea !important; border-color: var(--success) !important; color: #0d652d; font-weight: bold; }
+        .mcq-wrong-label { background: #fce8e6 !important; border-color: var(--danger) !important; color: #c5221f; text-decoration: line-through; opacity: 0.7; }
+        .result-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .result-table td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen" class="screen active-screen" style="text-align:center; padding-top:80px;">
+        <h1 style="color:var(--primary); font-size: 2.5rem;">🎧 B1 Listening Practice</h1>
+        <p style="color:#666; font-size:1.2rem;">Chủ đề: School Radio & Book Club</p>
+        <p style="font-size:0.9rem; color:#ea4335; margin-top:20px;">*Yêu cầu: Đạt <strong>80%</strong> để xem đáp án & dẫn chứng.</p>
+        <input type="text" id="student-name" class="input-name" placeholder="NHẬP TÊN CỦA BẠN" oninput="this.value = this.value.toUpperCase()">
+        <br>
+        <button class="btn" onclick="startApp()">BẮT ĐẦU LÀM BÀI</button>
+    </div>
+
+    <div id="page-1" class="screen">
+        <div class="sticky-wrapper">
+            <h2 class="sticky-title">PART 1: School Radio Station</h2> <div class="audio-wrapper">
+                <audio controls id="audio-1" class="audio-main">
+                    <source src="https://www.dropbox.com/scl/fi/trtaz7xigwkp3fdrftkuy/TEST-3-Part-4.mp3?rlkey=rw1g2c3f9ikvf27u0bl7uzkpv&st=9zjr1vkm&raw=1" type="audio/mpeg">
+                    Trình duyệt không hỗ trợ.
+                </audio>
+                <button class="audio-upload-btn" onclick="document.getElementById('file-1').click()">Link lỗi? Bấm đây để chọn file từ máy</button>
+                <input type="file" id="file-1" accept="audio/*" style="display:none" onchange="loadLocalAudio(this, 'audio-1')">
+            </div>
+            
+            <div style="font-size:0.85rem; color:#888;">⬇️ Kéo từ hoặc Bấm chọn từ rồi bấm vào ô trống ⬇️</div>
+            <div class="word-bank" id="bank-1"></div>
+        </div>
+
+        <div class="script-container">
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">Today I'm talking to Mandy Thornhill, who's a presenter on her school's radio station. Mandy, tell us about the station.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy</span><div class="dialogue-text">Well, like most schools in our city, we've got a radio station that's part of the school <span class="dropzone" data-ans="website"></span>. But actually, we had one before other schools did. Basically, students download an <span class="dropzone" data-ans="app"></span> to their phone and they're given a <span class="dropzone" data-ans="password"></span>. Because we record the programmes in <span class="dropzone" data-ans="advance"></span>, they can decide when and where they listen, as long as it's not during <span class="dropzone" data-ans="lessons"></span>.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">So how did you get involved?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy</span><div class="dialogue-text">There's a group of five of us who take <span class="dropzone" data-ans="turns"></span> as the presenter, but we didn't start it all. It was one of our teachers. She read an <span class="dropzone" data-ans="article"></span> and thought it'd be a great one to do, and she asked for student <span class="dropzone" data-ans="volunteers"></span> to help get it going. Actually, only the five of us came forward.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy (tiếp)</span><div class="dialogue-text">So what about the equipment? Our teacher ordered it all from a company <span class="dropzone" data-ans="online"></span>. When it first came out of the box, we all looked at each other... because the <span class="dropzone" data-ans="instructions"></span> were way beyond our understanding. Fortunately, one girl's <span class="dropzone" data-ans="brother"></span>, who's actually a DJ, was able to set it up for us and teach us how to <span class="dropzone" data-ans="operate"></span> it.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">How much preparation is there before each programme?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy</span><div class="dialogue-text">It depends. I'm the presenter for an hour-long programme once a week. It's mostly <span class="dropzone" data-ans="music"></span> and announcements, but I make sure everything's ready before I record it. Once or twice a year, I <span class="dropzone" data-ans="interview"></span> a student who's done something interesting. That takes longer to get ready, but it's worth it because it's <span class="dropzone" data-ans="enjoyable"></span>.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">Have you ever done a live broadcast?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy</span><div class="dialogue-text">Only once. There was a special event at school and we reported on it <span class="dropzone" data-ans="live"></span>. I'd practised and written down what I wanted to say, but I didn't need my <span class="dropzone" data-ans="notes"></span> in the end. The worst thing about live radio is that if you get something wrong or say something <span class="dropzone" data-ans="silly"></span>, you can't go back.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">So how does the radio station fit in with schoolwork?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mandy</span><div class="dialogue-text">Some people think that I should be doing my <span class="dropzone" data-ans="homework"></span> rather than making radio programmes, but actually I think it has a good influence. You know, working to tight <span class="dropzone" data-ans="deadlines"></span>, checking that everything's <span class="dropzone" data-ans="correct"></span>. I'm sure all that is going to be <span class="dropzone" data-ans="useful"></span> in the future.</div></div>
+        </div>
+
+        <div class="mcq-section">
+            <h3 style="margin-top:0">Multiple Choice Questions</h3>
+            <div class="mcq-item" data-ans="C"><span class="mcq-question">20. Mandy explains that her school’s radio station</span><div class="mcq-options"><label><input type="radio" name="p1_q20" value="A"> A. can only be heard in the school building.</label><label><input type="radio" name="p1_q20" value="B"> B. is sometimes played during classes.</label><label><input type="radio" name="p1_q20" value="C"> C. was the first one in her home area.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "we had one before other schools did"</div></div>
+            <div class="mcq-item" data-ans="B"><span class="mcq-question">21. How did Mandy get involved with the radio station?</span><div class="mcq-options"><label><input type="radio" name="p1_q21" value="A"> A. She suggested the idea originally.</label><label><input type="radio" name="p1_q21" value="B"> B. She responded to a request for help.</label><label><input type="radio" name="p1_q21" value="C"> C. She was chosen by a member of staff.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "she asked for student volunteers... only the five of us came forward"</div></div>
+            <div class="mcq-item" data-ans="C"><span class="mcq-question">22. How did the students learn to operate the equipment?</span><div class="mcq-options"><label><input type="radio" name="p1_q22" value="A"> A. The company that made it gave them training.</label><label><input type="radio" name="p1_q22" value="B"> B. They studied the instructions very carefully.</label><label><input type="radio" name="p1_q22" value="C"> C. They found somebody able to show them.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "one girl's brother... was able to set it up for us and teach us how to operate it"</div></div>
+            <div class="mcq-item" data-ans="A"><span class="mcq-question">23. What does Mandy say about preparing for her programme?</span><div class="mcq-options"><label><input type="radio" name="p1_q23" value="A"> A. Most weeks it doesn’t take long.</label><label><input type="radio" name="p1_q23" value="B"> B. She never feels she spends enough time on it.</label><label><input type="radio" name="p1_q23" value="C"> C. She doesn’t like it when she has to interview someone.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "It's mostly music... Once or twice a year, I interview... That takes longer"</div></div>
+            <div class="mcq-item" data-ans="B"><span class="mcq-question">24. How did Mandy feel about her first live broadcast?</span><div class="mcq-options"><label><input type="radio" name="p1_q24" value="A"> A. It was embarrassing to make mistakes.</label><label><input type="radio" name="p1_q24" value="B"> B. It was much easier than she expected.</label><label><input type="radio" name="p1_q24" value="C"> C. It was hard to think of things to say.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "I didn't need my notes in the end... But it all went OK on the day."</div></div>
+            <div class="mcq-item" data-ans="C"><span class="mcq-question">25. What does Mandy say about the radio station and studying?</span><div class="mcq-options"><label><input type="radio" name="p1_q25" value="A"> A. It makes it hard to finish all her homework on time.</label><label><input type="radio" name="p1_q25" value="B"> B. She’s able to keep the two things separate.</label><label><input type="radio" name="p1_q25" value="C"> C. It’s taught her some relevant life skills.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "working to tight deadlines... useful in the future"</div></div>
+        </div>
+        <div style="text-align:center; margin-top:30px;"><button class="btn" onclick="showPage(2)">Bài tiếp theo ➡️</button></div>
+    </div>
+
+    <div id="page-2" class="screen">
+        <div class="sticky-wrapper">
+            <h2 class="sticky-title">PART 2: School Book Club</h2> <div class="audio-wrapper">
+                <audio controls id="audio-2" class="audio-main">
+                    <source src="https://www.dropbox.com/scl/fi/2nupezs5rgv3raw9yknti/Test-4_Part-4.mp3?rlkey=5h620n08thknqmohgfpkvmnqo&st=75dlyjjk&raw=1" type="audio/mpeg">
+                    Trình duyệt không hỗ trợ.
+                </audio>
+                <button class="audio-upload-btn" onclick="document.getElementById('file-2').click()">Link lỗi? Bấm đây để chọn file từ máy</button>
+                <input type="file" id="file-2" accept="audio/*" style="display:none" onchange="loadLocalAudio(this, 'audio-2')">
+            </div>
+            
+            <div style="font-size:0.85rem; color:#888;">⬇️ Kéo từ hoặc Bấm chọn từ rồi bấm vào ô trống ⬇️</div>
+            <div class="word-bank" id="bank-2"></div>
+        </div>
+
+        <div class="script-container">
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">Today I'm talking to Mara Henshaw, who started a school book club. Mara, what first gave you the idea?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara</span><div class="dialogue-text">Well, my <span class="dropzone" data-ans="mum"></span> goes to one every month, but I never really thought it was something for people my <span class="dropzone" data-ans="age"></span>. Then one day I saw an <span class="dropzone" data-ans="article"></span> about one on a teen website. What those kids did sounded really <span class="dropzone" data-ans="cool"></span>, and I thought we could do that in my year. So I went to talk to our English teacher, and she said go for it.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">So does the club have meetings?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara</span><div class="dialogue-text">Basically, we take it in <span class="dropzone" data-ans="turns"></span> to suggest a book. Everyone agrees to read it, then we have a meeting to talk about it. At first, our teacher came to show us how to <span class="dropzone" data-ans="organise"></span> things, but now she leaves it to us. The meetings are fun, because there aren't <span class="dropzone" data-ans="worksheets"></span> or anything, you just say what you think.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara (tiếp)</span><div class="dialogue-text">So, what books are best to read? Well, it's got to be a novel you can buy or <span class="dropzone" data-ans="borrow"></span> easily. Sometimes people choose one they've already read and enjoyed. Other people choose new books that none of us has even heard of before. That works better, if you ask me. It can <span class="dropzone" data-ans="spoil"></span> your favourite book if nobody else likes it. Although, we're never <span class="dropzone" data-ans="rude"></span> about people's choices.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">What if someone really doesn't like the choice of book?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara</span><div class="dialogue-text">Well, you have to try it, because if some people like it more than others, you get a good <span class="dropzone" data-ans="discussion"></span> going, and you can be wrong. Like, I didn't fancy one book because the <span class="dropzone" data-ans="cover"></span> looked childish, but it was actually brilliant. Our only <span class="dropzone" data-ans="rule"></span> is that you have to keep reading till the end, even if you hate the way it starts.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">Do you have a favourite book club activity?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara</span><div class="dialogue-text">Well, if a book's been made into a <span class="dropzone" data-ans="movie"></span>, we watch that and discuss how they're different. That's fun. Even better is going online and asking the <span class="dropzone" data-ans="writer"></span> questions on <span class="dropzone" data-ans="social"></span> media. You learn so much. Some club members like planning a <span class="dropzone" data-ans="sequel"></span>, imagining what happens next to the characters and stuff.</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Interviewer</span><div class="dialogue-text">What advice do you have for anyone thinking of starting a club like yours?</div></div>
+            <div class="dialogue-block"><span class="speaker-name">Mara</span><div class="dialogue-text">Well, everyone needs to bring drinks and <span class="dropzone" data-ans="snacks"></span>, because that's an important part of the meetings. And getting new people to join is good. Some clubs go for one sort of story, but a <span class="dropzone" data-ans="variety"></span>'s more interesting.</div></div>
+        </div>
+
+        <div class="mcq-section">
+            <h3 style="margin-top:0">Multiple Choice Questions</h3>
+            <div class="mcq-item" data-ans="A"><span class="mcq-question">20. Mara first thought of starting a school book club after</span><div class="mcq-options"><label><input type="radio" name="p2_q20" value="A"> A. she read about one online.</label><label><input type="radio" name="p2_q20" value="B"> B. one of her parents suggested it.</label><label><input type="radio" name="p2_q20" value="C"> C. somebody at school told her about one.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "Then one day I saw an article about one on a teen website."</div></div>
+            <div class="mcq-item" data-ans="B"><span class="mcq-question">21. What does Mara say about the club meetings?</span><div class="mcq-options"><label><input type="radio" name="p2_q21" value="A"> A. They’re always led by one of her teachers.</label><label><input type="radio" name="p2_q21" value="B"> B. A different person picks the book for each one.</label><label><input type="radio" name="p2_q21" value="C"> C. Students have to prepare answers to questions.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "Basically, we take it in turns to suggest a book."</div></div>
+            <div class="mcq-item" data-ans="A"><span class="mcq-question">22. Mara thinks it’s better if the club reads books which</span><div class="mcq-options"><label><input type="radio" name="p2_q22" value="A"> A. nobody in the group has read.</label><label><input type="radio" name="p2_q22" value="B"> B. everybody in the group has heard of.</label><label><input type="radio" name="p2_q22" value="C"> C. somebody in the group knows and loves.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "Other people choose new books that none of us has even heard of before. That works better"</div></div>
+            <div class="mcq-item" data-ans="C"><span class="mcq-question">23. Mara says that if some members don’t like a book,</span><div class="mcq-options"><label><input type="radio" name="p2_q23" value="A"> A. she tries to change their mind.</label><label><input type="radio" name="p2_q23" value="B"> B. then they don’t have to finish reading it.</label><label><input type="radio" name="p2_q23" value="C"> C. it can make the meetings more interesting.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "if some people like it more than others, you get a good discussion going"</div></div>
+            <div class="mcq-item" data-ans="B"><span class="mcq-question">24. Mara enjoys it most when members of the book club</span><div class="mcq-options"><label><input type="radio" name="p2_q24" value="A"> A. share ideas for stories of their own.</label><label><input type="radio" name="p2_q24" value="B"> B. get in touch with the author of the book.</label><label><input type="radio" name="p2_q24" value="C"> C. watch a film based on the book they’re reading.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "Even better is going online and asking the writer questions"</div></div>
+            <div class="mcq-item" data-ans="C"><span class="mcq-question">25. Mara advises anyone interested in starting a school book club to</span><div class="mcq-options"><label><input type="radio" name="p2_q25" value="A"> A. give members different responsibilities.</label><label><input type="radio" name="p2_q25" value="B"> B. decide the type of novels they’re going to read.</label><label><input type="radio" name="p2_q25" value="C"> C. encourage new members to join from time to time.</label></div><div class="evidence-box">💡 <strong>Dẫn chứng:</strong> "getting new people to join is good"</div></div>
+        </div>
+        <div style="text-align:center; margin-top:30px;"><button class="btn" style="background:#34a853" onclick="submitAll()">NỘP BÀI & XEM KẾT QUẢ ✅</button></div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div style="text-align:center;">
+            <h1 style="color:var(--primary)">KẾT QUẢ TỔNG HỢP</h1>
+            <div id="res-status" style="font-weight:bold; font-size:1.2rem; padding:10px; border-radius:8px; display:inline-block; margin-bottom:20px;"></div>
+            <table class="result-table">
+                <tr><td>👤 Họ và tên:</td><td id="res-name">...</td></tr>
+                <tr><td>⏱️ Thời gian bắt đầu:</td><td id="res-start">...</td></tr>
+                <tr><td>🏁 Thời gian nộp bài:</td><td id="res-end">...</td></tr>
+                <tr><td>⏳ Tổng thời gian:</td><td id="res-duration">...</td></tr>
+                <tr><td>📝 Điểm Điền từ (Gap Fill):</td><td id="res-gap">...</td></tr>
+                <tr><td>☑️ Điểm Trắc nghiệm (MCQ):</td><td id="res-mcq">...</td></tr>
+                <tr style="background:#f1f3f4"><td>🏆 <strong>TỔNG ĐIỂM:</strong></td><td id="res-total" style="font-size:1.5rem">...</td></tr>
+                <tr><td>📊 <strong>Tỉ lệ (%):</strong></td><td id="res-percent" style="font-size:1.5rem">...</td></tr>
+            </table>
+            <div id="res-message" style="margin:20px 0; font-weight:bold; font-size:1.1rem;"></div>
+            <button class="btn" style="background:#5f6368" onclick="location.reload()">Làm lại từ đầu</button>
+            <button class="btn" id="btn-review" style="display:none;" onclick="reviewAnswers()">Xem đáp án & Dẫn chứng</button>
+        </div>
+    </div>
+
+<script>
+    // --- DATA ---
+    const words1 = ["website", "app", "password", "advance", "lessons", "turns", "article", "volunteers", "online", "instructions", "brother", "operate", "music", "interview", "enjoyable", "live", "notes", "silly", "homework", "deadlines", "correct", "useful", "phone", "sister", "boring"];
+    const words2 = ["mum", "age", "article", "cool", "turns", "organise", "worksheets", "borrow", "spoil", "rude", "discussion", "cover", "rule", "movie", "writer", "social", "sequel", "snacks", "variety", "dad", "teacher", "scary"];
+
+    let selectedWord = null;
+    let draggedWord = null;
+    let startTime, endTime;
+
+    // --- MAIN FUNCTIONS ---
+    function startApp() {
+        const name = document.getElementById('student-name').value.trim();
+        if(!name) { alert("Vui lòng nhập tên của bạn!"); return; }
+        
+        document.getElementById('welcome-screen').classList.remove('active-screen');
+        document.getElementById('page-1').classList.add('active-screen');
+        startTime = new Date();
+        
+        initWordBank('bank-1', words1);
+        initWordBank('bank-2', words2);
+        setupDelegatedEvents(); 
+    }
+
+    function initWordBank(bankId, wordList) {
+        const bank = document.getElementById(bankId);
+        const shuffled = [...wordList].sort(() => Math.random() - 0.5);
+        shuffled.forEach(w => {
+            const el = document.createElement('div');
+            el.className = 'draggable';
+            el.draggable = true;
+            el.innerText = w;
+            el.id = `word-${w}-${bankId}`;
+            bank.appendChild(el);
+        });
+    }
+
+    // --- CORE LOGIC: EVENT DELEGATION ---
+    function setupDelegatedEvents() {
+        document.addEventListener('dragstart', (e) => {
+            if(e.target.classList.contains('draggable') && !e.target.classList.contains('used')) {
+                draggedWord = e.target;
+                e.target.style.opacity = '0.4';
+                e.dataTransfer.setData('text/plain', e.target.innerText);
+            }
+        });
+
+        document.addEventListener('dragend', (e) => {
+            if(e.target.classList.contains('draggable')) {
+                e.target.style.opacity = '1';
+                draggedWord = null;
+            }
+        });
+
+        document.addEventListener('dragover', (e) => {
+            if(e.target.classList.contains('dropzone')) {
+                e.preventDefault();
+                e.target.classList.add('active-target');
+            }
+        });
+
+        document.addEventListener('dragleave', (e) => {
+            if(e.target.classList.contains('dropzone')) {
+                e.target.classList.remove('active-target');
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            if(e.target.classList.contains('dropzone')) {
+                e.preventDefault();
+                e.target.classList.remove('active-target');
+                if(draggedWord) applyWord(e.target, draggedWord);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if(e.target.classList.contains('draggable') && !e.target.classList.contains('used')) {
+                if(e.target.classList.contains('selected')) {
+                    e.target.classList.remove('selected');
+                    selectedWord = null;
+                } else {
+                    document.querySelectorAll('.draggable').forEach(d => d.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    selectedWord = e.target;
+                }
+            }
+            if(e.target.classList.contains('dropzone')) {
+                if(e.target.innerText.trim()) {
+                    const txt = e.target.innerText.trim();
+                    const bankId = e.target.closest('.screen').querySelector('.word-bank').id;
+                    const originalId = `word-${txt}-${bankId}`;
+                    const el = document.getElementById(originalId);
+                    if(el) el.classList.remove('used');
+                    e.target.innerText = '';
+                    return;
+                }
+                if(selectedWord) {
+                    applyWord(e.target, selectedWord);
+                    selectedWord.classList.remove('selected');
+                    selectedWord = null;
+                }
+            }
+        });
+    }
+
+    function applyWord(zone, wordEl) {
+        if(zone.innerText.trim()) {
+            const bankId = zone.closest('.screen').querySelector('.word-bank').id;
+            const originalId = `word-${zone.innerText.trim()}-${bankId}`;
+            const oldEl = document.getElementById(originalId);
+            if(oldEl) oldEl.classList.remove('used');
+        }
+        zone.innerText = wordEl.innerText;
+        wordEl.classList.add('used');
+    }
+
+    function stopAllAudio() {
+        document.querySelectorAll('audio').forEach(a => a.pause());
+    }
+
+    function loadLocalAudio(input, audioId) {
+        if (input.files && input.files[0]) {
+            const url = URL.createObjectURL(input.files[0]);
+            const audio = document.getElementById(audioId);
+            audio.src = url;
+        }
+    }
+
+    function showPage(pageNum) {
+        stopAllAudio();
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(`page-${pageNum}`).classList.add('active-screen');
+        window.scrollTo(0, 0);
+    }
+
+    function submitAll() {
+        stopAllAudio();
+        endTime = new Date();
+        const duration = new Date(endTime - startTime).toISOString().substr(11, 8);
+        
+        // --- TÍCH HỢP GỬI ĐIỂM ---
+        // Lấy tên học sinh và gọi hàm gửi đi
+        const studentName = document.getElementById('student-name').value;
+        nopBaiLenSheet(studentName, duration);
+        // -------------------------
+
+        let gapCorrect = 0;
+        let gapTotal = document.querySelectorAll('.dropzone').length;
+        document.querySelectorAll('.dropzone').forEach(z => { if(z.innerText.trim() === z.dataset.ans) gapCorrect++; });
+
+        let mcqCorrect = 0;
+        let mcqTotal = document.querySelectorAll('.mcq-item').length;
+        document.querySelectorAll('.mcq-item').forEach(item => {
+            const sel = item.querySelector('input:checked');
+            if(sel && sel.value === item.dataset.ans) mcqCorrect++;
+        });
+
+        const totalScore = gapCorrect + mcqCorrect;
+        const maxScore = gapTotal + mcqTotal;
+        const percent = Math.round((totalScore / maxScore) * 100);
+        const passed = percent >= 80;
+
+        document.getElementById('res-name').innerText = document.getElementById('student-name').value;
+        document.getElementById('res-start').innerText = startTime.toLocaleTimeString();
+        document.getElementById('res-end').innerText = endTime.toLocaleTimeString();
+        document.getElementById('res-duration').innerText = duration;
+        document.getElementById('res-gap').innerText = `${gapCorrect} / ${gapTotal}`;
+        document.getElementById('res-mcq').innerText = `${mcqCorrect} / ${mcqTotal}`;
+        document.getElementById('res-total').innerText = `${totalScore} / ${maxScore}`;
+        document.getElementById('res-percent').innerText = `${percent}%`;
+
+        const status = document.getElementById('res-status');
+        const msg = document.getElementById('res-message');
+        const reviewBtn = document.getElementById('btn-review');
+
+        if(passed) {
+            status.innerText = "ĐẠT YÊU CẦU"; status.style.background = "#e6f4ea"; status.style.color = "#137333";
+            msg.innerText = "Chúc mừng! Bạn đã hoàn thành xuất sắc."; msg.style.color = "var(--success)";
+            reviewBtn.style.display = 'inline-block';
+            
+            document.querySelectorAll('.dropzone').forEach(z => {
+                const ans = z.dataset.ans;
+                if(z.innerText.trim() === ans) z.classList.add('correct');
+                else { z.classList.add('incorrect'); z.innerHTML += `<span class="ans-key">✓ ${ans}</span>`; }
+                z.style.pointerEvents = 'none';
+            });
+            document.querySelectorAll('.mcq-item').forEach(item => {
+                item.querySelector('.evidence-box').style.display = 'block';
+                const correct = item.dataset.ans;
+                item.querySelectorAll('input').forEach(i => {
+                    i.disabled = true;
+                    if(i.value === correct) i.parentElement.classList.add('mcq-correct-label');
+                    if(i.checked && i.value !== correct) i.parentElement.classList.add('mcq-wrong-label');
+                });
+            });
+            try { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); } catch(e){}
+        } else {
+            status.innerText = "CHƯA ĐẠT"; status.style.background = "#fce8e6"; status.style.color = "#c5221f";
+            msg.innerText = "Bạn cần đạt 80% để xem đáp án. Hãy làm lại!"; msg.style.color = "var(--danger)";
+            reviewBtn.style.display = 'none';
+        }
+
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById('result-screen').classList.add('active-screen');
+    }
+
+    function reviewAnswers() { stopAllAudio(); showPage(1); }
+
+    // ==========================================
+    // HÀM GỬI ĐIỂM LÊN GOOGLE SHEET
+    // ==========================================
+    function nopBaiLenSheet(tenHocSinh, thoiGianLamBai) {
+        // Link Apps Script của cô
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxGU3P4iZvvmLwLMirZpUbHJfF0u9vZobVz8uQhWWAGdF3nuuzT_H2W2gqpPLPhDBJbbA/exec";
+        
+        // Đảm bảo startTime đã được khởi tạo
+        if (!startTime) startTime = new Date();
+
+        var gioBatDauString = startTime.getHours() + ":" + startTime.getMinutes() + ":" + startTime.getSeconds();
+
+        var duLieu = {
+            ten: tenHocSinh,
+            gioBatDau: gioBatDauString,
+            thoiGianLam: thoiGianLamBai
+        };
+
+        // Gửi dữ liệu (dùng no-cors)
+        fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(duLieu)
+        }).then(() => {
+            console.log("Đã gửi kết quả thành công");
+        }).catch(err => console.error("Lỗi:", err));
+    }
+</script>
+</body>
+</html>

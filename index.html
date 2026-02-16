@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elaine's English Hub - No pain no gain!</title>
+    
+    <script>
+      var password = prompt("Please enter the password to access Elaine's materials:");
+      if (password !== "hoctrokungcuaMsThuong") { 
+        alert("Wrong password. Access denied!");
+        window.location.href = "about:blank"; 
+      }
+    </script>
+
+    <style>
+        :root {
+            --primary-blue: #3498db;
+            --soft-orange: #f39c12;
+            --bright-green: #2ecc71;
+            --light-bg: #f0f7ff;
+        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--light-bg); margin: 0; padding: 0; }
+        .header-img { width: 100%; max-width: 800px; display: block; margin: 20px auto; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 900px; margin: 0 auto 50px auto; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { text-align: center; color: var(--primary-blue); font-size: 2.2em; margin-bottom: 10px; }
+        h2 { background: var(--soft-orange); color: white; padding: 10px 20px; border-radius: 50px; display: inline-block; font-size: 1.1em; margin-top: 30px; }
+        .category-title { font-weight: bold; color: var(--bright-green); margin: 15px 0 10px 10px; display: block; border-bottom: 2px dashed #ddd; }
+        
+        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+        li { background: #fff; border: 2px solid #edf2f7; border-radius: 12px; transition: all 0.3s ease; }
+        li:hover { transform: scale(1.02); border-color: var(--primary-blue); background: #faffff; }
+        a { text-decoration: none; color: #444; display: block; padding: 15px; font-weight: 500; font-size: 0.95em; }
+        
+        .footer { text-align: center; padding: 40px; background: #fff; margin-top: 30px; }
+        .footer-name { font-size: 1.3em; font-weight: bold; color: var(--primary-blue); }
+        .footer-slogan { font-style: italic; color: #7f8c8d; display: block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<img src="https://img.freepik.com/free-vector/back-school-kids-students-with-backpacks-textbooks-stand-row-boy-girls-pupils-reading-books-education-learning-studying-concept-with-children-group-line-art-vector-illustration_107791-11175.jpg?semt=ais_hybrid&w=740&q=80" alt="Back to school" class="header-img">
+
+<div class="container">
+    <h1>ELAINE'S ENGLISH HUB</h1>
+    <p style="text-align: center; color: #666;">Welcome back! Choose your practice material below.</p>
+    
+    <section>
+        <h2>B2 FIRST (FCE)</h2>
+        <span class="category-title">Practice Files</span>
+        <ul>
+            <li><a href="FCE/B2 REGULAR VERBS PRACTICE.html">B2 Regular Verbs Practice</a></li>
+            <li><a href="FCE/FCE LISTENING PART 4 - BOOK 2 - TEST 1 - 2.html">Listening Part 4 - Book 2 (Test 1-2)</a></li>
+            <li><a href="FCE/FCE LISTENING PART 4 - BOOK 2 - TEST 3 - 4.html">Listening Part 4 - Book 2 (Test 3-4)</a></li>
+            <li><a href="FCE/FCE READING PART 1 - BOOK 1 - STUDY MODE.html">Reading Part 1 - Book 1 (Study Mode)</a></li>
+            <li><a href="FCE/FCE READING PART 1 - BOOK 2 - STUDY MODE v1.html">Reading Part 1 - Book 2 (v1)</a></li>
+            <li><a href="FCE/FCE READING PART 6 - BOOK 2 - TEST 1 - 2.HTML">Reading Part 6 - Book 2 (Test 1-2)</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>B1 PRELIMINARY (PET)</h2>
+        <span class="category-title">Listening & Reading</span>
+        <ul>
+            <li><a href="PET/B1 Listening Part 4 Test 3 - 4.html">Listening Part 4 (Test 3-4)</a></li>
+            <li><a href="PET/PET LISTENING PART 1 - B1 OXFORD - TEST 1 - 3.html">Listening P1 - Oxford (Test 1-3)</a></li>
+            <li><a href="PET/PET READING PART 4 - B1 OXFORD - TEST 1 - 3.html">Reading P4 - Oxford (Test 1-3)</a></li>
+            <li><a href="PET/PET READING PART 5 - B1 SIMPLY - TEST 1 - 4.html">Reading P5 - Simply (Test 1-4)</a></li>
+            <li><a href="PET/B1 REGULAR VERBS PRACTICE.html">B1 Regular Verbs Practice</a></li>
+            <li><a href="PET/B1 Verbs Challenge 2.0.html">B1 Verbs Challenge 2.0</a></li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>MOET CURRICULUM</h2>
+        <span class="category-title">Grade 7 & 9 & TS10</span>
+        <ul>
+            <li><a href="MOET/MOET-7/unit-1.html">Grade 7 Practice</a></li>
+            <li><a href="MOET/MOET-9/unit-1.html">Grade 9 Practice</a></li>
+            <li><a href="MOET/TUYEN-SINH-10/mock-test-01.html">Tuyển Sinh 10 Mock Test</a></li>
+        </ul>
+    </section>
+
+    <div class="footer">
+        <span class="footer-name">Elaine Nguyen</span>
+        <span class="footer-slogan">"Empowering students through Language and Technology"</span>
+    </div>
+</div>
+
+</body>
+</html>
