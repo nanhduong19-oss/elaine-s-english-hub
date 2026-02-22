@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Writing - Richmond Test 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        pet: {
+                            light: '#fdf2f8', // rose-50
+                            DEFAULT: '#e11d48', // rose-600
+                            dark: '#be123c', // rose-700
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .unselected-prompt {
+            opacity: 0.4;
+            filter: grayscale(100%);
+            transition: all 0.3s ease;
+        }
+
+        .selected-prompt {
+            opacity: 1;
+            filter: grayscale(0%);
+            transition: all 0.3s ease;
+            border: 2px solid #e11d48;
+            background-color: #fff1f2;
+        }
+
+        /* Toast Animation */
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .toast-enter { animation: slideIn 0.3s ease-out forwards; }
+        
+        /* Print CSS for PDF Export */
+        @media print {
+            body { background: white !important; }
+            .print-hide { display: none !important; }
+            #screen-result { display: block !important; overflow: visible !important; position: static !important; height: auto !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body class="bg-pet-light min-h-screen font-sans text-gray-800 select-none">
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <!-- ANTI-CHEAT BLOCKER -->
+    <div id="blocker-overlay" class="fixed inset-0 bg-black/80 z-[100] hidden flex-col items-center justify-center text-white p-6 text-center backdrop-blur-sm">
+        <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
+        <h2 class="text-3xl font-bold mb-2">VIOLATION WARNING!</h2>
+        <p id="blocker-reason" class="text-xl mb-6 text-gray-300">You exited fullscreen or switched tabs.</p>
+        <p class="mb-8 font-bold text-red-400">Violations: <span id="blocker-count"></span>/2</p>
+        <button onclick="returnToExam()" class="px-8 py-3 bg-pet text-white rounded-xl font-bold hover:bg-pet-dark transition transform hover:scale-105">
+            <i class="fas fa-expand mr-2"></i> RETURN TO EXAM (FULLSCREEN)
+        </button>
+    </div>
+
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen" class="fixed inset-0 bg-pet-light z-[60] hidden flex-col items-center justify-center">
+        <div class="animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-pet mb-4"></div>
+        <h2 class="text-2xl font-bold text-pet mb-2">Submitting...</h2>
+        <p class="text-gray-600 animate-pulse">AI is grading your writing, please wait.</p>
+    </div>
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden border-t-8 border-pet">
+            <div class="p-8 text-center relative">
+                <div class="w-20 h-20 bg-pet text-white rounded-2xl flex items-center justify-center mx-auto mb-4 transform -rotate-6 shadow-lg">
+                    <i class="fas fa-check-double text-4xl"></i>
+                </div>
+                <h1 class="text-3xl font-black text-pet tracking-tight uppercase">PET WRITING</h1>
+                <p id="welcome-test-title" class="text-gray-500 font-medium tracking-widest text-sm uppercase mt-1"></p>
+
+                <form id="login-form" class="mt-8 space-y-4 text-left">
+                    <div>
+                        <input type="text" id="studentName" required placeholder="Full Name" class="w-full bg-rose-50 border-none px-5 py-4 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-pet outline-none transition font-medium">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <input type="text" id="studentId" required placeholder="Student ID" class="w-full bg-rose-50 border-none px-5 py-4 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-pet outline-none transition font-medium">
+                        <input type="text" id="studentClass" required placeholder="Class" class="w-full bg-rose-50 border-none px-5 py-4 rounded-xl text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-pet outline-none transition font-medium">
+                    </div>
+
+                    <div class="bg-gray-50 p-5 rounded-xl border border-gray-100 mt-6 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
+                        <h3 class="text-sm font-bold text-red-600 mb-3 flex items-center"><i class="fas fa-shield-alt mr-2"></i> EXAM RULES</h3>
+                        <ul class="text-xs text-gray-600 space-y-2">
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2"></span> Duration: 45 minutes</li>
+                            <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2"></span> <strong class="text-gray-800 ml-1">Fullscreen mode is strictly required.</strong></li>
+                            <li class="flex items-center text-green-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-green-600 mr-2"></span> Copy/Paste is ENABLED (Test Mode).</li>
+                            <li class="flex items-center text-red-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-2"></span> Max 2 violations (exiting screen) = Auto-submit.</li>
+                        </ul>
+                    </div>
+
+                    <button type="submit" class="w-full bg-pet hover:bg-pet-dark text-white font-bold py-4 rounded-xl transition mt-4 flex items-center justify-center shadow-md shadow-rose-200">
+                        <i class="fas fa-expand mr-2"></i> START EXAM
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: EXAM -->
+    <div id="screen-exam" class="hidden h-screen flex flex-col bg-gray-50">
+        <!-- Header -->
+        <header class="bg-white shadow-sm px-6 py-3 flex justify-between items-center z-10 shrink-0 border-b border-rose-100">
+            <div class="flex items-center gap-4">
+                <div id="header-test-title" class="bg-pet text-white px-3 py-1 rounded-lg font-bold text-sm"></div>
+                <div class="text-gray-700 font-medium">
+                    <i class="fas fa-user-circle text-gray-400 mr-1"></i> <span id="display-name"></span> (<span id="display-id"></span>)
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex gap-2">
+                    <div id="nav-part1" class="px-4 py-1.5 rounded-full bg-pet text-white text-sm font-bold cursor-pointer transition shadow-sm" onclick="switchPart(1)">Part 1</div>
+                    <div id="nav-part2" class="px-4 py-1.5 rounded-full bg-gray-200 text-gray-600 text-sm font-bold cursor-pointer transition" onclick="switchPart(2)">Part 2</div>
+                </div>
+                <div class="text-red-500 font-bold text-sm bg-red-50 px-3 py-1 rounded-lg border border-red-100">
+                    <i class="fas fa-exclamation-triangle"></i> Violations: <span id="display-violations">0</span>/2
+                </div>
+                <div class="text-2xl font-black text-pet flex items-center bg-rose-50 px-4 py-1 rounded-xl w-32 justify-center">
+                    <i class="far fa-clock mr-2 text-rose-400"></i><span id="timer">45:00</span>
+                </div>
+                <button onclick="confirmSubmit()" class="bg-gray-800 hover:bg-gray-900 text-white px-5 py-2 rounded-lg font-bold text-sm transition shadow-md">
+                    SUBMIT
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-grow flex overflow-hidden p-4 gap-4">
+            
+            <!-- LEFT: PROMPT (35%) -->
+            <div class="w-[35%] bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col overflow-hidden">
+                <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 font-bold text-gray-700 text-sm flex justify-between items-center">
+                    <span id="prompt-title-text"><i class="fas fa-file-alt mr-2 text-pet"></i>Part 1</span>
+                </div>
+                <div class="p-5 overflow-y-auto flex-grow text-gray-800 text-sm" id="prompt-container">
+                    
+                    <!-- PART 1 PROMPT -->
+                    <div id="prompt-part1">
+                        <p class="font-bold mb-2">You must answer this question.</p>
+                        <p class="mb-4">Write your answer in about <strong>100 words</strong>.</p>
+                        <h3 class="font-bold text-lg mb-2">Question 1</h3>
+                        <p class="mb-4">Read this email from your English-speaking friend Ashley, and the notes you have made.</p>
+                        
+                        <!-- Fixed Email Layout using Padding and Absolute Positioning to prevent squishing -->
+                        <div class="border-2 border-gray-400 rounded-md bg-[#f4f4f4] overflow-hidden text-[13px] text-gray-800 font-sans shadow-sm mb-4">
+                            <!-- Email Header -->
+                            <div class="bg-gray-500 text-white font-bold px-3 py-1.5 flex items-center text-sm">
+                                <i class="fas fa-envelope-open-text mr-2"></i> EMAIL
+                            </div>
+                            
+                            <!-- Email Meta -->
+                            <div class="p-3">
+                                <div class="space-y-1.5 mb-3">
+                                    <div class="flex items-center">
+                                        <strong class="w-16 text-xs text-gray-700">From:</strong> 
+                                        <div class="border border-gray-400 bg-white px-2 py-0.5 flex-grow text-xs text-gray-800">Ashley</div>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <strong class="w-16 text-xs text-gray-700">Subject:</strong> 
+                                        <div class="border border-gray-400 bg-white px-2 py-0.5 flex-grow text-xs text-gray-800">Next weekend</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Email Body -->
+                                <div class="bg-white border border-gray-400 p-4 space-y-4 shadow-inner">
+                                    <p class="px-14">Hi!</p>
+                                    
+                                    <div class="relative min-h-[1rem]">
+                                        <div class="absolute left-0 top-0 text-red-600 font-bold text-[11px] italic text-right w-12 leading-tight">Me too! &rarr;</div>
+                                        <p class="px-14">I'm really <strong>looking forward</strong> to you coming to stay with me and my family next weekend.</p>
+                                    </div>
+                                    
+                                    <div class="relative min-h-[1rem]">
+                                        <div class="absolute right-0 top-0 text-red-600 font-bold text-[11px] italic leading-tight w-12">&larr; Yes,<br>because...</div>
+                                        <p class="px-14">Our house is about 40 minutes from the city centre. Shall we come and <strong>pick</strong> you up from the railway station?</p>
+                                    </div>
+                                    
+                                    <div class="relative min-h-[1rem]">
+                                        <div class="absolute left-0 top-0 text-red-600 font-bold text-[11px] italic text-right leading-tight w-12">Tell<br>Ashley &rarr;</div>
+                                        <p class="px-14">There are lots of attractions near our house, but the best two are a lake and a wildlife park. Which would you <strong>prefer</strong> to go to?</p>
+                                    </div>
+                                    
+                                    <div class="relative min-h-[1rem]">
+                                        <div class="absolute right-0 top-0 text-red-600 font-bold text-[11px] italic leading-tight w-12">&larr; Ask<br>Ashley...</div>
+                                        <p class="px-14">Let me know if you have any <strong>questions</strong>.</p>
+                                    </div>
+                                    
+                                    <div class="px-14">
+                                        <p>Your friend</p>
+                                        <p class="mt-3">Ashley</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="mt-4 font-bold">Write your email to Ashley using all the notes.</p>
+                    </div>
+
+                    <!-- PART 2 PROMPT -->
+                    <div id="prompt-part2" class="hidden">
+                        <p class="font-bold mb-2">Choose <strong>one</strong> of these questions.</p>
+                        <p class="mb-4">Write your answer in about <strong>100 words</strong>.</p>
+                        
+                        <!-- Question 2 (Article) - Clickable Card -->
+                        <div id="q2-box" class="mb-6 p-4 rounded-xl border border-gray-200 transition cursor-pointer hover:bg-rose-50 unselected-prompt" onclick="togglePart2('article')">
+                            <div class="flex items-center mb-3 pointer-events-none">
+                                <input type="radio" id="choose_q2" name="part2_choice" value="article" class="w-5 h-5 text-pet focus:ring-pet">
+                                <label class="ml-2 font-bold text-lg">Question 2 (Article)</label>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 text-center pointer-events-none shadow-sm">
+                                <h4 class="bg-gray-400 text-white font-bold py-1 px-4 inline-block mb-3">Articles wanted!</h4>
+                                <h3 class="text-xl font-bold mb-2">TV Programmes</h3>
+                                <p class="mb-1">What type of TV programmes do you enjoy watching? Why?</p>
+                                <p class="mb-3">Are these programmes popular with your friends as well?</p>
+                                <p class="font-bold text-sm">Write an article answering these questions and we'll put it in our magazine!</p>
+                            </div>
+                        </div>
+
+                        <!-- Question 3 (Story) - Clickable Card -->
+                        <div id="q3-box" class="p-4 rounded-xl border border-gray-200 transition cursor-pointer hover:bg-rose-50 unselected-prompt" onclick="togglePart2('story')">
+                            <div class="flex items-center mb-3 pointer-events-none">
+                                <input type="radio" id="choose_q3" name="part2_choice" value="story" class="w-5 h-5 text-pet focus:ring-pet">
+                                <label class="ml-2 font-bold text-lg">Question 3 (Story)</label>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg border border-gray-200 pointer-events-none shadow-sm">
+                                <p class="mb-2">Your English teacher has asked you to write a story.</p>
+                                <p class="mb-3">Your story must begin with this sentence:</p>
+                                <p class="italic text-lg font-serif mb-3">"Mark looked outside and saw that it had finally stopped snowing."</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- RIGHT: WRITING AREA (65%) -->
+            <div class="w-[65%] bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col">
+                <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 flex justify-between items-center shrink-0">
+                    <span class="font-bold text-gray-700 text-sm"><i class="fas fa-keyboard mr-2 text-pet"></i>Writing Area <span class="text-xs text-green-600 ml-2 font-bold">(Test Mode: Copy/Paste Enabled)</span></span>
+                    <div class="bg-white px-3 py-1 rounded-md border border-gray-300 text-sm font-mono text-gray-600">
+                        Words: <span id="word-count" class="font-bold text-pet">0</span>
+                    </div>
+                </div>
+                
+                <!-- Textareas container relative for overlay -->
+                <div class="relative flex-grow p-4">
+                    <!-- Overlay asking to choose Part 2 -->
+                    <div id="p2-overlay" class="absolute inset-0 bg-white/90 backdrop-blur-sm z-10 hidden flex-col items-center justify-center rounded-b-xl">
+                        <i class="fas fa-hand-pointer text-4xl text-gray-400 mb-3"></i>
+                        <p class="text-lg font-bold text-gray-700">Please select Question 2 or Question 3 on the left to start writing.</p>
+                    </div>
+
+                    <textarea id="answer-part1" class="w-full h-full resize-none outline-none text-base leading-relaxed p-2 text-gray-800 bg-transparent placeholder-gray-300 font-serif" placeholder="Start writing your email here... Remember to write about 100 words." oninput="updateWordCount(1)"></textarea>
+                    
+                    <textarea id="answer-part2" class="w-full h-full resize-none outline-none text-base leading-relaxed p-2 text-gray-800 bg-transparent placeholder-gray-300 font-serif hidden" placeholder="Start writing your article/story here... Remember to write about 100 words." oninput="updateWordCount(2)"></textarea>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULTS -->
+    <div id="screen-result" class="hidden min-h-screen p-6 pb-20">
+        <div class="max-w-6xl mx-auto space-y-6">
+            
+            <!-- Header Result -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border-t-8 border-pet flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-black text-gray-800 mb-1">WRITING EXAM RESULTS</h1>
+                    <p id="result-test-title" class="text-gray-500"></p>
+                </div>
+                <div class="text-right flex flex-col items-end">
+                    <p class="text-lg font-bold text-gray-800" id="res-name">Student Name</p>
+                    <p class="text-gray-500 text-sm">ID: <span id="res-id"></span> | Class: <span id="res-class"></span></p>
+                    <p class="text-gray-500 text-sm mt-1 mb-2">Time taken: <span id="res-time" class="font-bold text-pet"></span> | Violations: <span id="res-vio" class="text-red-500 font-bold"></span></p>
+                    <button onclick="window.print()" class="print-hide bg-gray-800 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-900 transition shadow-md flex items-center justify-center gap-2">
+                        <i class="fas fa-print"></i> Print / Export PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Score Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                    <p class="text-gray-500 font-bold uppercase text-xs tracking-wider mb-2">Total Score</p>
+                    <p class="text-4xl font-black text-pet"><span id="res-total">0</span><span class="text-xl text-gray-400">/40</span></p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                    <p class="text-gray-500 font-bold uppercase text-xs tracking-wider mb-2">Cambridge Score</p>
+                    <p class="text-4xl font-black text-blue-600" id="res-cambridge">0</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                    <p class="text-gray-500 font-bold uppercase text-xs tracking-wider mb-2">Grade</p>
+                    <p class="text-4xl font-black text-green-500" id="res-grade">-</p>
+                </div>
+                <div class="bg-white rounded-2xl p-6 shadow-sm flex flex-col items-center justify-center border border-gray-100">
+                    <p class="text-gray-500 font-bold uppercase text-xs tracking-wider mb-2">Submission Status</p>
+                    <div id="res-sheet-status" class="text-sm font-bold text-yellow-500"><i class="fas fa-spinner fa-spin mr-1"></i> Submitting...</div>
+                </div>
+            </div>
+
+            <!-- Detailed Feedback (Always shown now) -->
+            <div id="detailed-feedback-container" class="space-y-6 hidden">
+                <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl flex items-start gap-3">
+                    <i class="fas fa-info-circle text-xl mt-0.5"></i>
+                    <div>
+                        <p class="font-bold">Detailed Feedback is ready!</p>
+                        <p class="text-sm">Below is the in-depth AI analysis based on the Cambridge B1 rubric.</p>
+                    </div>
+                </div>
+
+                <!-- Part 1 Review -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 flex justify-between">
+                        <span>Part 1: Email</span>
+                        <span class="text-pet" id="score-p1">0/20</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Rubric scores -->
+                        <div>
+                            <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm">Detailed Rubric Evaluation</h3>
+                            <div class="space-y-4" id="p1-rubric">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <!-- General Feedback -->
+                        <div>
+                            <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm">General Feedback</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg whitespace-pre-wrap" id="p1-feedback"></p>
+                            
+                            <!-- Sample Answer -->
+                            <div class="mt-6 bg-pet-light p-5 rounded-xl border border-rose-200">
+                                <h3 class="font-bold text-pet mb-3 uppercase text-sm"><i class="fas fa-magic mr-2"></i>Improved Sample Answer</h3>
+                                <p class="text-gray-800 font-serif whitespace-pre-wrap bg-white p-4 rounded border border-rose-100 mb-3" id="p1-sample"></p>
+                                <p class="text-sm font-bold text-gray-700 mb-2">Word Count: <span id="p1-sample-wc" class="font-normal text-pet"></span></p>
+                                <h4 class="text-sm font-bold text-gray-700 mb-2">Improvements Made:</h4>
+                                <ul class="space-y-1 text-sm text-gray-600 list-disc list-inside" id="p1-improvements"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2 Review -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2 flex justify-between">
+                        <span>Part 2: <span id="p2-type-title">Article/Story</span></span>
+                        <span class="text-pet" id="score-p2">0/20</span>
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Rubric scores -->
+                        <div>
+                            <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm">Detailed Rubric Evaluation</h3>
+                            <div class="space-y-4" id="p2-rubric">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+                        <!-- General Feedback -->
+                        <div>
+                            <h3 class="font-bold text-gray-700 mb-3 uppercase text-sm">General Feedback</h3>
+                            <p class="text-gray-600 text-sm leading-relaxed bg-gray-50 p-4 rounded-lg whitespace-pre-wrap" id="p2-feedback"></p>
+                            
+                            <!-- Sample Answer -->
+                            <div class="mt-6 bg-pet-light p-5 rounded-xl border border-rose-200">
+                                <h3 class="font-bold text-pet mb-3 uppercase text-sm"><i class="fas fa-magic mr-2"></i>Improved Sample Answer</h3>
+                                <p class="text-gray-800 font-serif whitespace-pre-wrap bg-white p-4 rounded border border-rose-100 mb-3" id="p2-sample"></p>
+                                <p class="text-sm font-bold text-gray-700 mb-2">Word Count: <span id="p2-sample-wc" class="font-normal text-pet"></span></p>
+                                <h4 class="text-sm font-bold text-gray-700 mb-2">Improvements Made:</h4>
+                                <ul class="space-y-1 text-sm text-gray-600 list-disc list-inside" id="p2-improvements"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="low-score-message" class="bg-gray-100 border border-gray-300 text-gray-600 p-8 rounded-2xl text-center hidden">
+                <i class="fas fa-lock text-4xl mb-3 text-gray-400"></i>
+                <h3 class="text-xl font-bold mb-2">Detailed feedback is locked</h3>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- DOM TITLE SYNC ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const testTitleStr = document.title;
+            // Sync up titles automatically so they always match the <title> tag
+            document.getElementById('welcome-test-title').innerText = testTitleStr;
+            document.getElementById('header-test-title').innerText = testTitleStr;
+            document.getElementById('result-test-title').innerText = testTitleStr;
+
+            // Block copy/paste/cut in textareas (TEMPORARILY DISABLED FOR TESTING)
+            /*
+            const textareas = [document.getElementById('answer-part1'), document.getElementById('answer-part2')];
+            textareas.forEach(ta => {
+                ta.addEventListener('paste', e => { e.preventDefault(); showToast("Paste is disabled!", "error"); });
+                ta.addEventListener('copy', e => { e.preventDefault(); showToast("Copy is disabled!", "error"); });
+                ta.addEventListener('cut', e => { e.preventDefault(); showToast("Cut is disabled!", "error"); });
+            });
+            */
+        });
+
+        // --- CONSTANTS & CONFIG ---
+        // NEW LINKS ADDED HERE
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzsV4qx-CHr_VzerXsIEKFAgCtqqmx7EXQpc-mE7qyWaIzd_bisq_UsgqwMUmwiwUDJ/exec";
+        const VERCEL_GRADE_API_URL = "https://pet-writing-api.vercel.app/api/grade";
+        
+        const EXAM_DURATION = 45 * 60; // 45 minutes in seconds
+        const MAX_VIOLATIONS = 2; // Cho phép 1 lần cảnh báo, lần 2 nộp bài luôn
+        
+        // PET Writing Score Conversion (0-40) -> Cambridge (0-170)
+        const cambridgeConversion = {
+            0:0, 1:10, 2:20, 3:30, 4:40, 5:51, 6:61, 7:71, 8:81, 9:91, 10:102,
+            11:105, 12:108, 13:111, 14:114, 15:117, 16:120, 17:123, 18:125, 19:128, 20:130,
+            21:133, 22:135, 23:138, 24:140, 25:142, 26:144, 27:146, 28:148, 29:150, 30:152,
+            31:154, 32:156, 33:158, 34:160, 35:162, 36:164, 37:165, 38:167, 39:168, 40:170
+        };
+
+        // --- STATE VARIABLES ---
+        let state = {
+            student: { name: "", id: "", class: "" },
+            startTime: null,
+            endTime: null,
+            timeLeft: EXAM_DURATION,
+            timerInterval: null,
+            violations: 0,
+            isExamRunning: false,
+            isBlocked: false,
+            currentPart: 1,
+            part2Choice: null, // 'article' or 'story'
+            answers: { part1: "", part2: "" }
+        };
+
+        // --- DOM ELEMENTS ---
+        const screens = {
+            welcome: document.getElementById('screen-welcome'),
+            exam: document.getElementById('screen-exam'),
+            result: document.getElementById('screen-result')
+        };
+        const elements = {
+            loginForm: document.getElementById('login-form'),
+            timer: document.getElementById('timer'),
+            wordCount: document.getElementById('word-count'),
+            ansP1: document.getElementById('answer-part1'),
+            ansP2: document.getElementById('answer-part2'),
+            blocker: document.getElementById('blocker-overlay'),
+            blockerCount: document.getElementById('blocker-count'),
+            loading: document.getElementById('loading-screen')
+        };
+
+        // --- INITIALIZATION ---
+        elements.loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            state.student.name = document.getElementById('studentName').value.trim();
+            state.student.id = document.getElementById('studentId').value.trim();
+            state.student.class = document.getElementById('studentClass').value.trim();
+            
+            document.getElementById('display-name').innerText = state.student.name;
+            document.getElementById('display-id').innerText = state.student.id;
+            
+            startExam();
+        });
+
+        // --- EXAM LOGIC ---
+        async function startExam() {
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    await document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    await document.documentElement.webkitRequestFullscreen();
+                } else if (document.documentElement.msRequestFullscreen) { 
+                    await document.documentElement.msRequestFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen API failed or blocked:", err);
+            }
+            
+            screens.welcome.classList.add('hidden');
+            screens.exam.classList.remove('hidden');
+            state.isExamRunning = true;
+            state.startTime = new Date();
+            
+            setupAntiCheat();
+            startTimer();
+            switchPart(1);
+            
+            showToast("Exam started. Please follow the rules.", "success");
+        }
+
+        function startTimer() {
+            state.timerInterval = setInterval(() => {
+                if(state.isBlocked) return; 
+                
+                state.timeLeft--;
+                const m = Math.floor(state.timeLeft / 60).toString().padStart(2, '0');
+                const s = (state.timeLeft % 60).toString().padStart(2, '0');
+                elements.timer.innerText = `${m}:${s}`;
+                
+                if (state.timeLeft <= 300) {
+                    elements.timer.classList.add('text-red-600', 'animate-pulse');
+                }
+                
+                if (state.timeLeft <= 0) {
+                    clearInterval(state.timerInterval);
+                    autoSubmit("Time is up!");
+                }
+            }, 1000);
+        }
+
+        function switchPart(partNumber) {
+            state.currentPart = partNumber;
+            
+            // Cập nhật tiêu đề Part 1 / Part 2
+            document.getElementById('prompt-title-text').innerHTML = `<i class="fas fa-file-alt mr-2 text-pet"></i>Part ${partNumber}`;
+
+            document.getElementById('nav-part1').className = partNumber === 1 
+                ? "px-4 py-1.5 rounded-full bg-pet text-white text-sm font-bold cursor-pointer transition shadow-sm"
+                : "px-4 py-1.5 rounded-full bg-gray-200 text-gray-600 text-sm font-bold cursor-pointer transition";
+                
+            document.getElementById('nav-part2').className = partNumber === 2 
+                ? "px-4 py-1.5 rounded-full bg-pet text-white text-sm font-bold cursor-pointer transition shadow-sm"
+                : "px-4 py-1.5 rounded-full bg-gray-200 text-gray-600 text-sm font-bold cursor-pointer transition";
+
+            document.getElementById('prompt-part1').style.display = partNumber === 1 ? 'block' : 'none';
+            document.getElementById('prompt-part2').style.display = partNumber === 2 ? 'block' : 'none';
+
+            elements.ansP1.style.display = partNumber === 1 ? 'block' : 'none';
+            elements.ansP2.style.display = partNumber === 2 ? 'block' : 'none';
+
+            if (partNumber === 2) {
+                if (!state.part2Choice) {
+                    document.getElementById('p2-overlay').classList.remove('hidden');
+                    document.getElementById('p2-overlay').classList.add('flex');
+                } else {
+                    document.getElementById('p2-overlay').classList.add('hidden');
+                    document.getElementById('p2-overlay').classList.remove('flex');
+                    elements.ansP2.focus();
+                }
+            } else {
+                document.getElementById('p2-overlay').classList.add('hidden');
+                document.getElementById('p2-overlay').classList.remove('flex');
+                elements.ansP1.focus();
+            }
+
+            updateWordCount(partNumber);
+        }
+
+        function togglePart2(choice) {
+            // Nếu click lại vào ô đang chọn -> Bỏ chọn
+            if (state.part2Choice === choice) {
+                state.part2Choice = null;
+                document.getElementById('choose_q2').checked = false;
+                document.getElementById('choose_q3').checked = false;
+                
+                // Trả về trạng thái mờ ban đầu cho cả 2
+                document.getElementById('q2-box').className = 'mb-6 p-4 rounded-xl border border-gray-200 transition cursor-pointer hover:bg-rose-50 unselected-prompt';
+                document.getElementById('q3-box').className = 'p-4 rounded-xl border border-gray-200 transition cursor-pointer hover:bg-rose-50 unselected-prompt';
+
+                // Bật lại màn hình khóa
+                document.getElementById('p2-overlay').classList.remove('hidden');
+                document.getElementById('p2-overlay').classList.add('flex');
+            } 
+            // Nếu click chọn ô mới
+            else {
+                state.part2Choice = choice;
+                document.getElementById('choose_q2').checked = (choice === 'article');
+                document.getElementById('choose_q3').checked = (choice === 'story');
+                
+                document.getElementById('q2-box').className = choice === 'article' 
+                    ? 'mb-6 p-4 rounded-xl selected-prompt cursor-pointer shadow-md' 
+                    : 'mb-6 p-4 rounded-xl unselected-prompt cursor-pointer hover:bg-rose-50';
+                document.getElementById('q3-box').className = choice === 'story' 
+                    ? 'p-4 rounded-xl selected-prompt cursor-pointer shadow-md' 
+                    : 'p-4 rounded-xl unselected-prompt cursor-pointer hover:bg-rose-50';
+
+                // Tắt màn hình khóa
+                document.getElementById('p2-overlay').classList.add('hidden');
+                document.getElementById('p2-overlay').classList.remove('flex');
+                elements.ansP2.focus();
+            }
+        }
+
+        function updateWordCount(part) {
+            const text = part === 1 ? elements.ansP1.value : elements.ansP2.value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            elements.wordCount.innerText = words;
+            
+            if (part === 1) state.answers.part1 = text;
+            if (part === 2) state.answers.part2 = text;
+        }
+
+        // --- ANTI-CHEAT MECHANISMS ---
+        let pollingInterval;
+        
+        function setupAntiCheat() {
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden && state.isExamRunning) triggerViolation("Switched tabs or hid the browser");
+            });
+
+            window.addEventListener("blur", () => {
+                if (state.isExamRunning) triggerViolation("Clicked outside the exam window");
+            });
+
+            document.addEventListener("fullscreenchange", () => {
+                if (!document.fullscreenElement && state.isExamRunning) {
+                    triggerViolation("Exited fullscreen mode");
+                }
+            });
+
+            pollingInterval = setInterval(() => {
+                if (state.isExamRunning && !state.isBlocked) {
+                    if (window.innerHeight < screen.height - 150) {
+                        triggerViolation("Resized or minimized the window");
+                    }
+                }
+            }, 1000);
+            
+            document.addEventListener('contextmenu', e => e.preventDefault());
+        }
+
+        function triggerViolation(reason) {
+            if (state.isBlocked || !state.isExamRunning) return;
+            
+            state.violations++;
+            document.getElementById('display-violations').innerText = state.violations;
+            
+            // If violation reaches MAX_VIOLATIONS (2), submit immediately.
+            if (state.violations >= MAX_VIOLATIONS) {
+                autoSubmit("Exceeded violation limit. Auto-submitting exam.");
+                return;
+            }
+
+            state.isBlocked = true;
+            document.getElementById('blocker-reason').innerHTML = `${reason}<br><br><span class="text-red-400 font-bold mt-4 block text-2xl">URGENT WARNING: You only have 1 violation left. Exiting the screen again will auto-submit the exam!</span>`;
+            elements.blockerCount.innerText = state.violations;
+            elements.blocker.classList.remove('hidden');
+            elements.blocker.classList.add('flex');
+            showToast(`Violation Warning (${state.violations}/${MAX_VIOLATIONS}): ${reason}`, "error");
+        }
+
+        async function returnToExam() {
+            try {
+                if (document.documentElement.requestFullscreen) {
+                    await document.documentElement.requestFullscreen();
+                } else if (document.documentElement.webkitRequestFullscreen) {
+                    await document.documentElement.webkitRequestFullscreen();
+                }
+            } catch (err) {
+                console.warn("Fullscreen request failed", err);
+            }
+            
+            setTimeout(() => {
+                elements.blocker.classList.add('hidden');
+                elements.blocker.classList.remove('flex');
+                state.isBlocked = false;
+                if(state.currentPart === 1) elements.ansP1.focus();
+                else if(state.part2Choice) elements.ansP2.focus();
+            }, 500);
+        }
+
+        function showToast(message, type = "info") {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                info: "bg-blue-600",
+                success: "bg-green-600",
+                error: "bg-red-600"
+            };
+            
+            toast.className = `${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg font-bold flex items-center toast-enter`;
+            toast.innerHTML = `<i class="fas fa-${type==='error'?'exclamation-circle':(type==='success'?'check-circle':'info-circle')} mr-2"></i> ${message}`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                toast.style.transition = 'all 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function confirmSubmit() {
+            if (confirm("Are you sure you want to submit? You cannot edit your answers after submitting.")) {
+                finishExam();
+            }
+        }
+
+        function autoSubmit(reason) {
+            showToast(reason, "error");
+            finishExam();
+        }
+
+        async function finishExam() {
+            state.isExamRunning = false;
+            clearInterval(state.timerInterval);
+            clearInterval(pollingInterval);
+            state.endTime = new Date();
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(err => console.log(err));
+            }
+
+            screens.exam.classList.add('hidden');
+            elements.loading.classList.remove('hidden');
+            elements.loading.classList.add('flex');
+
+            try {
+                // 1. Grade using VERCEL API 
+                const gradingResult = await gradeWithVercelAPI();
+                
+                // 2. Calculate Final Scores
+                const p1Total = (gradingResult.part1.scores.content + gradingResult.part1.scores.communicative + gradingResult.part1.scores.organisation + gradingResult.part1.scores.language);
+                const p2Total = (gradingResult.part2.scores.content + gradingResult.part2.scores.communicative + gradingResult.part2.scores.organisation + gradingResult.part2.scores.language); 
+                const rawTotal = p1Total + p2Total;
+                
+                const cambridgeScore = cambridgeConversion[rawTotal] || 0;
+                let grade = "Fail";
+                if (rawTotal >= 34) grade = "A";
+                else if (rawTotal >= 31) grade = "B";
+                else if (rawTotal >= 24) grade = "C";
+
+                // 3. Render Results UI
+                renderResults(gradingResult, p1Total, p2Total, rawTotal, cambridgeScore, grade);
+                
+                // 4. Send to Google Sheets (action = save)
+                sendToGoogleSheets({
+                    rawTotal, cambridgeScore, grade, p1Total, p2Total,
+                    feedbackP1: gradingResult.part1.general_feedback || "",
+                    feedbackP2: gradingResult.part2.general_feedback || ""
+                });
+
+            } catch (error) {
+                console.error("Grading error:", error);
+                alert("An error occurred during grading: " + error.message);
+                elements.loading.classList.add('hidden');
+            }
+        }
+
+        // --- VERCEL API INTEGRATION FOR GRADING (REPLACED APPS SCRIPT) ---
+        async function gradeWithVercelAPI() {
+            const ans1 = state.answers.part1.trim() || "No answer provided.";
+            const ans2 = state.answers.part2.trim() || "No answer provided.";
+            const p2Type = state.part2Choice || "Not Selected";
+
+            const systemPrompt = `# ROLE AND TASK
+You are an expert Cambridge B1 Preliminary (PET) Writing Examiner. 
+Your task is to grade two writing tasks from a student:
+- Part 1: An Email (replying to the provided prompt notes: e.g., agreeing, suggesting, explaining, asking).
+- Part 2: EITHER an Article OR a Story.
+
+# INTERACTION TONE & RULES
+1. Tone and Register: Dùng giọng điệu thân thiện, khuyến khích, và dễ hiểu đối với học sinh Việt Nam. KHÔNG dùng đại từ nhân xưng ngôi thứ nhất (I, me) mà hãy dùng danh xưng khách quan hoặc gọi là "bạn", "người viết". 
+2. No Emojis or Symbols: KHÔNG sử dụng emoji, biểu tượng cảm xúc.
+3. Language Rules: BẮT BUỘC viết toàn bộ phần 'general_feedback', 'commentary' (nhận xét), và giải thích 'mistakes' bằng TIẾNG VIỆT hoàn toàn để học sinh Việt Nam dễ đọc hiểu và rút kinh nghiệm. Tuy nhiên, bài mẫu 'sample answer' và các trích dẫn bài làm gốc của học sinh PHẢI giữ bằng TIẾNG ANH.
+
+# CAMBRIDGE B1 ASSESSMENT SCALES (0-5 POINTS)
+Đánh giá học sinh dựa trên khung điểm Cambridge B1 Rubric:
+
+## I. CONTENT (Nội dung)
+5: All content is relevant to the task. The target reader is fully informed (e.g., all 4 notes in an email are addressed effectively; all article questions are answered).
+4: Minor irrelevances and/or omissions may be present. The target reader is on the whole informed.
+3: Irrelevances and misinterpretation of task may be present. The target reader is on the whole informed.
+2: There are omissions and/or irrelevances. The target reader is only minimally informed.
+1: The task is misinterpreted or incomplete. The target reader is not informed.
+0: Content is totally irrelevant.
+
+## II. COMMUNICATIVE ACHIEVEMENT (Hoàn thành nhiệm vụ giao tiếp)
+5: Uses the conventions of the communicative task to hold the target reader's attention and communicate straightforward ideas.
+4: Produces text that communicates simple ideas in generally appropriate ways.
+3: Uses the conventions of the communicative task in generally appropriate ways to communicate simple ideas.
+2: Produces text that communicates simple ideas in limited ways.
+1: Fails to use conventions to communicate ideas.
+0: Performance below Band 1.
+
+## III. ORGANISATION (Tổ chức bài)
+5: Text is connected and coherent, using a variety of linking words and cohesive devices.
+4: Text is generally well-organised and coherent.
+3: Text is connected and coherent, using basic linking words and a limited number of cohesive devices.
+2: Text is connected using only basic, high-frequency linking words.
+1: Text lacks logical structure and is difficult to follow.
+0: Performance below Band 1.
+
+## IV. LANGUAGE (Ngôn ngữ)
+5: Uses a range of everyday vocabulary appropriately, with occasional less common lexis. Uses a range of simple and some complex grammatical forms with a good degree of control. Errors do not impede communication.
+4: Uses everyday vocabulary generally appropriately. Uses simple grammatical forms with a good degree of control. Errors do not impede communication.
+3: Uses basic vocabulary reasonably appropriately. Uses simple grammatical forms with some degree of control. Errors may be noticeable but meaning can still be determined.
+2: Uses basic vocabulary. Uses simple grammatical forms with limited control. Errors are frequent and at times impede meaning.
+1: Vocabulary is extremely limited. Frequent errors severely impede meaning.
+0: Performance below Band 1.
+
+# CRITICAL INSTRUCTIONS FOR SCORING & COMMENTARY:
+1. Word Count Approach: Giới hạn 100 từ chỉ là tham khảo. Đừng trừ điểm nếu chỉ hơi thiếu hoặc hơi thừa từ. Chỉ trừ điểm trong "Content" nếu thiếu ý dẫn đến bài quá ngắn, hoặc trừ "Communicative Achievement" nếu viết lan man, không liên quan.
+2. Structure of Commentary: Bạn phải tuân thủ luồng đánh giá sau CHO MỖI TIÊU CHÍ (viết bằng Tiếng Việt):
+   - Khen ngợi (những gì học sinh làm tốt).
+   - Trích dẫn ví dụ từ bài làm (tiếng Anh) để chứng minh điểm số.
+   - Nếu điểm dưới 5, giải thích rõ lỗi sai hoặc phần bị thiếu.
+   - Cuối cùng, BẮT BUỘC phải chèn chính xác chuỗi html này: \`<br><br><b>Key Takeaway:</b><br>\` sau đó kèm theo bài học rút ra để học sinh khắc phục.
+3. Sample Answer: Bài mẫu bắt buộc là phiên bản được nâng cấp, trau chuốt, tự nhiên hơn DỰA TRÊN Ý TƯỞNG GỐC CỦA HỌC SINH. Độ dài bài mẫu phải nằm trong khoảng 100-120 từ và phải được viết bằng TIẾNG ANH.
+
+# REQUIRED OUTPUT FORMAT
+Bạn PHẢI trả về ĐÚNG định dạng JSON sau để hệ thống parse (không có text nào nằm ngoài JSON):
+{
+  "part1": {
+    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
+    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
+    "commentary": {
+      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
+    },
+    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
+    "sample_word_count": "exact word count",
+    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
+  },
+  "part2": {
+    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
+    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
+    "commentary": {
+      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
+    },
+    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
+    "sample_word_count": "exact word count",
+    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
+  }
+}
+If "No answer provided", give 0s and explain in Vietnamese.`;
+
+            // Xây dựng Prompts chi tiết gửi cho AI để đối chiếu Content
+            const p1PromptText = `Read this email from your English-speaking friend Ashley, and the notes you have made.
+From: Ashley
+Subject: Next weekend
+Hi! I'm really looking forward to you coming to stay with me and my family next weekend. (Note: Me too!)
+Our house is about 40 minutes from the city centre. Shall we come and pick you up from the railway station? (Note: Yes, because...)
+There are lots of attractions near our house, but the best two are a lake and a wildlife park. Which would you prefer to go to? (Note: Tell Ashley)
+Let me know if you have any questions. (Note: Ask Ashley)
+Write your email to Ashley using all the notes.`;
+
+            const p2PromptText = state.part2Choice === 'article' 
+                ? `Articles wanted! TV Programmes. What type of TV programmes do you enjoy watching? Why? Are these programmes popular with your friends as well? Write an article answering these questions.`
+                : `Your English teacher has asked you to write a story. Your story must begin with this sentence: "Mark looked outside and saw that it had finally stopped snowing."`;
+
+            const userPrompt = `
+=== TASK 1: EMAIL ===
+[Question/Prompt Context for Examiner]:
+${p1PromptText}
+
+[Candidate's Answer]:
+${ans1}
+
+=== TASK 2: ${p2Type.toUpperCase()} ===
+[Question/Prompt Context for Examiner]:
+${p2PromptText}
+
+[Candidate's Answer]:
+${ans2}
+`;
+
+            const payload = {
+                systemPrompt: systemPrompt,
+                userPrompt: userPrompt
+            };
+
+            // Cơ chế Exponential Backoff: Tự động thử lại 5 lần (1s, 2s, 4s, 8s, 16s) nếu quá tải
+            const maxRetries = 5;
+            const delays = [1000, 2000, 4000, 8000, 16000];
+
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    // Send to the Vercel API
+                    const response = await fetch(VERCEL_GRADE_API_URL, {
+                        method: 'POST',
+                        body: JSON.stringify(payload),
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if(data.error) throw new Error(data.error);
+
+                    // Xử lý linh hoạt định dạng trả về từ Vercel
+                    // Trường hợp 1: API đã parse sẵn JSON
+                    if (data.part1 && data.part2) {
+                        return data;
+                    } 
+                    // Trường hợp 2: API trả về structure tương tự như Gemini Native
+                    else if (data.candidates && data.candidates[0].content) {
+                        const textResult = data.candidates[0].content.parts[0].text;
+                        const cleanText = textResult.replace(/```json/gi, '').replace(/```/gi, '').trim();
+                        return JSON.parse(cleanText);
+                    } 
+                    // Trường hợp 3: Trả về một trường text thô
+                    else if (data.text) {
+                        const cleanText = data.text.replace(/```json/gi, '').replace(/```/gi, '').trim();
+                        return JSON.parse(cleanText);
+                    }
+                    else {
+                        return data;
+                    }
+
+                } catch (error) {
+                    if (i === maxRetries - 1) throw new Error("Could not connect to AI after multiple attempts. " + error.message);
+                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+                }
+            }
+        }
+
+        // --- RENDER RESULTS ---
+        function renderResults(data, p1Total, p2Total, rawTotal, cambridgeScore, grade) {
+            elements.loading.classList.add('hidden');
+            elements.loading.classList.remove('flex');
+            screens.result.classList.remove('hidden');
+
+            document.getElementById('res-name').innerText = state.student.name;
+            document.getElementById('res-id').innerText = state.student.id;
+            document.getElementById('res-class').innerText = state.student.class;
+            
+            const timeTakenSecs = EXAM_DURATION - state.timeLeft;
+            const m = Math.floor(timeTakenSecs / 60);
+            const s = timeTakenSecs % 60;
+            document.getElementById('res-time').innerText = `${m}m ${s}s`;
+            document.getElementById('res-vio').innerText = state.violations;
+
+            document.getElementById('res-total').innerText = rawTotal;
+            document.getElementById('res-cambridge').innerText = cambridgeScore;
+            
+            const gradeEl = document.getElementById('res-grade');
+            gradeEl.innerText = grade;
+            if(grade === 'Fail') gradeEl.className = 'text-4xl font-black text-red-500';
+            else gradeEl.className = 'text-4xl font-black text-green-500';
+
+            document.getElementById('detailed-feedback-container').classList.remove('hidden');
+            document.getElementById('low-score-message').classList.add('hidden');
+
+            // Render Part 1
+            document.getElementById('score-p1').innerText = `${p1Total}/20`;
+            renderRubric('p1-rubric', data.part1.scores, data.part1.commentary);
+            document.getElementById('p1-feedback').innerText = data.part1.general_feedback || "No general feedback available.";
+            document.getElementById('p1-sample').innerText = data.part1.sample;
+            document.getElementById('p1-sample-wc').innerText = data.part1.sample_word_count || "N/A";
+            document.getElementById('p1-improvements').innerHTML = (data.part1.improvements_made || []).map(m => `<li><i class="fas fa-check text-green-500 mr-2"></i>${m}</li>`).join('');
+
+            // Render Part 2
+            document.getElementById('p2-type-title').innerText = state.part2Choice === 'story' ? "Story" : "Article";
+            document.getElementById('score-p2').innerText = `${p2Total}/20`;
+            renderRubric('p2-rubric', data.part2.scores, data.part2.commentary);
+            document.getElementById('p2-feedback').innerText = data.part2.general_feedback || "No general feedback available.";
+            document.getElementById('p2-sample').innerText = data.part2.sample;
+            document.getElementById('p2-sample-wc').innerText = data.part2.sample_word_count || "N/A";
+            document.getElementById('p2-improvements').innerHTML = (data.part2.improvements_made || []).map(m => `<li><i class="fas fa-check text-green-500 mr-2"></i>${m}</li>`).join('');
+        }
+
+        function renderRubric(containerId, scores, commentaries) {
+            const container = document.getElementById(containerId);
+            const criteria = [
+                { id: 'content', name: 'Content' },
+                { id: 'communicative', name: 'Comm. Achievement' },
+                { id: 'organisation', name: 'Organisation' },
+                { id: 'language', name: 'Language' }
+            ];
+
+            let html = '';
+            criteria.forEach(c => {
+                const score = scores[c.id];
+                const comment = commentaries ? commentaries[c.id] : '';
+                let bars = '';
+                for(let i=1; i<=5; i++) {
+                    if(i <= score) bars += `<div class="w-full h-2 bg-pet rounded-sm"></div>`;
+                    else bars += `<div class="w-full h-2 bg-gray-200 rounded-sm"></div>`;
+                }
+                
+                html += `
+                <div class="mb-4">
+                    <div class="flex justify-between items-center text-sm mb-1">
+                        <span class="text-gray-700 font-bold w-1/2">${c.name}</span>
+                        <div class="flex gap-1 w-1/3">${bars}</div>
+                        <span class="font-bold text-gray-800 w-8 text-right">${score}/5</span>
+                    </div>
+                    ${comment ? `<p class="text-xs text-gray-500 bg-white p-3 rounded border border-gray-200 mt-2 leading-relaxed shadow-sm">${comment}</p>` : ''}
+                </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        // --- GOOGLE SHEETS INTEGRATION ---
+        function sendToGoogleSheets(scores) {
+            const statusEl = document.getElementById('res-sheet-status');
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US');
+            const startString = state.startTime.toLocaleTimeString('en-US');
+            
+            const timeTakenSecs = EXAM_DURATION - state.timeLeft;
+            const mins = Math.floor(timeTakenSecs / 60);
+            const secs = timeTakenSecs % 60;
+            const duration = `${mins}m ${secs}s`;
+
+            const testTitleStr = document.title; // Lấy tự động tên từ thẻ Title
+
+            const duLieu = {
+                action: 'save', // Mới: Gắn cờ action để Apps Script biết cần làm gì
+                kyNang: "WRITING",            
+                tenSheet: testTitleStr,    
+                tenBai: testTitleStr,
+                ten: state.student.name,
+                maHocSinh: state.student.id,
+                gioBatDau: startString,
+                thoiGianLam: duration,
+                soLanViPham: state.violations,
+                
+                p1: scores.p1Total,
+                p2: scores.p2Total,
+                
+                noiDungP1: state.answers.part1,
+                noiDungP2: state.answers.part2,
+                
+                // Mới: Bổ sung general feedback gửi lên sheet
+                nhanXetP1: scores.feedbackP1,
+                nhanXetP2: scores.feedbackP2,
+                
+                diemSo: scores.rawTotal,
+                diemCambridge: scores.cambridgeScore,
+                xepHang: scores.grade
+            };
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: JSON.stringify(duLieu),
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8",
+                },
+                mode: 'no-cors' 
+            })
+            .then(() => {
+                statusEl.innerHTML = `<span class="text-green-500"><i class="fas fa-check-circle mr-1"></i> Result Saved</span>`;
+            })
+            .catch(error => {
+                console.error('Error saving to sheets:', error);
+                statusEl.innerHTML = `<span class="text-red-500"><i class="fas fa-times-circle mr-1"></i> Failed to save</span>`;
+            });
+        }
+    </script>
+</body>
+</html>
