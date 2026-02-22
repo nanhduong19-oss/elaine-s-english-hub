@@ -110,10 +110,10 @@
                         <div class="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
                         <h3 class="text-sm font-bold text-red-600 mb-3 flex items-center"><i class="fas fa-shield-alt mr-2"></i> EXAM RULES</h3>
                         <ul class="text-xs text-gray-600 space-y-2">
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2"></span> Duration: 45 minutes</li>
-                            <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2"></span> <strong class="text-gray-800 ml-1">Fullscreen mode is strictly required.</strong></li>
-                            <li class="flex items-center text-green-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-green-600 mr-2"></span> Copy/Paste is ENABLED (Test Mode).</li>
-                            <li class="flex items-center text-red-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-2"></span> Max 2 violations (exiting screen) = Auto-submit.</li>
+                            <li class="flex items-start"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2 mt-1 shrink-0"></span> <span>Duration: 45 minutes</span></li>
+                            <li class="flex items-start"><span class="w-1.5 h-1.5 rounded-full bg-pet mr-2 mt-1 shrink-0"></span> <strong class="text-gray-800">Fullscreen mode is strictly required.</strong></li>
+                            <li class="flex items-start text-red-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-2 mt-1 shrink-0"></span> <span>Copy/Paste is disabled.</span></li>
+                            <li class="flex items-start text-red-600 font-bold"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-2 mt-1 shrink-0"></span> <span>Max 2 violations (exiting screen) = Auto-submit.</span></li>
                         </ul>
                     </div>
 
@@ -264,7 +264,7 @@
             <!-- RIGHT: WRITING AREA (65%) -->
             <div class="w-[65%] bg-white rounded-xl shadow-sm border border-gray-200 flex flex-col">
                 <div class="bg-gray-100 px-4 py-3 border-b border-gray-200 flex justify-between items-center shrink-0">
-                    <span class="font-bold text-gray-700 text-sm"><i class="fas fa-keyboard mr-2 text-pet"></i>Writing Area <span class="text-xs text-green-600 ml-2 font-bold">(Test Mode: Copy/Paste Enabled)</span></span>
+                    <span class="font-bold text-gray-700 text-sm"><i class="fas fa-keyboard mr-2 text-pet"></i>Writing Area <span class="text-xs text-red-600 ml-2 font-bold">(Exam Mode: Copy/Paste Disabled)</span></span>
                     <div class="bg-white px-3 py-1 rounded-md border border-gray-300 text-sm font-mono text-gray-600">
                         Words: <span id="word-count" class="font-bold text-pet">0</span>
                     </div>
@@ -344,6 +344,12 @@
                         <span class="text-pet" id="score-p1">0/20</span>
                     </h2>
                     
+                    <!-- Bản nháp gốc của học sinh Part 1 -->
+                    <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-700 mb-2 uppercase text-sm"><i class="fas fa-user-edit mr-2"></i>Your Original Answer</h3>
+                        <p class="text-gray-800 font-serif whitespace-pre-wrap text-base" id="p1-original-answer"></p>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Rubric scores -->
                         <div>
@@ -363,7 +369,7 @@
                                 <p class="text-gray-800 font-serif whitespace-pre-wrap bg-white p-4 rounded border border-rose-100 mb-3" id="p1-sample"></p>
                                 <p class="text-sm font-bold text-gray-700 mb-2">Word Count: <span id="p1-sample-wc" class="font-normal text-pet"></span></p>
                                 <h4 class="text-sm font-bold text-gray-700 mb-2">Improvements Made:</h4>
-                                <ul class="space-y-1 text-sm text-gray-600 list-disc list-inside" id="p1-improvements"></ul>
+                                <ul class="space-y-2 text-sm text-gray-600" id="p1-improvements"></ul>
                             </div>
                         </div>
                     </div>
@@ -376,6 +382,12 @@
                         <span class="text-pet" id="score-p2">0/20</span>
                     </h2>
                     
+                    <!-- Bản nháp gốc của học sinh Part 2 -->
+                    <div class="mb-6 bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <h3 class="font-bold text-gray-700 mb-2 uppercase text-sm"><i class="fas fa-user-edit mr-2"></i>Your Original Answer</h3>
+                        <p class="text-gray-800 font-serif whitespace-pre-wrap text-base" id="p2-original-answer"></p>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Rubric scores -->
                         <div>
@@ -395,7 +407,7 @@
                                 <p class="text-gray-800 font-serif whitespace-pre-wrap bg-white p-4 rounded border border-rose-100 mb-3" id="p2-sample"></p>
                                 <p class="text-sm font-bold text-gray-700 mb-2">Word Count: <span id="p2-sample-wc" class="font-normal text-pet"></span></p>
                                 <h4 class="text-sm font-bold text-gray-700 mb-2">Improvements Made:</h4>
-                                <ul class="space-y-1 text-sm text-gray-600 list-disc list-inside" id="p2-improvements"></ul>
+                                <ul class="space-y-2 text-sm text-gray-600" id="p2-improvements"></ul>
                             </div>
                         </div>
                     </div>
@@ -419,15 +431,13 @@
             document.getElementById('header-test-title').innerText = testTitleStr;
             document.getElementById('result-test-title').innerText = testTitleStr;
 
-            // Block copy/paste/cut in textareas (TEMPORARILY DISABLED FOR TESTING)
-            /*
+            // Block copy/paste/cut in textareas
             const textareas = [document.getElementById('answer-part1'), document.getElementById('answer-part2')];
             textareas.forEach(ta => {
                 ta.addEventListener('paste', e => { e.preventDefault(); showToast("Paste is disabled!", "error"); });
                 ta.addEventListener('copy', e => { e.preventDefault(); showToast("Copy is disabled!", "error"); });
                 ta.addEventListener('cut', e => { e.preventDefault(); showToast("Cut is disabled!", "error"); });
             });
-            */
         });
 
         // --- CONSTANTS & CONFIG ---
@@ -776,89 +786,79 @@
             const systemPrompt = `# ROLE AND TASK
 You are an expert Cambridge B1 Preliminary (PET) Writing Examiner. 
 Your task is to grade two writing tasks from a student:
-- Part 1: An Email (replying to the provided prompt notes: e.g., agreeing, suggesting, explaining, asking).
+- Part 1: An Email (replying to the provided prompt notes).
 - Part 2: EITHER an Article OR a Story.
 
 # INTERACTION TONE & RULES
 1. Tone and Register: Dùng giọng điệu thân thiện, khuyến khích, và dễ hiểu đối với học sinh Việt Nam. KHÔNG dùng đại từ nhân xưng ngôi thứ nhất (I, me) mà hãy dùng danh xưng khách quan hoặc gọi là "bạn", "người viết". 
-2. No Emojis or Symbols: KHÔNG sử dụng emoji, biểu tượng cảm xúc.
-3. Language Rules: BẮT BUỘC viết toàn bộ phần 'general_feedback', 'commentary' (nhận xét), và giải thích 'mistakes' bằng TIẾNG VIỆT hoàn toàn để học sinh Việt Nam dễ đọc hiểu và rút kinh nghiệm. Tuy nhiên, bài mẫu 'sample answer' và các trích dẫn bài làm gốc của học sinh PHẢI giữ bằng TIẾNG ANH.
+2. No Emojis or Symbols: KHÔNG sử dụng emoji.
+3. Language Rules: BẮT BUỘC viết toàn bộ phần 'general_feedback', 'commentary' (nhận xét), và giải thích 'improvements_made' bằng TIẾNG VIỆT. Tuy nhiên, bài mẫu 'sample' và các trích dẫn bài làm gốc của học sinh PHẢI giữ bằng TIẾNG ANH.
 
 # CAMBRIDGE B1 ASSESSMENT SCALES (0-5 POINTS)
 Đánh giá học sinh dựa trên khung điểm Cambridge B1 Rubric:
-
-## I. CONTENT (Nội dung)
-5: All content is relevant to the task. The target reader is fully informed (e.g., all 4 notes in an email are addressed effectively; all article questions are answered).
-4: Minor irrelevances and/or omissions may be present. The target reader is on the whole informed.
-3: Irrelevances and misinterpretation of task may be present. The target reader is on the whole informed.
-2: There are omissions and/or irrelevances. The target reader is only minimally informed.
-1: The task is misinterpreted or incomplete. The target reader is not informed.
-0: Content is totally irrelevant.
-
-## II. COMMUNICATIVE ACHIEVEMENT (Hoàn thành nhiệm vụ giao tiếp)
-5: Uses the conventions of the communicative task to hold the target reader's attention and communicate straightforward ideas.
-4: Produces text that communicates simple ideas in generally appropriate ways.
-3: Uses the conventions of the communicative task in generally appropriate ways to communicate simple ideas.
-2: Produces text that communicates simple ideas in limited ways.
-1: Fails to use conventions to communicate ideas.
-0: Performance below Band 1.
-
-## III. ORGANISATION (Tổ chức bài)
-5: Text is connected and coherent, using a variety of linking words and cohesive devices.
-4: Text is generally well-organised and coherent.
-3: Text is connected and coherent, using basic linking words and a limited number of cohesive devices.
-2: Text is connected using only basic, high-frequency linking words.
-1: Text lacks logical structure and is difficult to follow.
-0: Performance below Band 1.
-
-## IV. LANGUAGE (Ngôn ngữ)
-5: Uses a range of everyday vocabulary appropriately, with occasional less common lexis. Uses a range of simple and some complex grammatical forms with a good degree of control. Errors do not impede communication.
-4: Uses everyday vocabulary generally appropriately. Uses simple grammatical forms with a good degree of control. Errors do not impede communication.
-3: Uses basic vocabulary reasonably appropriately. Uses simple grammatical forms with some degree of control. Errors may be noticeable but meaning can still be determined.
-2: Uses basic vocabulary. Uses simple grammatical forms with limited control. Errors are frequent and at times impede meaning.
-1: Vocabulary is extremely limited. Frequent errors severely impede meaning.
-0: Performance below Band 1.
+- Content (0-5)
+- Communicative Achievement (0-5)
+- Organisation (0-5)
+- Language (0-5)
 
 # CRITICAL INSTRUCTIONS FOR SCORING & COMMENTARY:
-1. Word Count Approach: Giới hạn 100 từ chỉ là tham khảo. Đừng trừ điểm nếu chỉ hơi thiếu hoặc hơi thừa từ. Chỉ trừ điểm trong "Content" nếu thiếu ý dẫn đến bài quá ngắn, hoặc trừ "Communicative Achievement" nếu viết lan man, không liên quan.
-2. Structure of Commentary: Bạn phải tuân thủ luồng đánh giá sau CHO MỖI TIÊU CHÍ (viết bằng Tiếng Việt):
+1. CHẤM ĐIỂM CHÍNH XÁC: BẠN PHẢI TÍNH TOÁN ĐIỂM CHO TỪNG SUB-SKILL DỰA TRÊN BÀI VIẾT THỰC TẾ CỦA HỌC SINH. Không bao giờ cho điểm 0 trừ khi học sinh bỏ giấy trắng.
+2. Word Count Approach: Giới hạn 100 từ chỉ là tham khảo. Đừng trừ điểm nếu chỉ hơi thiếu hoặc hơi thừa từ.
+3. Structure of Commentary: Bạn phải tuân thủ luồng đánh giá sau CHO MỖI TIÊU CHÍ (viết bằng Tiếng Việt):
    - Khen ngợi (những gì học sinh làm tốt).
    - Trích dẫn ví dụ từ bài làm (tiếng Anh) để chứng minh điểm số.
    - Nếu điểm dưới 5, giải thích rõ lỗi sai hoặc phần bị thiếu.
-   - Cuối cùng, BẮT BUỘC phải chèn chính xác chuỗi html này: \`<br><br><b>Key Takeaway:</b><br>\` sau đó kèm theo bài học rút ra để học sinh khắc phục.
-3. Sample Answer: Bài mẫu bắt buộc là phiên bản được nâng cấp, trau chuốt, tự nhiên hơn DỰA TRÊN Ý TƯỞNG GỐC CỦA HỌC SINH. Độ dài bài mẫu phải nằm trong khoảng 105-130 từ và phải được viết bằng TIẾNG ANH.
+   - Cuối cùng, BẮT BUỘC phải chèn chính xác chuỗi html này: \`<br><br><b>Key Takeaway:</b><br>\` sau đó kèm theo bài học rút ra.
+4. BẮT BUỘC CÓ BÀI MẪU (Sample Answer): Bạn phải luôn luôn cung cấp một phiên bản bài mẫu được nâng cấp mượt mà (105-130 từ bằng tiếng Anh) dựa trên ý tưởng của học sinh.
 
 # REQUIRED OUTPUT FORMAT
-Bạn PHẢI trả về ĐÚNG định dạng JSON sau để hệ thống parse (không có text nào nằm ngoài JSON):
+Bạn PHẢI trả về ĐÚNG định dạng JSON sau. THAY THẾ các giá trị <placeholder> bằng dữ liệu thực tế do bạn sinh ra. KHÔNG THÊM BẤT KỲ VĂN BẢN NÀO NGOÀI JSON.
+
 {
   "part1": {
-    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
-    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
-    "commentary": {
-      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
+    "general_feedback": "Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ (Tiếng Việt).",
+    "scores": {
+      "content": <số nguyên từ 0-5>,
+      "communicative": <số nguyên từ 0-5>,
+      "organisation": <số nguyên từ 0-5>,
+      "language": <số nguyên từ 0-5>
     },
-    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
-    "sample_word_count": "exact word count",
-    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
+    "commentary": {
+      "content": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "communicative": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "organisation": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "language": "Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai. <br><br><b>Key Takeaway:</b><br> Bài học."
+    },
+    "sample": "Bản viết mẫu nâng cấp mượt mà dựa trên ý của học sinh (Tiếng Anh, 100-120 words). PHẦN NÀY LÀ BẮT BUỘC.",
+    "sample_word_count": "<số lượng từ của bài mẫu>",
+    "improvements_made": [
+      "Giải thích nâng cấp cấu trúc (Tiếng Việt)",
+      "Giải thích nâng cấp từ vựng (Tiếng Việt)"
+    ]
   },
   "part2": {
-    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
-    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
-    "commentary": {
-      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
-      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
+    "general_feedback": "Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ (Tiếng Việt).",
+    "scores": {
+      "content": <số nguyên từ 0-5>,
+      "communicative": <số nguyên từ 0-5>,
+      "organisation": <số nguyên từ 0-5>,
+      "language": <số nguyên từ 0-5>
     },
-    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
-    "sample_word_count": "exact word count",
-    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
+    "commentary": {
+      "content": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "communicative": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "organisation": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
+      "language": "Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai. <br><br><b>Key Takeaway:</b><br> Bài học."
+    },
+    "sample": "Bản viết mẫu nâng cấp mượt mà dựa trên ý của học sinh (Tiếng Anh, 100-120 words). PHẦN NÀY LÀ BẮT BUỘC.",
+    "sample_word_count": "<số lượng từ của bài mẫu>",
+    "improvements_made": [
+      "Giải thích nâng cấp cấu trúc (Tiếng Việt)",
+      "Giải thích nâng cấp từ vựng (Tiếng Việt)"
+    ]
   }
 }
-If "No answer provided", give 0s and explain in Vietnamese.`;
+`;
 
             // Xây dựng Prompts chi tiết gửi cho AI để đối chiếu Content
             const p1PromptText = `Read this email from your English-speaking friend Ashley, and the notes you have made.
@@ -970,20 +970,22 @@ ${ans2}
 
             // Render Part 1
             document.getElementById('score-p1').innerText = `${p1Total}/20`;
+            document.getElementById('p1-original-answer').innerText = state.answers.part1 || "No answer provided.";
             renderRubric('p1-rubric', data.part1.scores, data.part1.commentary);
             document.getElementById('p1-feedback').innerText = data.part1.general_feedback || "No general feedback available.";
-            document.getElementById('p1-sample').innerText = data.part1.sample;
+            document.getElementById('p1-sample').innerText = data.part1.sample || "No sample answer was generated.";
             document.getElementById('p1-sample-wc').innerText = data.part1.sample_word_count || "N/A";
-            document.getElementById('p1-improvements').innerHTML = (data.part1.improvements_made || []).map(m => `<li><i class="fas fa-check text-green-500 mr-2"></i>${m}</li>`).join('');
+            document.getElementById('p1-improvements').innerHTML = (data.part1.improvements_made || []).map(m => `<li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
 
             // Render Part 2
             document.getElementById('p2-type-title').innerText = state.part2Choice === 'story' ? "Story" : "Article";
             document.getElementById('score-p2').innerText = `${p2Total}/20`;
+            document.getElementById('p2-original-answer').innerText = state.answers.part2 || "No answer provided.";
             renderRubric('p2-rubric', data.part2.scores, data.part2.commentary);
             document.getElementById('p2-feedback').innerText = data.part2.general_feedback || "No general feedback available.";
-            document.getElementById('p2-sample').innerText = data.part2.sample;
+            document.getElementById('p2-sample').innerText = data.part2.sample || "No sample answer was generated.";
             document.getElementById('p2-sample-wc').innerText = data.part2.sample_word_count || "N/A";
-            document.getElementById('p2-improvements').innerHTML = (data.part2.improvements_made || []).map(m => `<li><i class="fas fa-check text-green-500 mr-2"></i>${m}</li>`).join('');
+            document.getElementById('p2-improvements').innerHTML = (data.part2.improvements_made || []).map(m => `<li class="flex items-start"><i class="fas fa-check text-green-500 mr-2 mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
         }
 
         function renderRubric(containerId, scores, commentaries) {
