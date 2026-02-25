@@ -91,44 +91,25 @@ const TEST_DATA = [
     ]
   },
   {
-    id: "flyers-3-test-1",
-    title: "Octopuses",
-    imageUrl: "https://www.dropbox.com/scl/fi/7imy58opcte4le1x0wtmj/flyers-3_test-1_part-4.png?rlkey=xt5jymgxk3cpf1df85gjpoasv&st=fa1e8q7y&raw=1",
-    text: "<b>An octopus is a creature [EX] lives in the sea.</b> It has a round head with two large eyes. People often think that octopuses have eight legs, but they [1] have four pairs of arms. Octopuses live in oceans all [2] the world. Octopuses that live in warm water are small, and [3] that live in cold water are much [4] .\nMost octopuses are ‘nocturnal’. This means that they sleep [5] day, and move around and eat at night. Octopuses usually live [6] one or two years.\nTo move, octopuses usually use their arms to walk [7] the bottom of the sea. When they need to, they can swim at forty kilometres an hour for a short time. [8] an octopus needs to hide from [9] creatures, it can change colour. It can also get into very small spaces because its body is very soft.\nOctopuses are very clever. For example, they can [10] new things and open bottles. Octopuses can see very well with their large eyes, but they can’t hear anything.",
-    example: { answer: "which", options: ["which", "it", "where"] },
-    questions: [
-      { id: 1, answer: "actually", options: ["quite", "actually", "still"], explanation: "quite (khá), actually (thực ra), still (vẫn). Người ta nghĩ bạch tuộc có 8 chân, nhưng 'thực sự thì' (actually) chúng có 4 cặp tay." },
-      { id: 2, answer: "around", options: ["about", "of", "around"], explanation: "about (về), of (của), around (quanh). Cụm từ cố định 'all around the world' (trên toàn thế giới)." },
-      { id: 3, answer: "those", options: ["both", "those", "each"], explanation: "both (cả hai), those (những cái/con đó), each (mỗi). Dùng 'those' (những con đó) để thay thế cho từ 'octopuses' ở vế trước." },
-      { id: 4, answer: "bigger", options: ["bigger", "big", "biggest"], explanation: "bigger (lớn hơn), big (lớn), biggest (lớn nhất). Đang so sánh bạch tuộc nước lạnh với bạch tuộc nước ấm -> dùng so sánh hơn 'bigger'." },
-      { id: 5, answer: "all", options: ["all", "some", "the"], explanation: "all (tất cả), some (một vài). Cụm từ 'all day' nghĩa là (ngủ) cả ngày." },
-      { id: 6, answer: "for", options: ["during", "since", "for"], explanation: "during (trong suốt), since (từ khi), for (trong khoảng). Dùng 'for + khoảng thời gian' (for one or two years: trong khoảng 1-2 năm)." },
-      { id: 7, answer: "along", options: ["past", "along", "between"], explanation: "past (qua), along (dọc theo), between (giữa). 'walk along the bottom' nghĩa là đi bộ dọc theo đáy biển." },
-      { id: 8, answer: "If", options: ["Before", "If", "While"], explanation: "Before (trước khi), If (nếu), While (trong khi). 'Nếu' (If) một con bạch tuộc cần trốn, nó có thể đổi màu." },
-      { id: 9, answer: "other", options: ["more", "every", "other"], explanation: "more (nhiều hơn), every (mọi), other (khác). Trốn khỏi CÁC sinh vật 'KHÁC' -> 'other creatures'." },
-      { id: 10, answer: "learn", options: ["learn", "learning", "learned"], explanation: "learn (học). Sau 'can' dùng động từ nguyên mẫu -> 'learn' (học những điều mới)." }
+    id:"flyers-3-test-1",
+    title:"Octopuses",
+    imageUrl:"https://www.dropbox.com/scl/fi/7imy58opcte4le1x0wtmj/flyers-3_test-1_part-4.png?rlkey=xt5jymgxk3cpf1df85gjpoasv&st=fa1e8q7y&raw=1",
+    text:"<b>An octopus is a creature [EX] lives in the sea.</b> It has a round head with two large eyes. People often think that octopuses have eight legs, but they [1] have four pairs of arms. Octopuses live in oceans all [2] the world. Octopuses that live in warm water are small, and [3] that live in cold water are much [4]. Most octopuses are 'nocturnal'. This means that they sleep [5] day, and move around and eat at night. Octopuses usually live [6] one or two years. To move, octopuses usually use their arms to walk [7] the bottom of the sea. When they need to, they can swim at forty kilometres an hour for a short time. [8] an octopus needs to hide from [9] creatures, it can change colour. It can also get into very small spaces because its body is very soft. Octopuses are very clever. For example, they can [10] new things and open bottles. Octopuses can see very well with their large eyes, but they can’t hear anything.",
+    example:{answer:"which",options:["which","it","where"]},
+    questions:[
+      {id:1,answer:"actually",options:["quite","actually","still"],explanation:"quite (khá), actually (thực ra), still (vẫn). Người ta nghĩ bạch tuộc có 8 chân, nhưng 'thực ra' chúng có 4 cặp tay."},
+      {id:2,answer:"around",options:["about","of","around"],explanation:"Cụm cố định 'all around the world' (trên toàn thế giới)."},
+      {id:3,answer:"those",options:["both","those","each"],explanation:"Dùng 'those' để thay thế cho 'octopuses' ở vế trước."},
+      {id:4,answer:"bigger",options:["bigger","big","biggest"],explanation:"Có 'much' phía trước nên dùng so sánh hơn 'bigger'."},
+      {id:5,answer:"all",options:["all","some","the"],explanation:"Cụm 'all day' nghĩa là suốt cả ngày."},
+      {id:6,answer:"for",options:["during","since","for"],explanation:"Dùng 'for' để chỉ khoảng thời gian (for one or two years)."},
+      {id:7,answer:"along",options:["past","along","between"],explanation:"'walk along the bottom' = đi dọc theo đáy biển."},
+      {id:8,answer:"If",options:["Before","If","While"],explanation:"If (nếu). Nếu bạch tuộc cần trốn, nó có thể đổi màu."},
+      {id:9,answer:"other",options:["more","every","other"],explanation:"'other creatures' = những sinh vật khác."},
+      {id:10,answer:"learn",options:["learn","learning","learned"],explanation:"Sau 'can' dùng động từ nguyên mẫu → learn."}
     ]
   },
   {
-  id:"flyers-3-test-1",
-  title:"Octopuses",
-  imageUrl:"https://www.dropbox.com/scl/fi/7imy58opcte4le1x0wtmj/flyers-3_test-1_part-4.png?rlkey=xt5jymgxk3cpf1df85gjpoasv&st=fa1e8q7y&raw=1",
-  text:"<b>An octopus is a creature [EX] lives in the sea.</b> It has a round head with two large eyes. People often think that octopuses have eight legs, but they [1] have four pairs of arms. Octopuses live in oceans all [2] the world. Octopuses that live in warm water are small, and [3] that live in cold water are much [4]. Most octopuses are 'nocturnal'. This means that they sleep [5] day, and move around and eat at night. Octopuses usually live [6] one or two years. To move, octopuses usually use their arms to walk [7] the bottom of the sea. When they need to, they can swim at forty kilometres an hour for a short time. [8] an octopus needs to hide from [9] creatures, it can change colour. It can also get into very small spaces because its body is very soft. Octopuses are very clever. For example, they can [10] new things and open bottles. Octopuses can see very well with their large eyes, but they can’t hear anything.",
-  example:{answer:"which",options:["which","it","where"]},
-  questions:[
-    {id:1,answer:"actually",options:["quite","actually","still"],explanation:"quite (khá), actually (thực ra), still (vẫn). Người ta nghĩ bạch tuộc có 8 chân, nhưng 'thực ra' chúng có 4 cặp tay."},
-    {id:2,answer:"around",options:["about","of","around"],explanation:"Cụm cố định 'all around the world' (trên toàn thế giới)."},
-    {id:3,answer:"those",options:["both","those","each"],explanation:"Dùng 'those' để thay thế cho 'octopuses' ở vế trước."},
-    {id:4,answer:"bigger",options:["bigger","big","biggest"],explanation:"Có 'much' phía trước nên dùng so sánh hơn 'bigger'."},
-    {id:5,answer:"all",options:["all","some","the"],explanation:"Cụm 'all day' nghĩa là suốt cả ngày."},
-    {id:6,answer:"for",options:["during","since","for"],explanation:"Dùng 'for' để chỉ khoảng thời gian (for one or two years)."},
-    {id:7,answer:"along",options:["past","along","between"],explanation:"'walk along the bottom' = đi dọc theo đáy biển."},
-    {id:8,answer:"If",options:["Before","If","While"],explanation:"If (nếu). Nếu bạch tuộc cần trốn, nó có thể đổi màu."},
-    {id:9,answer:"other",options:["more","every","other"],explanation:"'other creatures' = những sinh vật khác."},
-    {id:10,answer:"learn",options:["learn","learning","learned"],explanation:"Sau 'can' dùng động từ nguyên mẫu → learn."}
-  ]
-},
-{
     id:"flyers-3-test-2",
     title:"Camels",
     imageUrl:"https://www.dropbox.com/scl/fi/kz6b06i68mkl4qzjt6asv/flyers-3_test-2_part-4.png?rlkey=omjhmwh9d6ivr4el8n9zqjuqz&st=yuf774rr&raw=1",
@@ -548,6 +529,9 @@ export default function App() {
   
   // 1. WELCOME SCREEN
   if (screen === 'welcome') {
+    // Generate an array of numbers representing available test counts
+    const testOptions = Array.from({ length: TEST_DATA.length }, (_, i) => i + 1);
+
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="bg-white rounded-[2rem] p-8 max-w-md w-full shadow-[0_10px_40px_-10px_rgba(165,214,167,0.5)] relative z-10 border-[6px]" style={{ borderColor: CONFIG.colors.secondary }}>
@@ -588,7 +572,7 @@ export default function App() {
                 onFocus={(e) => e.target.style.borderColor = CONFIG.colors.primary}
                 onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
               >
-                {[1, 2, 3, 4, 5, 6].map(n => (
+                {testOptions.map(n => (
                   <option key={n} value={n}>{n} Test{n > 1 ? 's' : ''}</option>
                 ))}
               </select>
