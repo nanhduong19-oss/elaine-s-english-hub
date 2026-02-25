@@ -1,38 +1,108 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Clock, CheckCircle, XCircle, ChevronRight, RefreshCcw, Award, Play } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flyers Part 4 Practice</title>
+    
+    <!-- Import thư viện React & Babel để chạy code trực tiếp trên trình duyệt -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Import TailwindCSS để nhận diện giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Nunito', 'Google Sans', sans-serif;
+        }
+        body {
+            background-color: #F4FBF6;
+        }
+        .cloze-input {
+            display: inline-block;
+            border: none;
+            border-bottom: 2px solid #9CA3AF;
+            background: transparent;
+            text-align: center;
+            width: 110px;
+            margin: 0 4px;
+            padding: 0 4px;
+            font-size: 1.15rem;
+            outline: none;
+            color: #E84393;
+            font-weight: 800;
+            transition: all 0.2s;
+            border-radius: 4px 4px 0 0;
+        }
+        .cloze-input:focus {
+            border-bottom-color: #E84393;
+            background-color: #FDF2F8;
+        }
+        .cloze-input.correct {
+            border-bottom-color: #15803D;
+            color: #15803D;
+            background-color: #DCFCE7;
+        }
+        .cloze-input.incorrect {
+            border-bottom-color: #BE185D;
+            color: #BE185D;
+            text-decoration: line-through;
+            background-color: #FCE7F3;
+        }
+        .options-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .options-scroll::-webkit-scrollbar-thumb {
+            background-color: #A5D6A7;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nơi ứng dụng React sẽ được render -->
+    <div id="root"></div>
 
-/* ============================================================================
-   PART 1: UI CONFIGURATION & STYLES (CẤU HÌNH GIAO DIỆN)
-   ============================================================================ */
-const CONFIG = {
-  fontFamily: "'Nunito', 'Google Sans', sans-serif", 
-  colors: {
-    primary: '#E84393', /* Lotus Pink */
-    secondary: '#A5D6A7', /* Pastel Green */
-    background: '#F4FBF6', /* Nền xanh pastel rất nhạt */
-    text: '#374151', /* Gray 700 */
-    correct: '#15803D', /* Dark Green */
-    incorrect: '#BE185D', /* Dark Pink */
-    gapLine: '#9CA3AF', 
-  },
-  reviewTimeSeconds: 60,
-  bannerUrl: 'https://www.dropbox.com/scl/fi/vil0vic87fl5tev5rg941/flyers-banner-1.jpg?rlkey=kpq60o038l840k2dzbzai21nh&st=3trt6sz6&raw=1'
-};
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-/* Array shuffler */
-const shuffleArray = (array) => {
-  const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
-};
+        /* ============================================================================
+           ICONS (Thay thế cho thư viện lucide-react để chạy độc lập)
+           ============================================================================ */
+        const Play = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+        const Clock = ({size=20, className=""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>;
+        const CheckCircle = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>;
+        const ChevronRight = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>;
+        const RefreshCcw = ({size=20}) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>;
+        const Award = ({size=80, className=""}) => <svg className={className} width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>;
 
-/* ============================================================================
-   PART 2: DATA INPUT (DỮ LIỆU BÀI TẬP & GIẢI THÍCH)
-   ============================================================================ */
-const TEST_DATA = [
+        /* ============================================================================
+           CẤU HÌNH GIAO DIỆN & DỮ LIỆU
+           ============================================================================ */
+        const CONFIG = {
+            colors: {
+                primary: '#E84393',
+                secondary: '#A5D6A7',
+                background: '#F4FBF6',
+                correct: '#15803D',
+                incorrect: '#BE185D',
+            },
+            reviewTimeSeconds: 60,
+            bannerUrl: 'https://www.dropbox.com/scl/fi/vil0vic87fl5tev5rg941/flyers-banner-1.jpg?rlkey=kpq60o038l840k2dzbzai21nh&st=3trt6sz6&raw=1'
+        };
+
+        const shuffleArray = (array) => {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        };
+
+         const TEST_DATA = [
   {
     id: "flyers-4-test-1",
     title: "Tortoises",
@@ -206,599 +276,541 @@ const TEST_DATA = [
   }
 ];
 
-/* ============================================================================
-   PART 3: MAIN APP LOGIC & COMPONENT
-   ============================================================================ */
-export default function App() {
-  const [screen, setScreen] = useState('welcome'); 
-  const [studentName, setStudentName] = useState('');
-  const [numTests, setNumTests] = useState(1);
-  
-  const [testsToPlay, setTestsToPlay] = useState([]);
-  const [currentTestIdx, setCurrentTestIdx] = useState(0);
-  
-  const [answers, setAnswers] = useState({});
-  const [results, setResults] = useState({});
-  
-  const [timeLeft, setTimeLeft] = useState(0);
-  const timerRef = useRef(null);
 
-  const [sessionStats, setSessionStats] = useState({
-    startTime: null,
-    endTime: null,
-    testScores: [] 
-  });
-
-  /* Inject Google Font CSS & Custom Styles */
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-      * {
-        font-family: ${CONFIG.fontFamily};
-      }
-      body {
-        background-color: ${CONFIG.colors.background};
-      }
-      .cloze-input {
-        display: inline-block;
-        border: none;
-        border-bottom: 2px solid ${CONFIG.colors.gapLine};
-        background: transparent;
-        text-align: center;
-        width: 110px;
-        margin: 0 4px;
-        padding: 0 4px;
-        font-size: 1.15rem;
-        outline: none;
-        color: ${CONFIG.colors.primary};
-        font-weight: 800;
-        transition: all 0.2s;
-        border-radius: 4px 4px 0 0;
-      }
-      .cloze-input:focus {
-        border-bottom-color: ${CONFIG.colors.primary};
-        background-color: #FDF2F8;
-      }
-      .cloze-input.correct {
-        border-bottom-color: ${CONFIG.colors.correct};
-        color: ${CONFIG.colors.correct};
-        background-color: #DCFCE7;
-      }
-      .cloze-input.incorrect {
-        border-bottom-color: ${CONFIG.colors.incorrect};
-        color: ${CONFIG.colors.incorrect};
-        text-decoration: line-through;
-        background-color: #FCE7F3;
-      }
-      
-      .options-scroll::-webkit-scrollbar {
-        width: 6px;
-      }
-      .options-scroll::-webkit-scrollbar-thumb {
-        background-color: ${CONFIG.colors.secondary};
-        border-radius: 4px;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
-
-  const getDurationString = (start, end) => {
-    if (!start || !end) return '';
-    const diff = Math.floor((end - start) / 1000);
-    const m = Math.floor(diff / 60);
-    const s = diff % 60;
-    return `${m} min ${s} sec`;
-  };
-
-  const startGame = (e) => {
-    e.preventDefault();
-    if (!studentName.trim()) {
-      alert("Please enter the student's name!");
-      return;
-    }
-
-    const shuffledData = shuffleArray(TEST_DATA);
-    const selected = shuffledData.slice(0, numTests);
-    
-    const preparedTests = selected.map(test => {
-      const pTest = { ...test, questions: [] };
-      test.questions.forEach(q => {
-        pTest.questions.push({
-          ...q,
-          options: shuffleArray(q.options) 
-        });
-      });
-      return pTest;
-    });
-
-    setTestsToPlay(preparedTests);
-    setCurrentTestIdx(0);
-    setAnswers({});
-    setResults({});
-    setSessionStats({
-      startTime: new Date(),
-      endTime: null,
-      testScores: []
-    });
-    setScreen('test');
-  };
-
-  const handleInputChange = (qId, value) => {
-    setAnswers(prev => ({ ...prev, [qId]: value }));
-  };
-
-  const handleSubmit = () => {
-    const currentTest = testsToPlay[currentTestIdx];
-    let correctCount = 0;
-    const newResults = {};
-
-    currentTest.questions.forEach(q => {
-      const studentAns = (answers[q.id] || '').trim().toLowerCase();
-      const correctAns = q.answer.trim().toLowerCase();
-      const isCorrect = studentAns === correctAns;
-      
-      if (isCorrect) correctCount++;
-      
-      newResults[q.id] = {
-        isCorrect,
-        expected: q.answer,
-        actual: answers[q.id] || ''
-      };
-    });
-
-    setSessionStats(prev => {
-      const scores = [...prev.testScores];
-      if (scores.length === currentTestIdx) {
-        scores.push({
-          title: currentTest.title,
-          correct: correctCount,
-          total: currentTest.questions.length
-        });
-      }
-      return { ...prev, testScores: scores };
-    });
-
-    setResults(newResults);
-
-    if (correctCount === currentTest.questions.length) {
-      setScreen('review');
-      setTimeLeft(3); 
-      startTimer(3, true);
-    } else {
-      setScreen('review');
-      setTimeLeft(CONFIG.reviewTimeSeconds);
-      startTimer(CONFIG.reviewTimeSeconds, false);
-    }
-  };
-
-  const startTimer = (seconds, autoNext) => {
-    clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current);
-          handleReviewTimeout(autoNext);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-  };
-
-  const handleReviewTimeout = (autoNext) => {
-    const currentTest = testsToPlay[currentTestIdx];
-    const isAllCorrect = currentTest.questions.every(q => results[q.id]?.isCorrect);
-
-    if (isAllCorrect || autoNext) {
-      goToNextTestOrResult();
-    } else {
-      resetIncorrectAnswers();
-    }
-  };
-
-  const skipReview = () => {
-    clearInterval(timerRef.current);
-    handleReviewTimeout(false);
-  };
-
-  const resetIncorrectAnswers = () => {
-    setAnswers(prev => {
-      const newAns = { ...prev };
-      Object.keys(results).forEach(qId => {
-        if (!results[qId].isCorrect) {
-          newAns[qId] = '';
-        }
-      });
-      return newAns;
-    });
-    setResults({});
-    setScreen('test');
-  };
-
-  const goToNextTestOrResult = () => {
-    if (currentTestIdx + 1 < testsToPlay.length) {
-      setCurrentTestIdx(prev => prev + 1);
-      setAnswers({});
-      setResults({});
-      setScreen('test');
-    } else {
-      setSessionStats(prev => ({ ...prev, endTime: new Date() }));
-      setScreen('results');
-    }
-  };
-
-  /* --------------------------------------------------------------------------
-     TEXT PARSER
-     -------------------------------------------------------------------------- */
-  const renderTextWithGaps = () => {
-    const currentTest = testsToPlay[currentTestIdx];
-    if (!currentTest) return null;
-
-    const parts = currentTest.text.split(/(\[EX\]|\[\d+\]|<b>|<\/b>)/g);
-    let isBold = false;
-    const elements = [];
-
-    parts.forEach((part, index) => {
-      if (!part) return;
-      if (part === '<b>') { isBold = true; return; }
-      if (part === '</b>') { isBold = false; return; }
-
-      const fontClass = isBold ? "font-bold text-gray-800" : "text-gray-700";
-
-      if (part === '[EX]') {
-        elements.push(
-          <span key={`ex-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
-            <span className="font-extrabold mr-2 border-b-2 border-transparent" style={{ color: CONFIG.colors.primary }}>Ex</span>
-            <span className="font-bold text-gray-500 border-b-2 border-dashed border-gray-400 px-3 text-center min-w-[60px] bg-white rounded-t">
-              {currentTest.example.answer}
-            </span>
-          </span>
-        );
-        return;
-      }
-
-      const match = part.match(/^\[(\d+)\]$/);
-      if (match) {
-        const qId = parseInt(match[1], 10);
-        const res = results[qId];
-        
-        if (screen === 'review' && res) {
-          if (res.isCorrect) {
-            elements.push(
-              <span key={`gap-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
-                <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.correct }}>{qId}</span>
-                <input type="text" readOnly className="cloze-input correct" value={res.actual} />
-              </span>
-            );
-          } else {
-            elements.push(
-              <span key={`gap-${index}`} className={`inline-flex items-center mx-1 relative group ${fontClass}`}>
-                <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.incorrect }}>{qId}</span>
-                <input type="text" readOnly className="cloze-input incorrect" value="" />
-                {/* Tooltip on hover for quick answer */}
-                <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 text-white rounded px-3 py-1 text-sm font-bold shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none" style={{ backgroundColor: CONFIG.colors.incorrect }}>
-                  Correct: {res.expected}
-                </span>
-              </span>
-            );
-          }
-        } else {
-          elements.push(
-            <span key={`gap-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
-              <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.primary }}>{qId}</span>
-              <input
-                type="text"
-                autoComplete="off"
-                className="cloze-input"
-                value={answers[qId] || ''}
-                onChange={(e) => handleInputChange(qId, e.target.value)}
-                placeholder="..."
-              />
-            </span>
-          );
-        }
-        return;
-      }
-
-      /* Handle newlines formatting */
-      elements.push(
-        <span key={`text-${index}`} className={fontClass}>
-          {part.split('\n').map((line, i, arr) => (
-            <React.Fragment key={i}>
-              {line}
-              {i < arr.length - 1 && <div className="h-4"></div>}
-            </React.Fragment>
-          ))}
-        </span>
-      );
-    });
-
-    return (
-      <div className="text-[1.15rem] leading-[2.8rem] text-justify">
-        {elements}
-      </div>
-    );
-  };
-
-  /* ============================================================================
-     SCREENS RENDER
-     ============================================================================ */
-  
-  /* 1. WELCOME SCREEN */
-  if (screen === 'welcome') {
-    /* Generate an array of numbers representing available test counts dynamically */
-    const testOptions = Array.from({ length: TEST_DATA.length }, (_, i) => i + 1);
-
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-white rounded-[2rem] p-8 max-w-md w-full shadow-[0_10px_40px_-10px_rgba(165,214,167,0.5)] relative z-10 border-[6px]" style={{ borderColor: CONFIG.colors.secondary }}>
-          
-          <div className="w-full h-48 rounded-2xl overflow-hidden mb-6 border-2 shadow-inner" style={{ borderColor: CONFIG.colors.background }}>
-             <img src={CONFIG.bannerUrl} alt="Flyers Banner" className="w-full h-full object-cover" />
-          </div>
-
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-extrabold mb-2 tracking-tight" style={{ color: CONFIG.colors.primary }}>Flyers Part 4</h1>
-            <p className="text-gray-500 font-semibold">Reading & Writing Practice</p>
-          </div>
-
-          <form onSubmit={startGame} className="space-y-6">
-            <div>
-              <label className="block text-gray-700 text-sm uppercase font-bold mb-2 tracking-wider">Student's Name</label>
-              <input 
-                type="text" 
-                required
-                className="w-full px-5 py-4 rounded-xl border-2 focus:ring-4 outline-none text-lg font-bold text-gray-700 transition-all bg-gray-50 focus:bg-white"
-                style={{ borderColor: '#E5E7EB', '--tw-ring-color': CONFIG.colors.secondary }}
-                placeholder="Enter your name..."
-                value={studentName}
-                onChange={e => setStudentName(e.target.value)}
-                onFocus={(e) => e.target.style.borderColor = CONFIG.colors.primary}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-              />
-            </div>
+        /* ============================================================================
+           MAIN APP LOGIC
+           ============================================================================ */
+        function App() {
+            const [screen, setScreen] = useState('welcome'); 
+            const [studentName, setStudentName] = useState('');
+            const [numTests, setNumTests] = useState(1);
             
-            <div>
-              <label className="block text-gray-700 text-sm uppercase font-bold mb-2 tracking-wider">Number of Tests</label>
-              <select 
-                className="w-full px-5 py-4 rounded-xl border-2 focus:ring-4 outline-none text-lg font-bold text-gray-700 bg-gray-50 focus:bg-white transition-all appearance-none cursor-pointer"
-                style={{ borderColor: '#E5E7EB', '--tw-ring-color': CONFIG.colors.secondary }}
-                value={numTests}
-                onChange={e => setNumTests(Number(e.target.value))}
-                onFocus={(e) => e.target.style.borderColor = CONFIG.colors.primary}
-                onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
-              >
-                {testOptions.map(n => (
-                  <option key={n} value={n}>{n} Test{n > 1 ? 's' : ''}</option>
-                ))}
-              </select>
-            </div>
-
-            <button type="submit" className="w-full text-white font-bold py-4 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2" style={{ backgroundColor: CONFIG.colors.primary }}>
-              <Play fill="currentColor" size={20} /> Let's Start!
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
-
-  /* 2. TEST & REVIEW SCREEN */
-  if (screen === 'test' || screen === 'review') {
-    const currentTest = testsToPlay[currentTestIdx];
-    const isAllCorrect = currentTest.questions.every(q => results[q.id]?.isCorrect);
-
-    return (
-      <div className="min-h-screen p-4 md:p-6 lg:p-10 font-sans text-gray-800">
-        <div className="max-w-[1400px] mx-auto">
-          
-          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white py-3 px-6 rounded-2xl shadow-sm border border-gray-100">
-            <div className="flex items-center gap-4 mb-2 sm:mb-0">
-              <span className="text-sm font-extrabold px-4 py-1.5 rounded-lg tracking-wide uppercase" style={{ backgroundColor: '#FDF2F8', color: CONFIG.colors.primary }}>
-                Test {currentTestIdx + 1} / {testsToPlay.length}
-              </span>
-              <span className="font-bold text-gray-600">Student: <span className="text-gray-900">{studentName}</span></span>
-            </div>
+            const [testsToPlay, setTestsToPlay] = useState([]);
+            const [currentTestIdx, setCurrentTestIdx] = useState(0);
             
-            {screen === 'review' && !isAllCorrect && (
-              <div className="flex items-center gap-2 font-bold px-5 py-2 rounded-xl border shadow-inner" style={{ color: CONFIG.colors.incorrect, backgroundColor: '#FCE7F3', borderColor: '#FBCFE8' }}>
-                <Clock size={20} className="animate-pulse" /> Try again in {timeLeft}s
-              </div>
-            )}
-            {screen === 'review' && isAllCorrect && (
-              <div className="flex items-center gap-2 font-bold px-5 py-2 rounded-xl border" style={{ color: CONFIG.colors.correct, backgroundColor: '#DCFCE7', borderColor: '#A7F3D0' }}>
-                <CheckCircle size={20} /> Excellent! Moving to next...
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            const [answers, setAnswers] = useState({});
+            const [results, setResults] = useState({});
             
-            <div className="lg:col-span-8 bg-white rounded-3xl p-6 md:p-10 shadow-md border-t-[8px]" style={{ borderColor: CONFIG.colors.primary }}>
-              <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-800 tracking-tight">{currentTest.title}</h2>
-              
-              {currentTest.imageUrl && (
-                <div className="flex justify-center mb-10">
-                  <img src={currentTest.imageUrl} alt={currentTest.title} className="max-w-full h-auto max-h-[250px] object-contain rounded-2xl shadow-sm border border-gray-100" />
-                </div>
-              )}
+            const [timeLeft, setTimeLeft] = useState(0);
+            const timerRef = useRef(null);
 
-              <div className="p-6 md:p-8 rounded-2xl border" style={{ backgroundColor: CONFIG.colors.background, borderColor: CONFIG.colors.secondary }}>
-                {renderTextWithGaps()}
-              </div>
-            </div>
+            const [sessionStats, setSessionStats] = useState({
+                startTime: null,
+                endTime: null,
+                testScores: [] 
+            });
 
-            <div className="lg:col-span-4 bg-white rounded-3xl shadow-md border-t-[8px] flex flex-col sticky top-6 max-h-[calc(100vh-2rem)] overflow-hidden" style={{ borderColor: CONFIG.colors.secondary }}>
-              <div className="p-6 pb-2 border-b border-gray-100 flex-shrink-0">
-                <h3 className="text-2xl font-extrabold text-center text-gray-800">Options</h3>
-              </div>
-              
-              <div className="flex-1 overflow-y-auto options-scroll p-4 space-y-3 bg-gray-50/50">
+            const getDurationString = (start, end) => {
+                if (!start || !end) return '';
+                const diff = Math.floor((end - start) / 1000);
+                const m = Math.floor(diff / 60);
+                const s = diff % 60;
+                return `${m} min ${s} sec`;
+            };
+
+            const startGame = (e) => {
+                e.preventDefault();
+                if (!studentName.trim()) {
+                alert("Please enter the student's name!");
+                return;
+                }
+
+                const shuffledData = shuffleArray(TEST_DATA);
+                const selected = shuffledData.slice(0, numTests);
                 
-                {currentTest.imageUrl && <div className="hidden lg:block h-24 xl:h-48 transition-all"></div>}
+                const preparedTests = selected.map(test => {
+                const pTest = { ...test, questions: [] };
+                test.questions.forEach(q => {
+                    pTest.questions.push({
+                    ...q,
+                    options: shuffleArray(q.options) 
+                    });
+                });
+                return pTest;
+                });
 
-                <div className="flex items-center text-base p-3 rounded-xl border border-gray-200 bg-white">
-                  <span className="font-bold w-20 text-sm uppercase tracking-wider" style={{ color: CONFIG.colors.secondary }}>Example</span>
-                  <div className="flex-1 flex justify-between px-2 text-gray-500 font-semibold italic">
-                    {currentTest.example.options.map((opt, i) => (
-                      <span key={i} className="w-1/3 text-center">{opt}</span>
-                    ))}
-                  </div>
-                </div>
+                setTestsToPlay(preparedTests);
+                setCurrentTestIdx(0);
+                setAnswers({});
+                setResults({});
+                setSessionStats({
+                startTime: new Date(),
+                endTime: null,
+                testScores: []
+                });
+                setScreen('test');
+            };
 
-                {currentTest.questions.map(q => {
-                  const res = results[q.id];
-                  const isReviewed = screen === 'review' && res;
-                  const isWrong = isReviewed && !res.isCorrect;
-                  
-                  return (
-                    <div key={q.id} className={`flex flex-col p-3 rounded-xl border-2 transition-all duration-300 ${isWrong ? 'shadow-sm' : isReviewed && res.isCorrect ? '' : 'bg-white border-transparent hover:border-gray-200 shadow-sm'}`} 
-                         style={{ 
-                            backgroundColor: isWrong ? '#FCE7F3' : (isReviewed && res.isCorrect ? '#DCFCE7' : 'white'),
-                            borderColor: isWrong ? '#FBCFE8' : (isReviewed && res.isCorrect ? '#A7F3D0' : '')
-                         }}>
-                      
-                      <div className="flex items-center text-lg">
-                        <span className="font-extrabold w-10 text-center text-xl" style={{ color: isWrong ? CONFIG.colors.incorrect : CONFIG.colors.primary }}>
-                          {q.id}
+            const handleInputChange = (qId, value) => {
+                setAnswers(prev => ({ ...prev, [qId]: value }));
+            };
+
+            const handleSubmit = () => {
+                const currentTest = testsToPlay[currentTestIdx];
+                let correctCount = 0;
+                const newResults = {};
+
+                currentTest.questions.forEach(q => {
+                const studentAns = (answers[q.id] || '').trim().toLowerCase();
+                const correctAns = q.answer.trim().toLowerCase();
+                const isCorrect = studentAns === correctAns;
+                
+                if (isCorrect) correctCount++;
+                
+                newResults[q.id] = {
+                    isCorrect,
+                    expected: q.answer,
+                    actual: answers[q.id] || ''
+                };
+                });
+
+                setSessionStats(prev => {
+                const scores = [...prev.testScores];
+                if (scores.length === currentTestIdx) {
+                    scores.push({
+                    title: currentTest.title,
+                    correct: correctCount,
+                    total: currentTest.questions.length
+                    });
+                }
+                return { ...prev, testScores: scores };
+                });
+
+                setResults(newResults);
+
+                if (correctCount === currentTest.questions.length) {
+                setScreen('review');
+                setTimeLeft(3); 
+                startTimer(3, true);
+                } else {
+                setScreen('review');
+                setTimeLeft(CONFIG.reviewTimeSeconds);
+                startTimer(CONFIG.reviewTimeSeconds, false);
+                }
+            };
+
+            const startTimer = (seconds, autoNext) => {
+                clearInterval(timerRef.current);
+                timerRef.current = setInterval(() => {
+                setTimeLeft((prev) => {
+                    if (prev <= 1) {
+                    clearInterval(timerRef.current);
+                    handleReviewTimeout(autoNext);
+                    return 0;
+                    }
+                    return prev - 1;
+                });
+                }, 1000);
+            };
+
+            const handleReviewTimeout = (autoNext) => {
+                const currentTest = testsToPlay[currentTestIdx];
+                const isAllCorrect = currentTest.questions.every(q => results[q.id]?.isCorrect);
+
+                if (isAllCorrect || autoNext) {
+                goToNextTestOrResult();
+                } else {
+                resetIncorrectAnswers();
+                }
+            };
+
+            const skipReview = () => {
+                clearInterval(timerRef.current);
+                handleReviewTimeout(false);
+            };
+
+            const resetIncorrectAnswers = () => {
+                setAnswers(prev => {
+                const newAns = { ...prev };
+                Object.keys(results).forEach(qId => {
+                    if (!results[qId].isCorrect) {
+                    newAns[qId] = '';
+                    }
+                });
+                return newAns;
+                });
+                setResults({});
+                setScreen('test');
+            };
+
+            const goToNextTestOrResult = () => {
+                if (currentTestIdx + 1 < testsToPlay.length) {
+                setCurrentTestIdx(prev => prev + 1);
+                setAnswers({});
+                setResults({});
+                setScreen('test');
+                } else {
+                setSessionStats(prev => ({ ...prev, endTime: new Date() }));
+                setScreen('results');
+                }
+            };
+
+            const renderTextWithGaps = () => {
+                const currentTest = testsToPlay[currentTestIdx];
+                if (!currentTest) return null;
+
+                const parts = currentTest.text.split(/(\[EX\]|\[\d+\]|<b>|<\/b>)/g);
+                let isBold = false;
+                const elements = [];
+
+                parts.forEach((part, index) => {
+                if (!part) return;
+                if (part === '<b>') { isBold = true; return; }
+                if (part === '</b>') { isBold = false; return; }
+
+                const fontClass = isBold ? "font-bold text-gray-800" : "text-gray-700";
+
+                if (part === '[EX]') {
+                    elements.push(
+                    <span key={`ex-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
+                        <span className="font-extrabold mr-2 border-b-2 border-transparent" style={{ color: CONFIG.colors.primary }}>Ex</span>
+                        <span className="font-bold text-gray-500 border-b-2 border-dashed border-gray-400 px-3 text-center min-w-[60px] bg-white rounded-t">
+                        {currentTest.example.answer}
                         </span>
-                        <div className="flex-1 flex justify-between px-2 font-bold text-gray-700">
-                          {q.options.map((opt, i) => {
-                            let optClass = "w-1/3 text-center py-1 rounded-md transition-colors ";
-                            let inlineStyle = {};
-                            if (isReviewed) {
-                              if (opt.toLowerCase() === q.answer.toLowerCase()) {
-                                optClass += "text-white shadow-sm";
-                                inlineStyle = { backgroundColor: CONFIG.colors.correct };
-                              } else if (isWrong && opt.toLowerCase() === res.actual.toLowerCase()) {
-                                optClass += "line-through";
-                                inlineStyle = { color: CONFIG.colors.incorrect, backgroundColor: '#FBCFE8' };
-                              }
-                            }
-                            return (
-                              <span key={i} className={optClass} style={inlineStyle}>
-                                {opt}
-                              </span>
-                            );
-                          })}
-                        </div>
-                      </div>
+                    </span>
+                    );
+                    return;
+                }
 
-                      {isReviewed && q.explanation && (
-                        <div className="mt-3 text-sm p-3 rounded-lg leading-relaxed border bg-white/80" style={{ borderColor: isWrong ? '#FBCFE8' : '#A7F3D0', color: isWrong ? CONFIG.colors.incorrect : CONFIG.colors.correct }}>
-                          <span className="font-bold block mb-1 uppercase tracking-wide text-xs opacity-80">💡 Giải thích:</span> 
-                          {q.explanation}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                const match = part.match(/^\[(\d+)\]$/);
+                if (match) {
+                    const qId = parseInt(match[1], 10);
+                    const res = results[qId];
+                    
+                    if (screen === 'review' && res) {
+                    if (res.isCorrect) {
+                        elements.push(
+                        <span key={`gap-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
+                            <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.correct }}>{qId}</span>
+                            <input type="text" readOnly className="cloze-input correct" value={res.actual} />
+                        </span>
+                        );
+                    } else {
+                        elements.push(
+                        <span key={`gap-${index}`} className={`inline-flex items-center mx-1 relative group ${fontClass}`}>
+                            <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.incorrect }}>{qId}</span>
+                            <input type="text" readOnly className="cloze-input incorrect" value="" />
+                            <span className="absolute -top-10 left-1/2 transform -translate-x-1/2 text-white rounded px-3 py-1 text-sm font-bold shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none" style={{ backgroundColor: CONFIG.colors.incorrect }}>
+                            Correct: {res.expected}
+                            </span>
+                        </span>
+                        );
+                    }
+                    } else {
+                    elements.push(
+                        <span key={`gap-${index}`} className={`inline-flex items-center mx-1 ${fontClass}`}>
+                        <span className="font-extrabold mr-2" style={{ color: CONFIG.colors.primary }}>{qId}</span>
+                        <input
+                            type="text"
+                            autoComplete="off"
+                            className="cloze-input"
+                            value={answers[qId] || ''}
+                            onChange={(e) => handleInputChange(qId, e.target.value)}
+                            placeholder="..."
+                        />
+                        </span>
+                    );
+                    }
+                    return;
+                }
 
-              <div className="p-4 bg-white border-t border-gray-100 flex-shrink-0">
-                {screen === 'test' ? (
-                  <button 
-                    onClick={handleSubmit}
-                    className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transform transition hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                    style={{ backgroundColor: CONFIG.colors.primary }}
-                  >
-                    <CheckCircle /> Check Answers
-                  </button>
-                ) : (
-                  isAllCorrect ? (
-                    <button 
-                      onClick={() => { clearInterval(timerRef.current); goToNextTestOrResult(); }}
-                      className="w-full text-gray-800 font-extrabold py-4 rounded-xl text-lg shadow-lg flex items-center justify-center gap-2 animate-bounce"
-                      style={{ backgroundColor: CONFIG.colors.secondary }}
-                    >
-                      Next Test <ChevronRight />
-                    </button>
-                  ) : (
-                    <button 
-                      onClick={skipReview}
-                      className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]"
-                      style={{ backgroundColor: '#F59E0B' }}
-                    >
-                      <RefreshCcw size={20}/> Try Again Now
-                    </button>
-                  )
-                )}
-              </div>
-            </div>
+                elements.push(
+                    <span key={`text-${index}`} className={fontClass}>
+                    {part.split('\n').map((line, i, arr) => (
+                        <React.Fragment key={i}>
+                        {line}
+                        {i < arr.length - 1 && <div className="h-4"></div>}
+                        </React.Fragment>
+                    ))}
+                    </span>
+                );
+                });
 
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  /* 3. RESULTS SCREEN */
-  if (screen === 'results') {
-    const totalCorrect = sessionStats.testScores.reduce((sum, test) => sum + test.correct, 0);
-    const totalQuestions = sessionStats.testScores.reduce((sum, test) => sum + test.total, 0);
-    const percent = Math.round((totalCorrect / totalQuestions) * 100);
-
-    return (
-      <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: CONFIG.colors.background }}>
-        <div className="bg-white rounded-3xl p-8 md:p-12 max-w-2xl w-full shadow-2xl relative overflow-hidden border border-gray-100">
-          
-          <div className="absolute top-0 left-0 w-full h-3" style={{ background: `linear-gradient(to right, ${CONFIG.colors.secondary}, ${CONFIG.colors.primary})` }}></div>
-          
-          <div className="text-center mb-10 mt-4">
-            <Award size={80} className="mx-auto text-yellow-400 mb-4 drop-shadow-md" />
-            <h1 className="text-4xl font-extrabold text-gray-800 mb-2">Practice Completed!</h1>
-            <p className="text-xl text-gray-500 font-semibold">Student: <span style={{ color: CONFIG.colors.primary }}>{studentName}</span></p>
-          </div>
-
-          <div className="bg-gray-50 rounded-2xl p-6 mb-8 border border-gray-200">
-            <h3 className="text-sm uppercase tracking-wider font-extrabold text-gray-400 mb-4">Session Details</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600 font-medium">
-              <p>📅 Date: <span className="font-bold text-gray-800">{sessionStats.endTime?.toLocaleDateString('vi-VN')}</span></p>
-              <p>⏱ Time: <span className="font-bold" style={{ color: CONFIG.colors.primary }}>{getDurationString(sessionStats.startTime, sessionStats.endTime)}</span></p>
-              <p>🟢 Start: <span className="font-bold text-gray-800">{sessionStats.startTime?.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></p>
-              <p>🔴 Finish: <span className="font-bold text-gray-800">{sessionStats.endTime?.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></p>
-            </div>
-          </div>
-
-          <div className="mb-8">
-            <h3 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center justify-between">
-              <span>Final Score:</span>
-              <span className={`text-3xl ${percent >= 80 ? '' : percent >= 50 ? 'text-[#D97706]' : ''}`} style={{ color: percent >= 80 ? CONFIG.colors.correct : (percent < 50 ? CONFIG.colors.incorrect : undefined) }}>
-                {totalCorrect}/{totalQuestions} <span className="text-xl opacity-70">({percent}%)</span>
-              </span>
-            </h3>
-            
-            <div className="space-y-3">
-              {sessionStats.testScores.map((score, i) => (
-                <div key={i} className="flex justify-between items-center bg-white border-2 p-4 rounded-xl" style={{ borderColor: CONFIG.colors.background }}>
-                  <span className="font-bold text-gray-700">Test {i + 1}: {score.title}</span>
-                  <span className="font-extrabold px-3 py-1 rounded-lg text-sm border" 
-                        style={{ 
-                          backgroundColor: score.correct === score.total ? '#DCFCE7' : '#FEF3C7',
-                          color: score.correct === score.total ? CONFIG.colors.correct : '#B45309',
-                          borderColor: score.correct === score.total ? '#A7F3D0' : '#FDE68A'
-                        }}>
-                    {score.correct} / {score.total} correct
-                  </span>
+                return (
+                <div className="text-[1.15rem] leading-[2.8rem] text-justify">
+                    {elements}
                 </div>
-              ))}
-            </div>
-            <p className="text-sm text-gray-400 mt-4 text-center font-medium">* Scores are based on your first attempt for each test.</p>
-          </div>
+                );
+            };
 
-          <button 
-            onClick={() => window.location.reload()}
-            className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-            style={{ backgroundColor: CONFIG.colors.primary }}
-          >
-            Practice Again
-          </button>
-        </div>
-      </div>
-    );
-  }
+            /* WELCOME SCREEN */
+            if (screen === 'welcome') {
+                const testOptions = Array.from({ length: TEST_DATA.length }, (_, i) => i + 1);
 
-  return null;
-}
+                return (
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    <div className="bg-white rounded-[2rem] p-8 max-w-md w-full shadow-[0_10px_40px_-10px_rgba(165,214,167,0.5)] relative z-10 border-[6px]" style={{ borderColor: CONFIG.colors.secondary }}>
+                    
+                    <div className="w-full h-48 rounded-2xl overflow-hidden mb-6 border-2 shadow-inner" style={{ borderColor: CONFIG.colors.background }}>
+                        <img src={CONFIG.bannerUrl} alt="Flyers Banner" className="w-full h-full object-cover" />
+                    </div>
+
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-extrabold mb-2 tracking-tight" style={{ color: CONFIG.colors.primary }}>Flyers Part 4</h1>
+                        <p className="text-gray-500 font-semibold">Reading & Writing Practice</p>
+                    </div>
+
+                    <form onSubmit={startGame} className="space-y-6">
+                        <div>
+                        <label className="block text-gray-700 text-sm uppercase font-bold mb-2 tracking-wider">Student's Name</label>
+                        <input 
+                            type="text" 
+                            required
+                            className="w-full px-5 py-4 rounded-xl border-2 focus:ring-4 outline-none text-lg font-bold text-gray-700 transition-all bg-gray-50 focus:bg-white"
+                            style={{ borderColor: '#E5E7EB', '--tw-ring-color': CONFIG.colors.secondary }}
+                            placeholder="Enter your name..."
+                            value={studentName}
+                            onChange={e => setStudentName(e.target.value)}
+                            onFocus={(e) => e.target.style.borderColor = CONFIG.colors.primary}
+                            onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
+                        />
+                        </div>
+                        
+                        <div>
+                        <label className="block text-gray-700 text-sm uppercase font-bold mb-2 tracking-wider">Number of Tests</label>
+                        <select 
+                            className="w-full px-5 py-4 rounded-xl border-2 focus:ring-4 outline-none text-lg font-bold text-gray-700 bg-gray-50 focus:bg-white transition-all appearance-none cursor-pointer"
+                            style={{ borderColor: '#E5E7EB', '--tw-ring-color': CONFIG.colors.secondary }}
+                            value={numTests}
+                            onChange={e => setNumTests(Number(e.target.value))}
+                            onFocus={(e) => e.target.style.borderColor = CONFIG.colors.primary}
+                            onBlur={(e) => e.target.style.borderColor = '#E5E7EB'}
+                        >
+                            {testOptions.map(n => (
+                            <option key={n} value={n}>{n} Test{n > 1 ? 's' : ''}</option>
+                            ))}
+                        </select>
+                        </div>
+
+                        <button type="submit" className="w-full text-white font-bold py-4 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex items-center justify-center gap-2" style={{ backgroundColor: CONFIG.colors.primary }}>
+                        <Play size={20} /> Let's Start!
+                        </button>
+                    </form>
+                    </div>
+                </div>
+                );
+            }
+
+            /* TEST & REVIEW SCREEN */
+            if (screen === 'test' || screen === 'review') {
+                const currentTest = testsToPlay[currentTestIdx];
+                const isAllCorrect = currentTest.questions.every(q => results[q.id]?.isCorrect);
+
+                return (
+                <div className="min-h-screen p-4 md:p-6 lg:p-10 font-sans text-gray-800">
+                    <div className="max-w-[1400px] mx-auto">
+                    
+                    <div className="flex flex-col sm:flex-row justify-between items-center mb-6 bg-white py-3 px-6 rounded-2xl shadow-sm border border-gray-100">
+                        <div className="flex items-center gap-4 mb-2 sm:mb-0">
+                        <span className="text-sm font-extrabold px-4 py-1.5 rounded-lg tracking-wide uppercase" style={{ backgroundColor: '#FDF2F8', color: CONFIG.colors.primary }}>
+                            Test {currentTestIdx + 1} / {testsToPlay.length}
+                        </span>
+                        <span className="font-bold text-gray-600">Student: <span className="text-gray-900">{studentName}</span></span>
+                        </div>
+                        
+                        {screen === 'review' && !isAllCorrect && (
+                        <div className="flex items-center gap-2 font-bold px-5 py-2 rounded-xl border shadow-inner" style={{ color: CONFIG.colors.incorrect, backgroundColor: '#FCE7F3', borderColor: '#FBCFE8' }}>
+                            <Clock size={20} className="animate-pulse" /> Try again in {timeLeft}s
+                        </div>
+                        )}
+                        {screen === 'review' && isAllCorrect && (
+                        <div className="flex items-center gap-2 font-bold px-5 py-2 rounded-xl border" style={{ color: CONFIG.colors.correct, backgroundColor: '#DCFCE7', borderColor: '#A7F3D0' }}>
+                            <CheckCircle size={20} /> Excellent! Moving to next...
+                        </div>
+                        )}
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                        
+                        <div className="lg:col-span-8 bg-white rounded-3xl p-6 md:p-10 shadow-md border-t-[8px]" style={{ borderColor: CONFIG.colors.primary }}>
+                        <h2 className="text-3xl font-extrabold text-center mb-8 text-gray-800 tracking-tight">{currentTest.title}</h2>
+                        
+                        {currentTest.imageUrl && (
+                            <div className="flex justify-center mb-10">
+                            <img src={currentTest.imageUrl} alt={currentTest.title} className="max-w-full h-auto max-h-[250px] object-contain rounded-2xl shadow-sm border border-gray-100" />
+                            </div>
+                        )}
+
+                        <div className="p-6 md:p-8 rounded-2xl border" style={{ backgroundColor: CONFIG.colors.background, borderColor: CONFIG.colors.secondary }}>
+                            {renderTextWithGaps()}
+                        </div>
+                        </div>
+
+                        <div className="lg:col-span-4 bg-white rounded-3xl shadow-md border-t-[8px] flex flex-col sticky top-6 max-h-[calc(100vh-2rem)] overflow-hidden" style={{ borderColor: CONFIG.colors.secondary }}>
+                        <div className="p-6 pb-2 border-b border-gray-100 flex-shrink-0">
+                            <h3 className="text-2xl font-extrabold text-center text-gray-800">Options</h3>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto options-scroll p-4 space-y-3 bg-gray-50/50">
+                            
+                            {currentTest.imageUrl && <div className="hidden lg:block h-24 xl:h-48 transition-all"></div>}
+
+                            <div className="flex items-center text-base p-3 rounded-xl border border-gray-200 bg-white">
+                            <span className="font-bold w-20 text-sm uppercase tracking-wider" style={{ color: CONFIG.colors.secondary }}>Example</span>
+                            <div className="flex-1 flex justify-between px-2 text-gray-500 font-semibold italic">
+                                {currentTest.example.options.map((opt, i) => (
+                                <span key={i} className="w-1/3 text-center">{opt}</span>
+                                ))}
+                            </div>
+                            </div>
+
+                            {currentTest.questions.map(q => {
+                            const res = results[q.id];
+                            const isReviewed = screen === 'review' && res;
+                            const isWrong = isReviewed && !res.isCorrect;
+                            
+                            return (
+                                <div key={q.id} className={`flex flex-col p-3 rounded-xl border-2 transition-all duration-300 ${isWrong ? 'shadow-sm' : isReviewed && res.isCorrect ? '' : 'bg-white border-transparent hover:border-gray-200 shadow-sm'}`} 
+                                    style={{ 
+                                        backgroundColor: isWrong ? '#FCE7F3' : (isReviewed && res.isCorrect ? '#DCFCE7' : 'white'),
+                                        borderColor: isWrong ? '#FBCFE8' : (isReviewed && res.isCorrect ? '#A7F3D0' : '')
+                                    }}>
+                                
+                                <div className="flex items-center text-lg">
+                                    <span className="font-extrabold w-10 text-center text-xl" style={{ color: isWrong ? CONFIG.colors.incorrect : CONFIG.colors.primary }}>
+                                    {q.id}
+                                    </span>
+                                    <div className="flex-1 flex justify-between px-2 font-bold text-gray-700">
+                                    {q.options.map((opt, i) => {
+                                        let optClass = "w-1/3 text-center py-1 rounded-md transition-colors ";
+                                        let inlineStyle = {};
+                                        if (isReviewed) {
+                                        if (opt.toLowerCase() === q.answer.toLowerCase()) {
+                                            optClass += "text-white shadow-sm";
+                                            inlineStyle = { backgroundColor: CONFIG.colors.correct };
+                                        } else if (isWrong && opt.toLowerCase() === res.actual.toLowerCase()) {
+                                            optClass += "line-through";
+                                            inlineStyle = { color: CONFIG.colors.incorrect, backgroundColor: '#FBCFE8' };
+                                        }
+                                        }
+                                        return (
+                                        <span key={i} className={optClass} style={inlineStyle}>
+                                            {opt}
+                                        </span>
+                                        );
+                                    })}
+                                    </div>
+                                </div>
+
+                                {isReviewed && q.explanation && (
+                                    <div className="mt-3 text-sm p-3 rounded-lg leading-relaxed border bg-white/80" style={{ borderColor: isWrong ? '#FBCFE8' : '#A7F3D0', color: isWrong ? CONFIG.colors.incorrect : CONFIG.colors.correct }}>
+                                    <span className="font-bold block mb-1 uppercase tracking-wide text-xs opacity-80">💡 Giải thích:</span> 
+                                    {q.explanation}
+                                    </div>
+                                )}
+                                </div>
+                            );
+                            })}
+                        </div>
+
+                        <div className="p-4 bg-white border-t border-gray-100 flex-shrink-0">
+                            {screen === 'test' ? (
+                            <button 
+                                onClick={handleSubmit}
+                                className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transform transition hover:-translate-y-0.5 flex items-center justify-center gap-2"
+                                style={{ backgroundColor: CONFIG.colors.primary }}
+                            >
+                                <CheckCircle /> Check Answers
+                            </button>
+                            ) : (
+                            isAllCorrect ? (
+                                <button 
+                                onClick={() => { clearInterval(timerRef.current); goToNextTestOrResult(); }}
+                                className="w-full text-gray-800 font-extrabold py-4 rounded-xl text-lg shadow-lg flex items-center justify-center gap-2 animate-bounce"
+                                style={{ backgroundColor: CONFIG.colors.secondary }}
+                                >
+                                Next Test <ChevronRight />
+                                </button>
+                            ) : (
+                                <button 
+                                onClick={skipReview}
+                                className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg flex items-center justify-center gap-2 transition-transform hover:scale-[1.02]"
+                                style={{ backgroundColor: '#F59E0B' }}
+                                >
+                                <RefreshCcw size={20}/> Try Again Now
+                                </button>
+                            )
+                            )}
+                        </div>
+                        </div>
+
+                    </div>
+                    </div>
+                </div>
+                );
+            }
+
+            /* RESULTS SCREEN */
+            if (screen === 'results') {
+                const totalCorrect = sessionStats.testScores.reduce((sum, test) => sum + test.correct, 0);
+                const totalQuestions = sessionStats.testScores.reduce((sum, test) => sum + test.total, 0);
+                const percent = Math.round((totalCorrect / totalQuestions) * 100);
+
+                return (
+                <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: CONFIG.colors.background }}>
+                    <div className="bg-white rounded-3xl p-8 md:p-12 max-w-2xl w-full shadow-2xl relative overflow-hidden border border-gray-100">
+                    
+                    <div className="absolute top-0 left-0 w-full h-3" style={{ background: `linear-gradient(to right, ${CONFIG.colors.secondary}, ${CONFIG.colors.primary})` }}></div>
+                    
+                    <div className="text-center mb-10 mt-4">
+                        <Award size={80} className="mx-auto text-yellow-400 mb-4 drop-shadow-md" />
+                        <h1 className="text-4xl font-extrabold text-gray-800 mb-2">Practice Completed!</h1>
+                        <p className="text-xl text-gray-500 font-semibold">Student: <span style={{ color: CONFIG.colors.primary }}>{studentName}</span></p>
+                    </div>
+
+                    <div className="bg-gray-50 rounded-2xl p-6 mb-8 border border-gray-200">
+                        <h3 className="text-sm uppercase tracking-wider font-extrabold text-gray-400 mb-4">Session Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-600 font-medium">
+                        <p>📅 Date: <span className="font-bold text-gray-800">{sessionStats.endTime?.toLocaleDateString('vi-VN')}</span></p>
+                        <p>🕰 Time: <span className="font-bold" style={{ color: CONFIG.colors.primary }}>{getDurationString(sessionStats.startTime, sessionStats.endTime)}</span></p>
+                        <p>⏳ Start: <span className="font-bold text-gray-800">{sessionStats.startTime?.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></p>
+                        <p>⌛️ Finish: <span className="font-bold text-gray-800">{sessionStats.endTime?.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</span></p>
+                        </div>
+                    </div>
+
+                    <div className="mb-8">
+                        <h3 className="text-xl font-extrabold text-gray-800 mb-4 flex items-center justify-between">
+                        <span>Final Score:</span>
+                        <span className={`text-3xl ${percent >= 80 ? '' : percent >= 50 ? 'text-[#D97706]' : ''}`} style={{ color: percent >= 80 ? CONFIG.colors.correct : (percent < 50 ? CONFIG.colors.incorrect : undefined) }}>
+                            {totalCorrect}/{totalQuestions} <span className="text-xl opacity-70">({percent}%)</span>
+                        </span>
+                        </h3>
+                        
+                        <div className="space-y-3">
+                        {sessionStats.testScores.map((score, i) => (
+                            <div key={i} className="flex justify-between items-center bg-white border-2 p-4 rounded-xl" style={{ borderColor: CONFIG.colors.background }}>
+                            <span className="font-bold text-gray-700">Test {i + 1}: {score.title}</span>
+                            <span className="font-extrabold px-3 py-1 rounded-lg text-sm border" 
+                                    style={{ 
+                                        backgroundColor: score.correct === score.total ? '#DCFCE7' : '#FEF3C7',
+                                        color: score.correct === score.total ? CONFIG.colors.correct : '#B45309',
+                                        borderColor: score.correct === score.total ? '#A7F3D0' : '#FDE68A'
+                                    }}>
+                                {score.correct} / {score.total} correct
+                            </span>
+                            </div>
+                        ))}
+                        </div>
+                        <p className="text-sm text-gray-400 mt-4 text-center font-medium">* Scores are based on your first attempt for each test.</p>
+                    </div>
+
+                    <button 
+                        onClick={() => window.location.reload()}
+                        className="w-full text-white font-extrabold py-4 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+                        style={{ backgroundColor: CONFIG.colors.primary }}
+                    >
+                        Practice Again
+                    </button>
+                    </div>
+                </div>
+                );
+            }
+
+            return null;
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
