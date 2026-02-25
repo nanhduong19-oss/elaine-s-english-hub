@@ -16,11 +16,9 @@
 
     <style>
         :root {
-            /* Các màu cũ */
             --pet-pink: #FFD1DC;
             --fce-green: #C1E1C1;
             --moet-yellow: #FEF9E7;
-            /* 3 Màu Pastel mới */
             --starters-blue: #CDE4FE; 
             --movers-purple: #E1D5E7;
             --flyers-peach: #FFE5B4;
@@ -34,19 +32,40 @@
         .container { max-width: 1000px; margin: 10px auto; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); }
         .banner { width: 100%; border-radius: 25px; margin-bottom: 20px; }
         
-        h1 { text-align: center; font-size: 2.8em; font-weight: 700; color: var(--navy-text); margin: 10px 0; letter-spacing: 1px; }
+        h1 { text-align: center; font-size: 2.5em; font-weight: 700; color: var(--navy-text); margin: 10px 0; letter-spacing: 1px; }
 
-        /* HỆ THỐNG TAB CHÍNH */
-        /* Đã thêm flex-wrap: wrap để các nút tự xuống dòng nếu màn hình nhỏ, tránh bị méo nút */
-        .main-tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; padding: 0 10px; flex-wrap: wrap; }
-        .tab-btn { 
-            flex: 1 1 200px; /* Cho phép nút co giãn tự động */
-            padding: 18px; cursor: pointer; border: none; border-radius: 22px; 
-            font-weight: 700; font-size: 1.1em; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            color: var(--navy-text); opacity: 0.8;
+        /* HỆ THỐNG TAB CHÍNH - Chuyển sang CSS Grid để chia đúng 3 cột đều nhau */
+        .main-tabs { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* Ép buộc chia thành 3 cột bằng nhau */
+            gap: 15px; 
+            margin-bottom: 25px; 
+            padding: 0 10px; 
         }
         
-        /* Hiệu ứng tô sáng nền thay vì viền */
+        .tab-btn { 
+            padding: 15px 10px; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 22px; 
+            font-weight: 700; 
+            font-size: 1em; /* Cỡ chữ bằng nhau tuyệt đối cho tất cả các nút */
+            transition: all 0.3s ease;
+            color: var(--navy-text); 
+            opacity: 0.8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        /* Responsive: Tự động chuyển thành 2 cột nếu học sinh dùng điện thoại dọc */
+        @media (max-width: 768px) {
+            .main-tabs { grid-template-columns: repeat(2, 1fr); }
+            .tab-btn { font-size: 0.9em; padding: 12px 5px; }
+        }
+        
+        /* Hiệu ứng màu nền */
         .tab-btn[data-target="pet"] { background: #FFF0F3; }
         .tab-btn[data-target="pet"].active { background: var(--pet-pink); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
 
@@ -73,7 +92,6 @@
             border-radius: 15px; font-weight: 700; font-size: 0.95em; transition: 0.3s; color: #666;
         }
 
-        /* Hiệu ứng tô màu theo tab chính khi được chọn */
         .pet-active .sub-btn.active { background: var(--pet-pink); color: var(--navy-text); border-color: var(--pet-pink); box-shadow: 0 4px 10px rgba(255,183,178,0.4); }
         .fce-active .sub-btn.active { background: var(--fce-green); color: var(--navy-text); border-color: var(--fce-green); box-shadow: 0 4px 10px rgba(178,226,178,0.4); }
         .moet-active .sub-btn.active { background: #FDF2B3; color: var(--navy-text); border-color: #FDF2B3; box-shadow: 0 4px 10px rgba(255,255,186,0.4); }
@@ -86,12 +104,12 @@
         .content-area.active { display: block; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
-        li { background: white; border-radius: 20px; transition: 0.3s; border: 1px solid #FAFAFA; }
-        li:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.06); }
-        a { text-decoration: none; color: var(--navy-text); display: block; padding: 20px; font-weight: 700; font-size: 1.1em; }
+        ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; }
+        li { background: white; border-radius: 18px; transition: 0.3s; border: 1px solid #FAFAFA; }
+        li:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
+        a { text-decoration: none; color: var(--navy-text); display: block; padding: 18px; font-weight: 700; font-size: 1.05em; }
 
-        .footer { text-align: center; padding: 40px; font-weight: 700; font-size: 1em; line-height: 1.6; }
+        .footer { text-align: center; padding: 40px; font-weight: 700; font-size: 0.95em; line-height: 1.6; }
     </style>
 </head>
 <body class="pet-active"> 
@@ -101,8 +119,8 @@
     <h1>ELAINE'S ENGLISH HUB</h1>
 
     <div class="main-tabs">
-        <button class="tab-btn active" data-target="pet">B1 PRELIMINARY (PET)</button>
-        <button class="tab-btn" data-target="fce">FIRST CERTIFICATE (FCE)</button>
+        <button class="tab-btn active" data-target="pet">PET (B1)</button>
+        <button class="tab-btn" data-target="fce">FCE (B2)</button>
         <button class="tab-btn" data-target="moet">MOET</button>
         <button class="tab-btn" data-target="starters">STARTERS</button>
         <button class="tab-btn" data-target="movers">MOVERS</button>
@@ -112,14 +130,14 @@
     <div id="pet-subs" class="sub-tabs active">
         <button class="sub-btn active" data-sub="pet-full">Full Tests</button>
         <button class="sub-btn" data-sub="pet-listening">Listening</button>
-        <button class="sub-btn" data-sub="pet-reading">Reading & Use of English</button>
+        <button class="sub-btn" data-sub="pet-reading">Reading & Use</button>
         <button class="sub-btn" data-sub="pet-writing">Writing</button>
     </div>
 
     <div id="fce-subs" class="sub-tabs">
         <button class="sub-btn active" data-sub="fce-full">Full Tests</button>
         <button class="sub-btn" data-sub="fce-listening">Listening</button>
-        <button class="sub-btn" data-sub="fce-reading">Reading & Use of English</button>
+        <button class="sub-btn" data-sub="fce-reading">Reading & Use</button>
         <button class="sub-btn" data-sub="fce-writing">Writing</button>
     </div>
 
@@ -146,7 +164,6 @@
         <button class="sub-btn" data-sub="flyers-listening">Listening</button>
         <button class="sub-btn" data-sub="flyers-rw">Reading & Writing</button>
     </div>
-
 
     <div id="pet-full" class="content-area active">
         <ul><li><a href="#">(Update PET Full Test files)</a></li></ul>
@@ -222,7 +239,7 @@
         <ul><li><a href="#">(Update Flyers Listening files)</a></li></ul></div>
     <div id="flyers-rw" class="content-area">
         <ul><li><a href="FLYERS/FLYERS READING PART 4 PRACTICES.html">FLYERS READING PART 4 PRACTICE</a></li></ul>
-
+    </div>
 
     <div class="footer">
         Ms. Elaine Nguyen<br>
@@ -245,7 +262,6 @@
             btn.classList.add('active');
             const target = btn.dataset.target;
             
-            // Đổi class body để đổi màu sub-tabs
             document.body.className = target + '-active';
             
             const activeSubs = document.getElementById(target + '-subs');
