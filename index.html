@@ -16,6 +16,7 @@
 
     <style>
         :root {
+            --ket-mint: #D5F5E3; /* Màu Mint tươi mát cho KET */
             --pet-pink: #FFD1DC;
             --fce-green: #C1E1C1;
             --moet-yellow: #FEF9E7;
@@ -34,46 +35,36 @@
         
         h1 { text-align: center; font-size: 2.5em; font-weight: 700; color: var(--navy-text); margin: 10px 0; letter-spacing: 1px; }
 
-        /* HỆ THỐNG TAB CHÍNH - Chuyển sang CSS Grid để chia đúng 3 cột đều nhau */
+        /* HỆ THỐNG TAB CHÍNH - 3 cột chuẩn xác */
         .main-tabs { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* Ép buộc chia thành 3 cột bằng nhau */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 15px; 
             margin-bottom: 25px; 
             padding: 0 10px; 
         }
         
         .tab-btn { 
-            padding: 15px 10px; 
-            cursor: pointer; 
-            border: none; 
-            border-radius: 22px; 
-            font-weight: 700; 
-            font-size: 1em; /* Cỡ chữ bằng nhau tuyệt đối cho tất cả các nút */
-            transition: all 0.3s ease;
-            color: var(--navy-text); 
-            opacity: 0.8;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            padding: 15px 10px; cursor: pointer; border: none; border-radius: 22px; 
+            font-weight: 700; font-size: 1em; transition: all 0.3s ease;
+            color: var(--navy-text); opacity: 0.8; display: flex;
+            align-items: center; justify-content: center; text-align: center;
         }
 
-        /* Responsive: Tự động chuyển thành 2 cột nếu học sinh dùng điện thoại dọc */
         @media (max-width: 768px) {
             .main-tabs { grid-template-columns: repeat(2, 1fr); }
             .tab-btn { font-size: 0.9em; padding: 12px 5px; }
         }
         
-        /* Hiệu ứng màu nền */
+        /* Hiệu ứng màu nền các Tab */
+        .tab-btn[data-target="ket"] { background: #E8F8F5; }
+        .tab-btn[data-target="ket"].active { background: var(--ket-mint); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
+
         .tab-btn[data-target="pet"] { background: #FFF0F3; }
         .tab-btn[data-target="pet"].active { background: var(--pet-pink); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
 
         .tab-btn[data-target="fce"] { background: #F0FFF0; }
         .tab-btn[data-target="fce"].active { background: var(--fce-green); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
-
-        .tab-btn[data-target="moet"] { background: #FFFFF0; border: 1px solid #FDF2B3; }
-        .tab-btn[data-target="moet"].active { background: var(--moet-yellow); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
 
         .tab-btn[data-target="starters"] { background: #E8F4FF; }
         .tab-btn[data-target="starters"].active { background: var(--starters-blue); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
@@ -84,6 +75,10 @@
         .tab-btn[data-target="flyers"] { background: #FFF4E6; }
         .tab-btn[data-target="flyers"].active { background: var(--flyers-peach); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
 
+        /* Nút MOET chiếm trọn 3 cột (hoặc nằm riêng) để bố cục đẹp mắt */
+        .tab-btn[data-target="moet"] { background: #FFFFF0; border: 1px solid #FDF2B3; grid-column: 1 / -1; }
+        .tab-btn[data-target="moet"].active { background: var(--moet-yellow); opacity: 1; box-shadow: var(--active-shadow); transform: translateY(-3px); }
+
         /* HỆ THỐNG TAB CON */
         .sub-tabs { display: none; justify-content: center; gap: 10px; margin-bottom: 25px; flex-wrap: wrap; }
         .sub-tabs.active { display: flex; }
@@ -92,12 +87,13 @@
             border-radius: 15px; font-weight: 700; font-size: 0.95em; transition: 0.3s; color: #666;
         }
 
+        .ket-active .sub-btn.active { background: var(--ket-mint); color: var(--navy-text); border-color: var(--ket-mint); box-shadow: 0 4px 10px rgba(213,245,227,0.4); }
         .pet-active .sub-btn.active { background: var(--pet-pink); color: var(--navy-text); border-color: var(--pet-pink); box-shadow: 0 4px 10px rgba(255,183,178,0.4); }
         .fce-active .sub-btn.active { background: var(--fce-green); color: var(--navy-text); border-color: var(--fce-green); box-shadow: 0 4px 10px rgba(178,226,178,0.4); }
-        .moet-active .sub-btn.active { background: #FDF2B3; color: var(--navy-text); border-color: #FDF2B3; box-shadow: 0 4px 10px rgba(255,255,186,0.4); }
         .starters-active .sub-btn.active { background: var(--starters-blue); color: var(--navy-text); border-color: var(--starters-blue); box-shadow: 0 4px 10px rgba(205,228,254,0.4); }
         .movers-active .sub-btn.active { background: var(--movers-purple); color: var(--navy-text); border-color: var(--movers-purple); box-shadow: 0 4px 10px rgba(225,213,231,0.4); }
         .flyers-active .sub-btn.active { background: var(--flyers-peach); color: var(--navy-text); border-color: var(--flyers-peach); box-shadow: 0 4px 10px rgba(255,229,180,0.4); }
+        .moet-active .sub-btn.active { background: #FDF2B3; color: var(--navy-text); border-color: #FDF2B3; box-shadow: 0 4px 10px rgba(255,255,186,0.4); }
 
         /* KHU VỰC NỘI DUNG */
         .content-area { display: none; animation: slideUp 0.5s ease; }
@@ -119,12 +115,22 @@
     <h1>ELAINE'S ENGLISH HUB</h1>
 
     <div class="main-tabs">
+        <button class="tab-btn" data-target="ket">KET (A2)</button>
         <button class="tab-btn active" data-target="pet">PET (B1)</button>
         <button class="tab-btn" data-target="fce">FCE (B2)</button>
-        <button class="tab-btn" data-target="moet">MOET</button>
+        
         <button class="tab-btn" data-target="starters">STARTERS</button>
         <button class="tab-btn" data-target="movers">MOVERS</button>
         <button class="tab-btn" data-target="flyers">FLYERS</button>
+        
+        <button class="tab-btn" data-target="moet">MOET PROGRAM</button>
+    </div>
+
+    <div id="ket-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="ket-full">Full Tests</button>
+        <button class="sub-btn" data-sub="ket-listening">Listening</button>
+        <button class="sub-btn" data-sub="ket-rw">Reading & Writing</button>
+        <button class="sub-btn" data-sub="ket-gv">Grammar & Vocabulary</button>
     </div>
 
     <div id="pet-subs" class="sub-tabs active">
@@ -132,7 +138,7 @@
         <button class="sub-btn" data-sub="pet-listening">Listening</button>
         <button class="sub-btn" data-sub="pet-reading">Reading & Use</button>
         <button class="sub-btn" data-sub="pet-writing">Writing</button>
-        <button class="sub-btn" data-sub="pet-grammar and vocabulary">Grammar and Vocabulary</button>
+        <button class="sub-btn" data-sub="pet-gv">Grammar & Vocabulary</button>
     </div>
 
     <div id="fce-subs" class="sub-tabs">
@@ -140,7 +146,28 @@
         <button class="sub-btn" data-sub="fce-listening">Listening</button>
         <button class="sub-btn" data-sub="fce-reading">Reading & Use</button>
         <button class="sub-btn" data-sub="fce-writing">Writing</button>
-        <button class="sub-btn" data-sub="fce-grammar and vocabulary">Grammar and Vocabulary</button>
+        <button class="sub-btn" data-sub="fce-gv">Grammar & Vocabulary</button>
+    </div>
+
+    <div id="starters-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="starters-full">Full Tests</button>
+        <button class="sub-btn" data-sub="starters-listening">Listening</button>
+        <button class="sub-btn" data-sub="starters-rw">Reading & Writing</button>
+        <button class="sub-btn" data-sub="starters-gv">Grammar & Vocabulary</button>
+    </div>
+
+    <div id="movers-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="movers-full">Full Tests</button>
+        <button class="sub-btn" data-sub="movers-listening">Listening</button>
+        <button class="sub-btn" data-sub="movers-rw">Reading & Writing</button>
+        <button class="sub-btn" data-sub="movers-gv">Grammar & Vocabulary</button>
+    </div>
+
+    <div id="flyers-subs" class="sub-tabs">
+        <button class="sub-btn active" data-sub="flyers-full">Full Tests</button>
+        <button class="sub-btn" data-sub="flyers-listening">Listening</button>
+        <button class="sub-btn" data-sub="flyers-rw">Reading & Writing</button>
+        <button class="sub-btn" data-sub="flyers-gv">Grammar & Vocabulary</button>
     </div>
 
     <div id="moet-subs" class="sub-tabs">
@@ -149,30 +176,12 @@
         <button class="sub-btn" data-sub="ts10">TUYỂN SINH 10</button>
     </div>
 
-    <div id="starters-subs" class="sub-tabs">
-        <button class="sub-btn active" data-sub="starters-full">Full Tests</button>
-        <button class="sub-btn" data-sub="starters-listening">Listening</button>
-        <button class="sub-btn" data-sub="starters-rw">Reading & Writing</button>
-        <button class="sub-btn" data-sub="starters-grammar and vocabulary">Grammar and Vocabulary</button>
-    </div>
+    <div id="ket-full" class="content-area"><ul><li><a href="#">(Update KET Full Test files)</a></li></ul></div>
+    <div id="ket-listening" class="content-area"><ul><li><a href="#">(Update KET Listening)</a></li></ul></div>
+    <div id="ket-rw" class="content-area"><ul><li><a href="#">(Update KET Reading & Writing)</a></li></ul></div>
+    <div id="ket-gv" class="content-area"><ul><li><a href="#">(Update KET Grammar & Vocab)</a></li></ul></div>
 
-    <div id="movers-subs" class="sub-tabs">
-        <button class="sub-btn active" data-sub="movers-full">Full Tests</button>
-        <button class="sub-btn" data-sub="movers-listening">Listening</button>
-        <button class="sub-btn" data-sub="movers-rw">Reading & Writing</button>
-        <button class="sub-btn" data-sub="movers-grammar and vocabulary">Grammar and Vocabulary</button>
-    </div>
-
-    <div id="flyers-subs" class="sub-tabs">
-        <button class="sub-btn active" data-sub="flyers-full">Full Tests</button>
-        <button class="sub-btn" data-sub="flyers-listening">Listening</button>
-        <button class="sub-btn" data-sub="flyers-rw">Reading & Writing</button>
-        <button class="sub-btn" data-sub="flyers-grammar and vocabulary">Grammar and Vocabulary</button>
-    </div>
-
-    <div id="pet-full" class="content-area active">
-        <ul><li><a href="#">(Update PET Full Test files)</a></li></ul>
-    </div>
+    <div id="pet-full" class="content-area active"><ul><li><a href="#">(Update PET Full Test files)</a></li></ul></div>
     <div id="pet-listening" class="content-area">
         <ul>
             <li><a href="PET/SKILLS-PRACTICE/Listening/B1 LISTENING PART 4 Test 3 - 4.html">Listening Part 4 Test 3 - 4</a></li>
@@ -182,22 +191,18 @@
     </div>
     <div id="pet-reading" class="content-area">
         <ul>
-            <li><a href="PET/SKILLS-PRACTICE/Reading/B1 REGULAR VERBS PRACTICE.html">B1 Regular Verbs Practice</a></li>
             <li><a href="PET/SKILLS-PRACTICE/Reading/PET READING PART 4 - B1 OXFORD - TEST 1 - 3.html">Reading P4 - Oxford 1-3</a></li>
             <li><a href="PET/SKILLS-PRACTICE/Reading/PET READING PART 5 - B1 SIMPLY - TEST 1 - 4.html">Reading P5 - Simply 1-4</a></li>
         </ul>
     </div>
     <div id="pet-writing" class="content-area">
-        <ul>
-            <li><a href="PET/WRITING/PET WRITING RICHMOND TEST 1.html">RICHMOND WRITING TEST 1</a></li>
-        </ul>
+        <ul><li><a href="PET/WRITING/PET WRITING RICHMOND TEST 1.html">RICHMOND WRITING TEST 1</a></li></ul>
     </div>
-    <div id="pet-grammar and vocabulary" class="content-area">
-        <ul>
-            <li><a href="PET/B1 REGULAR VERBS PRACTICE.html">B1 REGULAR VERBS PRACTICE</a></li>
-        </ul>
+    <div id="pet-gv" class="content-area">
+        <ul><li><a href="PET/SKILLS-PRACTICE/Reading/B1 REGULAR VERBS PRACTICE.html">B1 Regular Verbs Practice</a></li></ul>
     </div>
     
+    <div id="fce-full" class="content-area"><ul><li><a href="#">(Update FCE Full Test files)</a></li></ul></div>
     <div id="fce-listening" class="content-area">
         <ul>
             <li><a href="FCE/SKILLS-PRACTICE/Listening/FCE LISTENING PART 4 - BOOK 2 - TEST 1 - 2.html">Listening P4 - Book 2 Test 1-2</a></li>
@@ -210,56 +215,30 @@
             <li><a href="FCE/SKILLS-PRACTICE/Reading/FCE READING PART 6 - BOOK 2 - TEST 1 - 2.HTML">Reading P6 - Book 2 Test 1-2</a></li>
         </ul>
     </div>
-    <div id="fce-full" class="content-area">
-        <ul><li><a href="#">(Update FCE Full Test files)</a></li></ul>
-    </div>
-    <div id="fce-writing" class="content-area">
-        <ul><li><a href="#">(Update FCE Writing files)</a></li></ul>
-    </div>
-    <div id="pet-grammar and vocabulary" class="content-area">
-        <ul>
-            <li><a href="FCE/B2 REGULAR VERBS PRACTICE.html">B2 REGULAR VERBS PRACTICE</a></li>
-        </ul>
-    </div>
+    <div id="fce-writing" class="content-area"><ul><li><a href="#">(Update FCE Writing files)</a></li></ul></div>
+    <div id="fce-gv" class="content-area"><ul><li><a href="#">(Update FCE Grammar & Vocab files)</a></li></ul></div>
+
+    <div id="starters-full" class="content-area"><ul><li><a href="#">(Update Starters Full Test files)</a></li></ul></div>
+    <div id="starters-listening" class="content-area"><ul><li><a href="#">(Update Starters Listening files)</a></li></ul></div>
+    <div id="starters-rw" class="content-area"><ul><li><a href="#">(Update Starters Reading & Writing files)</a></li></ul></div>
+    <div id="starters-gv" class="content-area"><ul><li><a href="#">(Update Starters Grammar & Vocab files)</a></li></ul></div>
+
+    <div id="movers-full" class="content-area"><ul><li><a href="#">(Update Movers Full Test files)</a></li></ul></div>
+    <div id="movers-listening" class="content-area"><ul><li><a href="#">(Update Movers Listening files)</a></li></ul></div>
+    <div id="movers-rw" class="content-area"><ul><li><a href="#">(Update Movers Reading & Writing files)</a></li></ul></div>
+    <div id="movers-gv" class="content-area"><ul><li><a href="#">(Update Movers Grammar & Vocab files)</a></li></ul></div>
+
+    <div id="flyers-full" class="content-area"><ul><li><a href="#">(Update Flyers Full Test files)</a></li></ul></div>
+    <div id="flyers-listening" class="content-area"><ul><li><a href="#">(Update Flyers Listening files)</a></li></ul></div>
+    <div id="flyers-rw" class="content-area"><ul><li><a href="FLYERS/FLYERS READING PART 4 PRACTICES.html">FLYERS READING PART 4 PRACTICE</a></li></ul></div>
+    <div id="flyers-gv" class="content-area"><ul><li><a href="#">(Update Flyers Grammar & Vocab files)</a></li></ul></div>
 
     <div id="moet7" class="content-area">
         <ul><li><a href="MOET/MOET-7/unit-1.html">Grade 7 - Unit 1</a></li></ul>
         <ul><li><a href="MOET/B2 Word Family Master.html">B2 Word Family Master</a></li></ul>
     </div>
-    <div id="moet9" class="content-area">
-        <ul><li><a href="#">(Update MOET 9 files)</a></li></ul>
-    </div>
-    <div id="ts10" class="content-area">
-        <ul><li><a href="#">(Update TS10 files)</a></li></ul>
-    </div>
-
-    <div id="starters-full" class="content-area">
-        <ul><li><a href="#">(Update Starters Full Test files)</a></li></ul></div>
-    <div id="starters-listening" class="content-area">
-        <ul><li><a href="#">(Update Starters Listening files)</a></li></ul></div>
-    <div id="starters-rw" class="content-area">
-        <ul><li><a href="#">(Update Starters Reading & Writing files)</a></li></ul></div>
-    <div id="starters-grammar and vocabulary" class="content-area">
-        <ul><li><a href="#">(Update Starters Grammar and Vocabulary files)</a></li></ul></div>
-
-    <div id="movers-full" class="content-area">
-        <ul><li><a href="#">(Update Movers Full Test files)</a></li></ul></div>
-    <div id="movers-listening" class="content-area">
-        <ul><li><a href="#">(Update Movers Listening files)</a></li></ul></div>
-    <div id="movers-rw" class="content-area">
-        <ul><li><a href="#">(Update Movers Reading & Writing files)</a></li></ul></div>
-    <div id="movers-grammar and vocabulary" class="content-area">
-        <ul><li><a href="#">(Update Movers Grammar and Vocabulary files)</a></li></ul></div>
-
-    <div id="flyers-full" class="content-area">
-        <ul><li><a href="#">(Update Flyers Full Test files)</a></li></ul></div>
-    <div id="flyers-listening" class="content-area">
-        <ul><li><a href="#">(Update Flyers Listening files)</a></li></ul></div>
-    <div id="flyers-rw" class="content-area">
-        <ul><li><a href="#">(Update Flyers Reading and Writing files)</a></li></ul></div>
-    <div id="flyers-grammar and vocabulary" class="content-area">
-        <ul><li><a href="FLYERS/FLYERS READING PART 4 PRACTICES.html">FLYERS READING PART 4 PRACTICE</a></li></ul>
-    </div>
+    <div id="moet9" class="content-area"><ul><li><a href="#">(Update MOET 9 files)</a></li></ul></div>
+    <div id="ts10" class="content-area"><ul><li><a href="#">(Update TS10 files)</a></li></ul></div>
 
     <div class="footer">
         Ms. Elaine Nguyen<br>
