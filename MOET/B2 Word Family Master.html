@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-        body { font-family: 'Nunito', sans-serif; }
+        body { font-family: 'Nunito', sans-serif; background-color: #fffbeb; }
         
         .shake { animation: shake 0.5s; }
         @keyframes shake {
@@ -31,76 +31,133 @@
 
         .tag-enter { animation: popIn 0.3s ease-out forwards; opacity: 0; transform: scale(0.9); }
         @keyframes popIn { to { opacity: 1; transform: scale(1); } }
+
+        .tab-active {
+            background-color: #fff;
+            border-color: #eab308;
+            color: #854d0e;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .tab-inactive {
+            background-color: #fef3c7;
+            border-color: transparent;
+            color: #b45309;
+        }
+
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="bg-yellow-50 min-h-screen pb-10 flex flex-col items-center">
+<body class="min-h-screen pb-10 flex flex-col items-center">
 
     <div id="app" class="w-full max-w-3xl px-4 py-8">
         <!-- Header -->
         <header class="text-center mb-8">
-            <div class="inline-block p-3 bg-yellow-400 rounded-full text-white text-3xl mb-3 shadow-lg">
+            <div class="inline-block p-4 bg-yellow-400 rounded-2xl text-white text-3xl mb-3 shadow-lg transform -rotate-3">
                 <i class="fas fa-graduation-cap"></i>
             </div>
             <h1 class="text-4xl font-extrabold text-yellow-900 mb-2 tracking-tight">Word Family Master</h1>
-            <p class="text-yellow-700 font-medium">Practice English Word Forms</p>
+            <p class="text-yellow-700 font-bold">Practice English Word Forms</p>
         </header>
 
         <!-- Setup Screen -->
-        <div id="setup-screen" class="bg-white rounded-3xl shadow-xl p-8 border-b-4 border-yellow-200">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-800">Welcome! 👋</h2>
-                <p class="text-gray-500 text-sm mt-1">Setup your study session below.</p>
-            </div>
-            
-            <div class="space-y-6">
+        <div id="setup-screen" class="bg-white rounded-3xl shadow-xl p-8 border-b-4 border-yellow-300">
+            <!-- Student Information Inputs -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Student Name</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Student ID</label>
+                    <div class="relative">
+                        <i class="fas fa-id-card absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input type="text" id="student-id" placeholder="Ex: HS001" 
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-yellow-400 transition-all font-bold text-lg outline-none text-yellow-900">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">Full Name</label>
                     <div class="relative">
                         <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input type="text" id="student-name" placeholder="Enter your name..." 
-                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-yellow-400 transition-all font-semibold text-lg outline-none">
+                            class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-100 bg-gray-50 focus:bg-white focus:border-yellow-400 transition-all font-bold text-lg outline-none text-yellow-900">
                     </div>
                 </div>
+            </div>
 
+            <!-- Tabs -->
+            <div class="flex gap-2 mb-6 bg-yellow-50 p-2 rounded-xl">
+                <button onclick="switchTab('range')" id="tab-range" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm sm:text-base border-2 tab-active">
+                    <i class="fas fa-list-ol mr-2"></i> Range Mode
+                </button>
+                <button onclick="switchTab('random')" id="tab-random" class="flex-1 py-3 px-4 rounded-lg font-bold transition-all text-sm sm:text-base border-2 tab-inactive">
+                    <i class="fas fa-dice mr-2"></i> Random Mode
+                </button>
+            </div>
+
+            <!-- MODE 1: RANGE SELECTION -->
+            <div id="mode-range" class="space-y-6 animate-fade-in">
                 <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100">
                     <label class="block text-sm font-bold text-yellow-800 mb-4 uppercase tracking-wide">
-                        <i class="fas fa-list-ol mr-1"></i> Select Word Range (1 - 210)
+                        <i class="fas fa-layer-group mr-1"></i> Select Root Range (1 - 210)
                     </label>
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                            <span class="text-xs font-semibold text-gray-500 mb-1 block">From No.</span>
-                            <input type="number" id="start-range" value="1" min="1" max="210" oninput="updatePreview()"
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">Start Root (Min: 1)</span>
+                            <input type="number" id="start-range" value="1" min="1" max="210" oninput="updateRangePreview()"
                                 class="w-full px-4 py-3 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 outline-none text-center text-xl font-bold text-gray-800">
                         </div>
                         <div>
-                            <span class="text-xs font-semibold text-gray-500 mb-1 block">To No.</span>
-                            <input type="number" id="end-range" value="10" min="1" max="210" oninput="updatePreview()"
+                            <span class="text-xs font-semibold text-gray-500 mb-1 block">End Root (Max: 210)</span>
+                            <input type="number" id="end-range" value="10" min="1" max="210" oninput="updateRangePreview()"
                                 class="w-full px-4 py-3 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 outline-none text-center text-xl font-bold text-gray-800">
                         </div>
                     </div>
                     
-                    <div class="mt-5 pt-4 border-t border-yellow-200">
+                    <div class="mt-4 pt-4 border-t border-yellow-200">
                         <div class="flex justify-between items-end mb-2">
-                            <span class="text-xs font-bold text-gray-400 uppercase">Selected Words List:</span>
-                            <span id="preview-count" class="text-xs font-bold text-yellow-600">0 words</span>
+                            <span class="text-xs font-bold text-gray-400 uppercase">Root Word List:</span>
+                            <span id="preview-count" class="text-xs font-bold text-yellow-600">0 roots</span>
                         </div>
-                        <div id="range-preview" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-yellow-50/50 rounded-lg">
-                            <!-- Tags will be injected here -->
-                        </div>
+                        <div id="range-preview" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 bg-white/50 rounded-lg border border-yellow-100"></div>
                     </div>
                 </div>
 
                 <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-5 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
-                    Start Quiz <i class="fas fa-rocket ml-2"></i>
+                    Start Learning <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+
+            <!-- MODE 2: RANDOM SELECTION -->
+            <div id="mode-random" class="space-y-6 hidden animate-fade-in">
+                <div class="bg-yellow-50 p-6 rounded-2xl border border-yellow-100 text-center">
+                    <label class="block text-sm font-bold text-yellow-800 mb-4 uppercase tracking-wide">
+                        Number of Word Families (Roots)
+                    </label>
+                    <div class="flex justify-center items-center mb-4">
+                        <button onclick="adjustLimit(-1)" class="w-10 h-10 bg-white rounded-full shadow text-yellow-600 font-bold hover:bg-yellow-100">-</button>
+                        <input type="number" id="random-limit" value="5" min="1" max="210"
+                            class="w-32 mx-4 px-4 py-3 rounded-xl border-2 border-yellow-200 focus:border-yellow-500 outline-none text-center text-2xl font-bold text-yellow-700">
+                        <button onclick="adjustLimit(1)" class="w-10 h-10 bg-white rounded-full shadow text-yellow-600 font-bold hover:bg-yellow-100">+</button>
+                    </div>
+                    <div class="text-sm text-yellow-800 bg-yellow-100/50 p-3 rounded-lg inline-block text-left">
+                        <i class="fas fa-info-circle mr-1"></i> The system will randomly select Word Families.
+                        <br><span class="font-bold text-xs opacity-75">(1 Word Family can generate 2-6 questions)</span>
+                    </div>
+                </div>
+                <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-orange-400 to-red-500 hover:from-orange-500 hover:to-red-600 text-white font-bold py-5 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
+                    Start Random Challenge <i class="fas fa-random ml-2"></i>
                 </button>
             </div>
         </div>
 
         <!-- Quiz Screen -->
-        <div id="quiz-screen" class="hidden w-full">
+        <div id="quiz-screen" class="hidden w-full animate-fade-in">
             <div class="flex justify-between items-center mb-6 bg-white px-5 py-3 rounded-2xl shadow-sm border border-yellow-100">
                 <div class="flex items-center text-gray-700 font-bold">
-                    <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mr-2 text-xs">
+                    <div class="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center mr-2 text-sm">
                         <i class="fas fa-user"></i>
                     </div>
                     <span id="display-name">Student</span>
@@ -112,39 +169,50 @@
             </div>
 
             <div id="question-card" class="bg-white rounded-3xl shadow-xl border-b-8 border-gray-100 overflow-hidden relative w-full">
+                <!-- TIMER BAR -->
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gray-100 z-10">
+                    <div id="timer-bar" class="h-full bg-yellow-400 transition-all duration-1000 ease-linear w-full"></div>
+                </div>
+                <div class="absolute top-4 left-5 font-bold text-yellow-600 flex items-center gap-2 z-10 bg-white/80 px-2 py-1 rounded-lg shadow-sm">
+                    <i class="fas fa-clock"></i> <span id="timer-text">10s</span>
+                </div>
+
                 <!-- Type Badge -->
-                <div class="absolute top-0 right-0 mt-6 mr-6">
+                <div class="absolute top-4 right-5 z-10">
                      <span id="target-type" class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg text-sm font-extrabold uppercase tracking-wider shadow-sm border border-yellow-200">Noun</span>
                 </div>
 
-                <div class="p-8 pt-12">
+                <div class="absolute top-0 right-0 p-4 opacity-5">
+                    <i class="fas fa-sitemap text-6xl text-yellow-500"></i>
+                </div>
+
+                <div class="p-8 pt-20 text-center">
                     
-                    <h2 class="text-xl md:text-3xl font-bold text-gray-800 mb-2 text-center mt-4">
-                        Meaning: <span id="meaning-clue" class="text-yellow-600 italic font-medium">...</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                        Meaning: <span id="meaning-clue" class="text-yellow-600 italic">...</span>
                     </h2>
                     
                     <div class="relative mt-8">
-                        <input type="text" id="answer-input" placeholder="Type the English word..." autocomplete="off"
-                            class="word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all">
-                        
+                        <input type="text" id="answer-input" placeholder="Type the correct form..." autocomplete="off"
+                            class="word-input w-full text-center text-3xl font-bold px-6 py-6 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all">
                         <div id="feedback-icon" class="hidden absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl"></div>
                     </div>
 
                     <div id="feedback-box" class="hidden mt-6 p-5 rounded-xl text-center animate-fade-in-up">
                         <div id="feedback-title" class="font-bold text-lg mb-1"></div>
                         <div id="feedback-content" class="text-gray-700"></div>
-                        <div id="retry-msg" class="text-xs mt-2 font-semibold uppercase tracking-wide opacity-75 hidden">
-                            <i class="fas fa-redo mr-1"></i> Added to queue for review
+                        <div id="retry-msg" class="text-xs mt-3 font-semibold uppercase tracking-wide opacity-75 hidden text-red-500 bg-red-50 inline-block px-2 py-1 rounded">
+                            <i class="fas fa-redo mr-1"></i> Mistake -> Review at the end
                         </div>
                     </div>
                 </div>
 
                 <div class="bg-gray-50 p-6 flex gap-4 border-t border-gray-100">
-                    <button id="check-btn" onclick="checkAnswer()" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
-                        Check Answer
+                    <button id="check-btn" onclick="checkAnswer()" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase tracking-wider">
+                        Check Answer (Enter)
                     </button>
-                    <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
-                        Next <i class="fas fa-arrow-right ml-2"></i>
+                    <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase tracking-wider">
+                        Next (Enter) <i class="fas fa-arrow-right ml-2"></i>
                     </button>
                 </div>
             </div>
@@ -157,49 +225,63 @@
         </div>
 
         <!-- Result Screen -->
-        <div id="result-screen" class="hidden text-center w-full">
-            <div class="bg-white rounded-3xl shadow-xl p-10 border-b-4 border-yellow-200 relative overflow-hidden">
-                <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-400 via-yellow-400 to-blue-400"></div>
-
-                <div class="w-20 h-20 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-4 text-4xl shadow-inner">
-                    <i class="fas fa-crown"></i>
-                </div>
+        <div id="result-screen" class="hidden text-center w-full animate-fade-in">
+            <div class="bg-white rounded-[3rem] p-12 shadow-xl border-b-4 border-yellow-300">
                 
-                <h2 class="text-2xl font-extrabold text-gray-800 mb-1">Excellent, <span id="result-name">Student</span>!</h2>
-                <p class="text-gray-500 mb-6 text-base">You have mastered all selected words.</p>
+                <!-- Dynamic Icon & Title -->
+                <div id="result-icon-container" class="w-24 h-24 bg-yellow-400 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-yellow-200">
+                    <span id="result-icon">🤩</span>
+                </div>
+                <h2 id="result-title" class="text-4xl font-extrabold text-yellow-900 mb-2 tracking-tight">Great Job!</h2>
+                <p id="result-subtitle" class="text-gray-500 mb-6 text-lg">You have completed the practice.</p>
                 
-                <div class="grid grid-cols-2 gap-4 mb-6">
-                    <div class="bg-gray-50 p-3 rounded-xl">
-                        <div class="text-2xl font-bold text-yellow-500" id="total-words-count">0</div>
-                        <div class="text-xs text-gray-400 font-bold uppercase">Questions</div>
+                <p id="result-user" class="text-yellow-600 font-bold mb-8 text-xl"></p>
+                
+                <div class="grid grid-cols-2 gap-6 mb-10">
+                    <div class="bg-yellow-50 p-8 rounded-[2rem] border border-yellow-100 relative overflow-hidden">
+                        <div class="text-5xl font-bold text-yellow-900 relative z-10" id="res-correct">0</div>
+                        <div class="text-xs text-yellow-700 font-bold uppercase mt-2 tracking-widest relative z-10">Score (First Try)</div>
                     </div>
-                    <div class="bg-gray-50 p-3 rounded-xl">
-                        <div class="text-2xl font-bold text-green-500" id="accuracy-rate">100%</div>
-                        <div class="text-xs text-gray-400 font-bold uppercase">Accuracy</div>
+                    <div class="bg-green-50 p-8 rounded-[2rem] border border-green-100 relative overflow-hidden">
+                        <div class="text-5xl font-bold text-green-600 relative z-10" id="res-accuracy">0%</div>
+                        <div class="text-xs text-green-700 font-bold uppercase mt-2 tracking-widest relative z-10">Accuracy</div>
                     </div>
                 </div>
 
-                <!-- NEW: Reviewed List -->
-                <div class="mb-6 text-left">
-                     <h3 class="text-xs font-bold text-gray-400 uppercase mb-2 tracking-wider">
-                        <i class="fas fa-book mr-1"></i> Word Families Completed
+                <!-- BLOCK 1: MASTERED WORDS -->
+                <div class="mb-8 text-left">
+                    <h3 class="text-xs font-bold text-green-600 uppercase mb-4 tracking-widest flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i> Mastered Word Forms
                     </h3>
-                    <div id="reviewed-list" class="bg-yellow-50 rounded-xl p-4 max-h-48 overflow-y-auto border border-yellow-100 text-sm space-y-3">
-                        <!-- Content -->
+                    <div id="mastered-list" class="bg-green-50/50 rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-green-100 grid grid-cols-1 gap-3">
+                        <!-- Items injected here -->
                     </div>
                 </div>
 
-                <button onclick="quitQuiz()" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 rounded-xl shadow-lg transition-all text-lg uppercase">
-                    New Session
+                <!-- BLOCK 2: NEED REVIEW WORDS -->
+                <div class="mb-10 text-left">
+                    <h3 class="text-xs font-bold text-red-500 uppercase mb-4 tracking-widest flex items-center">
+                        <i class="fas fa-exclamation-triangle mr-2"></i> Word Forms to Review
+                    </h3>
+                    <div id="need-review-list" class="bg-red-50/50 rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-red-100 grid grid-cols-1 gap-3">
+                        <!-- Items injected here -->
+                    </div>
+                </div>
+                
+                <button onclick="resetToSetup()" class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-6 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 active:translate-y-0 text-xl uppercase tracking-wider">
+                    PRACTICE AGAIN <i class="fas fa-redo ml-2"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <audio id="sound-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3"></audio>
-    <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3"></audio>
+    <audio id="sound-correct" src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" preload="auto"></audio>
+    <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
 
     <script>
+        var thoiGianBatDauHoc = new Date();
+        var studentInfo = { id: '', name: '' };
+
         // --- DATA SOURCE: FULL 210 WORDS ---
         const wordBank = [
             { id: 1, root: "able", forms: [ { word: "enable", meaning: "cho phép", type: "Verb" }, { word: "disable", meaning: "làm mất khả năng", type: "Verb" }, { word: "ability", meaning: "khả năng", type: "Noun" }, { word: "disability", meaning: "sự khuyết tật", type: "Noun" }, { word: "able", meaning: "có khả năng", type: "Adj" }, { word: "unable", meaning: "không thể", type: "Adj" } ] },
@@ -414,38 +496,119 @@
             { id: 210, root: "write", forms: [{word: "write", meaning: "viết", type: "Verb"}, {word: "writer", meaning: "nhà văn", type: "Noun"}, {word: "writing", meaning: "bài viết", type: "Noun"}, {word: "written", meaning: "được viết (văn bản)", type: "Adj"}] }
         ];
 
+        let allForms = [];
+        wordBank.forEach(rootItem => {
+            rootItem.forms.forEach(form => {
+                allForms.push({...form, rootId: rootItem.id, rootWord: rootItem.root});
+            });
+        });
+
         // --- GLOBAL STATE ---
         let questionQueue = [];
-        let totalOriginalQuestions = 0;
-        let mistakesCount = 0;
-        let currentSessionRoots = []; // To store practiced roots for summary
+        let currentIndex = 0;
+        let currentMode = 'range';
+        
+        let timerInterval;
+        let timeLeft = 10;
+        let totalQuestionsToAsk = 0;
+        let correctFirstTryCount = 0;
+        
+        let masteredWords = [];
+        let reviewWords = [];
+        let usedRandomRoots = []; 
 
-        // --- PREVIEW LOGIC ---
-        function updatePreview() {
+        // --- GOOGLE SHEETS INTEGRATION ---
+        function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDA2JO5j-aXbvYBIVBYVg4wvQEvLrafuoyPq_XglM-siz1eGQRJcXSMDcuhfBoTCw/exec"; 
+            const TEN_SHEET_LUU = "B2 WORD FAMILY"; 
+
+            var gio = thoiGianBatDauHoc.getHours();
+            var phut = thoiGianBatDauHoc.getMinutes();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut);
+
+            var duLieu = {
+                tenSheet: TEN_SHEET_LUU,
+                tenBai: tenBaiHoc,
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                cheDoHoc: cheDo,
+                soTuLam: soTuDaLam,
+                phanTramDung: phanTramKetQua
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                console.log("Success");
+            }).catch(err => {
+                console.error("Sheet error:", err);
+            });
+        }
+
+        // --- PREVIEW & MODE LOGIC ---
+        function switchTab(mode) {
+            currentMode = mode;
+            const tabRange = document.getElementById('tab-range');
+            const tabRandom = document.getElementById('tab-random');
+            const contentRange = document.getElementById('mode-range');
+            const contentRandom = document.getElementById('mode-random');
+
+            if (mode === 'range') {
+                tabRange.classList.add('tab-active');
+                tabRange.classList.remove('tab-inactive');
+                tabRandom.classList.add('tab-inactive');
+                tabRandom.classList.remove('tab-active');
+                contentRange.classList.remove('hidden');
+                contentRandom.classList.add('hidden');
+            } else {
+                tabRandom.classList.add('tab-active');
+                tabRandom.classList.remove('tab-inactive');
+                tabRange.classList.add('tab-inactive');
+                tabRange.classList.remove('tab-active');
+                contentRandom.classList.remove('hidden');
+                contentRange.classList.add('hidden');
+            }
+            updateRangePreview();
+        }
+
+        function updateRangePreview() {
+            if (currentMode !== 'range') return;
             const start = parseInt(document.getElementById('start-range').value) || 0;
             const end = parseInt(document.getElementById('end-range').value) || 0;
             const previewBox = document.getElementById('range-preview');
             const countBox = document.getElementById('preview-count');
 
             if (start > end) {
-                previewBox.innerHTML = "<span class='text-red-500 font-bold'>Invalid Range: Start > End</span>";
-                countBox.innerText = "0 words";
+                previewBox.innerHTML = "<span class='text-red-500 font-bold'>Invalid range (Start > End)</span>";
+                countBox.innerText = "0 roots";
                 return;
             }
 
             const selected = wordBank.filter(w => w.id >= start && w.id <= end);
-            countBox.innerText = `${selected.length} words`;
+            countBox.innerText = `${selected.length} roots`;
             
             if (selected.length === 0) {
-                previewBox.innerHTML = "<span class='text-gray-400 italic p-2'>No words found in this range. Please check your IDs.</span>";
+                previewBox.innerHTML = "<span class='text-gray-400 italic p-2'>No words found in this range.</span>";
             } else {
                 const tags = selected.map((w, index) => 
-                    `<span class="tag-enter inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-yellow-100 text-yellow-800 border border-yellow-200 shadow-sm mb-1 mr-1" style="animation-delay: ${index * 0.05}s">
-                        <span class="mr-1 text-yellow-500 opacity-50">${w.id}.</span> ${w.root}
+                    `<span class="tag-enter inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white text-yellow-800 border border-yellow-200 shadow-sm mb-1 mr-1" style="animation-delay: ${index * 0.05}s">
+                        <span class="mr-1 text-yellow-500 opacity-70">#${w.id}.</span> ${w.root}
                     </span>`
                 ).join('');
                 previewBox.innerHTML = tags;
             }
+        }
+
+        function adjustLimit(change) {
+            const input = document.getElementById('random-limit');
+            let val = parseInt(input.value) + change;
+            if (val < 1) val = 1;
+            if (val > 210) val = 210; 
+            input.value = val;
         }
 
         // --- TTS & SOUND ---
@@ -453,12 +616,13 @@
             const audio = document.getElementById(type === 'correct' ? 'sound-correct' : 'sound-wrong');
             if(audio) {
                 audio.currentTime = 0;
-                audio.play().catch(e => console.log("Audio Error - User interaction needed"));
+                audio.play().catch(e => {});
             }
         }
 
         function speakWord(text) {
             if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
                 const cleanText = text.replace(/\(.*\)/g, '').replace(/\//g, ' or ').trim();
                 const utterance = new SpeechSynthesisUtterance(cleanText);
                 utterance.lang = 'en-US';
@@ -468,66 +632,94 @@
         }
 
         // --- CORE FUNCTIONS ---
-        function startQuiz() {
-            const name = document.getElementById('student-name').value.trim();
-            if (!name) {
-                alert("Please enter your name!");
-                document.getElementById('student-name').focus();
-                return;
-            }
-
-            const start = parseInt(document.getElementById('start-range').value);
-            const end = parseInt(document.getElementById('end-range').value);
-
-            const selectedRoots = wordBank.filter(item => item.id >= start && item.id <= end);
-            currentSessionRoots = selectedRoots; // Store for final summary
-            
-            if (selectedRoots.length === 0) {
-                alert(`No words found between ${start} and ${end}.`);
-                return;
-            }
-
-            questionQueue = [];
-            selectedRoots.forEach(rootItem => {
-                rootItem.forms.forEach(form => {
-                    questionQueue.push({
-                        ...form,
-                        root: rootItem.root
-                    });
-                });
-            });
-
-            questionQueue.sort(() => Math.random() - 0.5);
-
-            totalOriginalQuestions = questionQueue.length;
-            mistakesCount = 0;
-            
-            document.getElementById('display-name').innerText = name;
-            document.getElementById('setup-screen').classList.add('hidden');
-            document.getElementById('quiz-screen').classList.remove('hidden');
+        function resetToSetup() {
+            clearInterval(timerInterval);
             document.getElementById('result-screen').classList.add('hidden');
-            
-            loadNextQuestion();
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+            updateRangePreview();
         }
 
-        function loadNextQuestion() {
-            if (questionQueue.length === 0) {
+        function startQuiz() {
+            studentInfo.id = document.getElementById('student-id').value.trim();
+            studentInfo.name = document.getElementById('student-name').value.trim();
+
+            if (!studentInfo.id || !studentInfo.name) {
+                alert("Please enter both Student ID and Full Name!");
+                return;
+            }
+
+            thoiGianBatDauHoc = new Date(); 
+            let pool = [];
+
+            if (currentMode === 'range') {
+                const start = parseInt(document.getElementById('start-range').value);
+                const end = parseInt(document.getElementById('end-range').value);
+
+                const selectedRoots = wordBank.filter(item => item.id >= start && item.id <= end);
+                if (selectedRoots.length === 0) {
+                    alert(`No words found in the range ${start} - ${end}.`);
+                    return;
+                }
+                
+                selectedRoots.forEach(rootItem => {
+                    rootItem.forms.forEach(form => {
+                        pool.push({...form, rootId: rootItem.id, rootWord: rootItem.root});
+                    });
+                });
+            } else {
+                const limit = parseInt(document.getElementById('random-limit').value);
+                
+                let availableRoots = wordBank.filter(r => !usedRandomRoots.includes(r.id));
+                
+                if (availableRoots.length < limit) {
+                    usedRandomRoots = [];
+                    availableRoots = [...wordBank];
+                }
+                
+                const selectedRoots = availableRoots.sort(() => 0.5 - Math.random()).slice(0, limit);
+                
+                selectedRoots.forEach(r => usedRandomRoots.push(r.id));
+
+                selectedRoots.forEach(rootItem => {
+                    rootItem.forms.forEach(form => {
+                        pool.push({...form, rootId: rootItem.id, rootWord: rootItem.root});
+                    });
+                });
+            }
+
+            document.getElementById('display-name').innerText = studentInfo.name;
+            document.getElementById('setup-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+
+            questionQueue = [...pool].map(q => ({...q, isFirstTry: true})).sort(() => 0.5 - Math.random());
+            currentIndex = 0;
+            totalQuestionsToAsk = questionQueue.length;
+            correctFirstTryCount = 0;
+            masteredWords = [];
+            reviewWords = [];
+
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentIndex >= questionQueue.length) {
                 finishQuiz();
                 return;
             }
 
-            const q = questionQueue[0];
+            const q = questionQueue[currentIndex];
             
-            document.getElementById('progress-text').innerText = `${questionQueue.length} remaining`;
+            document.getElementById('progress-text').innerText = `${questionQueue.length - currentIndex} left`;
             document.getElementById('target-type').innerText = q.type;
+            
             document.getElementById('meaning-clue').innerText = q.meaning;
             
             const input = document.getElementById('answer-input');
             input.value = '';
             input.disabled = false;
-            input.className = "word-input w-full text-center text-2xl font-bold px-6 py-5 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 placeholder-gray-300 transition-all";
-            input.focus();
-
+            input.className = "word-input w-full text-center text-3xl font-bold py-6 px-8 rounded-2xl border-2 border-gray-200 bg-gray-50 text-gray-800 focus:bg-white focus:border-yellow-400 transition-all placeholder-gray-300";
+            
             document.getElementById('feedback-box').classList.add('hidden');
             document.getElementById('feedback-icon').classList.add('hidden');
             document.getElementById('retry-msg').classList.add('hidden');
@@ -535,22 +727,45 @@
             document.getElementById('check-btn').classList.remove('hidden');
             document.getElementById('next-btn').classList.add('hidden');
 
-            input.onkeypress = (e) => { 
-                if (e.key === 'Enter') {
-                    if(!document.getElementById('check-btn').classList.contains('hidden')) {
-                        checkAnswer();
-                    } else {
-                        nextQuestion();
-                    }
-                }
-            };
+            setTimeout(() => { input.focus(); }, 50);
+            startTimer();
         }
 
-        function checkAnswer() {
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 10;
+            document.getElementById('timer-bar').style.width = '100%';
+            document.getElementById('timer-text').innerText = '10s';
+            
+            setTimeout(() => {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timer-text').innerText = timeLeft + 's';
+                    document.getElementById('timer-bar').style.width = (timeLeft * 10) + '%';
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        checkAnswer(true); 
+                    }
+                }, 1000);
+            }, 50);
+        }
+
+        function checkAnswer(isTimeout = false) {
             const input = document.getElementById('answer-input');
             const userAnswer = input.value.trim().toLowerCase();
-            const currentQ = questionQueue[0];
-            const correctAnswers = currentQ.word.toLowerCase().split('/').map(w => w.trim());
+            const q = questionQueue[currentIndex];
+
+            if (!isTimeout && !userAnswer) {
+                input.classList.add('shake');
+                setTimeout(() => input.classList.remove('shake'), 500);
+                return;
+            }
+
+            clearInterval(timerInterval);
+            input.disabled = true;
+
+            const correctAnswers = q.word.toLowerCase().split('/').map(w => w.trim());
             const cleanUser = userAnswer.replace(/\(.*\)/g, '').trim();
             
             const isCorrect = correctAnswers.some(ans => {
@@ -563,94 +778,193 @@
             const feedbackContent = document.getElementById('feedback-content');
             const feedbackIcon = document.getElementById('feedback-icon');
             const retryMsg = document.getElementById('retry-msg');
+            const checkBtn = document.getElementById('check-btn');
+            const nextBtn = document.getElementById('next-btn');
 
             feedbackBox.classList.remove('hidden');
             feedbackIcon.classList.remove('hidden');
-            input.disabled = true;
+            checkBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
 
             if (isCorrect) {
                 playSound('correct');
-                speakWord(currentQ.word);
+                speakWord(q.word);
 
                 input.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
-                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-green-100 border border-green-200";
-                feedbackTitle.innerHTML = "<span class='text-green-700'>🎉 Correct!</span>";
-                feedbackContent.innerHTML = `Answer: <span class="font-bold text-xl">${currentQ.word}</span>`;
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-green-100 border border-green-200";
+                feedbackTitle.innerHTML = "<span class='text-green-700 font-bold tracking-widest uppercase'>🎉 Correct!</span>";
+                feedbackContent.innerHTML = `Answer: <span class="font-bold text-xl">${q.word}</span>`;
                 feedbackIcon.innerHTML = '<i class="fas fa-check-circle text-green-500"></i>';
+                retryMsg.classList.add('hidden');
                 
-                questionQueue.shift();
+                if (q.isFirstTry) {
+                    correctFirstTryCount++;
+                    if (!masteredWords.some(w => w.word === q.word && w.rootId === q.rootId)) { masteredWords.push(q); }
+                }
             } else {
+                if (q.isFirstTry) {
+                    q.isFirstTry = false;
+                    if (!reviewWords.some(w => w.word === q.word && w.rootId === q.rootId)) { reviewWords.push(q); }
+                }
+
                 playSound('wrong');
-                mistakesCount++;
 
                 input.classList.add('border-red-500', 'bg-red-50', 'text-red-700', 'shake');
-                setTimeout(() => input.classList.remove('shake'), 500);
-
-                feedbackBox.className = "mt-6 p-5 rounded-xl text-center bg-red-100 border border-red-200";
-                feedbackTitle.innerHTML = "<span class='text-red-700'>Not quite!</span>";
-                feedbackContent.innerHTML = `Correct answer: <br><span class="font-bold text-2xl text-red-600 mt-2 block">${currentQ.word}</span><br><span class="text-sm text-gray-500">(${currentQ.meaning})</span>`;
+                feedbackBox.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-red-100 border border-red-200";
                 
+                if (isTimeout) {
+                    feedbackTitle.innerHTML = "<span class='text-red-700 font-bold tracking-widest uppercase'>Time's up!</span>";
+                    input.value = "TIME'S UP!";
+                } else {
+                    feedbackTitle.innerHTML = "<span class='text-red-700 font-bold tracking-widest uppercase'>Incorrect!</span>";
+                }
+
+                feedbackContent.innerHTML = `Correct: <span class="font-bold text-2xl text-red-600 block mt-1">${q.word}</span>`;
                 feedbackIcon.innerHTML = '<i class="fas fa-times-circle text-red-500"></i>';
                 retryMsg.classList.remove('hidden');
 
-                const wrongQ = questionQueue.shift();
-                questionQueue.push(wrongQ);
+                const current = questionQueue.splice(currentIndex, 1)[0];
+                questionQueue.push(current);
+                currentIndex--; 
             }
-
-            document.getElementById('check-btn').classList.add('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-            document.getElementById('next-btn').focus();
         }
 
         function nextQuestion() {
-            loadNextQuestion();
-        }
-
-        function finishQuiz() {
-            document.getElementById('quiz-screen').classList.add('hidden');
-            document.getElementById('result-screen').classList.remove('hidden');
-            
-            const name = document.getElementById('student-name').value;
-            document.getElementById('result-name').innerText = name;
-            document.getElementById('total-words-count').innerText = totalOriginalQuestions;
-            
-            const totalAttempts = totalOriginalQuestions + mistakesCount;
-            const accuracy = totalAttempts > 0 ? Math.round((totalOriginalQuestions / totalAttempts) * 100) : 100;
-            
-            document.getElementById('accuracy-rate').innerText = `${accuracy}%`;
-
-            // Populate Review List (New Feature)
-            const listContainer = document.getElementById('reviewed-list');
-            listContainer.innerHTML = '';
-
-            currentSessionRoots.forEach(rootItem => {
-                const formsText = rootItem.forms.map(f => `<span class="inline-block bg-white px-2 py-1 rounded border border-gray-100 shadow-sm mr-1 mb-1 text-gray-600">${f.word}</span>`).join('');
-                
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "border-b border-yellow-200 pb-2 last:border-0";
-                itemDiv.innerHTML = `
-                    <div class="font-bold text-yellow-800 mb-1 flex items-center">
-                        <span class="w-5 h-5 rounded-full bg-yellow-200 text-yellow-700 flex items-center justify-center text-xs mr-2">${rootItem.id}</span>
-                        ${rootItem.root}
-                    </div>
-                    <div class="text-xs leading-relaxed pl-7">
-                        ${formsText}
-                    </div>
-                `;
-                listContainer.appendChild(itemDiv);
-            });
+            currentIndex++;
+            loadQuestion();
         }
 
         function quitQuiz() {
-            if(confirm("Are you sure you want to quit? Progress will be lost.")) {
-                document.getElementById('setup-screen').classList.remove('hidden');
-                document.getElementById('quiz-screen').classList.add('hidden');
-                document.getElementById('result-screen').classList.add('hidden');
-                updatePreview();
+            if (confirm("Are you sure you want to quit this session?")) {
+                clearInterval(timerInterval);
+                resetToSetup();
             }
         }
 
-        window.onload = updatePreview;
+        function finishQuiz() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            document.getElementById('result-user').innerText = studentInfo.name;
+            
+            document.getElementById('res-correct').innerText = `${correctFirstTryCount}/${totalQuestionsToAsk}`;
+            const accuracy = Math.round((correctFirstTryCount / totalQuestionsToAsk) * 100) || 0;
+            const accuracyStr = `${accuracy}%`;
+            document.getElementById('res-accuracy').innerText = accuracyStr;
+
+            const resultTitle = document.getElementById('result-title');
+            const resultSubtitle = document.getElementById('result-subtitle');
+            const resultIcon = document.getElementById('result-icon');
+            const resultIconContainer = document.getElementById('result-icon-container');
+
+            if (accuracy < 50) {
+                resultTitle.innerText = "Keep trying!";
+                resultSubtitle.innerText = "Keep going, you just need a little more practice.";
+                resultIcon.innerText = "😢";
+                resultIconContainer.className = "w-24 h-24 bg-blue-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-blue-200";
+            } else if (accuracy < 70) {
+                resultTitle.innerText = "Good Job!";
+                resultSubtitle.innerText = "You're making progress, keep it up.";
+                resultIcon.innerText = "🙂";
+                resultIconContainer.className = "w-24 h-24 bg-yellow-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-yellow-200";
+            } else if (accuracy < 80) {
+                resultTitle.innerText = "Very Good!";
+                resultSubtitle.innerText = "Great results, keep up the good work!";
+                resultIcon.innerText = "😊";
+                resultIconContainer.className = "w-24 h-24 bg-orange-400 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-orange-200";
+            } else if (accuracy < 90) {
+                resultTitle.innerText = "Excellent!";
+                resultSubtitle.innerText = "Your knowledge is very solid!";
+                resultIcon.innerText = "😁";
+                resultIconContainer.className = "w-24 h-24 bg-red-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-red-200";
+            } else {
+                resultTitle.innerText = "Outstanding!";
+                resultSubtitle.innerText = "Excellent, absolutely perfect!";
+                resultIcon.innerText = "🤩";
+                resultIconContainer.className = "w-24 h-24 bg-yellow-400 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-yellow-200";
+            }
+
+            const createCard = (w, isMastered) => {
+                const color = isMastered ? "green" : "red";
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-${color}-100 shadow-sm flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-${color}-100 text-${color}-700 flex-shrink-0 flex items-center justify-center font-bold text-xs shadow-inner">
+                            R${w.rootId}
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-${color}-900 text-base truncate">
+                                ${w.word} <span class="text-[10px] uppercase font-bold text-white bg-${color}-500 px-1.5 py-0.5 rounded ml-1">${w.type}</span>
+                            </div>
+                            <div class="text-xs text-gray-500 truncate mt-0.5">
+                                Root: <span class="font-semibold text-gray-700">${w.rootWord}</span> | ${w.meaning}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            const masteredListContainer = document.getElementById('mastered-list');
+            masteredWords.sort((a,b) => a.rootId - b.rootId);
+            if (masteredWords.length === 0) {
+                masteredListContainer.innerHTML = '<div class="text-center text-sm text-gray-400 py-4 italic">No words answered correctly on the first try.</div>';
+            } else {
+                masteredListContainer.innerHTML = masteredWords.map(w => createCard(w, true)).join('');
+            }
+
+            const reviewListContainer = document.getElementById('need-review-list');
+            reviewWords.sort((a,b) => a.rootId - b.rootId);
+            if (reviewWords.length === 0) {
+                reviewListContainer.innerHTML = '<div class="text-center text-sm text-gray-400 py-4 italic">Awesome! You didn\'t make any mistakes.</div>';
+            } else {
+                reviewListContainer.innerHTML = reviewWords.map(w => createCard(w, false)).join('');
+            }
+
+            const modeLabel = currentMode === 'range' ? 
+                `Range Roots ${document.getElementById('start-range').value}-${document.getElementById('end-range').value}` : 
+                `Random ${document.getElementById('random-limit').value} Roots`;
+
+            guiKetQuaTuVung(
+                "Word Family Master",
+                studentInfo.id,
+                studentInfo.name,
+                modeLabel,
+                totalQuestionsToAsk, 
+                accuracyStr
+            );
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault(); 
+                const setup = document.getElementById('setup-screen');
+                const quiz = document.getElementById('quiz-screen');
+                const result = document.getElementById('result-screen');
+                
+                if (!setup.classList.contains('hidden')) {
+                    startQuiz();
+                    return;
+                } 
+                
+                if (!quiz.classList.contains('hidden')) {
+                    const checkBtn = document.getElementById('check-btn');
+                    const nextBtn = document.getElementById('next-btn');
+                    
+                    if (checkBtn && !checkBtn.classList.contains('hidden')) {
+                        checkAnswer();
+                    } 
+                    else if (nextBtn && !nextBtn.classList.contains('hidden')) {
+                        nextQuestion();
+                    }
+                    return;
+                }
+
+                if (!result.classList.contains('hidden')) {
+                    resetToSetup();
+                }
+            }
+        });
+
+        window.onload = updateRangePreview;
     </script>
 </body>
 </html>
