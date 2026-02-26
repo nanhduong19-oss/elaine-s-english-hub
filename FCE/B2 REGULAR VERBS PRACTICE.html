@@ -174,12 +174,20 @@
             </div>
 
             <div id="question-card" class="bg-white rounded-3xl shadow-xl border-b-8 border-gray-100 overflow-hidden relative w-full">
+                <!-- TIMER BAR -->
+                <div class="absolute top-0 left-0 w-full h-1.5 bg-gray-100 z-10">
+                    <div id="timer-bar" class="h-full bg-orange-500 transition-all duration-1000 ease-linear w-full"></div>
+                </div>
+                <div class="absolute top-4 left-5 font-bold text-orange-500 flex items-center gap-2 z-10 bg-white/80 px-2 py-1 rounded-lg">
+                    <i class="fas fa-clock"></i> <span id="timer-text">10s</span>
+                </div>
+
                 <div class="absolute top-0 right-0 p-4 opacity-10">
                     <i class="fas fa-language text-6xl text-orange-500"></i>
                 </div>
 
                 <div class="p-8 pt-12 text-center">
-                    <span class="inline-block px-3 py-1 bg-orange-50 text-orange-400 text-xs font-bold rounded-full uppercase tracking-wider mb-2">Meaning</span>
+                    <span class="inline-block px-3 py-1 bg-orange-50 text-orange-400 text-xs font-bold rounded-full uppercase tracking-wider mb-2 mt-4">Meaning</span>
                     <h2 id="meaning-clue" class="text-2xl md:text-3xl font-bold text-gray-800 leading-tight">...</h2>
                     
                     <div class="relative mt-8">
@@ -193,7 +201,7 @@
                         <div id="feedback-content" class="text-gray-700"></div>
                         <div id="ipa-display" class="mt-2 text-orange-600 font-mono text-lg font-semibold"></div>
                         <div id="retry-msg" class="text-xs mt-3 font-semibold uppercase tracking-wide opacity-75 hidden text-red-500 bg-red-50 inline-block px-2 py-1 rounded">
-                            <i class="fas fa-redo mr-1"></i> Mistake -> Review at the end
+                            Mistake -> Review at the end
                         </div>
                     </div>
                 </div>
@@ -203,14 +211,14 @@
                         Check Answer (Enter)
                     </button>
                     <button id="next-btn" onclick="nextQuestion()" class="hidden flex-1 bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md transition-all text-lg uppercase">
-                        Next (Enter) <i class="fas fa-arrow-right ml-2"></i>
+                        Next (Enter)
                     </button>
                 </div>
             </div>
             
             <div class="mt-6 text-center">
                  <button onclick="quitQuiz()" class="text-gray-400 hover:text-red-500 text-sm font-semibold transition-colors">
-                    <i class="fas fa-times mr-1"></i> Quit Session
+                    Quit Session
                 </button>
             </div>
         </div>
@@ -218,34 +226,58 @@
         <!-- Result Screen -->
         <div id="result-screen" class="hidden text-center w-full animate-fade-in">
             <div class="bg-white rounded-[3rem] p-12 card-shadow border border-gray-50">
-                <div class="w-24 h-24 bg-[#ef6c33] text-white rounded-[2rem] flex items-center justify-center mx-auto mb-8 text-4xl shadow-xl shadow-orange-100">
-                    <i class="fas fa-trophy"></i>
+                
+                <!-- Dynamic Icon & Title -->
+                <div id="result-icon-container" class="w-24 h-24 bg-[#ef6c33] text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-orange-100">
+                    <span id="result-icon">🤩</span>
                 </div>
-                <h2 class="text-4xl font-bold text-[#5c3d2e] mb-4">Great Job!</h2>
-                <p id="result-user" class="text-[#ef6c33] font-bold mb-10 text-xl"></p>
+                <h2 id="result-title" class="text-4xl font-bold text-[#5c3d2e] mb-2">Great Job!</h2>
+                <p id="result-subtitle" class="text-gray-500 mb-6 text-lg">You have completed the practice.</p>
+                
+                <p id="result-user" class="text-[#ef6c33] font-bold mb-8 text-xl"></p>
                 
                 <div class="grid grid-cols-2 gap-6 mb-10">
-                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100">
-                        <div class="text-5xl font-bold text-[#5c3d2e]" id="res-correct">0</div>
-                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest">Words Mastered</div>
+                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100 relative overflow-hidden">
+                        <div class="text-5xl font-bold text-[#5c3d2e] relative z-10" id="res-correct">0</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest relative z-10">Score (First Try)</div>
                     </div>
-                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100">
-                        <div class="text-5xl font-bold text-[#2ecc71]" id="res-accuracy">0%</div>
-                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest">Accuracy</div>
+                    <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100 relative overflow-hidden">
+                        <div class="text-5xl font-bold text-[#2ecc71] relative z-10" id="res-accuracy">0%</div>
+                        <div class="text-xs text-gray-400 font-bold uppercase mt-2 tracking-widest relative z-10">Accuracy</div>
                     </div>
                 </div>
 
-                <!-- ADDED REVIEW LIST SECTION -->
-                <div class="mb-10 text-left">
-                    <h3 class="text-xs font-bold text-gray-400 uppercase mb-4 tracking-widest flex items-center">
-                        <i class="fas fa-clipboard-list mr-2"></i> Review List
+                <!-- BLOCK 1: MASTERED WORDS -->
+                <div class="mb-8 text-left">
+                    <h3 class="text-xs font-bold text-green-500 uppercase mb-4 tracking-widest flex items-center">
+                        Mastered Words (First Try)
                     </h3>
-                    <div id="reviewed-list" class="bg-[#fffbf8] rounded-[2rem] p-6 max-h-80 overflow-y-auto border border-[#fdf2e9] grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <!-- Review items will be injected here -->
+                    <div id="mastered-list" class="bg-[#f0fff4] rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-[#c6f6d5] grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Items injected here -->
+                    </div>
+                </div>
+
+                <!-- BLOCK 2: NEED REVIEW WORDS -->
+                <div class="mb-10 text-left">
+                    <h3 class="text-xs font-bold text-red-500 uppercase mb-4 tracking-widest flex items-center">
+                        Words to Review (Mistakes or Timeout)
+                    </h3>
+                    <div id="mastered-list" class="bg-[#f0fff4] rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-[#c6f6d5] grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Items injected here -->
+                    </div>
+                </div>
+
+                <!-- BLOCK 2: NEED REVIEW WORDS -->
+                <div class="mb-10 text-left">
+                    <h3 class="text-xs font-bold text-red-500 uppercase mb-4 tracking-widest flex items-center">
+                        ⚠️ Words to Review (Mistakes or Timeout)
+                    </h3>
+                    <div id="need-review-list" class="bg-[#fff5f5] rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-[#fed7d7] grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <!-- Items injected here -->
                     </div>
                 </div>
                 
-                <button onclick="location.reload()" class="btn-primary w-full text-white font-bold py-6 rounded-2xl shadow-xl text-xl uppercase tracking-widest">PRACTICE AGAIN</button>
+                <button onclick="resetToSetup()" class="btn-primary w-full text-white font-bold py-6 rounded-2xl shadow-xl text-xl uppercase tracking-widest">PRACTICE AGAIN</button>
             </div>
         </div>
     </div>
@@ -255,7 +287,6 @@
     <audio id="sound-wrong" src="https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3" preload="auto"></audio>
 
     <script>
-        // 1. BIẾN LƯU THỜI GIAN BẮT ĐẦU
         var thoiGianBatDauHoc = new Date();
 
         const verbData = [
@@ -304,12 +335,21 @@
 
         let questionQueue = [];
         let currentIndex = 0;
-        let mistakesCount = 0;
         let currentMode = 'range';
         let studentInfo = { id: '', name: '' };
-        let reviewedWords = []; // Biến lưu danh sách từ đã học
+        
+        let timerInterval;
+        let timeLeft = 10;
+        let totalQuestionsToAsk = 0;
+        let correctFirstTryCount = 0;
+        
+        // Hai mảng phân loại kết quả
+        let masteredWords = [];
+        let reviewWords = [];
+        
+        // Mảng lưu ID các từ đã học trong Random Mode để tránh lặp lại
+        let usedRandomWordIds = [];
 
-        // 2. HÀM GỬI KẾT QUẢ GOOGLE SHEET
         function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDA2JO5j-aXbvYBIVBYVg4wvQEvLrafuoyPq_XglM-siz1eGQRJcXSMDcuhfBoTCw/exec"; 
             const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
@@ -329,15 +369,12 @@
                 phanTramDung: phanTramKetQua
             };
 
-            console.log("Đang gửi dữ liệu...", duLieu);
-
             fetch(SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(duLieu)
             }).then(() => {
-                // Đã gửi thành công (do no-cors nên không check response text được)
                 console.log("Gửi thành công");
             }).catch(err => {
                 console.error("Lỗi gửi sheet:", err);
@@ -359,9 +396,14 @@
             const end = parseInt(document.getElementById('range-end').value) || 1;
             const filtered = verbData.filter(v => v.id >= start && v.id <= end);
             document.getElementById('preview-count').innerText = `${filtered.length} words`;
-            document.getElementById('preview-list').innerHTML = filtered.map(v => 
-                `<span class="bg-[#fff3ec] text-[#ef6c33] px-3 py-1.5 rounded-xl font-bold text-[11px]">#${v.id} ${v.word.toUpperCase()}</span>`
-            ).join('');
+            
+            if (filtered.length === 0) {
+                document.getElementById('preview-list').innerHTML = "<span class='text-gray-400 text-sm'>Không tìm thấy từ nào.</span>";
+            } else {
+                document.getElementById('preview-list').innerHTML = filtered.map(v => 
+                    `<span class="bg-[#fff3ec] text-[#ef6c33] px-3 py-1.5 rounded-xl font-bold text-[11px]">#${v.id} ${v.word.toUpperCase()}</span>`
+                ).join('');
+            }
         }
 
         function adjustLimit(delta) {
@@ -388,6 +430,15 @@
             }
         }
 
+        // Hàm đưa người dùng về màn hình chờ mà không tải lại trang (Giữ nguyên bộ nhớ đã học)
+        function resetToSetup() {
+            clearInterval(timerInterval);
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('setup-screen').classList.remove('hidden');
+            updatePreview();
+        }
+
         function startQuiz() {
             studentInfo.id = document.getElementById('student-id').value.trim();
             studentInfo.name = document.getElementById('student-name').value.trim();
@@ -404,7 +455,20 @@
                 pool = verbData.filter(v => v.id >= s && v.id <= e);
             } else {
                 const limit = parseInt(document.getElementById('random-limit').value);
-                pool = [...verbData].sort(() => 0.5 - Math.random()).slice(0, limit);
+                
+                // Lọc ra các từ chưa được hỏi trong phiên học này
+                let availableWords = verbData.filter(v => !usedRandomWordIds.includes(v.id));
+                
+                // Nếu số từ còn lại ít hơn số lượng cần Random (limit), reset lại kho nhớ
+                if (availableWords.length < limit) {
+                    usedRandomWordIds = [];
+                    availableWords = [...verbData];
+                }
+                
+                pool = availableWords.sort(() => 0.5 - Math.random()).slice(0, limit);
+                
+                // Đánh dấu các từ này đã được sử dụng
+                pool.forEach(q => usedRandomWordIds.push(q.id));
             }
 
             if (pool.length === 0) return;
@@ -413,10 +477,14 @@
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
 
-            questionQueue = [...pool].sort(() => 0.5 - Math.random());
+            // Gắn cờ isFirstTry = true
+            questionQueue = [...pool].map(q => ({...q, isFirstTry: true})).sort(() => 0.5 - Math.random());
             currentIndex = 0;
-            mistakesCount = 0;
-            reviewedWords = []; // Reset danh sách
+            totalQuestionsToAsk = questionQueue.length;
+            correctFirstTryCount = 0;
+            masteredWords = [];
+            reviewWords = [];
+
             loadQuestion();
         }
 
@@ -439,23 +507,42 @@
             document.getElementById('check-btn').classList.remove('hidden');
             document.getElementById('next-btn').classList.add('hidden');
             
-            // Auto focus
+            setTimeout(() => { input.focus(); }, 50);
+            startTimer(); 
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 10;
+            document.getElementById('timer-bar').style.width = '100%';
+            document.getElementById('timer-text').innerText = '10s';
+            
             setTimeout(() => {
-                input.focus();
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    document.getElementById('timer-text').innerText = timeLeft + 's';
+                    document.getElementById('timer-bar').style.width = (timeLeft * 10) + '%';
+                    
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        checkAnswer(true); 
+                    }
+                }, 1000);
             }, 50);
         }
 
-        function checkAnswer() {
+        function checkAnswer(isTimeout = false) {
             const input = document.getElementById('answer-input');
             const user = input.value.trim().toLowerCase();
             const q = questionQueue[currentIndex];
 
-            if (!user) {
+            if (!isTimeout && !user) {
                 input.classList.add('shake');
                 setTimeout(() => input.classList.remove('shake'), 500);
                 return;
             }
 
+            clearInterval(timerInterval);
             input.disabled = true;
             const isCorrect = user === q.word.toLowerCase();
             
@@ -479,20 +566,31 @@
                 speakWord(q.word); 
                 input.classList.add('border-[#2ecc71]', 'text-[#27ae60]');
                 box.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-[#f0fff4] border border-[#c6f6d5]";
-                title.innerHTML = `<i class="fas fa-check-circle mr-2"></i> CORRECT!`;
+                title.innerHTML = `CORRECT!`;
                 title.className = "font-bold text-lg mb-1 uppercase tracking-widest text-[#27ae60]";
                 retryMsg.classList.add('hidden');
                 
-                // Thêm vào danh sách đã học nếu chưa có
-                if (!reviewedWords.some(w => w.id === q.id)) {
-                    reviewedWords.push(q);
+                if (q.isFirstTry) {
+                    correctFirstTryCount++;
+                    if (!masteredWords.some(w => w.id === q.id)) { masteredWords.push(q); }
                 }
             } else {
-                mistakesCount++;
+                if (q.isFirstTry) {
+                    q.isFirstTry = false;
+                    if (!reviewWords.some(w => w.id === q.id)) { reviewWords.push(q); }
+                }
+
                 playSfx('sound-wrong');
                 input.classList.add('border-[#e74c3c]', 'text-[#c0392b]', 'shake');
                 box.className = "mt-6 p-5 rounded-xl text-center animate-fade-in-up bg-[#fff5f5] border border-[#fed7d7]";
-                title.innerHTML = `<i class="fas fa-times-circle mr-2"></i> INCORRECT!`;
+                
+                if (isTimeout) {
+                    title.innerHTML = `TIME'S UP!`;
+                    input.value = "TIME'S UP!";
+                } else {
+                    title.innerHTML = `INCORRECT!`;
+                }
+
                 title.className = "font-bold text-lg mb-1 uppercase tracking-widest text-[#c0392b]";
                 retryMsg.classList.remove('hidden');
                 
@@ -509,50 +607,97 @@
 
         function quitQuiz() {
             if (confirm("Are you sure you want to quit this session?")) {
-                location.reload();
+                clearInterval(timerInterval);
+                resetToSetup();
             }
         }
 
         function finishQuiz() {
+            clearInterval(timerInterval);
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('result-user').innerText = studentInfo.name;
             
-            // Tính toán kết quả
-            const totalWordsDone = questionQueue.length; // Số câu hỏi ban đầu
-            document.getElementById('res-correct').innerText = totalWordsDone;
-            
-            // Tổng lượt trả lời = số câu hỏi + số lần sai
-            const totalAttempts = questionQueue.length + mistakesCount;
-            const accuracy = Math.round((questionQueue.length / totalAttempts) * 100) || 0;
+            document.getElementById('res-correct').innerText = `${correctFirstTryCount}/${totalQuestionsToAsk}`;
+            const accuracy = Math.round((correctFirstTryCount / totalQuestionsToAsk) * 100) || 0;
             const accuracyStr = `${accuracy}%`;
             document.getElementById('res-accuracy').innerText = accuracyStr;
 
-            // HIỂN THỊ REVIEW LIST
-            const listContainer = document.getElementById('reviewed-list');
-            listContainer.innerHTML = '';
-            // Sắp xếp theo ID
-            reviewedWords.sort((a,b) => a.id - b.id);
-            
-            reviewedWords.forEach(word => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = "bg-white p-4 rounded-2xl border border-orange-50 shadow-sm flex items-center gap-3";
-                itemDiv.innerHTML = `
-                    <div class="w-10 h-10 rounded-full bg-[#fff3ec] text-[#ef6c33] flex-shrink-0 flex items-center justify-center font-bold text-xs shadow-inner">
-                        ${word.id}
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="font-bold text-[#5c3d2e] uppercase text-sm truncate">
-                            ${word.word} 
-                            <span class="text-xs font-normal text-gray-400 normal-case ml-1 font-mono">${word.ipa}</span>
-                        </div>
-                        <div class="text-xs text-gray-500 truncate" title="${word.meaning}">${word.meaning}</div>
-                    </div>
-                `;
-                listContainer.appendChild(itemDiv);
-            });
+            // XỬ LÝ LỜI KHÍCH LỆ & ICON DỰA TRÊN ĐIỂM SỐ
+            const resultTitle = document.getElementById('result-title');
+            const resultSubtitle = document.getElementById('result-subtitle');
+            const resultIcon = document.getElementById('result-icon');
+            const resultIconContainer = document.getElementById('result-icon-container');
 
-            // Gửi dữ liệu về Google Sheet
+            if (accuracy < 50) {
+                resultTitle.innerText = "Keep trying!";
+                resultSubtitle.innerText = "Don't give up, you just need a little more practice.";
+                resultIcon.innerText = "😢";
+                resultIconContainer.className = "w-24 h-24 bg-blue-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-blue-200";
+            } else if (accuracy < 70) {
+                resultTitle.innerText = "Good Job!";
+                resultSubtitle.innerText = "You're making progress, keep pushing yourself.";
+                resultIcon.innerText = "🙂";
+                resultIconContainer.className = "w-24 h-24 bg-yellow-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-yellow-200";
+            } else if (accuracy < 80) {
+                resultTitle.innerText = "Very Good!";
+                resultSubtitle.innerText = "Great results, keep up the good work!";
+                resultIcon.innerText = "😊";
+                resultIconContainer.className = "w-24 h-24 bg-orange-400 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-orange-200";
+            } else if (accuracy < 90) {
+                resultTitle.innerText = "Excellent!";
+                resultSubtitle.innerText = "Your knowledge is very solid!";
+                resultIcon.innerText = "😁";
+                resultIconContainer.className = "w-24 h-24 bg-red-500 text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-red-200";
+            } else {
+                resultTitle.innerText = "Outstanding!";
+                resultSubtitle.innerText = "Perfect score, absolutely amazing!";
+                resultIcon.innerText = "🤩";
+                resultIconContainer.className = "w-24 h-24 bg-[#ef6c33] text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-orange-200";
+            }
+
+            // HIỂN THỊ LIST TỪ ĐÃ THUỘC (Xanh)
+            const masteredListContainer = document.getElementById('mastered-list');
+            masteredListContainer.innerHTML = '';
+            masteredWords.sort((a,b) => a.id - b.id);
+            if (masteredWords.length === 0) {
+                masteredListContainer.innerHTML = '<div class="col-span-1 md:col-span-2 text-center text-sm text-gray-400 py-4 italic">No words mastered on the first try yet.</div>';
+            } else {
+                masteredWords.forEach(word => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "bg-white p-4 rounded-2xl border border-green-100 shadow-sm flex items-center gap-3";
+                    itemDiv.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-green-50 text-green-600 flex-shrink-0 flex items-center justify-center font-bold text-xs shadow-inner">${word.id}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-green-900 uppercase text-sm truncate">${word.word} <span class="text-xs font-normal text-gray-400 normal-case ml-1 font-mono">${word.ipa}</span></div>
+                            <div class="text-xs text-gray-500 truncate" title="${word.meaning}">${word.meaning}</div>
+                        </div>
+                    `;
+                    masteredListContainer.appendChild(itemDiv);
+                });
+            }
+
+            // HIỂN THỊ LIST TỪ CẦN ÔN LẠI (Đỏ)
+            const reviewListContainer = document.getElementById('need-review-list');
+            reviewListContainer.innerHTML = '';
+            reviewWords.sort((a,b) => a.id - b.id);
+            if (reviewWords.length === 0) {
+                reviewListContainer.innerHTML = '<div class="col-span-1 md:col-span-2 text-center text-sm text-gray-400 py-4 italic">Awesome! You didn\'t miss any words.</div>';
+            } else {
+                reviewWords.forEach(word => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = "bg-white p-4 rounded-2xl border border-red-100 shadow-sm flex items-center gap-3";
+                    itemDiv.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-red-50 text-red-600 flex-shrink-0 flex items-center justify-center font-bold text-xs shadow-inner">${word.id}</div>
+                        <div class="flex-1 min-w-0">
+                            <div class="font-bold text-red-900 uppercase text-sm truncate">${word.word} <span class="text-xs font-normal text-gray-400 normal-case ml-1 font-mono">${word.ipa}</span></div>
+                            <div class="text-xs text-gray-500 truncate" title="${word.meaning}">${word.meaning}</div>
+                        </div>
+                    `;
+                    reviewListContainer.appendChild(itemDiv);
+                });
+            }
+
             const modeLabel = currentMode === 'range' ? 
                 `Range ${document.getElementById('range-start').value}-${document.getElementById('range-end').value}` : 
                 `Random (${document.getElementById('random-limit').value})`;
@@ -562,45 +707,38 @@
                 studentInfo.id,
                 studentInfo.name,
                 modeLabel,
-                totalWordsDone,
+                totalQuestionsToAsk,
                 accuracyStr
             );
         }
 
-        // --- XỬ LÝ PHÍM ENTER TOÀN CỤC ---
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                e.preventDefault(); // Ngăn chặn hành vi mặc định (như click button đang focus)
-
+                e.preventDefault(); 
                 const setup = document.getElementById('setup-screen');
                 const quiz = document.getElementById('quiz-screen');
                 const result = document.getElementById('result-screen');
                 
-                // 1. Màn hình Setup
                 if (!setup.classList.contains('hidden')) {
                     startQuiz();
                     return;
                 } 
                 
-                // 2. Màn hình Quiz
                 if (!quiz.classList.contains('hidden')) {
                     const checkBtn = document.getElementById('check-btn');
                     const nextBtn = document.getElementById('next-btn');
                     
-                    // Nếu nút Check đang hiện -> Gọi hàm Check
                     if (checkBtn && !checkBtn.classList.contains('hidden')) {
                         checkAnswer();
                     } 
-                    // Nếu nút Next đang hiện -> Gọi hàm Next
                     else if (nextBtn && !nextBtn.classList.contains('hidden')) {
                         nextQuestion();
                     }
                     return;
                 }
 
-                // 3. Màn hình Result (Optional: Bấm Enter để làm lại)
                 if (!result.classList.contains('hidden')) {
-                    location.reload();
+                    resetToSetup();
                 }
             }
         });
