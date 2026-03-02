@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Part 4 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- DRAG & DROP STYLES --- */
+        
+        /* 1. Base Drop Zone (Empty - Rose Theme for PET) */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #fff1f2; /* Rose-50 */
+            border: 2px dashed #fda4af; /* Rose-300 */
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #be123c; /* Rose-700 */
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #fce7f3;
+            border-color: #db2777;
+            transform: scale(1.1);
+        }
+
+        /* 2. FILLED STATE (Bình thường: Đen, Đậm, Không nền, Không viền) */
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            
+            /* Visuals: Transparent & No Border */
+            background-color: transparent !important; 
+            border: none !important; 
+            border-radius: 4px;
+            border-bottom: 2px solid transparent !important; /* Để dành cho hover */
+            
+            /* Typography: Black Text by default */
+            color: #000000 !important; 
+            font-size: 1em;
+            font-weight: 800; /* In đậm */
+            line-height: 1.6;
+            text-align: left;
+            box-shadow: none !important;
+            white-space: normal;
+        }
+        
+        /* Hover vào câu đã điền: Hiện gạch chân hồng */
+        .drop-zone.filled:hover {
+            border-bottom: 2px solid #be123c !important; 
+            background-color: #fff1f2 !important; /* Feedback nhẹ khi hover */
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            margin-left: 5px;
+        }
+
+        /* 3. CORRECT STATE (Đúng: Chữ Xanh đậm, Nền Xanh nhạt, Tích) */
+        .drop-zone.filled.correct {
+            background-color: #dcfce7 !important; /* Light Green Bg */
+            color: #15803d !important; /* Dark Green Text */
+            border: 1px solid #86efac !important;
+            border-bottom: 1px solid #86efac !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            pointer-events: none; /* Khóa */
+        }
+
+        .drop-zone.filled.correct::after {
+            content: '\f00c'; /* FontAwesome Check Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #15803d;
+            margin-left: 0;
+        }
+
+        /* 4. WRONG STATE (Sai: Chữ Đỏ đậm, Nền Đỏ nhạt, X) */
+        .drop-zone.filled.wrong {
+            background-color: #fee2e2 !important; /* Light Red Bg */
+            color: #b91c1c !important; /* Dark Red Text */
+            border: 1px solid #fca5a5 !important;
+            border-bottom: 1px solid #fca5a5 !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .drop-zone.filled.wrong::after {
+            content: '\f00d'; /* FontAwesome X Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #b91c1c;
+            margin-left: 0;
+        }
+
+        .draggable-item { cursor: grab; user-select: none; touch-action: none; }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.dragging { opacity: 0.5; transform: scale(0.95); }
+        .draggable-item.used {
+            opacity: 0.4;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+            color: #94a3b8;
+        }
+
+        .reading-content p { margin-bottom: 1.5em; line-height: 2.2; text-align: justify; }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-600 w-full"></div> <!-- PET Rose Color -->
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">PET Reading Part 4</h1>
+                <p class="text-slate-500 mb-6 font-medium">B1 Oxford - Test 4, 5 & 6</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student Code</label>
+                    <input type="text" id="user-id-input" placeholder="Enter ID (e.g., 71001BT)..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/3</span>
+                    
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose"></div>
+                        
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-rose-50 rounded-xl border border-rose-200">
+                            <h4 class="font-bold text-rose-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-rose-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options Area -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-H
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-rose-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/15</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span> (<span id="res-id"></span>)</span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">Waiting to send...</div>
+                </div>
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- PET DATA (Tests 4 - 6) ---
+        const db = [
+            {
+                id: "test4",
+                title: "Lost in the mountains",
+                content_html: `<p>When you’re a mountain rescue volunteer, you never know when you’re going to be called to work. We go out in all weather, and at any time of the day or night. If someone is in danger, there’s no time to lose. On New Year’s Day last year, I was sitting down to breakfast with my family. <span class="drop-zone" data-id="16">[16]</span> Two hikers had decided to celebrate the new year by walking along a mountain ridge in County Kerry, Ireland, just a few miles from my home. They were staying in a small guest house, and had set off early on New Year’s Eve. When they didn’t return by the following morning, their host became worried and called the police. <span class="drop-zone" data-id="17">[17]</span></p><p>I was just one of 12 volunteers who left our breakfast tables and set out to look for the missing hikers. We pushed through strong winds and thick cloud, calling and listening over and over again. <span class="drop-zone" data-id="18">[18]</span> It was too cold to survive for long out in the mountains, and the hikers had been missing for a whole day and night. <span class="drop-zone" data-id="19">[19]</span> I shouted out, and was relieved to hear a voice shout back. <span class="drop-zone" data-id="20">[20]</span> They were so happy to see us. They explained that they’d got lost, and the winds had been too strong for them to keep walking. Luckily, they had warm clothes, food and the tent.</p><p>We led them back down the mountain and returned them to their guest house, where a delicious hot meal was waiting for them and for the rescue team. They said that they’ll never forget that New Year’s Day when they were rescued by local people who became heroes.</p>`,
+                options: [
+                    { id: "A", text: "The police called the Kerry Mountain Rescue Team." },
+                    { id: "B", text: "The hikers were huddled together in a small tent between two large rocks." },
+                    { id: "C", text: "They said it’s extremely dangerous to go hiking in bad weather." },
+                    { id: "D", text: "Nobody answered back so we began to lose hope." },
+                    { id: "E", text: "We didn’t know they had already found their way home." },
+                    { id: "F", text: "Suddenly, I heard the sound of a whistle." },
+                    { id: "G", text: "We were just about to start eating when my phone rang." },
+                    { id: "H", text: "After searching all night, we gave up and went back home." }
+                ],
+                answers: { 16: "G", 17: "A", 18: "D", 19: "F", 20: "B" },
+                explanations: `
+                    <strong>16. G: [Sequence & Contrast]</strong><br>
+                    Tác giả đang chuẩn bị ăn sáng ("sitting down to breakfast") thì có một sự kiện xen ngang. Câu G "We were just about to start eating when my phone rang" (Chúng tôi vừa định bắt đầu ăn thì điện thoại tôi reo) khớp hoàn hảo về trình tự thời gian và tạo ra sự thay đổi bối cảnh đột ngột.
+                    <br><br>
+                    <strong>17. A: [Cause & Result]</strong><br>
+                    Câu trước nói chủ nhà lo lắng và gọi cảnh sát. Hệ quả logic là cảnh sát phải gọi cho đội chuyên gia. Câu A "The police called the Kerry Mountain Rescue Team" (Cảnh sát đã gọi cho Đội cứu hộ núi Kerry) là bước tiếp theo trong quy trình cứu hộ.
+                    <br><br>
+                    <strong>18. D: [Action & Negative Result]</strong><br>
+                    Các tình nguyện viên đang kêu gọi và lắng nghe ("calling and listening over and over"). Câu D "Nobody answered back so we began to lose hope" (Không ai đáp lại nên chúng tôi bắt đầu mất hy vọng) mô tả kết quả thất vọng của hành động kêu gọi đó.
+                    <br><br>
+                    <strong>19. F: [Turning Point / Sound Connection]</strong><br>
+                    Đoạn văn đang mô tả sự khắc nghiệt và thời gian mất tích dài. Câu F "Suddenly, I heard the sound of a whistle" (Bất thình lình, tôi nghe thấy tiếng còi) tạo ra bước ngoặt, dẫn tới hành động "I shouted out" (Tôi hét lên) ở câu sau.
+                    <br><br>
+                    <strong>20. B: [Visual Detail / Result]</strong><br>
+                    Tác giả nghe thấy tiếng hét đáp lại. Câu B "The hikers were huddled together in a small tent between two large rocks" (Những người leo núi đang túm tụm lại trong một chiếc lều nhỏ giữa hai tảng đá lớn) cung cấp chi tiết hình ảnh về vị trí và tình trạng của họ khi được tìm thấy.
+                `
+            },
+            {
+                id: "test5",
+                title: "Saved by dolphins",
+                content_html: `<p>I’ve always loved the sea, and I started surfing when I was five years old. I live near the beach in California, so I try to get out on the waves every day. <span class="drop-zone" data-id="16">[16]</span> It was a warm, windy day with some good waves. I was resting on my board and watching a group of bottlenose dolphins playing in the surf a short distance away, when suddenly a great white shark appeared. It was huge, but it moved so fast that I didn’t see it coming.</p><p>The shark tried to bite me, but it couldn’t get its teeth around me and the board. It tore a big chunk out of the board, but I wasn’t hurt that time. Then the shark came at me again. <span class="drop-zone" data-id="17">[17]</span> I stayed calm even though I knew the next bite was probably seconds away. <span class="drop-zone" data-id="18">[18]</span> I looked up and saw the bottlenose dolphins swimming around me. They formed a circle around me and my surfboard, so the shark couldn’t get near me. I was amazed. It was like something out of a film.</p><p>I knew a lot of stories about dolphins helping humans, but I never really believed them until it happened to me. Dolphins are very intelligent and they knew what to do to help me stay safe. They stayed close to me until I managed to get back on my board and catch a wave back to the shore, where I collapsed with relief. Someone who was at the beach called an ambulance, and I was taken to hospital.</p><p><span class="drop-zone" data-id="19">[19]</span> I won’t give up my favourite activity. I’m not angry with the shark. <span class="drop-zone" data-id="20">[20]</span> I’ll always be grateful to the dolphins. They saved my life.</p>`,
+                options: [
+                    { id: "A", text: "I’ve stayed out of the sea ever since." },
+                    { id: "B", text: "But the next bite never came." },
+                    { id: "C", text: "Six weeks later, I was back on my surfboard." },
+                    { id: "D", text: "Two months ago, I went surfing alone." },
+                    { id: "E", text: "I’ve always loved dolphins." },
+                    { id: "F", text: "I know I was in his home, and he was protecting it." },
+                    { id: "G", text: "I knew that I would survive the attack." },
+                    { id: "H", text: "This time it bit my leg and pulled me off my surfboard." }
+                ],
+                answers: { 16: "D", 17: "H", 18: "B", 19: "C", 20: "F" },
+                explanations: `
+                    <strong>16. D: [Introduction / Context Setting]</strong><br>
+                    Đoạn đầu giới thiệu về sở thích lướt sóng hàng ngày. Câu D "Two months ago, I went surfing alone" (Hai tháng trước, tôi đi lướt sóng một mình) đưa vào thời gian cụ thể để bắt đầu kể về sự cố xảy ra vào ngày hôm đó.
+                    <br><br>
+                    <strong>17. H: [Action Sequence / Escalation]</strong><br>
+                    Con cá mập tấn công lần thứ hai ("Then the shark came at me again"). Câu H "This time it bit my leg and pulled me off my surfboard" (Lần này nó cắn vào chân tôi và kéo tôi khỏi ván lướt) mô tả chi tiết mức độ nguy hiểm tăng lên của cuộc tấn công.
+                    <br><br>
+                    <strong>18. B: [Contrast / Subversion of Expectation]</strong><br>
+                    Tác giả đang chờ đợi cú cắn tiếp theo ("next bite was probably seconds away"). Câu B "But the next bite never came" (Nhưng cú cắn tiếp theo đã không bao giờ đến) tạo ra sự tương phản bất ngờ, dẫn đến sự xuất hiện cứu nguy của đàn cá heo ở câu sau.
+                    <br><br>
+                    <strong>19. C: [Time Jump / Recovery]</strong><br>
+                    Sau khi bị thương và đi bệnh viện. Câu C "Six weeks later, I was back on my surfboard" (Sáu tuần sau, tôi đã quay lại trên chiếc ván lướt của mình) cho thấy sự hồi phục và dẫn dắt đến ý "không từ bỏ hoạt động yêu thích" ở câu sau.
+                    <br><br>
+                    <strong>20. F: [Reasoning / Logic]</strong><br>
+                    Tác giả nói mình không giận con cá mập. Câu F "I know I was in his home, and he was protecting it" (Tôi biết mình đang ở trong nhà của nó, và nó đang bảo vệ nơi đó) giải thích cho quan điểm bao dung đó dựa trên bản năng tự nhiên của động vật.
+                `
+            },
+            {
+                id: "test6",
+                title: "My first marathon",
+                content_html: `<p>The alarm went off at half-past four that morning. It was far too early to get up, and the idea of running 26 miles seemed impossible. <span class="drop-zone" data-id="16">[16]</span> I pulled myself out of bed, showered and pulled on my running gear.</p><p>By six o’clock, I was at the Dodger Stadium, where the rest of my running group was already waiting. When they saw the look of terror on my face, they laughed kindly. This was clearly my first marathon. <span class="drop-zone" data-id="17">[17]</span> When I realized that I was just one of them, I felt a little better. Helicopters hovered overhead ready to film us as we ran through the streets of Los Angeles, passing every major landmark until we reached the sea at Santa Monica. Suddenly, I felt very lucky and proud to be a part of it. <span class="drop-zone" data-id="18">[18]</span></p><p>As I began to run, I tried to ignore the aches in my body from eight months of training. Instead, I put one foot in front of the other and kept going. By mile five, my body was complaining, and by mile eight, my muscles were screaming at me.</p><p><span class="drop-zone" data-id="19">[19]</span> I was running alone now, but I was still running. By mile 12, I was ready to give up, and by mile 15, I was moving even more slowly. By mile 18, I was in my neighbourhood. <span class="drop-zone" data-id="20">[20]</span> But by mile 22, there were only four miles to go. Spectators yelled encouragement at me as I ran past. ‘You can do it! Keep going!’</p><p>As the finish line came into sight, I started running faster and faster, and I crossed that line running. I grinned as the medal was placed over my head, and then I cried. I had done it. I had run my first marathon!</p>`,
+                options: [
+                    { id: "A", text: "After eight months of training, this was going to be easy." },
+                    { id: "B", text: "I slowed down, and the rest of my group moved away." },
+                    { id: "C", text: "But I had trained for this, and I was going to do it." },
+                    { id: "D", text: "There was no way I could finish the race now." },
+                    { id: "E", text: "The horn blew to start the race." },
+                    { id: "F", text: "I was very tempted to turn down my street and go home." },
+                    { id: "G", text: "I was so glad that I had decided to do this." },
+                    { id: "H", text: "Thousands of runners from all over the world were gathered for the race." }
+                ],
+                answers: { 16: "C", 17: "H", 18: "E", 19: "B", 20: "F" },
+                explanations: `
+                    <strong>16. C: [Internal Conflict & Determination]</strong><br>
+                    Tác giả thấy việc chạy 26 dặm là bất khả thi ("seemed impossible"). Câu C "But I had trained for this, and I was going to do it" (Nhưng tôi đã tập luyện cho điều này, và tôi sẽ thực hiện nó) thể hiện sự quyết tâm vượt qua nỗi sợ hãi ban đầu.
+                    <br><br>
+                    <strong>17. H: [Context & Reference]</strong><br>
+                    Tác giả đang ở sân vận động với nhóm chạy. Câu H "Thousands of runners from all over the world were gathered for the race" (Hàng ngàn người chạy từ khắp nơi trên thế giới đã tụ họp cho cuộc đua) mở rộng bối cảnh, khớp với ý "I was just one of them" (Tôi chỉ là một trong số họ) ở câu sau.
+                    <br><br>
+                    <strong>18. E: [Action / Signal Connection]</strong><br>
+                    Sau khi mô tả không khí tự hào và chuẩn bị. Câu E "The horn blew to start the race" (Tiếng còi vang lên để bắt đầu cuộc đua) là tín hiệu hành động cần thiết để chuyển sang đoạn tiếp theo mô tả quá trình chạy ("As I began to run").
+                    <br><br>
+                    <strong>19. B: [Cause & Effect / Consequence of Pain]</strong><br>
+                    Cơ thể tác giả bắt đầu đau nhức dữ dội ("muscles were screaming"). Hệ quả là câu B "I slowed down, and the rest of my group moved away" (Tôi chạy chậm lại, và những người còn lại trong nhóm tách xa dần), giải thích tại sao tác giả lại "running alone" (đang chạy một mình).
+                    <br><br>
+                    <strong>20. F: [Location-based Temptation]</strong><br>
+                    Tác giả đang chạy qua khu phố nhà mình ("in my neighbourhood"). Câu F "I was very tempted to turn down my street and go home" (Tôi đã rất bị cám dỗ để rẽ vào con đường nhà mình và đi về nhà) mô tả một suy nghĩ thực tế khi kiệt sức và đang ở gần nơi nghỉ ngơi quen thuộc.
+                `
+            }
+        ];
+
+        var thoiGianBatDau = new Date();
+
+        function guiKetQua10Cot(tenBai, maHS, tenHS, diemSo, phanTram, thoiGianLamBai) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKnfEohBoagjHJmRPSM4uhSoEKeykBkzS-6DTy476UyddLxc-b8zptoQU6v8C94Nw14A/exec"; 
+            const statusEl = document.getElementById('sheet-status');
+            if(statusEl) statusEl.textContent = "Đang gửi dữ liệu...";
+
+            var gio = thoiGianBatDau.getHours();
+            var phut = thoiGianBatDau.getMinutes();
+            var giay = thoiGianBatDau.getSeconds();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut) + ":" + (giay < 10 ? '0'+giay : giay);
+
+            var duLieu = {
+                tenSheet: "PET Reading Part 4 - Test 4-6", 
+                tenBai: tenBai,            
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLamBai, 
+                soCauDung: diemSo,         
+                phanTram: phanTram         
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu thành công!</span>';
+                alert("✅ Submission Successful!");
+            }).catch(err => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Submission failed</span>';
+            });
+        }
+
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false 
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name) { alert("Please enter your name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 4}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                // Only show explanation if PASSED
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    expContent.innerHTML = test.explanations;
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                     
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+                        
+                        if (savedAns) {
+                            this.fillGapUI(gap, savedAns);
+                        } else {
+                             gap.className = 'drop-zone';
+                             gap.innerHTML = `[${qId}]`;
+                             gap.ondragover = (e) => this.allowDrop(e);
+                             gap.ondrop = (e) => this.drop(e);
+                        }
+                        
+                        gap.onclick = () => {
+                             if (!this.state.testCompleted) this.handleGapClick(test.id, qId);
+                        };
+                    });
+                } else {
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+
+                        if (this.state.testCompleted) {
+                            gap.onclick = null;
+                            gap.ondragover = null;
+                            gap.ondrop = null;
+                        }
+
+                        if (savedAns) {
+                             if (!gap.innerHTML.includes(savedAns)) {
+                                 this.fillGapUI(gap, savedAns);
+                             }
+                        } else {
+                             if (gap.classList.contains('filled')) {
+                                 gap.className = 'drop-zone';
+                                 gap.innerHTML = `[${qId}]`;
+                             }
+                        }
+                     });
+                }
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-rose-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    container.appendChild(div);
+                });
+            },
+
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                target.classList.remove('hovered');
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                gapEl.className = 'drop-zone filled'; 
+                gapEl.innerHTML = `<span class="uppercase text-rose-800 mr-1">[${optId}]</span><span class="font-extrabold">${optText}</span>`;
+            },
+
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const totalQuestions = Object.keys(test.answers).length; 
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    if (this.state.userAnswers[`${test.id}-${qId}`]) answeredCount++;
+                });
+
+                if (answeredCount < totalQuestions) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns === test.answers[qId]) correctCount++;
+                });
+
+                // PASS Logic: >= 4 (cho PET)
+                if (correctCount >= 4) {
+                    this.showFeedback(true); // PASSED
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You need at least 4 correct answers. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                    } else {
+                        this.showFeedback(false); // FAILED
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+                    
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong'); // Add Red style
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+
+                    if (passed) {
+                        if (userAns === correctAns) {
+                            gap.classList.add('correct'); // Green style
+                        } else {
+                            gap.classList.add('wrong'); // Red style
+                        }
+                    } else {
+                        // FAILED
+                        if (userAns !== correctAns) {
+                            gap.classList.add('wrong');
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test (>= 4 correct).");
+                } else {
+                    alert("Out of attempts. Moving to next part.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.renderTest();
+            },
+
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    const qIds = Object.keys(test.answers);
+                    totalQ += qIds.length;
+                    
+                    qIds.forEach(qId => {
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key];
+                        if (userAns === test.answers[qId]) score++;
+                    });
+                });
+
+                const percent = totalQ > 0 ? Math.round((score / totalQ) * 100) : 0;
+
+                guiKetQua10Cot(
+                    "PET Reading Part 4 - Test 4-6", 
+                    this.state.studentId,
+                    this.state.userName, 
+                    score + "/" + totalQ,
+                    percent + "%",
+                    durationStr
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-score').nextElementSibling.textContent = "/" + totalQ;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-id').textContent = this.state.studentId;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#e11d48');
+            }
+        };
+    </script>
+</body>
+</html>
