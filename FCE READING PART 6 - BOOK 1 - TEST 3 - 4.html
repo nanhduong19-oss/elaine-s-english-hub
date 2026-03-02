@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Reading Part 6 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Drag & Drop Styles */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #f0fdf4;
+            border: 2px dashed #86efac;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #166534;
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+            transform: scale(1.1);
+        }
+
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            background-color: #f8fafc; 
+            border: none;
+            border-bottom: 2px solid #64748b;
+            border-radius: 4px;
+            color: #0f172a;
+            font-size: 1em;
+            font-weight: 800;
+            text-align: left;
+            box-shadow: none;
+            white-space: normal; 
+            line-height: 1.6;
+        }
+        
+        .drop-zone.filled:hover {
+            background-color: #e2e8f0;
+            border-bottom-color: #0f172a; 
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .drop-zone.correct {
+            background-color: #dcfce7 !important;
+            border-bottom: 2px solid #16a34a !important;
+            color: #15803d !important;
+            pointer-events: none;
+        }
+        
+        .drop-zone.wrong {
+            background-color: #fee2e2 !important;
+            border-bottom: 2px solid #dc2626 !important;
+            color: #b91c1c !important;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+        }
+
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.0; 
+            text-align: justify; 
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-green-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">FCE Reading Part 6</h1>
+                <p class="text-slate-500 mb-6 font-medium">Test 3 & Test 4</p>
+                <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student Code</label>
+                    <input type="text" id="user-id-input" placeholder="Enter ID (e.g., 71001BT)..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-green-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-green-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-green-50 border border-green-200 rounded-lg text-green-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 7</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/2</span>
+                    
+                    <!-- Control Buttons -->
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-green-600 text-white font-bold text-sm shadow hover:bg-green-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Split View) -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                
+                <!-- LEFT: TEXT (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose">
+                            <!-- Content Injected Here -->
+                        </div>
+                        
+                        <!-- Explanation Box (Hidden initially) -->
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-green-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: OPTIONS (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-green-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-G
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20">
+                        <!-- Draggable Options Injected Here -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-green-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/12</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span> (<span id="res-id"></span>)</span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">
+                        Waiting to send...
+                    </div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const db = [
+            {
+                id: "test3",
+                title: "Does music make you run faster?",
+                content_html: `
+                    <p><em>Runner Adharanand Finn took part in an unusual race in order to test the theory that music can make you run faster.</em></p>
+                    <p>An expert on the effects of music on exercise, Dr Costas Karageorghis, claims that listening to music while running can boost performance by up to 15%. To put this theory to the test, I took part in a special Rock ’n’ Roll half marathon, which had groups of musicians playing at various points along the route.</p>
+                    <p>As I lined up at the start with almost 4,000 other runners, a singer sang an inspiring song for us. It may explain why I got off to a good start. I only came eighth in the end, though, even though I’d just spent six months training hard. <span class="drop-zone" data-id="37">[37]</span> However, it turns out that all the training may have affected my response to the music; according to the research, the benefits of listening to music decrease with the level of intensity of the running.</p>
+                    <p>‘Elite athletes,’ says Karageorghis, ‘tend to focus inwardly when they are running.’ According to him, most other runners look for stimulus and distraction from what is going on around them. ‘Judging by your time,’ he says, ‘you are one of the former.’ It is true. Apart from the song at the start, when I was standing still, I can barely remember the music played along the course. The first act I passed, a folk group, made me smile, and at one point I found myself running in time to the beat of some hard rock. <span class="drop-zone" data-id="38">[38]</span> I can’t say they helped my performance very much. But what did other runners make of the music?</p>
+                    <p>Adam Bull usually runs marathons with no music and little crowd support. <span class="drop-zone" data-id="39">[39]</span> With the upbeat bands, you find yourself running to the beat, which helps. It also brings out people to cheer you on.’ Rosie Bradford was also a convert. ‘As we ran past one band and they started playing These Boots Were Made for Walking, everybody suddenly went faster.’</p>
+                    <p>The only person I found who was less than happy with the music was Lois Lloyd. ‘There wasn’t enough of it, and I found it wasn’t loud enough, so I ran with an MP3 player,’ she said. <span class="drop-zone" data-id="40">[40]</span> Karageorghis is not surprised to hear it. ‘There are many advantages to using your own player, rather than relying on the music on the course,’ he says. ‘It gives you a constant stimulus, rather than just an occasional one, and you can tailor the playlist to your taste.’</p>
+                    <p>One runner told me there was a direct correlation between the quality of the music on the course and how much it helped. But quality, of course, is subjective. I remember feeling annoyed as I ran past one band playing Keep On Running. <span class="drop-zone" data-id="41">[41]</span></p>
+                    <p>Of course, the music was not only there to help runners break their personal bests (although sadly it was unable to help me beat mine), but to provide a sense of occasion, draw out the crowds and create a carnival atmosphere. <span class="drop-zone" data-id="42">[42]</span> As I left, people were beginning to relax after the run, listening to an excellent rock band. It was a fitting way to end the day.</p>
+                `,
+                options: [
+                    { id: "A", text: "I need my music all the time." },
+                    { id: "B", text: "I think they knew why I found the music here so distracting." },
+                    { id: "C", text: "I enjoyed that for a few moments, but both of them came and went in a flash." },
+                    { id: "D", text: "Along with some spring sunshine, it certainly achieved that." },
+                    { id: "E", text: "Someone else, though, may have found it uplifting." },
+                    { id: "F", text: "I was, in fact, taking my running pretty seriously at that time." },
+                    { id: "G", text: "The music here has been great for my performance." }
+                ],
+                answers: { 37: "F", 38: "C", 39: "G", 40: "A", 41: "E", 42: "D" },
+                explanations: `
+                    <strong>37. F:</strong> <strong>[Chiến thuật: 1.3 General → Specific]</strong><br>
+                    Trước gap: tác giả nói "spent six months training hard" (tập luyện chăm chỉ). Câu F: "I was, in fact, taking my running pretty seriously at that time" (Tôi thực sự rất nghiêm túc với việc chạy bộ lúc đó). Câu F bổ sung và làm rõ ý nghĩa của việc tập luyện chăm chỉ. Cụm từ "at that time" (lúc đó) liên kết với mốc thời gian trong quá khứ.<br><br>
+                    
+                    <strong>38. C:</strong> <strong>[Chiến thuật: 2.1 Pronouns]</strong><br>
+                    Trước gap: tác giả nhắc đến hai nhóm nhạc: "a folk group" và "hard rock". Câu C: "both of them came and went in a flash" (cả hai đều lướt qua rất nhanh). Đại từ "both of them" thay thế chính xác cho hai nhóm nhạc đã đề cập.<br><br>
+                    
+                    <strong>39. G:</strong> <strong>[Chiến thuật: 1.1 Contrast]</strong><br>
+                    Trước gap: Adam Bull thường chạy "with no music" (không có nhạc). Câu G: "The music here has been great..." (Âm nhạc ở đây thật tuyệt). Đây là sự tương phản về trải nghiệm của Adam (bình thường không nghe nhạc >< hôm nay nghe nhạc thấy tốt).<br><br>
+                    
+                    <strong>40. A:</strong> <strong>[Chiến thuật: 1.2 Cause – Result]</strong><br>
+                    Trước gap: Lois Lloyd phàn nàn nhạc không đủ lớn nên phải dùng "MP3 player". Câu A: "I need my music all the time" (Tôi cần âm nhạc mọi lúc) giải thích lý do (nguyên nhân) cô ấy dùng máy MP3 riêng. Câu sau xác nhận chuyên gia "not surprised" với điều này.<br><br>
+                    
+                    <strong>41. E:</strong> <strong>[Chiến thuật: 1.1 Contrast]</strong><br>
+                    Trước gap: Tác giả cảm thấy "annoyed" (khó chịu) với bài hát Keep On Running. Câu E: "Someone else, though, may have found it uplifting" (Tuy nhiên, người khác có thể thấy nó phấn chấn). Từ "though" tạo sự tương phản trực tiếp giữa cảm xúc tiêu cực của tác giả và cảm xúc tích cực của người khác.<br><br>
+                    
+                    <strong>42. D:</strong> <strong>[Chiến thuật: 2.2 “This / That” referencing whole idea]</strong><br>
+                    Trước gap: Mục đích của âm nhạc là "create a carnival atmosphere" (tạo không khí lễ hội). Câu D: "...it certainly achieved that" (nó chắc chắn đã đạt được điều đó). Đại từ "that" thay thế cho cả ý tưởng "create a carnival atmosphere" ở phía trước.
+                `
+            },
+            {
+                id: "test4",
+                title: "Grand Prix driver",
+                content_html: `
+                    <p><em>I’m a great believer in success, in achieving whatever goal you set on a particular day, so whether I was practising on the track or working out in the gym, I always put my heart and soul into it.</em></p>
+                    <p>When I was learning my trade, racing on karts as a teenager, I would look after my helmet and race suit carefully. Everything had to be perfect; it was all about preparation. At 18, I progressed to Formula Ford racing, a stage before Formula One, and I’d even get the car up in the garage and polish the underside until it was gleaming. <span class="drop-zone" data-id="37">[37]</span> But I made the point, jokingly, that if I ever rolled over in a race, my car would have the shiniest underside in history.</p>
+                    <p>It may be that the environment of Formula One fuelled this obsession with neatness and cleanliness. It’s a profession based on precision and exactness. If you walk around a team factory it looks like a science laboratory. <span class="drop-zone" data-id="38">[38]</span> Honda factory couldn’t be further from that; it’s like something from another planet.</p>
+                    <p>Everything is aircraft standard and quality. And so it should be. If some mega-rich potential sponsor walks into a dirty factory to find people lounging around, that doesn’t make a great impression. If they walk in and everyone’s working hard and there’s not a speck of dust anywhere, that’s another matter. <span class="drop-zone" data-id="39">[39]</span></p>
+                    <p>Polishing my helmet was a specific ritual I had. The race helmet is an important and prized possession. When you’re starting out, you only have one helmet for several years and it can be a pricey piece of kit. <span class="drop-zone" data-id="40">[40]</span> By the time you get to Formula One, you’re getting through probably a dozen or more expensive ones a year. Normally I’d never have dreamed of wearing someone else’s, but I did have a problem with the front of my helmet some years ago at the Monaco Grand Prix, and just couldn’t see properly in the end I used one belonging to Nelson Piquet.</p>
+                    <p>He very kindly let me keep the helmet after the race. He’d finished second in the Brazilian Grand Prix with that helmet, so it’s a unique piece of history - two drivers wearing the same helmet and finishing second in different races. Four years later, Nelson said he wanted to swap another helmet with me. So this was where he’d announced he was retiring, so my immediate thought was, what’s with this helmet collection thing? <span class="drop-zone" data-id="41">[41]</span> There must be something in it. So I gave him a helmet and he gave me a signed one of his.</p>
+                    <p>Helmets are treasured and it’s quite rare for me to give race ones to anyone. I only gave my friend Richard one recently, although we’ve known each other since we were five. Sometimes it’s easy to forget obvious things. <span class="drop-zone" data-id="42">[42]</span> It should be the other way round.</p>
+                `,
+                options: [
+                    { id: "A", text: "I certainly took good care of mine as a result." },
+                    { id: "B", text: "You take for granted those you’re closest to and you make an effort with people you hardly know." },
+                    { id: "C", text: "But it was only natural for me to be so particular about cleanliness before racing." },
+                    { id: "D", text: "Think of a motor mechanic, and you think of oil and dirt, filthy overalls, grubby fingers." },
+                    { id: "E", text: "Some people said this was ridiculous because it wasn’t as if anyone was going to see it." },
+                    { id: "F", text: "Perhaps I should be doing it as well." },
+                    { id: "G", text: "That’s why all the teams try and compete hard with each other on presentation." }
+                ],
+                answers: { 37: "E", 38: "D", 39: "G", 40: "A", 41: "F", 42: "B" },
+                explanations: `
+                    <strong>37. E:</strong> <strong>[Chiến thuật: 2.2 “This” referencing idea]</strong><br>
+                    Trước gap: Tác giả kể việc lau chùi gầm xe ("polish the underside"). Câu E: "Some people said this was ridiculous..." (Mọi người bảo việc NÀY thật nực cười). "This" ám chỉ hành động lau chùi gầm xe. Câu sau gap dùng "But" để phản bác lại lời chê bai đó.<br><br>
+                    
+                    <strong>38. D:</strong> <strong>[Chiến thuật: 1.1 Contrast / 2.2 Reference]</strong><br>
+                    Trước gap: Nhà máy trông như phòng thí nghiệm khoa học ("science laboratory"). Câu D: "Think of a motor mechanic... oil and dirt..." (Nghĩ đến thợ máy là nghĩ đến dầu nhớt và bụi bẩn). Câu sau gap: "...couldn’t be further from that" (không thể khác xa ĐIỀU ĐÓ hơn nữa). "That" ở đây ám chỉ hình ảnh bẩn thỉu được mô tả trong câu D, tương phản với sự sạch sẽ của Honda.<br><br>
+                    
+                    <strong>39. G:</strong> <strong>[Chiến thuật: 1.2 Cause – Result]</strong><br>
+                    Trước gap: Mô tả việc nhà máy sạch sẽ tạo ấn tượng tốt với nhà tài trợ ("make a great impression"). Câu G: "That’s why all the teams try and compete hard... on presentation" (Đó là lý do các đội thi đua nhau về mặt hình thức). "That's why" chỉ kết quả của việc muốn gây ấn tượng tốt.<br><br>
+                    
+                    <strong>40. A:</strong> <strong>[Chiến thuật: 1.2 Cause – Result]</strong><br>
+                    Trước gap: Mũ bảo hiểm là vật dụng đắt tiền ("pricey piece of kit"). Câu A: "I certainly took good care of mine as a result" (Kết quả là tôi giữ gìn nó rất kỹ). Cụm "as a result" nối nguyên nhân (đắt) với kết quả (giữ kỹ).<br><br>
+                    
+                    <strong>41. F:</strong> <strong>[Chiến thuật: 2.1 Pronouns / Logic]</strong><br>
+                    Trước gap: Tác giả thắc mắc về việc Piquet sưu tập mũ ("what’s with this helmet collection thing?"). Câu F: "Perhaps I should be doing it as well" (Có lẽ tôi cũng nên làm thế). "Doing it" ám chỉ việc sưu tập mũ. Câu sau gap: "There must be something in it" (Chắc hẳn phải có lý do/điều gì đó hay ho) xác nhận suy nghĩ này.<br><br>
+                    
+                    <strong>42. B:</strong> <strong>[Chiến thuật: 1.3 General → Specific]</strong><br>
+                    Trước gap: "easy to forget obvious things" (dễ quên những điều hiển nhiên - ám chỉ việc tặng mũ cho bạn thân). Câu B: "You take for granted those you’re closest to..." (Bạn coi nhẹ người thân thiết và cố gắng với người lạ). Đây là sự mở rộng/giải thích cụ thể cho việc "quên điều hiển nhiên". Câu sau "It should be the other way round" (Lẽ ra phải ngược lại) kết lại ý này.
+                `
+            }
+        ];
+
+        // --- 1. BIẾN LƯU THỜI GIAN BẮT ĐẦU ---
+        var thoiGianBatDau = new Date();
+
+        // --- 2. HÀM GỬI KẾT QUẢ ---
+        function guiKetQua10Cot(tenBai, maHS, tenHS, diemSo, phanTram, thoiGianLamBai) {
+            
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQHdZDP0xL5F0rCSlQMRRnEq-xbFDFRfeWfQy95FXXFsDiJ66CyOqxrb0tLyvucEuEqw/exec"; 
+            
+            const statusEl = document.getElementById('sheet-status');
+            if(statusEl) statusEl.textContent = "Đang gửi dữ liệu...";
+
+            var gio = thoiGianBatDau.getHours();
+            var phut = thoiGianBatDau.getMinutes();
+            var giay = thoiGianBatDau.getSeconds();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut) + ":" + (giay < 10 ? '0'+giay : giay);
+
+            var duLieu = {
+                tenSheet: "Book 1 Reading Part 6 - Test 3 & 4", 
+                tenBai: tenBai,            
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLamBai, 
+                soCauDung: diemSo,         
+                phanTram: phanTram         
+            };
+
+            console.log("Đang gửi...", duLieu);
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu thành công!</span>';
+                alert("✅ Submission Successful!");
+            }).catch(err => {
+                console.error(err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Submission failed</span>';
+                alert("❌ Submission failed");
+            });
+        }
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false // Thêm trạng thái Đậu/Rớt
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name) { alert("Please enter your name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 3}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                // --- LOGIC HIỂN THỊ EXPLANATION ---
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                // Chỉ hiện giải thích khi đã hoàn thành VÀ ĐÃ ĐẬU
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    expContent.innerHTML = test.explanations;
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                // Render Content
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.innerHTML.trim() === "" || contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+                
+                // Re-bind events and fill UI
+                const gaps = contentDiv.querySelectorAll('.drop-zone');
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const key = `${test.id}-${qId}`;
+                    const savedAns = this.state.userAnswers[key];
+                    
+                    if (savedAns) {
+                        this.fillGapUI(gap, savedAns);
+                    } else {
+                         gap.className = 'drop-zone';
+                         gap.innerHTML = `[${qId}]`;
+                         gap.ondragover = (e) => this.allowDrop(e);
+                         gap.ondrop = (e) => this.drop(e);
+                    }
+                    
+                    if (!this.state.testCompleted) {
+                         gap.onclick = () => this.handleGapClick(test.id, qId);
+                    } else {
+                        gap.onclick = null;
+                        gap.ondragover = null;
+                        gap.ondrop = null;
+                    }
+                });
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-green-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    
+                    container.appendChild(div);
+                });
+            },
+
+            // --- DRAG & DROP ---
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                
+                target.classList.remove('hovered');
+                target.classList.remove('wrong'); 
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                // Keep wrong status visible if exists
+                if(!gapEl.classList.contains('wrong') && !gapEl.classList.contains('correct')){
+                     gapEl.className = 'drop-zone filled';
+                } else {
+                     gapEl.classList.add('filled');
+                }
+                
+                gapEl.innerHTML = `<span class="font-bold mr-2">[${optId}]</span>${optText}`;
+            },
+
+            // --- CHECK LOGIC (UPDATED) ---
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                
+                // Đếm số câu trả lời
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    if (this.state.userAnswers[`${test.id}-${qId}`]) answeredCount++;
+                });
+
+                if (answeredCount < 6) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                // Tính điểm
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns === test.answers[qId]) correctCount++;
+                });
+
+                // Xử lý điều kiện
+                if (correctCount >= 4) {
+                    // ĐẬU
+                    this.showFeedback(true);
+                } else {
+                    // CHƯA ĐẠT
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You need at least 4 correct answers. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrors(); 
+                        this.renderTest(); 
+                    } else {
+                        // HẾT LƯỢT VÀ RỚT -> showFeedback(false)
+                        this.showFeedback(false);
+                    }
+                }
+            },
+
+            highlightErrors() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong');
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed; // Lưu trạng thái đậu/rớt
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.classList.remove('wrong');
+                    gap.classList.remove('filled');
+                    
+                    if (userAns === correctAns) {
+                        // Câu đúng luôn hiện xanh
+                        gap.classList.add('correct');
+                        gap.innerHTML = `<span class="font-bold mr-2">[${correctAns}]</span>${test.options.find(o => o.id === correctAns).text}`;
+                    } else {
+                        // Câu sai: Tùy vào trạng thái Pass/Fail
+                        gap.classList.add('wrong');
+                        
+                        // CHỈ HIỆN ĐÁP ÁN ĐÚNG NẾU ĐÃ PASS
+                        if (passed) {
+                            const correctOpt = test.options.find(o => o.id === correctAns);
+                            gap.innerHTML += `<div class="text-xs text-green-700 mt-2 p-2 bg-green-50 rounded border border-green-200 font-normal"><i class="fas fa-check"></i> Correct: [${correctAns}] ${correctOpt.text}</div>`;
+                        } else {
+                            // Nếu Fail, chỉ giữ lại báo đỏ, không hiện text đáp án đúng
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test (>= 4 correct).");
+                } else {
+                    alert("Out of attempts. You did not reach the required score (4/6). Answers will not be shown.");
+                }
+
+                this.renderTest(); // Render lại để cập nhật explanation box (ẩn/hiện)
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false; // Reset trạng thái
+                this.renderTest();
+            },
+
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    for (let qId = 37; qId <= 42; qId++) {
+                        totalQ++;
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key] || "-";
+                        const correctAns = test.answers[qId];
+                        if (userAns === correctAns) {
+                            score++;
+                        }
+                    }
+                });
+
+                const percent = Math.round((score / totalQ) * 100);
+
+                guiKetQua10Cot(
+                    "FCE Reading Part 6 - Test 3 & 4", 
+                    this.state.studentId,
+                    this.state.userName, 
+                    score + "/" + totalQ,
+                    percent + "%",
+                    durationStr
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-id').textContent = this.state.studentId;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#22c55e');
+            }
+        };
+    </script>
+</body>
+</html>

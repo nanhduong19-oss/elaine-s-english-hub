@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FCE Reading Part 6 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Drag & Drop Styles */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #f0fdf4;
+            border: 2px dashed #86efac;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #166534;
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #dcfce7;
+            border-color: #16a34a;
+            transform: scale(1.1);
+        }
+
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            background-color: #f8fafc; 
+            border: none;
+            border-bottom: 2px solid #64748b;
+            border-radius: 4px;
+            color: #0f172a;
+            font-size: 1em;
+            font-weight: 800;
+            text-align: left;
+            box-shadow: none;
+            white-space: normal; 
+            line-height: 1.6;
+        }
+        
+        .drop-zone.filled:hover {
+            background-color: #e2e8f0;
+            border-bottom-color: #0f172a; 
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .drop-zone.correct {
+            background-color: #dcfce7 !important;
+            border-bottom: 2px solid #16a34a !important;
+            color: #15803d !important;
+            pointer-events: none;
+        }
+        
+        .drop-zone.wrong {
+            background-color: #fee2e2 !important;
+            border-bottom: 2px solid #dc2626 !important;
+            color: #b91c1c !important;
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active { cursor: grabbing; }
+        
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .draggable-item.used {
+            opacity: 0.3;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+        }
+
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.0; 
+            text-align: justify; 
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-green-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">FCE Reading Part 6</h1>
+                <p class="text-slate-500 mb-6 font-medium">Test 7 & Test 8</p>
+                <div class="inline-block bg-green-100 text-green-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student Code</label>
+                    <input type="text" id="user-id-input" placeholder="Enter ID (e.g., 71001BT)..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-green-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-green-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-green-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-green-50 border border-green-200 rounded-lg text-green-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 7</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/2</span>
+                    
+                    <!-- Control Buttons -->
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-green-600 text-white font-bold text-sm shadow hover:bg-green-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content (Split View) -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                
+                <!-- LEFT: TEXT (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose">
+                            <!-- Content Injected Here -->
+                        </div>
+                        
+                        <!-- Explanation Box (Hidden initially) -->
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-green-50 rounded-xl border border-green-200">
+                            <h4 class="font-bold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-green-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT: OPTIONS (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-green-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-G
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20">
+                        <!-- Draggable Options Injected Here -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-green-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/12</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span> (<span id="res-id"></span>)</span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">
+                        Waiting to send...
+                    </div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const db = [
+            {
+                id: "test7",
+                title: "Puffins in peril",
+                content_html: `
+                    <p>Scientist Mike Harris explains that the puffin seems about to join the list of seabirds whose numbers are declining.</p>
+                    <p>It’s a grey day in early April on the Isle of May off the east coast of Scotland. Far out to sea a small dot appears on the horizon. It rapidly increases in size, suddenly turning into a puffin that lands with a splash on the water. This bird probably hasn’t seen land for five months, but now it’s returning to its colony for the breeding season.</p>
+                    <p>The first puffin is soon joined by others together they bob on the sea. Newly returned birds are nervous but, as the days pass, they gain confidence and begin reclaiming the underground nesting burrows they made the previous year by tunnelling into the soft earth on the top of the cliffs. <span class="drop-zone" data-id="37">[37]</span> They have to hurry because it takes three months to rear a chick and all the birds must leave by early August to spend their feeding intensive period in winter.</p>
+                    <p>I visit the island every April, eager to see how many of the adult puffins we have caught and attached identification rings to have returned. <span class="drop-zone" data-id="38">[38]</span> With a team of helpers I counted every occupied burrow on the island – something we undertook every five years.</p>
+                    <p>The island’s puffin population had been increasing every year for the previous 40 years, and so we anticipated at least 100,000 pairs. To our dismay we found just 42,000. <span class="drop-zone" data-id="39">[39]</span> Experts from other research programmes have concluded it must be connected to where puffins spend the winter months.</p>
+                    <p>Last spring we also caught and weighed some returning adults and found they were significantly lighter than birds we caught 10 years ago. <span class="drop-zone" data-id="40">[40]</span> Puffins are long-lived and can cope with a few poor productive seasons, but not with such a large loss of adults.</p>
+                    <p>In early August, the puffin colonies empty rather abruptly. Virtually all puffins leave within a week, though a few adults remain to feed a chick. <span class="drop-zone" data-id="41">[41]</span> I have always believed, though, that few of them venture far from the North Sea. Now, however, the development of instruments known as geolocators, small enough to be fitted around a puffin’s leg, is enabling us to test this idea.</p>
+                    <p>We fitted these units to some puffins two years ago and caught the birds again last year to download the data. Some did remain within the North Sea, but others went much further. For someone who has spent years watching puffins for only part of their lives, this new technology is providing some fascinating information. <span class="drop-zone" data-id="42">[42]</span> This would still leave us with the question of what they eat in winter and whether are sufficient quantities of prey available.</p>
+                    <p>The good news is that we now have an idea of the areas our puffins go to in winter, and we can check whether conditions there might have altered due to climate change or overfishing. Maybe we can then take some steps to help them. Hopefully it is just a local problem, because there are in fact still plenty of puffins to see around the Scottish coast.</p>
+                `,
+                options: [
+                    { id: "A", text: "We weren’t the only ones to wonder why this might be happening." },
+                    { id: "B", text: "From this moment on, we know remarkably little about where these birds end up and what could possibly be affecting them there." },
+                    { id: "C", text: "But we should also take into account that if a young puffin survives the winter, it will come back the following July." },
+                    { id: "D", text: "Other devices will also hopefully tell us how much time puffins spend diving for food." },
+                    { id: "E", text: "This was further evidence that something unusual is happening at sea before they return to the colony." },
+                    { id: "F", text: "Puffins are always among the earliest seabirds to lay eggs." },
+                    { id: "G", text: "Last year there was an additional task." }
+                ],
+                answers: { 37: "F", 38: "G", 39: "A", 40: "E", 41: "B", 42: "D" },
+                explanations: `
+                    <strong>37. F:</strong> Trước gap nói về việc chim quay lại và chuẩn bị sinh sản, sau gap nói 'They have to hurry...'. F: 'Puffins are always among the earliest seabirds to lay eggs' liên kết logic hoàn hảo với 'have to hurry'.<br>
+                    <strong>38. G:</strong> Trước gap: 'I visit the island every April...'. Sau gap: 'With a team of helpers I counted every occupied burrow...'. G: 'Last year there was an additional task' giải thích vì sao có việc đếm hang.<br>
+                    <strong>39. A:</strong> Trước gap: 'To our dismay we found just 42,000' (số lượng giảm mạnh). A: 'We weren’t the only ones to wonder why this might be happening' chuyển sang ý các chuyên gia khác cũng kết luận tương tự.<br>
+                    <strong>40. E:</strong> Trước gap: 'they were significantly lighter'. E: 'This was further evidence that something unusual is happening at sea...' giải thích cân nặng nhẹ là bằng chứng bổ sung.<br>
+                    <strong>41. B:</strong> Trước gap: 'Virtually all puffins leave...'. B: 'From this moment on, we know remarkably little about where these birds end up...' phù hợp với việc 'I have always believed...'.<br>
+                    <strong>42. D:</strong> Đoạn này nói về geolocators. D: 'Other devices will also hopefully tell us how much time puffins spend diving for food' mở rộng sang nghiên cứu tiếp theo.
+                `
+            },
+            {
+                id: "test8",
+                title: "Inline Skating",
+                content_html: `
+                    <p>The popularity of inline skating is growing all the time.</p>
+                    <p>No doubt about it, inline skating is one of the world’s most popular street sports. Different people call it different things. Rollerblade was the original American skate manufacturer and that’s why many call it rollerblading. Others shorten this to blading, while still others prefer inline skating (because the wheels on each skate are in line).</p>
+                    <p><span class="drop-zone" data-id="37">[37]</span> Inline skating has taken the concept of self-propelled wheels into a new dimension which allows skaters of the most basic ability to move with grace, speed and style, and feel good about doing it. A huge attraction is that you can do it anywhere where there is a smooth, hard surface and if you’re really keen, you can even do it off-road too.</p>
+                    <p>But the very popularity of the sport everywhere has created something of a problem. The ‘Ban all Skaters’ group, made up of opponents of the sport, has never been far behind. <span class="drop-zone" data-id="38">[38]</span> No matter – people will keep on skating wherever they can.</p>
+                    <p>So the difficulty lies in changing the attitude of established local authorities, who are often dominated by older people who have no concept of the joy of inline skating, don’t want anything to do with it, and simply dismiss the sport as a branch of the current youth culture they can do without.</p>
+                    <p>We know they are wrong. <span class="drop-zone" data-id="39">[39]</span> It is a sport which offers everyone a brilliant way to get up off the couch, whizz around outside, have fun, get fit, get involved, develop skills and learn team-work.</p>
+                    <p>In time, all skaters will be allowed to go about their business and co-exist in harmony with others on foot. <span class="drop-zone" data-id="40">[40]</span> So skaters should take care not to adopt a selfish attitude to others, because annoying other people might eventually lead to a situation where the skaters’ own enjoyment or freedom of movement is curtailed.</p>
+                    <p>Kids as young as five or six can learn to skate well. <span class="drop-zone" data-id="41">[41]</span> And in between these two extremes skating is no less important as a way for those in their teen years to avoid the trap of urban boredom, which can create problems in contemporary society.</p>
+                    <p>To qualify as an inline skater, you just have to get through the basics of pushing off, turning and stopping – at least a few times when most people can learn to handle in half a dozen sessions. <span class="drop-zone" data-id="42">[42]</span> Next you can learn to skate faster, turn tighter, stop faster through slalom cones (just use tin cans) forwards and maybe backwards. Then you can learn how to go up and down hills and perhaps some clever tricks as well.</p>
+                `,
+                options: [
+                    { id: "A", text: "Inline skating is not just about kids whose wishes can be ignored." },
+                    { id: "B", text: "Once up and running, it’s all about consolidating what’s been learned, enjoying the feel of your wheels and getting better." },
+                    { id: "C", text: "They all add up to the great new world of inlining." },
+                    { id: "D", text: "What’s more, with all the right padding and protection, adults can start to skate safely at an age when they are collecting their pensions." },
+                    { id: "E", text: "In some areas it has been successful in implementing notorious and strict skating prohibitions, such as the closure of most of London’s parks to skaters." },
+                    { id: "F", text: "The name doesn’t really matter; it’s the impact it has had that is important." },
+                    { id: "G", text: "Indeed, it’s all about the right to enjoy life’s little – and not so little – pleasures." }
+                ],
+                answers: { 37: "F", 38: "E", 39: "A", 40: "G", 41: "D", 42: "B" },
+                explanations: `
+                    <strong>37. F:</strong> Đoạn trước nói về nhiều tên gọi khác nhau. F: 'The name doesn’t really matter; it’s the impact it has had that is important' kết nối hoàn hảo sang ý nói về ảnh hưởng của môn thể thao.<br>
+                    <strong>38. E:</strong> Trước gap: 'Ban all Skaters group...'. E: 'In some areas it has been successful in implementing notorious and strict skating prohibitions...' minh họa cụ thể cho sự phản đối.<br>
+                    <strong>39. A:</strong> Trước gap nói chính quyền dismiss môn này như văn hóa trẻ. A: 'Inline skating is not just about kids whose wishes can be ignored' phản biện trực tiếp quan điểm đó.<br>
+                    <strong>40. G:</strong> Trước gap nói về 'coexist in harmony'. G: 'Indeed, it’s all about the right to enjoy life’s little pleasures' liên kết ý 'harmony'.<br>
+                    <strong>41. D:</strong> Trước gap nói trẻ 5–6 tuổi. D: 'What’s more, with all the right padding and protection, adults can start to skate safely...' mở rộng sang người lớn.<br>
+                    <strong>42. B:</strong> Trước gap nói học kỹ năng cơ bản. B: 'Once up and running, it’s all about consolidating what’s been learned...' chuyển từ basics sang nâng cao.
+                `
+            }
+        ];
+
+        // --- 1. BIẾN LƯU THỜI GIAN BẮT ĐẦU ---
+        var thoiGianBatDau = new Date();
+
+        // --- 2. HÀM GỬI KẾT QUẢ ---
+        function guiKetQua10Cot(tenBai, maHS, tenHS, diemSo, phanTram, thoiGianLamBai) {
+            
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxQHdZDP0xL5F0rCSlQMRRnEq-xbFDFRfeWfQy95FXXFsDiJ66CyOqxrb0tLyvucEuEqw/exec"; 
+            
+            const statusEl = document.getElementById('sheet-status');
+            if(statusEl) statusEl.textContent = "Đang gửi dữ liệu...";
+
+            var gio = thoiGianBatDau.getHours();
+            var phut = thoiGianBatDau.getMinutes();
+            var giay = thoiGianBatDau.getSeconds();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut) + ":" + (giay < 10 ? '0'+giay : giay);
+
+            var duLieu = {
+                tenSheet: "Book 2 Reading Part 6 - Test 7 & 8", 
+                tenBai: tenBai,            
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLamBai, 
+                soCauDung: diemSo,         
+                phanTram: phanTram         
+            };
+
+            console.log("Đang gửi...", duLieu);
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu thành công!</span>';
+                alert("✅ Submission Successful!");
+            }).catch(err => {
+                console.error(err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Submission failed</span>';
+                alert("❌ Submission failed");
+            });
+        }
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false // Thêm trạng thái Đậu/Rớt
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name) { alert("Please enter your name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 7}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                // --- LOGIC HIỂN THỊ EXPLANATION ---
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                // Chỉ hiện giải thích khi đã hoàn thành VÀ ĐÃ ĐẬU
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    expContent.innerHTML = test.explanations;
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                // Render Content
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.innerHTML.trim() === "" || contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+                
+                // Re-bind events and fill UI
+                const gaps = contentDiv.querySelectorAll('.drop-zone');
+                gaps.forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const key = `${test.id}-${qId}`;
+                    const savedAns = this.state.userAnswers[key];
+                    
+                    if (savedAns) {
+                        this.fillGapUI(gap, savedAns);
+                    } else {
+                         gap.className = 'drop-zone';
+                         gap.innerHTML = `[${qId}]`;
+                         gap.ondragover = (e) => this.allowDrop(e);
+                         gap.ondrop = (e) => this.drop(e);
+                    }
+                    
+                    if (!this.state.testCompleted) {
+                         gap.onclick = () => this.handleGapClick(test.id, qId);
+                    } else {
+                        gap.onclick = null;
+                        gap.ondragover = null;
+                        gap.ondrop = null;
+                    }
+                });
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-green-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    
+                    container.appendChild(div);
+                });
+            },
+
+            // --- DRAG & DROP ---
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                
+                target.classList.remove('hovered');
+                target.classList.remove('wrong'); 
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                // Keep wrong status visible if exists
+                if(!gapEl.classList.contains('wrong') && !gapEl.classList.contains('correct')){
+                     gapEl.className = 'drop-zone filled';
+                } else {
+                     gapEl.classList.add('filled');
+                }
+                
+                gapEl.innerHTML = `<span class="font-bold mr-2">[${optId}]</span>${optText}`;
+            },
+
+            // --- CHECK LOGIC (UPDATED) ---
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                
+                // Đếm số câu trả lời
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    if (this.state.userAnswers[`${test.id}-${qId}`]) answeredCount++;
+                });
+
+                if (answeredCount < 6) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                // Tính điểm
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns === test.answers[qId]) correctCount++;
+                });
+
+                // Xử lý điều kiện
+                if (correctCount >= 4) {
+                    // ĐẬU
+                    this.showFeedback(true);
+                } else {
+                    // CHƯA ĐẠT
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You need at least 4 correct answers. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrors(); 
+                        this.renderTest(); 
+                    } else {
+                        // HẾT LƯỢT VÀ RỚT -> showFeedback(false)
+                        this.showFeedback(false);
+                    }
+                }
+            },
+
+            highlightErrors() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong');
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed; // Lưu trạng thái đậu/rớt
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.classList.remove('wrong');
+                    gap.classList.remove('filled');
+                    
+                    if (userAns === correctAns) {
+                        // Câu đúng luôn hiện xanh
+                        gap.classList.add('correct');
+                        gap.innerHTML = `<span class="font-bold mr-2">[${correctAns}]</span>${test.options.find(o => o.id === correctAns).text}`;
+                    } else {
+                        // Câu sai: Tùy vào trạng thái Pass/Fail
+                        gap.classList.add('wrong');
+                        
+                        // CHỈ HIỆN ĐÁP ÁN ĐÚNG NẾU ĐÃ PASS
+                        if (passed) {
+                            const correctOpt = test.options.find(o => o.id === correctAns);
+                            gap.innerHTML += `<div class="text-xs text-green-700 mt-2 p-2 bg-green-50 rounded border border-green-200 font-normal"><i class="fas fa-check"></i> Correct: [${correctAns}] ${correctOpt.text}</div>`;
+                        } else {
+                            // Nếu Fail, chỉ giữ lại báo đỏ, không hiện text đáp án đúng
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test (>= 4 correct).");
+                } else {
+                    alert("Out of attempts. You did not reach the required score (4/6). Answers will not be shown.");
+                }
+
+                this.renderTest(); // Render lại để cập nhật explanation box (ẩn/hiện)
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false; // Reset trạng thái
+                this.renderTest();
+            },
+
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    for (let qId = 37; qId <= 42; qId++) {
+                        totalQ++;
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key] || "-";
+                        const correctAns = test.answers[qId];
+                        if (userAns === correctAns) {
+                            score++;
+                        }
+                    }
+                });
+
+                const percent = Math.round((score / totalQ) * 100);
+
+                guiKetQua10Cot(
+                    "FCE Reading Part 6 - Test 7 & 8", 
+                    this.state.studentId,
+                    this.state.userName, 
+                    score + "/" + totalQ,
+                    percent + "%",
+                    durationStr
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-id').textContent = this.state.studentId;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#22c55e');
+            }
+        };
+    </script>
+</body>
+</html>
