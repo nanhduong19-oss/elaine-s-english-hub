@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Part 4 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- DRAG & DROP STYLES --- */
+        
+        /* 1. Base Drop Zone (Empty - Rose Theme for PET) */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #fff1f2; 
+            border: 2px dashed #fda4af; 
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #be123c; 
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #fce7f3;
+            border-color: #db2777;
+            transform: scale(1.1);
+        }
+
+        /* 2. FILLED STATE (Bình thường: Đen, Đậm, Không nền, Không viền) */
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            
+            /* Visuals: Transparent & No Border */
+            background-color: transparent !important; 
+            border: none !important; 
+            border-radius: 4px;
+            border-bottom: 2px solid transparent !important; 
+            
+            /* Typography: Black Text by default */
+            color: #000000 !important; 
+            font-size: 1em;
+            font-weight: 800; /* In đậm */
+            line-height: 1.6;
+            text-align: left;
+            box-shadow: none !important;
+            white-space: normal;
+        }
+        
+        /* Hover vào câu đã điền: Hiện gạch chân hồng */
+        .drop-zone.filled:hover {
+            border-bottom: 2px solid #be123c !important; 
+            background-color: #fff1f2 !important; /* Feedback nhẹ khi hover */
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            margin-left: 5px;
+        }
+
+        /* 3. CORRECT STATE (Đúng: Chữ Xanh đậm, Nền Xanh nhạt, Tích) */
+        .drop-zone.filled.correct {
+            background-color: #dcfce7 !important; /* Light Green Bg */
+            color: #15803d !important; /* Dark Green Text */
+            border: 1px solid #86efac !important;
+            border-bottom: 1px solid #86efac !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            pointer-events: none; /* Khóa */
+        }
+
+        .drop-zone.filled.correct::after {
+            content: '\f00c'; /* FontAwesome Check Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #15803d;
+            margin-left: 0;
+        }
+
+        /* 4. WRONG STATE (Sai: Chữ Đỏ đậm, Nền Đỏ nhạt, X) */
+        .drop-zone.filled.wrong {
+            background-color: #fee2e2 !important; /* Light Red Bg */
+            color: #b91c1c !important; /* Dark Red Text */
+            border: 1px solid #fca5a5 !important;
+            border-bottom: 1px solid #fca5a5 !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .drop-zone.filled.wrong::after {
+            content: '\f00d'; /* FontAwesome X Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #b91c1c;
+            margin-left: 0;
+        }
+
+        .draggable-item { cursor: grab; user-select: none; touch-action: none; }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.dragging { opacity: 0.5; transform: scale(0.95); }
+        .draggable-item.used {
+            opacity: 0.4;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+            color: #94a3b8;
+        }
+
+        .reading-content p { margin-bottom: 1.5em; line-height: 2.2; text-align: justify; }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">PET Reading Part 4</h1>
+                <p class="text-slate-500 mb-6 font-medium">B1 Simply Tests 1 - 4</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student Code</label>
+                    <input type="text" id="user-id-input" placeholder="Enter ID (e.g., 71001BT)..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/4</span>
+                    
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose"></div>
+                        
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-rose-50 rounded-xl border border-rose-200">
+                            <h4 class="font-bold text-rose-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-rose-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options Area -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-H
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-rose-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/20</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span> (<span id="res-id"></span>)</span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">Waiting to send...</div>
+                </div>
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "B1 Simply Tests 1-4"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbzKnfEohBoagjHJmRPSM4uhSoEKeykBkzS-6DTy476UyddLxc-b8zptoQU6v8C94Nw14A/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                "id": "test1",
+                "title": "Creating a youth club",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>Last summer our town achieved something quite special. We created a youth club in the town centre. Before that there was absolutely nothing for the young people to do after school and at the weekends. <span class=\"drop-zone\" data-id=\"16\">[16]</span> It took a long time to finally open the youth club.</p><p>First of all, we had to find a building that we could use. We put up posters all over the town asking people to help us find a place. We were very lucky because after a couple of weeks someone said we could have an old shop that had been closed for a year. <span class=\"drop-zone\" data-id=\"17\">[17]</span> Best of all, he said, we did not have to pay anything to use it. The only thing we had to promise to do was to keep it in good condition.</p><p>Once we had a building, lots of people came to help us paint the rather dirty rooms and put furniture in it. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Then, a big business in the town gave us three computers and a large TV. The local football team gave us some sport and fitness equipment and they send a coach twice a week to do health and fitness classes with us. <span class=\"drop-zone\" data-id=\"19\">[19]</span> There we can buy drinks and snacks. My mother often bakes cakes for the cafe. We also do lots of art at the youth club. We put our pictures on the walls to make the place look really interesting and colourful.</p><p>I think the most important thing about our youth club though is that it is a place that young people can go to if they are feeling lonely and want someone to talk to. Also, there is a homework room where we can sit quietly and study. This is useful to me because I have to share a room with my little sister at home. <span class=\"drop-zone\" data-id=\"20\">[20]</span> Obviously that makes it hard for me to concentrate on my school work.</p><p>Creating the youth club, in my opinion, is the best thing that has happened in our town recently.</p>",
+                "options": [
+                    { "id": "A", "text": "We didn't have to buy anything as so many people gave us chairs, tables, desks etc." },
+                    { "id": "B", "text": "However, the shop wasn't suitable for what we needed." },
+                    { "id": "C", "text": "I love her very much but she talks all the time and makes a lot of noise." },
+                    { "id": "D", "text": "As a result, people were very bored and it was difficult to make new friends." },
+                    { "id": "E", "text": "The building was clean and bright so we didn't have to do anything to it." },
+                    { "id": "F", "text": "She always behaves very well because she is shy and quiet." },
+                    { "id": "G", "text": "The owner did not want to rent it to anyone and that's why he said we could use it permanently." },
+                    { "id": "H", "text": "Some of the parents run a small cafe in the youth club, too." }
+                ],
+                "answers": { "16": "D", "17": "G", "18": "A", "19": "H", "20": "C" },
+                "explanations": [
+                    { "gap": 16, "correct": "D", "tag": "Cause and Effect", "html": "<strong>16. D:</strong> <strong>[Cause and Effect]</strong><br>Trước gap: 'Before that there was absolutely nothing for the young people to do after school...'<br>Sau gap: 'It took a long time to finally open...'<br>Vì sao chọn D: Vì không có gì để làm (nothing to do), kết quả là (As a result) mọi người rất chán nản (very bored)." },
+                    { "gap": 17, "correct": "G", "tag": "Reason / Explanation", "html": "<strong>17. G:</strong> <strong>[Reason / Explanation]</strong><br>Trước gap: 'someone said we could have an old shop...'<br>Sau gap: 'Best of all, he said, we did not have to pay anything to use it.'<br>Vì sao chọn G: Giải thích tại sao người chủ (the owner) lại cho mượn miễn phí - vì ông ấy không muốn cho ai thuê." },
+                    { "gap": 18, "correct": "A", "tag": "Detail Expansion", "html": "<strong>18. A:</strong> <strong>[Detail Expansion]</strong><br>Trước gap: '...help us paint the rather dirty rooms and put furniture in it.'<br>Sau gap: 'Then, a big business in the town gave us three computers...'<br>Vì sao chọn A: Liên kết với ý đưa đồ nội thất (furniture) vào, câu A bổ sung rằng họ không phải mua gì vì được mọi người tặng ghế, bàn (chairs, tables...)." },
+                    { "gap": 19, "correct": "H", "tag": "Reference / Topic continuation", "html": "<strong>19. H:</strong> <strong>[Reference / Topic continuation]</strong><br>Trước gap: '...health and fitness classes with us.'<br>Sau gap: 'There we can buy drinks and snacks.'<br>Vì sao chọn H: Câu sau nhắc đến việc mua đồ uống/đồ ăn nhẹ ở 'đó' (There). Câu H giới thiệu về một quán cà phê nhỏ (a small cafe) khớp với ngữ cảnh này." },
+                    { "gap": 20, "correct": "C", "tag": "Contrast / Logic", "html": "<strong>20. C:</strong> <strong>[Contrast / Logic]</strong><br>Trước gap: 'This is useful to me because I have to share a room with my little sister at home.'<br>Sau gap: 'Obviously that makes it hard for me to concentrate on my school work.'<br>Vì sao chọn C: Giải thích lý do khó tập trung ở nhà - dù yêu em gái nhưng cô bé nói quá nhiều và ồn ào." }
+                ]
+            },
+            {
+                "id": "test2",
+                "title": "The most unusual festival I've been to",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>Last year I visited a small village near the city of Gloucester, England, where a very special and unusual race takes place once a year. It's called ‘Cooper’s Hill Cheese-Rolling’. On a Saturday at the beginning of spring, people from all over the world go to Cooper’s Hill to see the race.</p><p>The first written information about the race was in a message sent to the local government in 1826. <span class=\"drop-zone\" data-id=\"16\">[16]</span> So nobody knows when it really started. Each year, the event becomes more and more popular with people coming from all over the world to take part and to watch. <span class=\"drop-zone\" data-id=\"17\">[17]</span></p><p>The way the race works is as follows. There is a very large piece of cheese, which is round, like a wheel, and weighs about 4 kilograms. <span class=\"drop-zone\" data-id=\"18\">[18]</span> One of the people in charge of the event sends the large piece of cheese down the hill and half a second later everyone taking part runs down the hill after the cheese. <span class=\"drop-zone\" data-id=\"19\">[19]</span></p><p>In the past, the cheese has hit people watching the race and injured them. It's not just the spectators who get injured; many of the people running down the hill get serious injuries, too. The injuries are usually broken ankles and legs as the runners lose control coming down the steep hill. <span class=\"drop-zone\" data-id=\"20\">[20]</span> There are also lots of local people helping to catch the runners, so they don't fall over and hurt themselves; they are called ‘catchers’.</p><p>This event has become so famous that it appears on television all over the world on the BBC network and also on Trans World Sport.</p>",
+                "options": [
+                    { "id": "A", "text": "It has wood around it to protect it." },
+                    { "id": "B", "text": "The police think the event is very dangerous." },
+                    { "id": "C", "text": "Winners of the event have come from the United States, Australia, New Zealand and Nepal." },
+                    { "id": "D", "text": "Sometimes they use an old tyre." },
+                    { "id": "E", "text": "The words in this message showed that this event was already a tradition then." },
+                    { "id": "F", "text": "That's why, at the bottom of the hill, there are lots of ambulances and medical staff." },
+                    { "id": "G", "text": "The first person over the finish line at the bottom of the hill wins the cheese." },
+                    { "id": "H", "text": "Children are not allowed to eat the cheese." }
+                ],
+                "answers": { "16": "E", "17": "C", "18": "A", "19": "G", "20": "F" },
+                "explanations": [
+                    { "gap": 16, "correct": "E", "tag": "Logical Connection", "html": "<strong>16. E:</strong> <strong>[Logical Connection]</strong><br>Trước gap: 'The first written information... was in a message sent... in 1826.'<br>Sau gap: 'So nobody knows when it really started.'<br>Vì sao chọn E: Câu E cho biết nội dung tin nhắn đó chỉ ra sự kiện đã là một truyền thống từ trước, khớp với việc 'không ai biết nó thực sự bắt đầu khi nào'." },
+                    { "gap": 17, "correct": "C", "tag": "Examples / Expansion", "html": "<strong>17. C:</strong> <strong>[Examples / Expansion]</strong><br>Trước gap: '...popular with people coming from all over the world to take part...'<br>Sau gap: (Sang đoạn mới)<br>Vì sao chọn C: Cung cấp ví dụ cụ thể cho cụm 'from all over the world' bằng cách liệt kê người thắng cuộc đến từ Mỹ, Úc, New Zealand và Nepal." },
+                    { "gap": 18, "correct": "A", "tag": "Pronoun Reference", "html": "<strong>18. A:</strong> <strong>[Pronoun Reference]</strong><br>Trước gap: 'There is a very large piece of cheese... weighs about 4 kilograms.'<br>Sau gap: 'One of the people... sends the large piece of cheese down...'<br>Vì sao chọn A: Đại từ 'It' trong câu A chỉ cục phô mai (piece of cheese) vừa được nhắc đến ở câu trước, miêu tả thêm việc nó được bọc gỗ bảo vệ." },
+                    { "gap": 19, "correct": "G", "tag": "Process Conclusion", "html": "<strong>19. G:</strong> <strong>[Process Conclusion]</strong><br>Trước gap: '...everyone taking part runs down the hill after the cheese.'<br>Sau gap: (Sang đoạn mới nói về tai nạn)<br>Vì sao chọn G: Kết thúc đoạn mô tả luật chơi bằng việc giải thích phần thưởng: Người đầu tiên qua vạch đích sẽ thắng cục phô mai." },
+                    { "gap": 20, "correct": "F", "tag": "Action - Reaction / Consequence", "html": "<strong>20. F:</strong> <strong>[Action - Reaction / Consequence]</strong><br>Trước gap: 'The injuries are usually broken ankles and legs...'<br>Sau gap: 'There are also lots of local people helping...'<br>Vì sao chọn F: Vì có nhiều người gãy chân/cổ chân (chấn thương) nên dẫn đến hệ quả là phải có nhiều xe cứu thương và nhân viên y tế túc trực (That's why...)." }
+                ]
+            },
+            {
+                "id": "test3",
+                "title": "Achieving your dreams",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>A psychologist reaching out to teens around the world</p><p><span class=\"drop-zone\" data-id=\"16\">[16]</span> To you, I say, you are more able and amazing than you know. Follow your dream no matter how ambitious it may appear to others. It is the dreamers who bring positive change to the world. So if somebody doesn't support or understand your dream, just smile and think to yourself, \"Don't believe me? Just watch!\"</p><p>Some people insist that the 'rules of success' are very black and white. <span class=\"drop-zone\" data-id=\"17\">[17]</span> Following 'the rules' may not be the best way to get you where you want to go.</p><p>You can try to be perfect, but one person's idea of what is perfect is always different from another's. In fact, I believe it is our weaknesses that make us special.</p><p>You may not be the best at what you do, but if you have great enthusiasm, you will reach your goal. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Enthusiasm creates dreams; talent does not.</p><p>When you have a big dream for your life, people like to tell you that you aren't being realistic. <span class=\"drop-zone\" data-id=\"19\">[19]</span> I think that when it comes to having a dream, being realistic and sensible aren't helpful.</p><p>Every step you take is one step closer to your dream becoming a reality. The important ingredient for realising your dream is hope. <span class=\"drop-zone\" data-id=\"20\">[20]</span> It can change the world.</p>",
+                "options": [
+                    { "id": "A", "text": "On the other hand, others who are more talented may not." },
+                    { "id": "B", "text": "You should never try to do anything that is difficult." },
+                    { "id": "C", "text": "Hope is belief - belief in yourself and belief in the power of possibility." },
+                    { "id": "D", "text": "Many of you may be afraid to do what you really love." },
+                    { "id": "E", "text": "I believe that you should always obey the rules." },
+                    { "id": "F", "text": "Well, I say that you do not need to know the details of how your dream will happen." },
+                    { "id": "G", "text": "It's very important that you listen to this advice." },
+                    { "id": "H", "text": "I disagree; I believe there is a HUGE grey area." }
+                ],
+                "answers": { "16": "D", "17": "H", "18": "A", "19": "F", "20": "C" },
+                "explanations": [
+                    { "gap": 16, "correct": "D", "tag": "Opening statement hook", "html": "<strong>16. D:</strong> <strong>[Opening statement hook]</strong><br>Trước gap: (Tiêu đề phụ)<br>Sau gap: 'To you, I say, you are more able and amazing than you know.'<br>Vì sao chọn D: Câu D đưa ra một vấn đề ('Many of you may be afraid...'). Câu sau đáp lời ('To you, I say...') để động viên chính những người đang lo sợ đó." },
+                    { "gap": 17, "correct": "H", "tag": "Contrast", "html": "<strong>17. H:</strong> <strong>[Contrast]</strong><br>Trước gap: '...rules of success are very black and white.' (rất rõ ràng đen trắng).<br>Sau gap: 'Following 'the rules' may not be the best way...'<br>Vì sao chọn H: Phản bác lại quan điểm 'black and white' (trắng đen rõ ràng) bằng cụm từ tương phản 'HUGE grey area' (có một vùng xám khổng lồ)." },
+                    { "gap": 18, "correct": "A", "tag": "Contrast / Comparison", "html": "<strong>18. A:</strong> <strong>[Contrast / Comparison]</strong><br>Trước gap: '...if you have great enthusiasm, you will reach your goal.'<br>Sau gap: 'Enthusiasm creates dreams; talent does not.'<br>Vì sao chọn A: So sánh giữa người có nhiệt huyết (sẽ thành công) với những người có tài năng hơn (more talented) nhưng lại có thể thất bại (may not)." },
+                    { "gap": 19, "correct": "F", "tag": "Argument reinforcement", "html": "<strong>19. F:</strong> <strong>[Argument reinforcement]</strong><br>Trước gap: '...people like to tell you that you aren't being realistic.'<br>Sau gap: 'I think that when it comes to having a dream, being realistic... aren't helpful.'<br>Vì sao chọn F: Khi bị nói là không thực tế, tác giả phản bác bằng câu F ('bạn không cần biết chi tiết mọi thứ sẽ diễn ra thế nào'), ủng hộ cho ý kiến mơ mộng không cần quá lí trí." },
+                    { "gap": 20, "correct": "C", "tag": "Concept definition", "html": "<strong>20. C:</strong> <strong>[Concept definition]</strong><br>Trước gap: 'The important ingredient for realising your dream is hope.'<br>Sau gap: 'It can change the world.'<br>Vì sao chọn C: Câu trước vừa nhắc đến khái niệm 'hope'. Câu C giải thích/định nghĩa rõ hơn 'Hope is belief...'. Đại từ 'It' ở câu sau lại thay thế cho 'Hope' này." }
+                ]
+            },
+            {
+                "id": "test4",
+                "title": "The Great Fire of London",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>This week we're doing a project at school about London. Over 350 years ago, London suffered a terrible event.</p><p>On the 2nd September 1666, a baker was making bread and cakes for the next day. It was one o'clock in the morning when a very small piece of burning wood came out of the oven and set fire to the building.</p><p>There was a family living above the bakery who couldn't get out down the stairs. <span class=\"drop-zone\" data-id=\"16\">[16]</span></p><p>Besides being made of wood, the houses were also built very close together. They were almost touching each other. <span class=\"drop-zone\" data-id=\"17\">[17]</span></p><p>Two days after the fire started, half of London was on fire. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Even the king came out to help the firemen.</p><p>In an attempt to stop the fire, the firemen destroyed many buildings to create a big gap across which the fire couldn't travel. <span class=\"drop-zone\" data-id=\"19\">[19]</span></p><p>By the 6th September the fire had been put out. London had burned for almost five days.</p><p><span class=\"drop-zone\" data-id=\"20\">[20]</span> Just before the fire, there had been a horrible disease which was killing lots of people. The fire destroyed the disease.</p>",
+                "options": [
+                    { "id": "A", "text": "Everybody was trying to put out the fire." },
+                    { "id": "B", "text": "The baker was able to put out the fire with a bucket of water." },
+                    { "id": "C", "text": "They escaped by climbing out of the window and jumping to the ground." },
+                    { "id": "D", "text": "He made the firemen cups of tea and sandwiches." },
+                    { "id": "E", "text": "This didn't stop it, but it did slow it down a lot." },
+                    { "id": "F", "text": "The fire went from house to house very quickly and the firemen had trouble controlling it." },
+                    { "id": "G", "text": "The people caught buses to get out of London." },
+                    { "id": "H", "text": "People say that, in a way, the fire did London some good, too." }
+                ],
+                "answers": { "16": "C", "17": "F", "18": "A", "19": "E", "20": "H" },
+                "explanations": [
+                    { "gap": 16, "correct": "C", "tag": "Pronoun Reference / Action", "html": "<strong>16. C:</strong> <strong>[Pronoun Reference / Action]</strong><br>Trước gap: '...family living above the bakery who couldn't get out down the stairs.'<br>Sau gap: (Sang đoạn mới)<br>Vì sao chọn C: Đại từ 'They' thay cho 'family'. Giải quyết vấn đề không xuống được cầu thang bằng cách 'climbing out of the window'." },
+                    { "gap": 17, "correct": "F", "tag": "Cause and Effect", "html": "<strong>17. F:</strong> <strong>[Cause and Effect]</strong><br>Trước gap: '...houses were also built very close together. They were almost touching each other.'<br>Sau gap: (Sang đoạn mới)<br>Vì sao chọn F: Hệ quả của việc nhà sát nhau là lửa lan rất nhanh (went from house to house very quickly) khiến lính cứu hỏa khó kiểm soát." },
+                    { "gap": 18, "correct": "A", "tag": "Detail Expansion", "html": "<strong>18. A:</strong> <strong>[Detail Expansion]</strong><br>Trước gap: 'Two days after the fire started, half of London was on fire.'<br>Sau gap: 'Even the king came out to help the firemen.'<br>Vì sao chọn A: 'Everybody' đang cố dập lửa, và câu sau nhấn mạnh mức độ nghiêm trọng bằng cách thêm chi tiết 'Thậm chí cả nhà vua cũng ra giúp'." },
+                    { "gap": 19, "correct": "E", "tag": "Result of an action", "html": "<strong>19. E:</strong> <strong>[Result of an action]</strong><br>Trước gap: '...firemen destroyed many buildings to create a big gap...' (phá nhà tạo khoảng trống cản lửa).<br>Sau gap: (Sang đoạn mới)<br>Vì sao chọn E: Đánh giá kết quả của hành động tạo khoảng trống: 'Điều này không dừng được nó (lửa) nhưng làm nó chậm lại nhiều'." },
+                    { "gap": 20, "correct": "H", "tag": "Topic Sentence / Contrast", "html": "<strong>20. H:</strong> <strong>[Topic Sentence / Contrast]</strong><br>Trước gap: (Kết thúc việc dập lửa).<br>Sau gap: '...there had been a horrible disease... The fire destroyed the disease.'<br>Vì sao chọn H: Đoạn cuối nói về khía cạnh tích cực bất ngờ (tiêu diệt dịch bệnh, xây đường rộng hơn). Câu H là câu mở đoạn hoàn hảo: '...the fire did London some good, too' (mang lại điểm tốt cho London)." }
+                ]
+            }
+        ];
+
+        var thoiGianBatDau = new Date();
+
+        function guiKetQua10Cot(tenBai, maHS, tenHS, diemSo, phanTram, thoiGianLamBai) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKnfEohBoagjHJmRPSM4uhSoEKeykBkzS-6DTy476UyddLxc-b8zptoQU6v8C94Nw14A/exec"; 
+            const statusEl = document.getElementById('sheet-status');
+            if(statusEl) statusEl.textContent = "Đang gửi dữ liệu...";
+
+            var gio = thoiGianBatDau.getHours();
+            var phut = thoiGianBatDau.getMinutes();
+            var giay = thoiGianBatDau.getSeconds();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut) + ":" + (giay < 10 ? '0'+giay : giay);
+
+            var duLieu = {
+                tenSheet: "B1 Simply Tests 1-4", 
+                tenBai: tenBai,            
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLamBai, 
+                soCauDung: diemSo,         
+                phanTram: phanTram         
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu thành công!</span>';
+                // Remove alert to avoid interruption, UI update is enough
+            }).catch(err => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Lỗi gửi kết quả. Kiểm tra console.</span>';
+                console.error("❌ Error:", err);
+            });
+        }
+
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false 
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name) { alert("Please enter your name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 1}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    // Xử lý Array mảng HTML explanations
+                    if (Array.isArray(test.explanations)) {
+                        expContent.innerHTML = test.explanations.map(e => e.html).join('<div class="my-4 border-b border-rose-100"></div>');
+                    } else {
+                        expContent.innerHTML = test.explanations;
+                    }
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                     
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+                        
+                        if (savedAns) {
+                            this.fillGapUI(gap, savedAns);
+                        } else {
+                             gap.className = 'drop-zone';
+                             gap.innerHTML = `[${qId}]`;
+                             gap.ondragover = (e) => this.allowDrop(e);
+                             gap.ondrop = (e) => this.drop(e);
+                        }
+                        
+                        gap.onclick = () => {
+                             if (!this.state.testCompleted) this.handleGapClick(test.id, qId);
+                        };
+                    });
+                } else {
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+
+                        if (this.state.testCompleted) {
+                            gap.onclick = null;
+                            gap.ondragover = null;
+                            gap.ondrop = null;
+                        }
+
+                        if (savedAns) {
+                             if (!gap.innerHTML.includes(savedAns)) {
+                                 this.fillGapUI(gap, savedAns);
+                             }
+                        } else {
+                             if (gap.classList.contains('filled')) {
+                                 gap.className = 'drop-zone';
+                                 gap.innerHTML = `[${qId}]`;
+                             }
+                        }
+                     });
+                }
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-rose-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    container.appendChild(div);
+                });
+            },
+
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                target.classList.remove('hovered');
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                gapEl.className = 'drop-zone filled'; 
+                gapEl.innerHTML = `<span class="uppercase text-rose-800 mr-1">[${optId}]</span><span class="font-extrabold">${optText}</span>`;
+            },
+
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const totalQuestions = Object.keys(test.answers).length; 
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    if (this.state.userAnswers[`${test.id}-${qId}`]) answeredCount++;
+                });
+
+                if (answeredCount < totalQuestions) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns === test.answers[qId]) correctCount++;
+                });
+
+                if (correctCount >= 4) {
+                    this.showFeedback(true); // PASSED
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You need at least 4 correct answers. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                    } else {
+                        this.showFeedback(false); // FAILED
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+                    
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong'); // Add Red style
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+
+                    if (passed) {
+                        if (userAns === correctAns) {
+                            gap.classList.add('correct'); // Green style
+                        } else {
+                            gap.classList.add('wrong'); // Red style
+                        }
+                    } else {
+                        if (userAns !== correctAns) {
+                            gap.classList.add('wrong');
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test (>= 4 correct).");
+                } else {
+                    alert("Out of attempts. Moving to next part.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.renderTest();
+            },
+
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    const qIds = Object.keys(test.answers);
+                    totalQ += qIds.length;
+                    
+                    qIds.forEach(qId => {
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key];
+                        if (userAns === test.answers[qId]) score++;
+                    });
+                });
+
+                const percent = totalQ > 0 ? Math.round((score / totalQ) * 100) : 0;
+
+                guiKetQua10Cot(
+                    "B1 Simply Tests 1-4", 
+                    this.state.studentId,
+                    this.state.userName, 
+                    score + "/" + totalQ,
+                    percent + "%",
+                    durationStr
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-score').nextElementSibling.textContent = "/" + totalQ;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-id').textContent = this.state.studentId;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#e11d48');
+            }
+        };
+    </script>
+</body>
+</html>
