@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Part 4 - Drag & Drop</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- DRAG & DROP STYLES --- */
+        
+        /* 1. Base Drop Zone (Empty - Rose Theme for PET) */
+        .drop-zone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            min-width: 45px;
+            height: 28px;
+            margin: 0 4px;
+            background-color: #fff1f2; 
+            border: 2px dashed #fda4af; 
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            color: #be123c; 
+            font-weight: 700;
+            font-size: 0.85em;
+            padding: 0 6px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .drop-zone.hovered {
+            background-color: #fce7f3;
+            border-color: #db2777;
+            transform: scale(1.1);
+        }
+
+        /* 2. FILLED STATE (Bình thường: Đen, Đậm, Không nền, Không viền) */
+        .drop-zone.filled {
+            display: inline; 
+            width: auto;
+            height: auto;
+            margin: 0 2px;
+            padding: 2px 6px;
+            
+            /* Visuals: Transparent & No Border */
+            background-color: transparent !important; 
+            border: none !important; 
+            border-radius: 4px;
+            border-bottom: 2px solid transparent !important; 
+            
+            /* Typography: Black Text by default */
+            color: #000000 !important; 
+            font-size: 1em;
+            font-weight: 800; /* In đậm */
+            line-height: 1.6;
+            text-align: left;
+            box-shadow: none !important;
+            white-space: normal;
+        }
+        
+        /* Hover vào câu đã điền: Hiện gạch chân hồng */
+        .drop-zone.filled:hover {
+            border-bottom: 2px solid #be123c !important; 
+            background-color: #fff1f2 !important; /* Feedback nhẹ khi hover */
+        }
+        
+        .drop-zone.filled:hover::after {
+            content: ' ✕';
+            font-size: 0.8em;
+            color: #ef4444;
+            margin-left: 5px;
+        }
+
+        /* 3. CORRECT STATE (Đúng: Chữ Xanh đậm, Nền Xanh nhạt, Tích) */
+        .drop-zone.filled.correct {
+            background-color: #dcfce7 !important; /* Light Green Bg */
+            color: #15803d !important; /* Dark Green Text */
+            border: 1px solid #86efac !important;
+            border-bottom: 1px solid #86efac !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            pointer-events: none; /* Khóa */
+        }
+
+        .drop-zone.filled.correct::after {
+            content: '\f00c'; /* FontAwesome Check Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #15803d;
+            margin-left: 0;
+        }
+
+        /* 4. WRONG STATE (Sai: Chữ Đỏ đậm, Nền Đỏ nhạt, X) */
+        .drop-zone.filled.wrong {
+            background-color: #fee2e2 !important; /* Light Red Bg */
+            color: #b91c1c !important; /* Dark Red Text */
+            border: 1px solid #fca5a5 !important;
+            border-bottom: 1px solid #fca5a5 !important;
+            padding-right: 28px !important; /* Chừa chỗ cho icon */
+            position: relative;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        .drop-zone.filled.wrong::after {
+            content: '\f00d'; /* FontAwesome X Icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            color: #b91c1c;
+            margin-left: 0;
+        }
+
+        .draggable-item { cursor: grab; user-select: none; touch-action: none; }
+        .draggable-item:active { cursor: grabbing; }
+        .draggable-item.dragging { opacity: 0.5; transform: scale(0.95); }
+        .draggable-item.used {
+            opacity: 0.4;
+            pointer-events: none;
+            background-color: #f1f5f9;
+            filter: grayscale(100%);
+            border-style: dashed;
+            color: #94a3b8;
+        }
+
+        .reading-content p { margin-bottom: 1.5em; line-height: 2.2; text-align: justify; }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">PET Reading Part 4</h1>
+                <p class="text-slate-500 mb-6 font-medium">B1 Simply Tests 5 - 8</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    DRAG & DROP MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student Code</label>
+                    <input type="text" id="user-id-input" placeholder="Enter ID (e.g., 71001BT)..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Your Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 5</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/4</span>
+                    
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose"></div>
+                        
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-rose-50 rounded-xl border border-rose-200">
+                            <h4 class="font-bold text-rose-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-3 text-sm text-rose-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Options Area -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Sentences A-H
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="options-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex items-start justify-center p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center">
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Total Score</div>
+                    <div class="text-5xl font-extrabold text-rose-600 mb-2">
+                        <span id="result-score">0</span><span class="text-2xl text-slate-400">/20</span>
+                    </div>
+                    <div id="result-percent" class="text-slate-500 font-medium mb-6">0%</div>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex justify-between text-sm font-bold text-slate-600">
+                         <span>Candidate: <span id="res-name"></span> (<span id="res-id"></span>)</span>
+                         <span>Time: <span id="res-time"></span></span>
+                    </div>
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">Waiting to send...</div>
+                </div>
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "B1 Simply Tests 5-8"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbzKnfEohBoagjHJmRPSM4uhSoEKeykBkzS-6DTy476UyddLxc-b8zptoQU6v8C94Nw14A/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                "id": "test5",
+                "title": "Cycling the Most Dangerous Road",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>Like most children, I got my first bicycle at a young age. You could easily tell from all the pictures that I fell in love with it from the moment I saw it. So, while most children grow out of cycling, I took it to a whole new level. <span class=\"drop-zone\" data-id=\"16\">[16]</span> My mum was not too keen on the idea but soon got used to it.</p><p>Nowadays, every spare moment I ever have I'm out, exploring different places. <span class=\"drop-zone\" data-id=\"17\">[17]</span> Hills, mountains, forests, nothing beats that sense of achievement when you manage to get through some of the most difficult landscapes on a bike. It's not so much about others knowing what you can do, but rather proving to yourself that you are able to do it.</p><p>And of course, there's being in the natural environment. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Breathing some fresh air while getting away from the city not only relaxes you but also keeps you healthy.</p><p>So, when I saw an advertisement for cyclists to join a group to cycle in Bolivia, I was not just keen. <span class=\"drop-zone\" data-id=\"19\">[19]</span> My mum was terrified when I announced I wanted to go, but as my father is a keen cyclist himself, he managed to persuade her that we should definitely go.</p><p>The Yungas Hwy is the world's most dangerous road. An average of twenty six vehicles disappear over its edge every year. <span class=\"drop-zone\" data-id=\"20\">[20]</span> With only space for one vehicle the 1,000 metre drops are terrifying. Add to that the waterfalls, which fall directly onto the road, and the journey becomes even more dangerous as you try to avoid the frequent speeding lorries. But despite this, the excitement draws cyclists from around the world. And I just couldn't be the one to miss it.</p>",
+                "options": [
+                    { "id": "A", "text": "Just to be outside, travelling through nature, is enough of a reason to do this." },
+                    { "id": "B", "text": "I must admit, it was a country I had never wanted to visit." },
+                    { "id": "C", "text": "Actually, it's more of a track than a road." },
+                    { "id": "D", "text": "All my friends got motorbikes or cars." },
+                    { "id": "E", "text": "The trouble is finding the free time." },
+                    { "id": "F", "text": "It was a dream opportunity not to be missed." },
+                    { "id": "G", "text": "The more challenging, the better." },
+                    { "id": "H", "text": "This meant getting myself a mountain bike and being out in all weathers." }
+                ],
+                "answers": { "16": "H", "17": "G", "18": "A", "19": "F", "20": "C" },
+                "explanations": [
+                    { "gap": 16, "correct": "H", "tag": "Action - Consequence / Reference", "html": "<strong>16. H:</strong> <strong>[Action - Consequence / Reference]</strong><br>Trước gap: 'Tôi đưa việc đạp xe lên một tầm cao mới.'<br>Sau gap: 'Mẹ tôi không quá thích ý tưởng này.'<br>Vì sao chọn H: Việc 'lên tầm cao mới' đồng nghĩa với việc 'mua xe đạp leo núi và ra ngoài trong mọi thời tiết' (This meant getting myself...). Điều này giải thích tại sao người mẹ lại không thích ý tưởng đó." },
+                    { "gap": 17, "correct": "G", "tag": "Opinion / Continuation", "html": "<strong>17. G:</strong> <strong>[Opinion / Continuation]</strong><br>Trước gap: 'Khám phá các nơi khác nhau.'<br>Sau gap: 'Đồi, núi, rừng, không gì đánh bại được cảm giác thành tựu khi vượt qua những địa hình khó khăn nhất.'<br>Vì sao chọn G: 'The more challenging, the better' (Càng thử thách càng tốt) phù hợp hoàn hảo với bối cảnh chọn vượt qua những địa hình khó khăn nhất (most difficult landscapes)." },
+                    { "gap": 18, "correct": "A", "tag": "Elaboration / Reference", "html": "<strong>18. A:</strong> <strong>[Elaboration / Reference]</strong><br>Trước gap: 'Và tất nhiên, đó là việc ở trong môi trường tự nhiên.'<br>Sau gap: 'Hít thở không khí trong lành... thư giãn và khỏe mạnh.'<br>Vì sao chọn A: 'Chỉ việc được ở ngoài trời, đi qua thiên nhiên là đủ lý do để làm việc này' bổ sung và làm rõ cho ý tận hưởng tự nhiên ở câu trước." },
+                    { "gap": 19, "correct": "F", "tag": "Emphasis / Reaction", "html": "<strong>19. F:</strong> <strong>[Emphasis / Reaction]</strong><br>Trước gap: 'Khi thấy quảng cáo đạp xe ở Bolivia, tôi không chỉ hào hứng (keen).'<br>Sau gap: 'Mẹ tôi đã rất hoảng sợ khi tôi thông báo muốn đi...' <br>Vì sao chọn F: Nó còn hơn cả hào hứng, tác giả coi đó là 'một cơ hội trong mơ không thể bỏ lỡ' (a dream opportunity not to be missed)." },
+                    { "gap": 20, "correct": "C", "tag": "Clarification / Definition", "html": "<strong>20. C:</strong> <strong>[Clarification / Definition]</strong><br>Trước gap: 'Yungas Hwy là con đường nguy hiểm nhất thế giới. Trung bình 26 phương tiện rơi khỏi rìa mỗi năm.'<br>Sau gap: 'Chỉ có không gian cho một phương tiện, những cú rơi 1.000 mét thật đáng sợ.'<br>Vì sao chọn C: Mặc dù gọi là 'Highways' (đường cao tốc), nhưng câu C đính chính 'Thực ra nó giống một con đường mòn hơn là đường nhựa' (more of a track than a road), điều này giải thích vì sao nó chỉ có đủ không gian cho một chiếc xe." }
+                ]
+            },
+            {
+                "id": "test6",
+                "title": "Learning a language",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>Whatever your reason for learning a new language, you can probably agree it'd be ideal to learn it fast. <span class=\"drop-zone\" data-id=\"16\">[16]</span> You'll have to learn a new grammar, memorise vocabulary words, practise speaking, etc. But learning a new language does not need to be a slow or boring process if you follow the right strategy.</p><p>The first step to learning a new language fast is to set goals. When you think about it, this makes a lot of sense. <span class=\"drop-zone\" data-id=\"17\">[17]</span> When faced with the idea of learning a new language, most of us feel nervous. Setting goals helps you to focus.</p><p>Languages are made up of a shocking number of words. English, for example, has between 600,000 and 1 million words. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Consider this: the top 100 words make up about 50 percent of English language texts, and the top 1,000 words make up about 90 percent! By focusing on learning these words first, you can increase the amount of information you understand very quickly.</p><p>One of the best ways to learn vocabulary words is to use flashcards. Flashcards allow you to test yourself, which helps you memorise new information. Try out electronic flash cards. <span class=\"drop-zone\" data-id=\"19\">[19]</span> You can easily carry large amounts of words on your smartphone or tablet, and you can take advantage of flash cards that other people have created and made public.</p><p>When you're learning a new language, it can be hard to practise words in context because you haven't mastered yet enough vocabulary to make complex sentences. <span class=\"drop-zone\" data-id=\"20\">[20]</span> For example, if you're learning the Spanish word casa (house), you could say, \"I'm going to go to my casa now.\" You can also make up a sentence with the new word you're learning, the meaning of the word and a word in your own language that sounds similar.</p>",
+                "options": [
+                    { "id": "A", "text": "Paper flashcards work just as well but electronic flash card programmes provide some great benefits." },
+                    { "id": "B", "text": "But in reality, having goals doesn't help you achieve much." },
+                    { "id": "C", "text": "If you don't set goals, how can you know what you want to achieve?" },
+                    { "id": "D", "text": "At this time, there is no point even trying to remember the word." },
+                    { "id": "E", "text": "Luckily, you don't need to learn anywhere near that many words to be good at a language." },
+                    { "id": "F", "text": "You should aim to learn about 5,000 words in a couple of weeks." },
+                    { "id": "G", "text": "To get around this, simply use the word in a sentence in your native language." },
+                    { "id": "H", "text": "Yet the idea of learning a language seems anything but fast." }
+                ],
+                "answers": { "16": "H", "17": "C", "18": "E", "19": "A", "20": "G" },
+                "explanations": [
+                    { "gap": 16, "correct": "H", "tag": "Contrast", "html": "<strong>16. H:</strong> <strong>[Contrast]</strong><br>Trước gap: '...học nhanh là điều lý tưởng.'<br>Sau gap: 'Bạn sẽ phải học ngữ pháp mới, ghi nhớ từ vựng...'<br>Vì sao chọn H: 'Tuy nhiên, ý tưởng học một ngôn ngữ có vẻ không hề nhanh' (anything but fast) tạo sự tương phản hợp lý giữa mong muốn (nhanh) và thực tế (phải học rất nhiều thứ)." },
+                    { "gap": 17, "correct": "C", "tag": "Logic / Cause and effect", "html": "<strong>17. C:</strong> <strong>[Logic / Cause and effect]</strong><br>Trước gap: 'Bước đầu tiên là đặt mục tiêu. Điều này rất có ý nghĩa.'<br>Sau gap: 'Khi đối mặt với việc học... ta cảm thấy lo lắng.'<br>Vì sao chọn C: 'Nếu không đặt mục tiêu, làm sao bạn biết mình muốn đạt được điều gì?' Câu này giải thích trực tiếp tại sao việc đặt mục tiêu lại 'có ý nghĩa' (makes a lot of sense)." },
+                    { "gap": 18, "correct": "E", "tag": "Contrast / Reassurance", "html": "<strong>18. E:</strong> <strong>[Contrast / Reassurance]</strong><br>Trước gap: 'Tiếng Anh có từ 600.000 đến 1 triệu từ.'<br>Sau gap: 'Hãy xem xét điều này: 100 từ phổ biến nhất chiếm 50%...'<br>Vì sao chọn E: Sau khi đưa ra một con số gây sốc (1 triệu từ), câu E trấn an người đọc: 'May mắn thay, bạn không cần học một số lượng từ gần bằng như thế để giỏi một ngôn ngữ'." },
+                    { "gap": 19, "correct": "A", "tag": "Comparison / Addition", "html": "<strong>19. A:</strong> <strong>[Comparison / Addition]</strong><br>Trước gap: 'Hãy thử dùng thẻ từ vựng điện tử (electronic flash cards).'<br>Sau gap: 'Bạn có thể dễ dàng mang theo lượng lớn từ trên điện thoại...'<br>Vì sao chọn A: 'Thẻ giấy cũng hoạt động tốt nhưng thẻ điện tử mang lại một số lợi ích tuyệt vời' kết nối trực tiếp với ví dụ về sự tiện lợi trên điện thoại ở câu sau." },
+                    { "gap": 20, "correct": "G", "tag": "Solution to a problem", "html": "<strong>20. G:</strong> <strong>[Solution to a problem]</strong><br>Trước gap: 'Rất khó để thực hành từ trong ngữ cảnh vì chưa đủ vốn từ.'<br>Sau gap: 'Ví dụ, nếu bạn đang học từ casa (nhà) trong tiếng Tây Ban Nha, bạn có thể nói: I'm going to go to my casa now.'<br>Vì sao chọn G: 'Để giải quyết vấn đề này (To get around this), chỉ cần sử dụng từ đó trong một câu bằng tiếng mẹ đẻ của bạn' - Khớp chính xác với ví dụ tiếng Anh có chèn 1 từ tiếng Tây Ban Nha ở câu sau." }
+                ]
+            },
+            {
+                "id": "test7",
+                "title": "Running a Marathon",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>I have recently decided that I want to train in order to run a full marathon when I finish school. I think what made me want this so much is the fact that it is not just a test of the body but a test of the mind too. That's why, I think most people can get a lot out of running marathons, even if it's not the full 42.195 kilometres. I truly believe we are all natural athletes. <span class=\"drop-zone\" data-id=\"16\">[16]</span> There are no more races and games to be won and no more prizes to feel that it is worth making the effort. So I guess that some people would lose their interest in competing, which is so sad, as they are missing out on a wonderful experience. Anyway, that won't be the case for me.</p><p>Actually, it has not always been my ambition to run, believe it or not. <span class=\"drop-zone\" data-id=\"17\">[17]</span> It all started with wanting to run faster and longer than two fifty-year-old ladies. Last year, my mum called me on a Monday afternoon to tell me that she and her running friend were going to run a half-marathon. <span class=\"drop-zone\" data-id=\"18\">[18]</span> Yes, you guessed it! I immediately volunteered myself for the run without even knowing what the length of a half-marathon was!</p><p>But I thought that if my mum thought she could do it, then for me it would be easy! I was fourteen at the time, so how hard could it be? As you understand, I had no idea how much effort I would have to put into it.</p><p><span class=\"drop-zone\" data-id=\"19\">[19]</span> However, it was not as I imagined. I was exhausted! By the time I got to the finish line, I promised myself that it was my first and last marathon. I hated every kilometre of it! <span class=\"drop-zone\" data-id=\"20\">[20]</span> And now I don't think I could live without the focus, the challenge and that awesome feeling of finally crossing the finish line.</p>",
+                "options": [
+                    { "id": "A", "text": "How was I to know that it was the beginning of a way of life?" },
+                    { "id": "B", "text": "I didn't grow up dreaming of the challenge of long distance running." },
+                    { "id": "C", "text": "A marathon is a race which started in Ancient Greece." },
+                    { "id": "D", "text": "Luckily, I did manage it." },
+                    { "id": "E", "text": "However, after school we are no longer made to do sport." },
+                    { "id": "F", "text": "When I was a kid, I would run everywhere, at top speed!" },
+                    { "id": "G", "text": "I was too tired to finish, and my legs and feet hurt so much!" },
+                    { "id": "H", "text": "At that point, I must have had a moment of madness." }
+                ],
+                "answers": { "16": "E", "17": "B", "18": "H", "19": "D", "20": "A" },
+                "explanations": [
+                    { "gap": 16, "correct": "E", "tag": "Contrast / Explanation", "html": "<strong>16. E:</strong> <strong>[Contrast / Explanation]</strong><br>Trước gap: 'Tôi tin rằng tất cả chúng ta đều là những vận động viên bẩm sinh.'<br>Sau gap: 'Không còn các cuộc đua để chiến thắng và không còn phần thưởng để cảm thấy nỗ lực là xứng đáng.'<br>Vì sao chọn E: 'Tuy nhiên, sau khi rời trường học, chúng ta không còn bị bắt buộc chơi thể thao nữa' giải thích lý do vì sao người lớn lại mất đi động lực và không còn giải thưởng như lúc đi học." },
+                    { "gap": 17, "correct": "B", "tag": "Restatement / Clarification", "html": "<strong>17. B:</strong> <strong>[Restatement / Clarification]</strong><br>Trước gap: 'Không phải lúc nào tôi cũng có tham vọng chạy.'<br>Sau gap: 'Mọi chuyện chỉ bắt đầu khi tôi muốn chạy nhanh hơn hai quý bà 50 tuổi.'<br>Vì sao chọn B: 'Tôi đã không lớn lên với giấc mơ về thử thách chạy đường dài' là câu diễn đạt lại và củng cố cho ý 'không phải lúc nào cũng có tham vọng chạy' ở câu trước." },
+                    { "gap": 18, "correct": "H", "tag": "Action / Reaction", "html": "<strong>18. H:</strong> <strong>[Action / Reaction]</strong><br>Trước gap: 'Mẹ gọi điện nói rằng mẹ và bạn sẽ chạy half-marathon.'<br>Sau gap: 'Vâng, bạn đoán đúng rồi! Tôi ngay lập tức tình nguyện tham gia mà không thèm biết nó dài bao nhiêu!'<br>Vì sao chọn H: 'Tại thời điểm đó, tôi hẳn đã có một phút bốc đồng/điên rồ' (a moment of madness) là câu giải thích hợp lý nhất cho quyết định vội vàng và thiếu suy nghĩ của cậu bé." },
+                    { "gap": 19, "correct": "D", "tag": "Result", "html": "<strong>19. D:</strong> <strong>[Result]</strong><br>Trước gap: 'Tôi không biết mình phải nỗ lực bao nhiêu.'<br>Sau gap: 'Tuy nhiên, nó không như tôi tưởng tượng. Tôi kiệt sức!'<br>Vì sao chọn D: 'May mắn thay, tôi đã hoàn thành nó' (Luckily, I did manage it). Mặc dù đã hoàn thành cuộc đua, nhưng câu sau chỉ ra rằng quá trình đó vô cùng mệt mỏi và gian nan." },
+                    { "gap": 20, "correct": "A", "tag": "Reflection / Contrast", "html": "<strong>20. A:</strong> <strong>[Reflection / Contrast]</strong><br>Trước gap: 'Tôi tự nhủ đó là lần chạy đầu và cũng là cuối. Tôi ghét từng kilomet của nó!'<br>Sau gap: 'Và bây giờ tôi không nghĩ mình có thể sống thiếu sự tập trung, thử thách... của việc chạy.'<br>Vì sao chọn A: 'Làm sao tôi biết được đó lại là khởi đầu của một lối sống mới?' (beginning of a way of life) tạo sự đối lập mạnh mẽ giữa việc từng rất ghét marathon và hiện tại lại đam mê nó." }
+                ]
+            },
+            {
+                "id": "test8",
+                "title": "A change in attitude",
+                "gapRange": { "start": 16, "end": 20 },
+                "content_html": "<p>It's difficult to remember exactly when I started playing computer games. Even from an early age, I was always looking at a computer screen. Sometimes I was playing games, and other times I was spending time on the internet. My mum used to joke that I spent more time on the computer than speaking to her! <span class=\"drop-zone\" data-id=\"16\">[16]</span></p><p>At first, my parents were keen for me to develop my computer skills. <span class=\"drop-zone\" data-id=\"17\">[17]</span> You use them at school for projects and at work when you're an adult. So my parents thought the earlier I started using them, the better.</p><p>Soon they began to think differently, however. What first started as a hobby or interest soon began to become much more than that. I started to spend more and more time playing games and less time communicating with my parents and friends. And if that wasn't bad enough, it wasn't long before I began to miss lessons just to play on my computer.</p><p><span class=\"drop-zone\" data-id=\"18\">[18]</span> My health began to suffer. Because I was indoors all day, I wasn't exercising. <span class=\"drop-zone\" data-id=\"19\">[19]</span> Quite often I would get colds and feel unwell most of the time. My parents noticed this and decided to do something about it. They told me that if I didn't stop spending so much time on my computer, they would take it away from me!</p><p>I was really upset at first. <span class=\"drop-zone\" data-id=\"20\">[20]</span> I listened to them and slowly began to spend less time on my computer and more time socialising with friends. As a result, I became much happier and now regret spending so much time in the past playing on my computer! I hope that more teenagers will be able to understand how bad this is for them and decide to take up a sport or go out with friends instead.</p>",
+                "options": [
+                    { "id": "A", "text": "Then, things got much worse." },
+                    { "id": "B", "text": "I'm really pleased that he bought me a new computer." },
+                    { "id": "C", "text": "They did their best to try and persuade me." },
+                    { "id": "D", "text": "Then, I began to realise my parents were right." },
+                    { "id": "E", "text": "I joined a gym immediately." },
+                    { "id": "F", "text": "After all, computers are essential for everyday life." },
+                    { "id": "G", "text": "And I suppose that was true at the time." },
+                    { "id": "H", "text": "This lack of exercise meant that I began to get ill." }
+                ],
+                "answers": { "16": "G", "17": "F", "18": "A", "19": "H", "20": "D" },
+                "explanations": [
+                    { "gap": 16, "correct": "G", "tag": "Reference / Agreement", "html": "<strong>16. G:</strong> <strong>[Reference / Agreement]</strong><br>Trước gap: 'Mẹ thường nói đùa rằng tôi dành thời gian cho máy tính nhiều hơn nói chuyện với bà!'<br>Sau gap: (Sang đoạn mới)<br>Vì sao chọn G: 'Và tôi cho rằng điều đó (lời nói đùa của mẹ) là sự thật vào thời điểm ấy' (And I suppose that was true...). Đại từ 'that' thay thế cho lời nhận xét của người mẹ." },
+                    { "gap": 17, "correct": "F", "tag": "Justification / Reason", "html": "<strong>17. F:</strong> <strong>[Justification / Reason]</strong><br>Trước gap: 'Ban đầu, bố mẹ muốn tôi phát triển kỹ năng máy tính.'<br>Sau gap: 'Bạn dùng chúng ở trường... và ở chỗ làm.'<br>Vì sao chọn F: 'Rốt cuộc thì, máy tính rất cần thiết cho cuộc sống hàng ngày.' Đây là lý do chính đáng giải thích tại sao ban đầu bố mẹ lại khuyến khích việc học máy tính." },
+                    { "gap": 18, "correct": "A", "tag": "Transition / Worsening situation", "html": "<strong>18. A:</strong> <strong>[Transition / Worsening situation]</strong><br>Trước gap: 'Tôi bắt đầu cúp học chỉ để chơi máy tính.'<br>Sau gap: 'Sức khỏe của tôi bắt đầu giảm sút.'<br>Vì sao chọn A: 'Sau đó, mọi thứ trở nên tồi tệ hơn nhiều' (Then, things got much worse) là câu chuyển ý hoàn hảo để nâng mức độ nghiêm trọng từ việc bỏ học sang việc ảnh hưởng đến sức khỏe thể chất." },
+                    { "gap": 19, "correct": "H", "tag": "Cause and Effect", "html": "<strong>19. H:</strong> <strong>[Cause and Effect]</strong><br>Trước gap: 'Vì tôi ở trong nhà cả ngày, tôi không hề tập thể dục.'<br>Sau gap: 'Tôi thường xuyên bị cảm và cảm thấy không khỏe.'<br>Vì sao chọn H: 'Sự thiếu tập thể dục này khiến tôi bắt đầu bị ốm' (This lack of exercise meant that I began to get ill). Câu này liên kết trực tiếp nguyên nhân (không tập) và kết quả (bị ốm/cảm)." },
+                    { "gap": 20, "correct": "D", "tag": "Change of perspective", "html": "<strong>20. D:</strong> <strong>[Change of perspective]</strong><br>Trước gap: 'Ban đầu tôi rất buồn (khi bị dọa tịch thu máy tính).'<br>Sau gap: 'Tôi đã lắng nghe họ và từ từ dành ít thời gian cho máy tính hơn...' <br>Vì sao chọn D: 'Sau đó, tôi bắt đầu nhận ra bố mẹ đã đúng' (Then, I began to realise my parents were right) giải thích bước ngoặt tâm lý, dẫn đến hành động nghe lời và thay đổi lối sống ở câu tiếp theo." }
+                ]
+            }
+        ];
+
+        var thoiGianBatDau = new Date();
+
+        function guiKetQua10Cot(tenBai, maHS, tenHS, diemSo, phanTram, thoiGianLamBai) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKnfEohBoagjHJmRPSM4uhSoEKeykBkzS-6DTy476UyddLxc-b8zptoQU6v8C94Nw14A/exec"; 
+            const statusEl = document.getElementById('sheet-status');
+            if(statusEl) statusEl.textContent = "Đang gửi dữ liệu...";
+
+            var gio = thoiGianBatDau.getHours();
+            var phut = thoiGianBatDau.getMinutes();
+            var giay = thoiGianBatDau.getSeconds();
+            var gioBatDauString = (gio < 10 ? '0'+gio : gio) + ":" + (phut < 10 ? '0'+phut : phut) + ":" + (giay < 10 ? '0'+giay : giay);
+
+            var duLieu = {
+                tenSheet: "B1 Simply Tests 5-8", 
+                tenBai: tenBai,            
+                maHocSinh: maHS,
+                hoTen: tenHS,
+                gioBatDau: gioBatDauString,
+                thoiGianLam: thoiGianLamBai, 
+                soCauDung: diemSo,         
+                phanTram: phanTram         
+            };
+
+            fetch(SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify(duLieu)
+            }).then(() => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu thành công!</span>';
+            }).catch(err => {
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Lỗi gửi kết quả. Kiểm tra console.</span>';
+                console.error("❌ Error:", err);
+            });
+        }
+
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                userAnswers: {}, 
+                draggedId: null,
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false 
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name) { alert("Please enter your name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                // Hiển thị tên bài test đúng (vì index 0 là test 5)
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 5}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    // Xử lý Array mảng HTML explanations
+                    if (Array.isArray(test.explanations)) {
+                        expContent.innerHTML = test.explanations.map(e => e.html).join('<div class="my-4 border-b border-rose-100"></div>');
+                    } else {
+                        expContent.innerHTML = test.explanations;
+                    }
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                     
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+                        
+                        if (savedAns) {
+                            this.fillGapUI(gap, savedAns);
+                        } else {
+                             gap.className = 'drop-zone';
+                             gap.innerHTML = `[${qId}]`;
+                             gap.ondragover = (e) => this.allowDrop(e);
+                             gap.ondrop = (e) => this.drop(e);
+                        }
+                        
+                        gap.onclick = () => {
+                             if (!this.state.testCompleted) this.handleGapClick(test.id, qId);
+                        };
+                    });
+                } else {
+                     const gaps = contentDiv.querySelectorAll('.drop-zone');
+                     gaps.forEach(gap => {
+                        const qId = gap.getAttribute('data-id');
+                        const key = `${test.id}-${qId}`;
+                        const savedAns = this.state.userAnswers[key];
+
+                        if (this.state.testCompleted) {
+                            gap.onclick = null;
+                            gap.ondragover = null;
+                            gap.ondrop = null;
+                        }
+
+                        if (savedAns) {
+                             if (!gap.innerHTML.includes(savedAns)) {
+                                 this.fillGapUI(gap, savedAns);
+                             }
+                        } else {
+                             if (gap.classList.contains('filled')) {
+                                 gap.className = 'drop-zone';
+                                 gap.innerHTML = `[${qId}]`;
+                             }
+                        }
+                     });
+                }
+
+                this.renderOptions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Finish Exam <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            renderOptions(test) {
+                const container = document.getElementById('options-container');
+                container.innerHTML = '';
+
+                test.options.forEach(opt => {
+                    const isUsed = Object.entries(this.state.userAnswers).some(([k, v]) => k.startsWith(test.id) && v === opt.id);
+                    
+                    const div = document.createElement('div');
+                    div.className = `draggable-item bg-white border border-slate-200 p-3 rounded-lg shadow-sm hover:shadow-md transition-all text-sm ${isUsed ? 'used' : ''}`;
+                    if (!isUsed && !this.state.testCompleted) {
+                        div.draggable = true;
+                        div.ondragstart = (e) => this.drag(e, opt.id, opt.text);
+                        div.ontouchstart = (e) => this.touchStart(e, opt.id, opt.text);
+                    }
+                    div.innerHTML = `<span class="font-bold text-rose-600 mr-2">[${opt.id}]</span> ${opt.text}`;
+                    container.appendChild(div);
+                });
+            },
+
+            drag(ev, optId, optText) {
+                this.state.draggedId = { id: optId, text: optText };
+                ev.dataTransfer.setData("text", JSON.stringify({id: optId, text: optText}));
+            },
+            
+            allowDrop(ev) { ev.preventDefault(); ev.target.classList.add('hovered'); },
+            
+            drop(ev) {
+                ev.preventDefault();
+                const target = ev.target.closest('.drop-zone');
+                if (!target) return;
+                target.classList.remove('hovered');
+                
+                let data = this.state.draggedId;
+                if (!data && ev.dataTransfer) {
+                     try { data = JSON.parse(ev.dataTransfer.getData("text")); } catch(e){}
+                }
+                
+                if (data) {
+                    const qId = target.getAttribute('data-id');
+                    this.state.userAnswers[`${db[this.state.currentTestIdx].id}-${qId}`] = data.id;
+                    this.renderTest();
+                }
+            },
+
+            handleGapClick(testId, qId) {
+                const key = `${testId}-${qId}`;
+                if (this.state.userAnswers[key]) {
+                    delete this.state.userAnswers[key];
+                    this.renderTest();
+                }
+            },
+
+            fillGapUI(gapEl, optId) {
+                const test = db[this.state.currentTestIdx];
+                const optText = test.options.find(o => o.id === optId)?.text || "";
+                
+                gapEl.className = 'drop-zone filled'; 
+                gapEl.innerHTML = `<span class="uppercase text-rose-800 mr-1">[${optId}]</span><span class="font-extrabold">${optText}</span>`;
+            },
+
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const totalQuestions = Object.keys(test.answers).length; 
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    if (this.state.userAnswers[`${test.id}-${qId}`]) answeredCount++;
+                });
+
+                if (answeredCount < totalQuestions) {
+                    alert("Please fill all gaps before checking.");
+                    return;
+                }
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    if (userAns && userAns === test.answers[qId]) correctCount++;
+                });
+
+                if (correctCount >= 4) {
+                    this.showFeedback(true); // PASSED
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Incorrect. You need at least 4 correct answers. You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                    } else {
+                        this.showFeedback(false); // FAILED
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+                    
+                    if (userAns && userAns !== test.answers[qId]) {
+                        gap.classList.add('wrong'); // Add Red style
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.drop-zone').forEach(gap => {
+                    const qId = gap.getAttribute('data-id');
+                    const userAns = this.state.userAnswers[`${test.id}-${qId}`];
+                    const correctAns = test.answers[qId];
+                    
+                    gap.className = 'drop-zone filled'; // Reset
+
+                    if (passed) {
+                        if (userAns === correctAns) {
+                            gap.classList.add('correct'); // Green style
+                        } else {
+                            gap.classList.add('wrong'); // Red style
+                        }
+                    } else {
+                        if (userAns !== correctAns) {
+                            gap.classList.add('wrong');
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test (>= 4 correct).");
+                } else {
+                    alert("Out of attempts. Moving to next part.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.renderTest();
+            },
+
+            finishExam() {
+                const endTime = new Date();
+                const diffMs = endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let score = 0;
+                let totalQ = 0;
+
+                db.forEach(test => {
+                    const qIds = Object.keys(test.answers);
+                    totalQ += qIds.length;
+                    
+                    qIds.forEach(qId => {
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key];
+                        if (userAns === test.answers[qId]) score++;
+                    });
+                });
+
+                const percent = totalQ > 0 ? Math.round((score / totalQ) * 100) : 0;
+
+                guiKetQua10Cot(
+                    "B1 Simply Tests 5-8", 
+                    this.state.studentId,
+                    this.state.userName, 
+                    score + "/" + totalQ,
+                    percent + "%",
+                    durationStr
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-score').nextElementSibling.textContent = "/" + totalQ;
+                document.getElementById('result-percent').textContent = `${percent}%`;
+                document.getElementById('res-name').textContent = this.state.userName;
+                document.getElementById('res-id').textContent = this.state.studentId;
+                document.getElementById('res-time').textContent = durationStr;
+            },
+
+            touchStart(ev, optId, text) {
+                this.state.draggedId = { id: optId, text: text };
+                document.querySelectorAll('.drop-zone').forEach(el => el.style.borderColor = '#e11d48');
+            }
+        };
+    </script>
+</body>
+</html>
