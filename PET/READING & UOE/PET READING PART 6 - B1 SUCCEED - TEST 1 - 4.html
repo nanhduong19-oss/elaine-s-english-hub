@@ -263,7 +263,7 @@
                 "title": "Bungee Jumping",
                 "content_html": `
                     <p>Have you ever tried bungee jumping? <input type="text" class="gap-input" data-id="27" placeholder="[27]"> you haven’t, then my advice is don’t.</p>
-                    <p>I almost tried it last year on holiday in Indonesia because my best friend, who I was travelling with, had done it <input type="text" class="gap-input" data-id="28" placeholder="[28]"> and suggested that I should try it. I had to jump from a great height with an elastic rope attached to my ankle.</p>
+                    <p>I almost tried it last year on holiday in Indonesia because my best friend, who I was travelling with, had done it <input type="text" class="gap-input" data-id="28" placeholder="[28]"> before and suggested that I should try it. I had to jump from a great height with an elastic rope attached to my ankle.</p>
                     <p>I guess I was really curious about what <input type="text" class="gap-input" data-id="29" placeholder="[29]"> feels like to jump off something so high, knowing that you will not hit the ground (or, in my case, water) below, as we were going <input type="text" class="gap-input" data-id="30" placeholder="[30]"> do the jump over a lake.</p>
                     <p>However, I personally will never know as I was <input type="text" class="gap-input" data-id="31" placeholder="[31]"> scared when I got up to the top of the rock that nobody could persuade me to jump.</p>
                     <p>I’m not sure if you have to be crazy or brave to actually do the jump, but I’ve decided that bungee jumping is <input type="text" class="gap-input" data-id="32" placeholder="[32]"> a sport for me.</p>
@@ -675,8 +675,9 @@
                 document.getElementById('result-percent-large').textContent = `${percent}%`;
                 document.getElementById('res-student-name').textContent = this.state.userName;
                 document.getElementById('res-student-id').textContent = this.state.studentId;
-                document.getElementById('res-start-time').textContent = `${ngayLam} ${gioBD}`;
-                document.getElementById('res-end-time').textContent = `${ngayLam} ${gioKT}`;
+                document.getElementById('res-date').textContent = ngayLam;
+                document.getElementById('res-start-time').textContent = gioBD;
+                document.getElementById('res-end-time').textContent = gioKT;
                 document.getElementById('result-breakdown').innerHTML = breakdownHtml;
                 document.getElementById('result-score').textContent = totalScore;
             }
