@@ -207,10 +207,22 @@
                             <p class="font-bold text-slate-700 text-lg truncate"><span id="res-student-name"></span></p>
                             <p class="text-sm text-slate-500">ID: <span id="res-student-id"></span></p>
                         </div>
-                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                            <p class="text-xs text-slate-400 font-bold uppercase mb-1">Time (dd/mm/yy hh:mm)</p>
-                            <p class="text-sm font-semibold text-slate-700">Start: <span id="res-start-time"></span></p>
-                            <p class="text-sm font-semibold text-slate-700">End: <span id="res-end-time"></span></p>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-center">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-2">Time Info</p>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Date</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-date"></p>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Start</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-start-time"></p>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">End</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-end-time"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -675,43 +687,37 @@
             const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; 
             
             const statusEl = document.getElementById('sheet-status');
-            if (statusEl) statusEl.textContent = "Đang gửi dữ liệu về hệ thống...";
+            if (statusEl) statusEl.textContent = "Sending data to system...";
             
-            // Khớp chính xác tên cột trên Google Sheets
-            const formData = new URLSearchParams();
-            formData.append("TÊN BÀI", tenBai);
-            formData.append("MÃ HỌC SINH", maHS);
-            formData.append("HỌ VÀ TÊN", tenHS);
-            formData.append("NGÀY", ngay);
-            formData.append("GIỜ BẮT ĐẦU", gioBatDau);
-            formData.append("GIỜ NỘP", gioNop);
-            formData.append("THỜI GIAN LÀM", thoiGianLamBai);
-            formData.append("SỐ CÂU ĐÚNG", diemSo);
-            formData.append("% ĐÚNG", phanTram);
+            // Khớp CHÍNH XÁC 100% các biến được gọi trong lệnh JSON.parse của App Script
+            const jsonPayload = {
+                "tenSheet": "Succeed Test 1 - 4",
+                "tenBai": tenBai,
+                "maHocSinh": maHS,
+                "hoTen": tenHS,
+                "gioBatDau": gioBatDau,
+                "thoiGianLam": thoiGianLamBai,
+                "soCauDung": diemSo,
+                "phanTram": phanTram
+            };
 
-            // Gửi dữ liệu bằng phương thức POST
+            // Gửi dữ liệu bằng phương thức POST với định dạng JSON (dùng text/plain để tránh lỗi CORS)
             fetch(LINK_APP_SCRIPT, {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
+                    "Content-Type": "text/plain;charset=utf-8"
                 },
-                body: formData.toString()
+                body: JSON.stringify(jsonPayload)
             })
             .then(() => {
-                console.log("✅ Sent to Google Sheets via POST");
-                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu vào Google Sheets thành công!</span>';
+                console.log("✅ Sent to Google Sheets via JSON");
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results saved successfully!</span>';
             })
             .catch(err => {
-                console.error("❌ POST Error:", err);
-                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Lỗi gửi kết quả. Vui lòng kiểm tra lại mạng.</span>';
+                console.error("❌ JSON POST Error:", err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Error sending results. Please check your network connection.</span>';
             });
-            
-            // Backup phương thức GET để tương thích với các đoạn script App Script cũ
-            fetch(LINK_APP_SCRIPT + "?" + formData.toString(), {
-                method: "GET",
-                mode: "no-cors"
-            }).catch(e => console.log("GET fallback completed"));
         }
     </script>
 </body>
