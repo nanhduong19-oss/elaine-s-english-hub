@@ -608,7 +608,7 @@
                 const diffMs = this.state.endTime - this.state.startTime;
                 const minutes = Math.floor(diffMs / 60000);
                 const seconds = Math.floor(((diffMs % 60000) / 1000));
-                const durationStr = `${minutes} min ${seconds} sec`;
+                const durationStr = `${minutes} phút ${seconds} giây`;
 
                 let totalScore = 0;
                 let totalQ = 0;
@@ -645,14 +645,14 @@
 
                 // --- GỌI HÀM GỬI GOOGLE SHEETS ---
                 guiKetQua10Cot(
-                    TEN_SHEET_NAY, 
+                    "Succeed Test 1 - 4", 
                     this.state.studentId,
                     this.state.userName, 
                     ngayLam,
                     gioBD,
                     gioKT,
                     durationStr,
-                    totalScore, // Số câu đúng
+                    totalScore, 
                     percent + "%"
                 );
 
@@ -672,23 +672,24 @@
 
         // --- GOOGLE SHEET SEND FUNCTION ---
         function guiKetQua10Cot(tenBai, maHS, tenHS, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
-            if (!LINK_APP_SCRIPT) return;
+            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; 
             
             const statusEl = document.getElementById('sheet-status');
-            statusEl.textContent = "Sending data to system...";
+            if (statusEl) statusEl.textContent = "Đang gửi dữ liệu về hệ thống...";
             
+            // Khớp chính xác tên cột trên Google Sheets
             const formData = new URLSearchParams();
-            formData.append("tenSheet", "Succeed Test 1 - 4");
-            formData.append("tenBai", tenBai);
-            formData.append("maHocSinh", maHS);
-            formData.append("hoTen", tenHS);
-            formData.append("ngay", ngay);
-            formData.append("gioBatDau", gioBatDau);
-            formData.append("gioNop", gioNop);
-            formData.append("thoiGianLam", thoiGianLamBai);
-            formData.append("soCauDung", diemSo);
-            formData.append("phanTram", phanTram);
+            formData.append("TÊN BÀI", tenBai);
+            formData.append("MÃ HỌC SINH", maHS);
+            formData.append("HỌ VÀ TÊN", tenHS);
+            formData.append("NGÀY", ngay);
+            formData.append("GIỜ BẮT ĐẦU", gioBatDau);
+            formData.append("GIỜ NỘP", gioNop);
+            formData.append("THỜI GIAN LÀM", thoiGianLamBai);
+            formData.append("SỐ CÂU ĐÚNG", diemSo);
+            formData.append("% ĐÚNG", phanTram);
 
+            // Gửi dữ liệu bằng phương thức POST
             fetch(LINK_APP_SCRIPT, {
                 method: "POST",
                 mode: "no-cors",
@@ -698,13 +699,19 @@
                 body: formData.toString()
             })
             .then(() => {
-                console.log("✅ Sent to Google Sheets");
-                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results saved successfully!</span>';
+                console.log("✅ Sent to Google Sheets via POST");
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Kết quả đã được lưu vào Google Sheets thành công!</span>';
             })
             .catch(err => {
-                console.error("❌ Error:", err);
-                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Error sending results. Please check your network connection.</span>';
+                console.error("❌ POST Error:", err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Lỗi gửi kết quả. Vui lòng kiểm tra lại mạng.</span>';
             });
+            
+            // Backup phương thức GET để tương thích với các đoạn script App Script cũ
+            fetch(LINK_APP_SCRIPT + "?" + formData.toString(), {
+                method: "GET",
+                mode: "no-cors"
+            }).catch(e => console.log("GET fallback completed"));
         }
     </script>
 </body>
