@@ -270,7 +270,7 @@
             </div>
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-brand-primary tracking-wide mb-1">FCE WRITING PRACTICE</h1>
-                <p class="text-xs text-gray-500 font-bold tracking-widest uppercase" id="welcome-test-title">Computer-Based Test Environmente</p>
+                <p class="text-xs text-gray-500 font-bold tracking-widest uppercase" id="welcome-test-title">Computer-Based Test Environment</p>
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
@@ -295,9 +295,9 @@
                     </h3>
                     <ul class="text-sm space-y-2 text-gray-600 font-medium">
                         <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-gray-400 mr-3 shrink-0"></span>Duration: 80 minutes</li>
-                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-brand-primary mr-3 shrink-0"></span><strong>Fullscreen mode is strictly required.</strong></li>
-                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3 shrink-0"></span><strong class="text-red-600">Copy/Paste is DISABLED.</strong></li>
-                        <li class="flex items-center text-red-500"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3 shrink-0"></span>Max 2 violations = Auto-submit.</li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Fullscreen mode is strictly required.</strong></li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Copy/Paste is DISABLED.</strong></li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Max 2 violations = Auto-submit.</strong></li>
                     </ul>
                 </div>
                 <button id="btn-start" type="submit" class="w-full bg-brand-primary hover:bg-brand-dark text-white font-bold py-4 px-4 rounded-2xl mt-6 transition shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
@@ -653,7 +653,7 @@
         };
 
         window.onload = () => { 
-            document.getElementById('welcome-test-title').innerText = document.title;
+            // Đã xóa dòng ghi đè welcome-test-title để giữ nguyên chữ "Computer-Based Test Environment"
             loadDashboard(); 
             setupEventListeners(); 
         };
