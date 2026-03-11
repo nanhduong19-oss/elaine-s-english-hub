@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge FCE Writing Practice Test</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            lightest: '#f1f8e9',
+                            lighter: '#c5e1a5',
+                            primary: '#8bc34a',
+                            dark: '#689f38',
+                            text: '#333333',
+                            gray: '#a1887f',
+                            graylight: '#bcaaa4'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base styles */
+        body {
+            background-color: #f1f8e9;
+            color: #333333;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* =========================================================
+           CHẾ ĐỘ HIGH CONTRAST (CHUẨN CAMBRIDGE CBT)
+           ========================================================= */
+        body.contrast-dark {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        /* Phủ đen toàn bộ các khung chính. 
+           Lưu ý: Tách riêng các class Tailwind có ký tự đặc biệt để tránh lỗi Parser */
+        body.contrast-dark #screen-1,
+        body.contrast-dark #screen-2, 
+        body.contrast-dark #screen-3,
+        body.contrast-dark header, 
+        body.contrast-dark footer,
+        body.contrast-dark .cbt-panel-left,
+        body.contrast-dark .cbt-panel-right {
+            background-color: #000000 !important;
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* Xử lý an toàn các màu nền */
+        body.contrast-dark .bg-white, 
+        body.contrast-dark .bg-gray-50,
+        body.contrast-dark .bg-gray-100,
+        body.contrast-dark .bg-gray-200,
+        body.contrast-dark .bg-brand-lightest {
+            background-color: #000000 !important;
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* Sửa lỗi cú pháp Tailwind bg-[#f8f9fa] */
+        body.contrast-dark .bg-\[\#f8f9fa\] {
+            background-color: #000000 !important;
+            border-color: #ffffff !important;
+            color: #ffffff !important;
+        }
+
+        /* Chỉnh lại Dropdown và Input */
+        body.contrast-dark input,
+        body.contrast-dark select {
+            background-color: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+
+        /* Ép các màu chữ xám/xanh/đỏ trong giao diện chung thành màu Trắng hết */
+        body.contrast-dark .text-brand-text, 
+        body.contrast-dark .text-gray-900, 
+        body.contrast-dark .text-gray-800, 
+        body.contrast-dark .text-gray-700, 
+        body.contrast-dark .text-gray-600, 
+        body.contrast-dark .text-gray-500,
+        body.contrast-dark .text-brand-dark, 
+        body.contrast-dark .text-brand-primary,
+        body.contrast-dark .text-blue-900,
+        body.contrast-dark .text-blue-800,
+        body.contrast-dark .text-green-900,
+        body.contrast-dark #header-test-name {
+            color: #ffffff !important;
+        }
+
+        /* Tối ưu hóa màu Đỏ cho cảnh báo ở Dark Mode */
+        body.contrast-dark .text-red-500,
+        body.contrast-dark .text-red-600 {
+            color: #ff6b6b !important;
+        }
+        body.contrast-dark .bg-red-50 {
+            background-color: #2a0000 !important;
+            border-color: #ff6b6b !important;
+            color: #ffffff !important;
+        }
+
+        /* Bắt các block màu sắc được chèn từ JSON Github phải chuyển thành đen viền trắng */
+        body.contrast-dark #prompt-part-1 *, 
+        body.contrast-dark #prompt-part-2 * {
+            background-color: transparent !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+
+        /* KHUNG TEXTAREA ĐẶC TRƯNG CỦA CBT: Đen tuyền, viền màu Cam đất */
+        body.contrast-dark .cbt-textarea-container {
+            border: 1px solid #d97706 !important; /* Cam đất chuẩn CBT */
+            background-color: #000000 !important;
+        }
+        body.contrast-dark textarea {
+            background-color: transparent !important;
+            color: #ffffff !important;
+        }
+
+        /* Thanh phân cách (Splitter) */
+        .cbt-divider {
+            width: 2px;
+            background-color: #d1d5db; /* gray-300 */
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        body.contrast-dark .cbt-divider {
+            background-color: #ffffff;
+        }
+        .cbt-handle {
+            width: 28px;
+            height: 28px;
+            background: #ffffff;
+            border: 1px solid #9ca3af;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #4b5563;
+        }
+        body.contrast-dark .cbt-handle {
+            background: #000000;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+        }
+
+        /* FOOTER TABS CHUẨN CBT */
+        footer {
+            border-top: 1px solid #d1d5db;
+        }
+        body.contrast-dark footer {
+            border-top: 1px solid #ffffff;
+        }
+        .tab-btn {
+            height: 100%;
+            padding: 0 30px;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #d1d5db;
+            transition: all 0.2s;
+        }
+        
+        /* Giao diện Thường */
+        .tab-active { background-color: #8bc34a; color: white; border-bottom: none; }
+        .tab-inactive { background-color: #e5e7eb; color: #4b5563; }
+        .tab-inactive:hover { background-color: #d1d5db; }
+
+        /* Giao diện Dark/Contrast */
+        body.contrast-dark .tab-btn { border-right: 1px solid #ffffff; }
+        body.contrast-dark .tab-active {
+            background-color: #8B4513 !important; /* Màu Nâu Cam đất */
+            color: #ffffff !important;
+        }
+        body.contrast-dark .tab-inactive {
+            background-color: #1a1a1a !important; /* Xám đen */
+            color: #9ca3af !important;
+        }
+        body.contrast-dark .tab-inactive:hover { background-color: #333333 !important; }
+
+        /* Icon bookmark */
+        .cbt-bookmark { position: absolute; top: 12px; right: 16px; color: #9ca3af; font-size: 18px; }
+        body.contrast-dark .cbt-bookmark { color: #ffffff; }
+
+        /* ========================================================= */
+
+        #check-size-base, #check-size-lg, #check-size-xl { color: transparent; }
+        body[data-text-size="base"] #check-size-base { color: currentColor; }
+        body[data-text-size="lg"] #check-size-lg { color: currentColor; }
+        body[data-text-size="xl"] #check-size-xl { color: currentColor; }
+
+        /* ACCESSIBILITY: TEXT SIZE SCALING LOGIC */
+        body[data-text-size="lg"] .scalable-text, 
+        body[data-text-size="lg"] .scalable-text * {
+            font-size: 1.15rem !important;
+            line-height: 1.7 !important;
+        }
+        
+        body[data-text-size="xl"] .scalable-text, 
+        body[data-text-size="xl"] .scalable-text * {
+            font-size: 1.3rem !important;
+            line-height: 1.9 !important;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #c5e1a5; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8bc34a; }
+        body.contrast-dark ::-webkit-scrollbar-thumb { background: #555; }
+        body.contrast-dark ::-webkit-scrollbar-thumb:hover { background: #777; }
+
+        /* Print overrides */
+        @media print {
+            body { background: white !important; }
+            #screen-1, #screen-2, .no-print { display: none !important; }
+            #screen-3 { display: block !important; padding: 0 !important; margin: 0 !important; box-shadow: none !important; }
+            .print-break-inside-avoid { page-break-inside: avoid; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+
+        .no-select { user-select: none; -webkit-user-select: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative overflow-x-hidden" data-text-size="base">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: WELCOME & LOGIN                  -->
+    <!-- ========================================== -->
+    <main id="screen-1" class="flex-grow flex flex-col items-center justify-center p-4 min-h-screen bg-brand-lightest">
+        <div class="bg-white rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden relative pt-10 pb-8 px-6 sm:px-8 border border-white z-10">
+            <div class="absolute top-0 left-0 w-full h-3 bg-brand-primary"></div>
+            <div class="mx-auto bg-brand-primary text-white w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg mb-5 transform -rotate-6">
+                <div class="relative transform rotate-6 mt-1">
+                    <i class="fa-solid fa-laptop text-4xl"></i>
+                    <span class="absolute -bottom-1 -right-4 bg-white text-brand-primary rounded-full shadow-sm w-7 h-7 flex items-center justify-center border-2 border-brand-primary">
+                        <i class="fa-solid fa-pen text-[11px]"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-brand-primary tracking-wide mb-1">FCE WRITING PRACTICE</h1>
+                <p class="text-xs text-gray-500 font-bold tracking-widest uppercase" id="welcome-test-title">FCE Writing - Simulated Practice</p>
+            </div>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <select id="test-selector" class="w-full px-5 py-4 rounded-xl border-none bg-brand-lightest/60 text-gray-700 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium" required>
+                        <option value="" disabled selected>Loading data from GitHub...</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" id="student-name" class="w-full px-5 py-4 rounded-xl border-none bg-brand-lightest/60 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium" placeholder="Full Name" required>
+                </div>
+                <div class="flex gap-4">
+                    <div class="w-1/2">
+                        <input type="text" id="student-id" class="w-full px-5 py-4 rounded-xl border-none bg-brand-lightest/60 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium" placeholder="Student ID" required>
+                    </div>
+                    <div class="w-1/2">
+                        <input type="text" id="student-class" class="w-full px-5 py-4 rounded-xl border-none bg-brand-lightest/60 text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium" placeholder="Class" required>
+                    </div>
+                </div>
+                <div class="bg-gray-50 border border-gray-100 rounded-2xl p-5 mt-4">
+                    <h3 class="font-bold text-red-600 text-sm mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shield"></i> PRACTICE RULES
+                    </h3>
+                    <ul class="text-sm space-y-2 text-gray-600 font-medium">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-gray-400 mr-3 shrink-0"></span>Duration: 80 minutes</li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-brand-primary mr-3 shrink-0"></span><strong>Fullscreen mode is strictly required.</strong></li>
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3 shrink-0"></span><strong class="text-red-600">Copy/Paste is DISABLED.</strong></li>
+                        <li class="flex items-center text-red-500"><span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-3 shrink-0"></span>Max 2 violations = Auto-submit.</li>
+                    </ul>
+                </div>
+                <button id="btn-start" type="submit" class="w-full bg-brand-primary hover:bg-brand-dark text-white font-bold py-4 px-4 rounded-2xl mt-6 transition shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 text-lg">
+                    <i class="fa-solid fa-expand"></i> START PRACTICE
+                </button>
+            </form>
+        </div>
+        <div class="mt-8 text-center w-full relative z-10 pb-4">
+            <h3 class="text-gray-500 font-bold uppercase tracking-wider text-[13px] sm:text-sm mb-1">
+                COMPILED AND DIGITIZED BY <span class="text-brand-primary">ELAINE NGUYỄN</span>
+            </h3>
+            <p class="text-gray-400 italic text-[13px] sm:text-sm">Empowering students through knowledge and technology</p>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: EXAM INTERFACE                   -->
+    <!-- ========================================== -->
+    <main id="screen-2" class="hidden flex-col h-screen w-full bg-gray-100">
+        <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-4 h-full">
+                <div class="font-bold text-lg text-brand-text pr-4 flex items-center h-full" id="header-test-name">FCE Test</div>
+                <div class="text-sm text-gray-600 border-l border-gray-300 pl-4 h-full flex flex-col justify-center">
+                    <span id="header-student-name" class="font-semibold">Student Name</span> 
+                    <span class="text-xs">(<span id="header-student-id">ID</span> - <span id="header-student-class">Class</span>)</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-4 border-r pr-6 border-gray-300">
+                    <button onclick="toggleContrast()" class="text-gray-500 hover:text-brand-primary text-xl" title="Toggle Contrast (Dark Mode)">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                    </button>
+                    <button onclick="openTextSizeModal()" class="text-gray-500 hover:text-brand-primary font-bold flex items-center gap-1 text-lg" title="Change Text Size">
+                        <i class="fa-solid fa-text-height"></i>
+                    </button>
+                </div>
+                <div class="text-red-500 font-medium flex items-center gap-2" title="Anti-cheat violations">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span id="violation-count">0/2</span>
+                </div>
+                <div id="exam-timer" class="font-mono text-xl font-bold bg-gray-100 px-4 py-1 rounded-lg">80:00</div>
+                <button onclick="confirmSubmit()" id="btn-submit-exam" class="bg-brand-primary hover:bg-brand-dark text-white px-6 py-2 rounded-lg font-bold shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> SUBMIT
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-grow flex overflow-hidden">
+            <!-- BẢNG CÂU HỎI TRÁI -->
+            <!-- Thêm class cbt-panel-left để bắt CSS High Contrast chính xác -->
+            <div class="w-[45%] lg:w-[40%] bg-[#f8f9fa] flex flex-col h-full overflow-y-auto no-select cbt-panel-left">
+                <div class="p-6 h-full flex flex-col">
+                    <h2 class="text-lg font-bold mb-4 flex items-center gap-2 text-brand-dark shrink-0">
+                        <i class="fa-solid fa-file-lines"></i> Question Prompt
+                    </h2>
+                    
+                    <!-- PROMPT PART 1 -->
+                    <div id="prompt-part-1" class="scalable-text prose max-w-none text-sm bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                        Loading...
+                    </div>
+                    
+                    <!-- PROMPT PART 2 -->
+                    <div id="prompt-part-2" class="scalable-text hidden flex-col h-full">
+                        <div id="prompt-part-2-content" class="overflow-y-auto flex-grow pb-4 bg-white p-5 rounded-xl shadow-sm border border-gray-200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- THANH KÉO (SPLITTER) GIẢ LẬP GIAO DIỆN CBT -->
+            <div class="cbt-divider">
+                <div class="cbt-handle">
+                    <i class="fa-solid fa-arrows-left-right"></i>
+                </div>
+            </div>
+
+            <!-- BẢNG LÀM BÀI PHẢI -->
+            <!-- Thêm class cbt-panel-right -->
+            <div class="w-[55%] lg:w-[60%] bg-white h-full flex flex-col relative px-6 pt-6 pb-4 cbt-panel-right">
+                
+                <!-- DROPDOWN CHỌN CÂU HỎI PART 2 -->
+                <div id="part2-answer-header" class="hidden border border-gray-200 bg-gray-50 p-3 flex items-center justify-between text-sm shrink-0 mb-4 rounded">
+                    <div class="text-gray-800">
+                        Which question are you answering?<br>
+                        <span id="part2-selection-status" class="text-xs text-gray-500 font-medium">0 of 1 questions selected.</span>
+                    </div>
+                    <select id="part2-dropdown" class="border border-gray-300 rounded px-3 py-1.5 bg-white outline-none focus:border-brand-primary cursor-pointer text-gray-800 shadow-sm font-medium" onchange="handleRightPanelDropdown(this)">
+                        <option value="undecided">✓ Undecided</option>
+                        <option value="2">Question 2</option>
+                        <option value="3">Question 3</option>
+                        <option value="4">Question 4</option>
+                        <option value="5">Question 5</option>
+                    </select>
+                </div>
+
+                <div class="flex-grow relative flex flex-col cbt-textarea-container border border-gray-300 rounded shadow-inner bg-white">
+                    <!-- Nút Bookmark giả lập -->
+                    <i class="fa-regular fa-bookmark cbt-bookmark"></i>
+                    
+                    <div id="part2-overlay" class="hidden absolute inset-0 z-10 bg-white/90 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center transition-opacity rounded">
+                        <div class="bg-white p-6 rounded-2xl shadow-xl border border-gray-200 max-w-md">
+                            <i class="fa-regular fa-hand-pointer text-4xl text-brand-primary mb-4 animate-bounce"></i>
+                            <h3 class="text-xl font-bold mb-2 text-gray-900">Select a Question First</h3>
+                            <p class="text-gray-600 mb-4">You must choose which question you are answering by selecting it from the dropdown above before you can start writing.</p>
+                        </div>
+                    </div>
+                    <div class="flex-grow p-4 pt-10 relative">
+                        <textarea id="answer-part-1" autocomplete="off" spellcheck="false" autocorrect="off" class="scalable-text w-full h-full resize-none outline-none text-base leading-relaxed bg-transparent" placeholder="Write your Part 1 answer here..."></textarea>
+                        <textarea id="answer-part-2" autocomplete="off" spellcheck="false" autocorrect="off" class="scalable-text hidden w-full h-full resize-none outline-none text-base leading-relaxed bg-transparent" placeholder="Write your Part 2 answer here..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- BỘ ĐẾM TỪ DƯỚI CÙNG BÊN PHẢI -->
+                <div class="flex justify-end pt-2 text-sm text-gray-500 font-medium">
+                    <span id="word-count">Words: 0</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- FOOTER TABS -->
+        <footer class="bg-gray-200 h-12 flex items-center shrink-0 z-20">
+            <button onclick="switchTab('part1')" id="tab-btn-part1" class="tab-btn tab-active">
+                Part 1
+            </button>
+            <button onclick="switchTab('part2')" id="tab-btn-part2" class="tab-btn tab-inactive">
+                Part 2
+            </button>
+        </footer>
+    </main>
+
+    <!-- MODALS & OVERLAYS -->
+    <div id="text-size-modal" class="hidden fixed inset-0 z-[110] bg-black/40 flex flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-xl overflow-hidden relative border border-gray-200">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                <button onclick="closeTextSizeModal()" class="text-gray-800 font-bold hover:text-brand-primary flex items-center gap-1 transition"><i class="fa-solid fa-chevron-left text-sm"></i> Options</button>
+                <h2 class="text-xl font-bold text-gray-900">Text size</h2>
+                <button onclick="closeTextSizeModal()" class="text-gray-800 text-xl font-bold hover:text-brand-primary transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 flex justify-center pb-8">
+                <div class="w-full max-w-sm border border-gray-300 rounded-lg overflow-hidden mt-2 bg-white">
+                    <div onclick="changeTextSize('base')" class="p-5 border-b border-gray-300 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-base" class="fa-solid fa-check absolute left-5 text-lg text-brand-primary"></i>
+                        <span class="text-base font-medium text-gray-800">Regular</span>
+                    </div>
+                    <div onclick="changeTextSize('lg')" class="p-5 border-b border-gray-300 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-lg" class="fa-solid fa-check absolute left-5 text-lg text-brand-primary"></i>
+                        <span class="text-lg font-medium text-gray-800">Large</span>
+                    </div>
+                    <div onclick="changeTextSize('xl')" class="p-5 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-xl" class="fa-solid fa-check absolute left-5 text-lg text-brand-primary"></i>
+                        <span class="text-xl font-medium text-gray-800">Extra large</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="anti-cheat-overlay" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-lg text-center shadow-2xl border-4 border-red-500">
+            <i class="fa-solid fa-triangle-exclamation text-6xl text-red-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-red-600 mb-2">WARNING: SUSPICIOUS ACTIVITY</h2>
+            <p class="text-gray-700 mb-4 text-lg">You have left the exam window or exited fullscreen.</p>
+            <div class="bg-red-50 p-4 rounded-lg mb-6 border border-red-200">
+                <p class="font-bold text-red-800">Violations: <span id="overlay-violation-count">1</span>/2</p>
+                <p class="text-sm mt-1 text-red-600">If you leave the screen again, your exam will be automatically submitted.</p>
+            </div>
+            <button onclick="returnToExam()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
+                Return to Exam
+            </button>
+        </div>
+    </div>
+    <div id="loading-overlay" class="hidden fixed inset-0 z-[100] bg-brand-lightest/90 backdrop-blur-md flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-6"></div>
+        <h2 class="text-2xl font-bold text-brand-dark mb-2" id="loading-title">Connecting...</h2>
+        <p class="text-gray-500 animate-pulse" id="loading-subtext">Please wait a moment.</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: RESULTS & AI FEEDBACK            -->
+    <!-- ========================================== -->
+    <main id="screen-3" class="hidden min-h-screen bg-gray-100 p-4 md:p-8">
+        <div class="max-w-6xl mx-auto space-y-6">
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden print-break-inside-avoid">
+                <div class="bg-brand-primary text-white p-6 flex flex-col md:flex-row justify-between items-center no-print">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">WRITING PRACTICE RESULTS</h1>
+                        <p class="text-brand-lightest mt-1 opacity-90" id="res-test-name">FCE Test 1</p>
+                    </div>
+                    <button onclick="exportPDF()" class="mt-4 md:mt-0 bg-white/20 hover:bg-white/30 border border-white/50 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 text-white shadow-sm">
+                        <i class="fa-solid fa-download"></i> Save Result As
+                    </button>
+                </div>
+                <div class="hidden print:block border-b-2 border-brand-primary pb-4 mb-4">
+                    <h1 class="text-3xl font-bold text-center uppercase tracking-wider text-brand-dark">Cambridge Writing Practice Result</h1>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Student</p>
+                        <p class="font-bold text-lg text-brand-text" id="res-student-name">Name</p>
+                        <p class="text-sm text-gray-500" id="res-student-info">ID - Class</p>
+                    </div>
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Time Taken / Violations</p>
+                        <p class="font-bold text-lg" id="res-time-taken">45m 0s</p>
+                        <p class="text-sm text-red-500 font-medium" id="res-violations">0 Violations</p>
+                    </div>
+                    <div class="pt-4 md:pt-0 bg-brand-lightest/50 rounded-lg p-2">
+                        <p class="text-xs text-brand-dark uppercase font-bold tracking-wider mb-1">Total Score</p>
+                        <p class="text-4xl font-black text-brand-primary" id="res-total-score">0/40</p>
+                    </div>
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Cambridge Grade</p>
+                        <p class="text-4xl font-black" id="res-grade">B2</p>
+                        <p class="text-sm font-bold mt-1 text-gray-500">Score: <span id="res-cambridge-score">160</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 text-blue-800 p-4 rounded-xl border border-blue-200 flex items-center gap-3 no-print">
+                <i class="fa-solid fa-robot text-2xl"></i>
+                <p>Detailed Feedback is ready! Below is the in-depth AI analysis based on the Cambridge B2 First rubric.</p>
+            </div>
+
+            <div class="flex justify-center gap-2 no-print">
+                 <button onclick="switchResultTab('part1', true)" id="res-tab-part1" class="px-6 py-2 rounded-full font-bold text-sm transition bg-brand-primary text-white shadow">Part 1 Review</button>
+                 <button onclick="switchResultTab('part2', true)" id="res-tab-part2" class="px-6 py-2 rounded-full font-bold text-sm transition bg-white text-gray-600 border hover:bg-gray-50">Part 2 Review</button>
+            </div>
+
+            <!-- PART 1 RESULT CONTAINER -->
+            <div id="result-part1-container">
+                <h3 class="font-bold text-xl mb-4 border-b pb-2 print:mt-8">Part 1: Essay</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <!-- Left Column: Rubric -->
+                    <div class="space-y-6 print-break-inside-avoid">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <h4 class="font-bold text-lg mb-4 text-gray-800 uppercase text-center border-b pb-3">Detailed Rubric Evaluation</h4>
+                            <div id="rubric-part1"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Feedback & Texts -->
+                    <div class="space-y-6 print-break-inside-avoid">
+                        <div class="bg-gray-50 p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <h4 class="font-bold text-lg mb-3 text-gray-800 uppercase text-sm">General Feedback</h4>
+                            <div id="general-feedback-part1" class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap"></div>
+                        </div>
+                        
+                        <!-- ORIGINAL ANSWER UI MATCHING SCREENSHOT -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                             <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-gray-800 uppercase text-sm">Your Original Answer</h4>
+                                <span class="text-xs font-bold bg-brand-lightest text-brand-dark px-3 py-1 rounded-sm border border-brand-lighter" id="wordcount-part1-res">Words: 0</span>
+                             </div>
+                             <div id="original-answer-part1" class="text-sm font-mono leading-relaxed text-gray-700 whitespace-pre-wrap bg-gray-50 p-5 rounded-xl border border-gray-100"></div>
+                        </div>
+
+                        <div class="bg-brand-lightest p-6 rounded-2xl shadow-sm border border-brand-lighter relative overflow-hidden">
+                            <h4 class="font-bold text-lg mb-3 text-brand-dark uppercase text-sm"><i class="fa-solid fa-magic mr-2"></i>Improved Sample Answer</h4>
+                            <div id="improved-answer-part1" class="text-sm leading-relaxed whitespace-pre-wrap text-gray-800 mb-4 bg-white p-4 rounded border border-gray-200 font-serif"></div>
+                            
+                            <h4 class="font-bold text-sm text-gray-800 mb-2">Improvements Made:</h4>
+                            <ul id="improvements-list-part1" class="space-y-1.5 text-sm text-gray-700"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PART 2 RESULT CONTAINER -->
+            <div id="result-part2-container" class="hidden print:block print:mt-12">
+                <h3 class="font-bold text-xl mb-4 border-b pb-2">Part 2: Selected Option</h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                     
+                     <!-- Left Column: Rubric -->
+                     <div class="space-y-6 print-break-inside-avoid">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <h4 class="font-bold text-lg mb-4 text-gray-800 uppercase text-center border-b pb-3">Detailed Rubric Evaluation</h4>
+                            <div id="rubric-part2"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Feedback & Texts -->
+                    <div class="space-y-6 print-break-inside-avoid">
+                        <div class="bg-gray-50 p-6 rounded-2xl shadow-sm border border-gray-200">
+                            <h4 class="font-bold text-lg mb-3 text-gray-800 uppercase text-sm">General Feedback</h4>
+                            <div id="general-feedback-part2" class="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap"></div>
+                        </div>
+                        
+                        <!-- ORIGINAL ANSWER UI MATCHING SCREENSHOT -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-200">
+                             <div class="flex justify-between items-center mb-4">
+                                <h4 class="font-bold text-gray-800 uppercase text-sm">Your Original Answer</h4>
+                                <span class="text-xs font-bold bg-brand-lightest text-brand-dark px-3 py-1 rounded-sm border border-brand-lighter" id="wordcount-part2-res">Words: 0</span>
+                             </div>
+                             <div id="original-answer-part2" class="text-sm font-mono leading-relaxed text-gray-700 whitespace-pre-wrap bg-gray-50 p-5 rounded-xl border border-gray-100"></div>
+                        </div>
+
+                        <div class="bg-brand-lightest p-6 rounded-2xl shadow-sm border border-brand-lighter relative overflow-hidden">
+                            <h4 class="font-bold text-lg mb-3 text-brand-dark uppercase text-sm"><i class="fa-solid fa-magic mr-2"></i>Improved Sample Answer</h4>
+                            <div id="improved-answer-part2" class="text-sm leading-relaxed whitespace-pre-wrap text-gray-800 mb-4 bg-white p-4 rounded border border-gray-200 font-serif"></div>
+                            
+                            <h4 class="font-bold text-sm text-gray-800 mb-2">Improvements Made:</h4>
+                            <ul id="improvements-list-part2" class="space-y-1.5 text-sm text-gray-700"></ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-8 no-print pb-8">
+                <button onclick="location.reload()" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-lg">
+                    Take Another Test
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        /**
+         * GLOBAL CONFIGURATION & STATE
+         */
+
+        // =========================================================================
+        // 🚀 CẤU HÌNH GITHUB VÀ API (BẮT BUỘC ĐIỀN)
+        // =========================================================================
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby3LilHQ34zoQQQDyO_4loomYTuTNQ_Zf-EE3urqYA7i7n1Vu3lD3A3hbVD-BacUjfwsQ/exec'; 
+        
+        // Link THƯ MỤC GỐC chứa file index.json và các file đề thi. Phải có dấu gạch chéo '/' ở cuối.
+        const GITHUB_FOLDER_URL = 'https://raw.githubusercontent.com/nanhduong19-oss/my-test-bank/main/FCE%20data/';
+        // =========================================================================
+
+        const STATE = {
+            student: { name: '', id: '', class: '' },
+            test: { id: '', name: '', data: null },
+            timer: { duration: 80 * 60, remaining: 80 * 60, intervalId: null, startTime: null },
+            antiCheat: { enabled: true, violations: 0, maxViolations: 2 },
+            exam: { isRunning: false, currentPart: 'part1', selectedPart2Option: null },
+            answers: { part1: '', part2: '' }
+        };
+
+        const screens = { login: document.getElementById('screen-1'), exam: document.getElementById('screen-2'), result: document.getElementById('screen-3') };
+        const elements = { toast: document.getElementById('toast-container'), textarea1: document.getElementById('answer-part-1'), textarea2: document.getElementById('answer-part-2'), wordCount: document.getElementById('word-count'), part2Overlay: document.getElementById('part2-overlay'), antiCheatOverlay: document.getElementById('anti-cheat-overlay'), loadingOverlay: document.getElementById('loading-overlay') };
+
+        // Thang quy đổi điểm FCE chính xác
+        const FCE_SCORE_MAP = {
+            40:190, 39:188, 38:187, 37:185, 36:183, 35:182, 34:180, 33:178, 32:176, 31:174,
+            30:172, 29:170, 28:168, 27:166, 26:164, 25:162, 24:160, 23:158, 22:155, 21:153,
+            20:150, 19:148, 18:145, 17:143, 16:140, 15:137, 14:134, 13:131, 12:128, 11:125,
+            10:122, 9:119, 8:116, 7:113, 6:110, 5:107, 4:104, 3:101, 2:98, 1:95, 0:0
+        };
+
+        window.onload = () => { 
+            document.getElementById('welcome-test-title').innerText = document.title;
+            loadDashboard(); 
+            setupEventListeners(); 
+        };
+
+        // HÀM ĐẾM VÀ TẢI DANH SÁCH ĐỀ TỪ GITHUB (index.json)
+        async function loadDashboard() {
+            const select = document.getElementById('test-selector');
+            select.innerHTML = '<option value="" disabled selected>Loading data from GitHub...</option>';
+            
+            try {
+                // Thêm tham số chống bộ nhớ đệm (Cache-buster) của GitHub Raw 
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${GITHUB_FOLDER_URL}index.json?v=${cacheBuster}`);
+                if (!response.ok) throw new Error('Cannot load index.json');
+                const testList = await response.json();
+                
+                select.innerHTML = '<option value="" disabled selected>Select a test...</option>';
+                let count = 0;
+                
+                testList.forEach(test => {
+                    if (!test.status || test.status === "ready" || test.status === "active") {
+                        const opt = document.createElement('option');
+                        
+                        let fileName = test.file || test.dataFile || `${test.id}.json`;
+                        fileName = fileName.replace('FCE data/', ''); 
+                        
+                        opt.value = fileName; 
+                        opt.textContent = test.name || test.title || test.id;
+                        opt.setAttribute('data-test-name', opt.textContent);
+                        opt.setAttribute('data-id', test.id || test.testId);
+                        select.appendChild(opt);
+                        count++;
+                    }
+                });
+                
+                if(count === 0) {
+                    select.innerHTML = '<option value="" disabled selected>No tests currently available.</option>';
+                } else {
+                    select.options[0].text = `Select a test (${count} loaded)...`;
+                }
+
+            } catch (error) {
+                console.error("Error loading test bank:", error);
+                select.innerHTML = '<option value="" disabled selected>Error loading test list from server.</option>';
+                showToast("Error loading test list from server.", "error");
+            }
+        }
+
+        // Hàm hỗ trợ escape chuỗi HTML để hiển thị an toàn
+        function escapeHTML(str) {
+            return (str || '').toString().replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        // BỘ LỌC CHỮ ĐỎ XỊN HƠN (Bắt dấu **, dấu ` và dấu *)
+        function formatMarkdownHighlights(text) {
+            if (!text) return "";
+            let safeText = escapeHTML(text).replace(/&lt;br&gt;/gi, '<br>').replace(/&lt;b&gt;/gi, '<b>').replace(/&lt;\/b&gt;/gi, '</b>');
+            safeText = safeText.replace(/\*\*(.*?)\*\*/g, '<span class="text-red-600 font-bold bg-red-50 px-1 rounded">$1</span>');
+            safeText = safeText.replace(/`(.*?)`/g, '<span class="text-red-600 font-bold bg-red-50 px-1 rounded">$1</span>');
+            safeText = safeText.replace(/(?<!\w)\*(?!\s)(.*?)(?<!\s)\*(?!\w)/g, '<span class="text-red-600 font-bold bg-red-50 px-1 rounded">$1</span>');
+            return safeText;
+        }
+
+        function formatOriginalAnswer(text) {
+            if (!text) return "";
+            let safeText = escapeHTML(text);
+            const highlightClass = '<b><span class="text-red-600 bg-red-50 px-1 rounded">$1</span></b>';
+            safeText = safeText.replace(/\*\*(.*?)\*\*/g, highlightClass);
+            safeText = safeText.replace(/`(.*?)`/g, highlightClass);
+            safeText = safeText.replace(/(?<!\w)\*(?!\s)(.*?)(?<!\s)\*(?!\w)/g, highlightClass);
+            return safeText;
+        }
+
+        function exportPDF() {
+            const originalTitle = document.title;
+            const safeTestName = STATE.test.name.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            const safeStudentId = STATE.student.id.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            const safeStudentName = STATE.student.name.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            
+            document.title = `${safeTestName}_${safeStudentId}_${safeStudentName}`;
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
+
+        function showToast(message, type = 'error') {
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+            toast.className = `${bg} text-white px-6 py-3 rounded-lg shadow-lg font-medium flex items-center gap-2 transform transition-all duration-300 translate-y-[-100%] opacity-0`;
+            toast.innerHTML = `<i class="fa-solid fa-${type === 'error' ? 'circle-exclamation' : 'check'}"></i> ${message}`;
+            elements.toast.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-[-100%]', 'opacity-0'); }, 10);
+            setTimeout(() => { toast.classList.add('translate-y-[-100%]', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000); 
+        }
+
+        function setupEventListeners() {
+            document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); startExam(); });
+            elements.textarea1.addEventListener('input', () => updateWordCount('part1'));
+            elements.textarea2.addEventListener('input', () => updateWordCount('part2'));
+            document.addEventListener('visibilitychange', () => { if (document.hidden && STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Tab Switch'); });
+            window.addEventListener('blur', () => { if (STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Window Blur'); });
+            document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Exit Fullscreen'); });
+
+            // KHÓA COPY/CUT/PASTE TRONG QUÁ TRÌNH LÀM BÀI
+            ['copy', 'cut', 'paste'].forEach(evt => {
+                document.addEventListener(evt, (e) => {
+                    if (STATE.exam.isRunning) {
+                        e.preventDefault();
+                        showToast("Copy and Paste are disabled during the practice test!", "error");
+                    }
+                });
+            });
+
+            // KHÓA CHUỘT PHẢI (CONTEXT MENU) TRÊN TOÀN BỘ TRANG WEB
+            document.addEventListener('contextmenu', (e) => {
+                e.preventDefault(); // Chặn vĩnh viễn không cần điều kiện
+            });
+
+            // KHÓA CÁC PHÍM TẮT XEM MÃ NGUỒN (F12, Ctrl+U, Ctrl+Shift+I...)
+            document.addEventListener('keydown', function(e) {
+                // Chặn F12
+                if (e.key === 'F12' || e.keyCode === 123) {
+                    e.preventDefault();
+                }
+                // Chặn Ctrl+U hoặc Cmd+U (View Page Source)
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') {
+                    e.preventDefault();
+                }
+                // Chặn Ctrl+S hoặc Cmd+S (Save Page As)
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+                    e.preventDefault();
+                }
+                // Chặn Ctrl+Shift+I / J / C (Inspect Element / DevTools)
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        // BẪY DEBUGGER: ĐÓNG BĂNG MÀN HÌNH NẾU CỐ TÌNH MỞ DEVTOOLS CHUI
+        setInterval(function() {
+            // Hàm này sẽ liên tục gọi lệnh debugger làm treo trình duyệt nếu DevTools đang mở
+            Function("debugger")();
+        }, 1000);
+
+        // HÀM START EXAM: TẢI ĐỀ CỤ THỂ TỪ GITHUB
+        async function startExam() {
+            const select = document.getElementById('test-selector');
+            const selectedOption = select.options[select.selectedIndex];
+            
+            if (!selectedOption.value) {
+                showToast("Please select a test!", "error");
+                return; 
+            }
+
+            // Sử dụng split và map để encode từng phần riêng biệt (tránh làm hỏng dấu / nếu có)
+            const dataFilePath = selectedOption.value.split('/').map(encodeURIComponent).join('/');
+            const testDisplayName = selectedOption.getAttribute('data-test-name');
+            const testId = selectedOption.getAttribute('data-id');
+
+            STATE.student.name = document.getElementById('student-name').value;
+            STATE.student.id = document.getElementById('student-id').value;
+            STATE.student.class = document.getElementById('student-class').value;
+            STATE.test.id = testId || 'unknown-id';
+            STATE.test.name = testDisplayName;
+
+            const submitBtn = document.getElementById('btn-start');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> LOADING EXAM...';
+            submitBtn.disabled = true;
+
+            // Thêm time parameter để ép trình duyệt/GitHub tải file mới nhất, không bị cache
+            const cacheBuster = new Date().getTime();
+            const fetchUrl = `${GITHUB_FOLDER_URL}${dataFilePath}?v=${cacheBuster}`;
+
+            try {
+                const response = await fetch(fetchUrl);
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: Failed to load exam content.\n\nAttempted to fetch from:\n${fetchUrl}\n\nPlease verify that the file name in index.json exactly matches the actual file on GitHub.`);
+                }
+                
+                let testData;
+                // Bắt lỗi JSON bị hỏng cú pháp (Syntax error)
+                try {
+                    testData = await response.json();
+                } catch (jsonErr) {
+                    throw new Error(`JSON Format Error!\n\nThe file ${dataFilePath} was found on GitHub, but its content is NOT valid JSON.\nDetails: ${jsonErr.message}\n\nPlease check for missing quotes or trailing commas inside your file.`);
+                }
+                
+                STATE.test.data = testData;
+
+                document.title = `${STATE.test.name}`;
+                document.getElementById('header-test-name').textContent = STATE.test.name;
+                document.getElementById('header-student-name').textContent = STATE.student.name;
+                document.getElementById('header-student-id').textContent = STATE.student.id;
+                document.getElementById('header-student-class').textContent = STATE.student.class;
+
+                const timeLimit = (STATE.test.data.timeLimit || 80) * 60;
+                STATE.timer.duration = timeLimit;
+                STATE.timer.remaining = timeLimit;
+
+                // NẠP HTML PART 1 TỪ JSON
+                document.getElementById('prompt-part-1').innerHTML = STATE.test.data.writing?.part1?.htmlContent || '<p class="text-red-500">Error: JSON file is missing Part 1 content</p>';
+                
+                // NẠP HTML PART 2 TỪ JSON VÀO KHUNG CHÍNH
+                document.getElementById('prompt-part-2-content').innerHTML = STATE.test.data.writing?.part2?.htmlContent || '<p class="text-red-500">Error: JSON file is missing Part 2 content</p>';
+
+                // Reset trạng thái chọn câu hỏi của Part 2
+                STATE.exam.selectedPart2Option = null;
+                updateRightPanelDropdown();
+
+                try { if (document.documentElement.requestFullscreen) { await document.documentElement.requestFullscreen(); } } catch (err) {}
+
+                screens.login.classList.add('hidden');
+                screens.exam.classList.replace('hidden', 'flex');
+                
+                STATE.exam.isRunning = true; 
+                STATE.exam.startTime = new Date();
+                switchTab('part1'); 
+                startTimer();
+
+            } catch (error) {
+                console.error("Exam load error:", error);
+                alert(error.message);
+                showToast("Error loading exam content. See details in popup.", "error");
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // CẬP NHẬT GIAO DIỆN CHỌN CÂU HỎI Ở CỘT BÊN PHẢI PART 2
+        function updateRightPanelDropdown() {
+            const dropdown = document.getElementById('part2-dropdown');
+            const status = document.getElementById('part2-selection-status');
+            
+            if (STATE.exam.selectedPart2Option) {
+                dropdown.value = STATE.exam.selectedPart2Option;
+                status.innerHTML = `<span class="text-brand-primary font-bold">Selected Question ${STATE.exam.selectedPart2Option}</span>`;
+                elements.part2Overlay.style.display = 'none';
+                if (STATE.exam.currentPart === 'part2') elements.textarea2.focus();
+            } else {
+                dropdown.value = 'undecided';
+                status.textContent = '0 of 1 questions selected.';
+                elements.part2Overlay.style.display = 'flex';
+            }
+        }
+
+        // LƯU LẠI LỰA CHỌN KHI HỌC SINH ĐỔI DROPDOWN
+        function handleRightPanelDropdown(sel) {
+            const val = sel.value;
+            if (val === 'undecided') {
+                STATE.exam.selectedPart2Option = null;
+            } else {
+                STATE.exam.selectedPart2Option = val;
+            }
+            updateRightPanelDropdown();
+        }
+
+        function switchTab(tabId, isReview = false) {
+            if (!isReview) STATE.exam.currentPart = tabId;
+            const isP1 = tabId === 'part1';
+
+            if (!isReview) {
+                const btn1 = document.getElementById('tab-btn-part1');
+                const btn2 = document.getElementById('tab-btn-part2');
+                
+                // Sử dụng class thay vì hardcode tailwind để dễ dàng override bằng CSS
+                btn1.className = 'tab-btn ' + (isP1 ? 'tab-active' : 'tab-inactive');
+                btn2.className = 'tab-btn ' + (!isP1 ? 'tab-active' : 'tab-inactive');
+
+                document.getElementById('prompt-part-1').style.display = isP1 ? 'block' : 'none';
+                document.getElementById('prompt-part-2').style.display = !isP1 ? 'flex' : 'none';
+                
+                document.getElementById('part2-answer-header').style.display = !isP1 ? 'flex' : 'none';
+                elements.textarea1.style.display = isP1 ? 'block' : 'none';
+                elements.textarea2.style.display = !isP1 ? 'block' : 'none';
+
+                if (!isP1) {
+                    updateRightPanelDropdown();
+                } else {
+                    elements.part2Overlay.style.display = 'none'; 
+                    elements.textarea1.focus();
+                }
+                updateWordCount(tabId);
+            } else {
+                // Dành cho màn hình Review (Screen 3)
+                document.getElementById('res-tab-part1').className = isP1 ? 'px-6 py-2 rounded-full font-bold text-sm transition bg-brand-primary text-white shadow' : 'px-6 py-2 rounded-full font-bold text-sm transition bg-white text-gray-600 border hover:bg-gray-50';
+                document.getElementById('res-tab-part2').className = !isP1 ? 'px-6 py-2 rounded-full font-bold text-sm transition bg-brand-primary text-white shadow' : 'px-6 py-2 rounded-full font-bold text-sm transition bg-white text-gray-600 border hover:bg-gray-50';
+                document.getElementById('result-part1-container').classList.toggle('hidden', !isP1);
+                document.getElementById('result-part2-container').classList.toggle('hidden', isP1);
+            }
+        }
+
+        function updateWordCount(tabId) {
+            const text = tabId === 'part1' ? elements.textarea1.value : elements.textarea2.value;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            elements.wordCount.textContent = `Words: ${words}`;
+        }
+
+        function toggleContrast() { document.body.classList.toggle('contrast-dark'); }
+        function openTextSizeModal() { document.getElementById('text-size-modal').classList.remove('hidden'); }
+        function closeTextSizeModal() { document.getElementById('text-size-modal').classList.add('hidden'); }
+        function changeTextSize(size) { document.body.setAttribute('data-text-size', size); closeTextSizeModal(); }
+
+        function startTimer() {
+            const timerEl = document.getElementById('exam-timer');
+            STATE.timer.intervalId = setInterval(() => {
+                STATE.timer.remaining--;
+                const m = Math.floor(STATE.timer.remaining / 60).toString().padStart(2, '0');
+                const s = (STATE.timer.remaining % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+                if (STATE.timer.remaining <= 300) { timerEl.classList.remove('bg-gray-100', 'text-black'); timerEl.classList.add('bg-red-500', 'text-white', 'animate-pulse'); }
+                if (STATE.timer.remaining <= 0) { clearInterval(STATE.timer.intervalId); autoSubmit("Time's up!"); }
+            }, 1000);
+        }
+
+        function handleViolation(reason) {
+            STATE.antiCheat.violations++;
+            document.getElementById('violation-count').textContent = `${STATE.antiCheat.violations}/${STATE.antiCheat.maxViolations}`;
+            if (STATE.antiCheat.violations >= STATE.antiCheat.maxViolations) { autoSubmit("Maximum violations reached."); } else {
+                document.getElementById('overlay-violation-count').textContent = STATE.antiCheat.violations;
+                elements.antiCheatOverlay.classList.remove('hidden');
+            }
+        }
+        function returnToExam() { elements.antiCheatOverlay.classList.add('hidden'); try { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); } catch(e){} }
+        function confirmSubmit() { if(confirm("Are you sure you want to submit your exam? You cannot undo this action.")) { processSubmission(); } }
+        function autoSubmit(reason) { showToast(`Auto-submitting: ${reason}`, 'error'); setTimeout(processSubmission, 1500); }
+
+
+        async function processSubmission() {
+            STATE.exam.isRunning = false;
+            clearInterval(STATE.timer.intervalId);
+            document.getElementById('btn-submit-exam').disabled = true;
+            document.getElementById('btn-submit-exam').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+            
+            document.getElementById('loading-title').innerText = "AI is grading your writing...";
+            document.getElementById('loading-subtext').innerText = "Please wait, this might take 10-15 seconds.";
+            elements.loadingOverlay.classList.remove('hidden');
+
+            STATE.answers.part1 = elements.textarea1.value;
+            STATE.answers.part2 = elements.textarea2.value;
+
+            const timeTakenSecs = STATE.timer.duration - STATE.timer.remaining;
+            const timeStr = `${Math.floor(timeTakenSecs / 60)}m ${timeTakenSecs % 60}s`;
+
+            const pad = n => n.toString().padStart(2, '0');
+            const now = new Date();
+            const startString = STATE.exam.startTime 
+                ? `${pad(STATE.exam.startTime.getHours())}:${pad(STATE.exam.startTime.getMinutes())}:${pad(STATE.exam.startTime.getSeconds())}` 
+                : `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const endString = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const dateString = now.toLocaleDateString('vi-VN'); 
+
+            // RÚT TRÍCH VĂN BẢN ĐỀ (LỌC BỎ HTML) ĐỂ GỬI TỚI AI
+            const tmpP1 = document.createElement('div');
+            tmpP1.innerHTML = STATE.test.data.writing?.part1?.htmlContent || '';
+            const prompt1Text = tmpP1.innerText.trim();
+
+            const tmpP2 = document.createElement('div');
+            tmpP2.innerHTML = STATE.test.data.writing?.part2?.htmlContent || '';
+            const prompt2Text = tmpP2.innerText.trim();
+
+            const qSelected = STATE.exam.selectedPart2Option ? `Question ${STATE.exam.selectedPart2Option}` : 'Not selected';
+
+            const payload = {
+                action: 'save_and_grade',
+                testId: STATE.test.name,
+                studentId: STATE.student.id,
+                studentName: STATE.student.name,
+                studentClass: STATE.student.class,
+                date: dateString,
+                startTime: startString,
+                endTime: endString,
+                timeTaken: timeStr,
+                violations: STATE.antiCheat.violations,
+                ansP1: STATE.answers.part1,
+                ansP2: STATE.answers.part2,
+                
+                // Đóng gói nội dung chuẩn Plain Text
+                submission: `=== PART 1: ESSAY ===\n--- QUESTION PROMPT ---\n${prompt1Text}\n\n--- STUDENT ANSWER ---\n${STATE.answers.part1 || '(No answer provided)'}\n\n=== PART 2: OPTION SELECTED: ${qSelected} ===\n--- QUESTION PROMPT (ALL OPTIONS) ---\n${prompt2Text}\n\n--- STUDENT ANSWER ---\n${STATE.answers.part2 || '(No answer provided)'}`
+            };
+
+            try {
+                const responseData = await fetchWithBackoff(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                const rawText = responseData._rawText;
+                const parsedObj = responseData._parsedObject;
+
+                let finalResult = findFceData(parsedObj) || findFceData(extractJSONFromString(rawText));
+
+                if (finalResult && finalResult.part1) {
+                    const p1Raw = (finalResult.part1.scores?.content || 0) + 
+                                  (finalResult.part1.scores?.communicative || 0) + 
+                                  (finalResult.part1.scores?.organisation || 0) + 
+                                  (finalResult.part1.scores?.language || 0);
+                                  
+                    const p2Raw = (finalResult.part2.scores?.content || 0) + 
+                                  (finalResult.part2.scores?.communicative || 0) + 
+                                  (finalResult.part2.scores?.organisation || 0) + 
+                                  (finalResult.part2.scores?.language || 0);
+                                  
+                    const rawTotal = Math.min(40, p1Raw + p2Raw);
+
+                    let cambridgeScore = FCE_SCORE_MAP[rawTotal] || 0;
+                    let grade = "Fail";
+                    let gradeColorClass = "text-gray-500";
+
+                    if (cambridgeScore >= 180) { grade = "Grade A"; gradeColorClass = "text-blue-600"; }
+                    else if (cambridgeScore >= 173) { grade = "Grade B"; gradeColorClass = "text-green-500"; }
+                    else if (cambridgeScore >= 160) { grade = "Grade C"; gradeColorClass = "text-yellow-500"; }
+                    else if (cambridgeScore >= 140) { grade = "Level B1"; gradeColorClass = "text-gray-500"; }
+                    else { grade = "Fail"; gradeColorClass = "text-red-500"; }
+
+                    finalResult.totalScore = rawTotal;
+                    finalResult.cambridgeScore = cambridgeScore;
+                    finalResult.grade = grade;
+                    finalResult.gradeColorClass = gradeColorClass;
+
+                    renderResults(finalResult, timeStr);
+                } 
+                else {
+                    const mockData = getMockResultData();
+                    mockData.totalScore = 0;
+                    mockData.cambridgeScore = 0;
+                    mockData.grade = "N/A";
+                    mockData.gradeColorClass = "text-gray-800";
+                    mockData.isError = true; 
+                    
+                    // KHÔNG dùng escapeHTML ở đây để giữ lại các thẻ HTML của khung báo lỗi
+                    mockData.part1.general_feedback = `
+                        <div class="bg-yellow-50 text-yellow-800 p-4 rounded-xl border border-yellow-200">
+                            <h4 class="font-bold mb-2 text-red-600"><i class="fa-solid fa-triangle-exclamation"></i> SERVER ERROR: SCORE NOT FOUND</h4>
+                            <p class="mb-2 text-sm text-gray-800">Successfully connected to Google Apps Script, but the returned content lacks the expected score structure. Actual response from your server:</p>
+                            <div class="bg-gray-900 text-green-400 p-4 rounded-lg text-[13px] overflow-x-auto break-words whitespace-pre-wrap font-mono mt-2 shadow-inner border border-gray-700">${escapeHTML(rawText || "Empty (No data returned)")}</div>
+                        </div>`;
+                    mockData.part2.general_feedback = mockData.part1.general_feedback;
+                    renderResults(mockData, timeStr);
+                    showToast("Server did not return scores!", "error");
+                }
+
+            } catch (error) {
+                console.error("Submission Error:", error);
+                const title = error.message.includes('Failed to fetch') ? 'NETWORK / CORS ERROR' : 'SERVER ERROR';
+                
+                showToast(`ERROR: Connection to server blocked!`, "error");
+                
+                const mockData = getMockResultData();
+                mockData.isError = true;
+                mockData.part1.general_feedback = `
+                    <div class="bg-red-50 p-4 rounded-xl border border-red-200">
+                        <h4 class="font-bold text-red-600 mb-2"><i class="fa-solid fa-circle-xmark"></i> ${title}</h4>
+                        <p class="text-sm text-gray-800">${error.message}</p>
+                    </div>`;
+                mockData.part2.general_feedback = mockData.part1.general_feedback;
+                renderResults(mockData, timeStr);
+            }
+        }
+
+        async function fetchWithBackoff(url, options, retries = 2, delay = 2000) {
+            try {
+                const res = await fetch(url, options);
+                const textData = await res.text();
+
+                if (!res.ok) {
+                    throw new Error(`HTTP Error ${res.status}: ${textData}`);
+                }
+
+                let parsed = null;
+                try { parsed = JSON.parse(textData); } catch(e) {}
+
+                return { _rawText: textData, _parsedObject: parsed };
+
+            } catch (err) {
+                if (retries <= 0) throw err; 
+                console.warn(`Retrying... ${retries} attempts left. Error: ${err.message}`);
+                document.getElementById('loading-subtext').innerText = `Unstable connection. Retrying... (${retries} attempts left)`;
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return fetchWithBackoff(url, options, retries - 1, delay * 2);
+            }
+        }
+
+        function extractJSONFromString(text) {
+            if (!text) return null;
+            try {
+                const cleaned = text.replace(/```json/gi, '').replace(/```/gi, '').trim();
+                return JSON.parse(cleaned);
+            } catch (e) {
+                try {
+                    const match = text.match(/\{[\s\S]*\}/);
+                    if (match) return JSON.parse(match[0]);
+                } catch(e2) {}
+            }
+            return null;
+        }
+
+        function findFceData(obj) {
+            if (!obj) return null;
+            if (obj.part1 && obj.part1.scores) return obj; 
+            if (typeof obj === 'object') {
+                for (let key in obj) {
+                    let val = obj[key];
+                    if (typeof val === 'string') {
+                        let parsed = extractJSONFromString(val);
+                        if (parsed) {
+                            let res = findFceData(parsed);
+                            if (res) return res;
+                        }
+                    } else if (typeof val === 'object') {
+                        let res = findFceData(val);
+                        if (res) return res;
+                    }
+                }
+            }
+            return null;
+        }
+
+        function renderResults(data, timeStr) {
+            try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+
+            elements.loadingOverlay.classList.add('hidden');
+            screens.exam.classList.replace('flex', 'hidden');
+            screens.result.classList.remove('hidden');
+
+            document.getElementById('res-test-name').textContent = STATE.test.name;
+            document.getElementById('res-student-name').textContent = STATE.student.name;
+            document.getElementById('res-student-info').textContent = `${STATE.student.id} | Class: ${STATE.student.class}`;
+            document.getElementById('res-time-taken').textContent = timeStr;
+            document.getElementById('res-violations').textContent = `${STATE.antiCheat.violations} Violations`;
+            
+            document.getElementById('res-total-score').textContent = `${data.totalScore}/40`;
+            document.getElementById('res-cambridge-score').textContent = data.cambridgeScore;
+            
+            const gradeEl = document.getElementById('res-grade');
+            gradeEl.textContent = data.grade;
+            gradeEl.className = `text-4xl font-black ${data.gradeColorClass || 'text-gray-800'}`;
+
+            // --- RENDER PART 1 ---
+            const p1WordCount = STATE.answers.part1.trim() ? STATE.answers.part1.trim().split(/\s+/).length : 0;
+            document.getElementById('wordcount-part1-res').textContent = `Words: ${p1WordCount}`;
+            document.getElementById('original-answer-part1').innerHTML = formatOriginalAnswer(data.part1?.annotated_answer || STATE.answers.part1) || "(No answer provided)";
+            
+            if (data.isError) {
+                // Trực tiếp in ra general_feedback chứa khung HTML báo lỗi mà không lột sạch code
+                document.getElementById('general-feedback-part1').innerHTML = data.part1?.general_feedback || "Error rendering feedback.";
+            } else {
+                document.getElementById('general-feedback-part1').innerHTML = formatMarkdownHighlights(data.part1?.general_feedback) || "No feedback provided.";
+            }
+            
+            document.getElementById('improved-answer-part1').innerHTML = formatMarkdownHighlights(data.part1?.sample) || "No sample answer provided.";
+            document.getElementById('improvements-list-part1').innerHTML = (data.part1?.improvements_made || []).map(m => `<li class="flex items-start"><i class="fa-solid fa-check text-brand-primary mt-1 mr-2"></i><span>${formatMarkdownHighlights(m)}</span></li>`).join('');
+            renderRubric('rubric-part1', data.part1?.scores, data.part1?.commentary);
+
+            // --- RENDER PART 2 ---
+            const p2WordCount = STATE.answers.part2.trim() ? STATE.answers.part2.trim().split(/\s+/).length : 0;
+            document.getElementById('wordcount-part2-res').textContent = `Words: ${p2WordCount}`;
+            document.getElementById('original-answer-part2').innerHTML = formatOriginalAnswer(data.part2?.annotated_answer || STATE.answers.part2) || "(No answer provided)";
+            
+            if (data.isError) {
+                document.getElementById('general-feedback-part2').innerHTML = data.part2?.general_feedback || "Error rendering feedback.";
+            } else {
+                document.getElementById('general-feedback-part2').innerHTML = formatMarkdownHighlights(data.part2?.general_feedback) || "No feedback provided.";
+            }
+            
+            document.getElementById('improved-answer-part2').innerHTML = formatMarkdownHighlights(data.part2?.sample) || "No sample answer provided.";
+            document.getElementById('improvements-list-part2').innerHTML = (data.part2?.improvements_made || []).map(m => `<li class="flex items-start"><i class="fa-solid fa-check text-brand-primary mt-1 mr-2"></i><span>${formatMarkdownHighlights(m)}</span></li>`).join('');
+            renderRubric('rubric-part2', data.part2?.scores, data.part2?.commentary);
+
+            window.onbeforeprint = () => {
+                document.getElementById('result-part1-container').classList.remove('hidden');
+                document.getElementById('result-part2-container').classList.remove('hidden');
+            };
+        }
+
+        function renderRubric(containerId, scores = {}, commentaries = {}) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            const criteriaMap = [
+                { key: 'content', label: 'Content' }, 
+                { key: 'communicative', label: 'Comm. Achievement' }, 
+                { key: 'organisation', label: 'Organisation' }, 
+                { key: 'language', label: 'Language' }
+            ];
+            
+            let html = '';
+            criteriaMap.forEach(crit => {
+                const score = scores[crit.key] || 0;
+                const comment = commentaries ? commentaries[crit.key] : '';
+                
+                let bars = '';
+                for(let i=1; i<=5; i++) {
+                    if(i <= score) bars += `<div class="w-full h-2.5 bg-brand-primary rounded-sm shadow-sm"></div>`;
+                    else bars += `<div class="w-full h-2.5 bg-gray-200 rounded-sm"></div>`;
+                }
+
+                html += `
+                    <div class="mb-5">
+                        <div class="flex justify-between items-center text-sm mb-2">
+                            <span class="text-gray-800 font-bold uppercase text-xs w-1/3">${crit.label}</span>
+                            <div class="flex gap-1.5 w-1/2">${bars}</div>
+                            <span class="font-black text-brand-dark text-right w-8">${score}/5</span>
+                        </div>
+                        ${comment ? `<div class="text-sm text-gray-700 bg-brand-lightest/40 p-4 rounded-xl border border-gray-100 mt-2 leading-relaxed shadow-sm">${formatMarkdownHighlights(comment)}</div>` : ''}
+                    </div>`;
+            });
+            container.innerHTML = html;
+        }
+
+        function switchResultTab(part) {
+            const isP1 = part === 'part1';
+            document.getElementById('res-tab-part1').className = isP1 ? 'px-6 py-2 rounded-full font-bold text-sm transition bg-brand-primary text-white shadow' : 'px-6 py-2 rounded-full font-bold text-sm transition bg-white text-gray-600 border hover:bg-gray-50';
+            document.getElementById('res-tab-part2').className = !isP1 ? 'px-6 py-2 rounded-full font-bold text-sm transition bg-brand-primary text-white shadow' : 'px-6 py-2 rounded-full font-bold text-sm transition bg-white text-gray-600 border hover:bg-gray-50';
+            document.getElementById('result-part1-container').classList.toggle('hidden', !isP1);
+            document.getElementById('result-part2-container').classList.toggle('hidden', isP1);
+        }
+
+        function getMockResultData() {
+            return {
+                totalScore: 0, cambridgeScore: 0, grade: "N/A", gradeColorClass: "text-gray-800",
+                isError: false,
+                part1: {
+                    general_feedback: ``,
+                    scores: { content: 0, communicative: 0, organisation: 0, language: 0 },
+                    commentary: {}, sample: "", improvements_made: []
+                },
+                part2: {
+                    general_feedback: ``,
+                    scores: { content: 0, communicative: 0, organisation: 0, language: 0 },
+                    commentary: {}, sample: "", improvements_made: []
+                }
+            };
+        }
+    </script>
+</body>
+</html>
