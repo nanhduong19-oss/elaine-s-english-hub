@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Open Cloze - Succeed Test 1 - 4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* --- IN-LINE INPUT STYLES --- */
+        .gap-input {
+            display: inline-block;
+            width: 85px;
+            height: 32px;
+            margin: 0 4px;
+            background-color: #f1f5f9;
+            border: none;
+            border-bottom: 2px solid #94a3b8;
+            border-radius: 4px 4px 0 0;
+            color: #0f172a;
+            font-weight: 700;
+            font-size: 1em;
+            text-align: center;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            outline: none;
+            box-shadow: none;
+            vertical-align: middle;
+            padding: 0 4px;
+        }
+
+        .gap-input::placeholder {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.85em;
+            text-transform: none;
+        }
+
+        .gap-input:focus {
+            background-color: #e0f2fe;
+            border-bottom-color: #0284c7;
+            width: 100px;
+        }
+
+        .gap-input.correct {
+            background-color: #dcfce7 !important;
+            border-bottom-color: #16a34a !important;
+            color: #15803d !important;
+            pointer-events: none;
+        }
+
+        .gap-input.wrong {
+            background-color: #fee2e2 !important;
+            border-bottom-color: #dc2626 !important;
+            color: #b91c1c !important;
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        /* Reading Text Styles */
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.2; 
+            text-align: justify; 
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">PET Reading Part 6</h1>
+                <p class="text-slate-500 mb-6 font-medium">Succeed Test 1 - 4</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    TYPE THE WORD MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student ID</label>
+                    <input type="text" id="user-id-input" placeholder="e.g., 71001BT..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Full Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your full name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium"
+                        onkeypress="if(event.key === 'Enter') app.startExam()">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+        
+        <!-- Footer Welcome -->
+        <div class="mt-8 text-center text-slate-400 text-xs">
+            <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+            <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/4</span>
+                    
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal leading-loose"></div>
+                        
+                        <div id="explanation-box" class="hidden mt-8 p-6 bg-rose-50 rounded-xl border border-rose-200">
+                            <h4 class="font-bold text-rose-800 mb-4 flex items-center gap-2"><i class="fas fa-lightbulb"></i> Explanations</h4>
+                            <div id="explanation-content" class="space-y-4 text-sm text-rose-900"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tracking Area (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10">
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-tasks"></i> Your Answers
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div class="p-4 flex-none bg-rose-50/50 border-b border-slate-200 text-sm text-slate-600">
+                        <i class="fas fa-info-circle text-rose-400 mr-1"></i> Read the text and type <strong>ONE</strong> word into each gap.
+                    </div>
+                    <div id="tracker-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-3 pb-20">
+                        <!-- Tracker Cards Injected Here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex flex-col items-center justify-start p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-rose-500"></div>
+                    
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2 mt-2">Total Accuracy</div>
+                    <div id="result-percent-large" class="text-7xl font-extrabold text-rose-600 mb-6">0%</div>
+                    
+                    <!-- Student Info & Time -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-6">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-1">Student Info</p>
+                            <p class="font-bold text-slate-700 text-lg truncate"><span id="res-student-name"></span></p>
+                            <p class="text-sm text-slate-500">ID: <span id="res-student-id"></span></p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-1">Time (dd/mm/yy hh:mm)</p>
+                            <p class="text-sm font-semibold text-slate-700">Start: <span id="res-start-time"></span></p>
+                            <p class="text-sm font-semibold text-slate-700">End: <span id="res-end-time"></span></p>
+                        </div>
+                    </div>
+
+                    <!-- Breakdown -->
+                    <div class="text-left mb-4">
+                        <h3 class="font-bold text-slate-700 uppercase text-xs tracking-wider mb-3">Score Breakdown</h3>
+                        <div id="result-breakdown" class="space-y-2">
+                            <!-- Breakdown injected here -->
+                        </div>
+                        <div class="mt-3 text-right text-lg font-bold text-slate-800">
+                            Total Score: <span id="result-score" class="text-rose-600">0</span><span class="text-slate-400">/24</span>
+                        </div>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">Sending data to system...</div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-slate-900 transition-all active:scale-[0.99]">Practice Again</button>
+            </div>
+            
+            <!-- Footer Result -->
+            <div class="mt-auto pt-10 text-center text-slate-400 text-xs">
+                <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+                <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "Succeed Test 1 - 4"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                "id": "test1",
+                "title": "Bungee Jumping",
+                "content_html": `
+                    <p>Have you ever tried bungee jumping? <input type="text" class="gap-input" data-id="27" placeholder="[27]"> you haven’t, then my advice is don’t.</p>
+                    <p>I almost tried it last year on holiday in Indonesia because my best friend, who I was travelling with, had done it <input type="text" class="gap-input" data-id="28" placeholder="[28]"> before and suggested that I should try it. I had to jump from a great height with an elastic rope attached to my ankle.</p>
+                    <p>I guess I was really curious about what <input type="text" class="gap-input" data-id="29" placeholder="[29]"> feels like to jump off something so high, knowing that you will not hit the ground (or, in my case, water) below, as we were going <input type="text" class="gap-input" data-id="30" placeholder="[30]"> do the jump over a lake.</p>
+                    <p>However, I personally will never know as I was <input type="text" class="gap-input" data-id="31" placeholder="[31]"> scared when I got up to the top of the rock that nobody could persuade me to jump.</p>
+                    <p>I’m not sure if you have to be crazy or brave to actually do the jump, but I’ve decided that bungee jumping is <input type="text" class="gap-input" data-id="32" placeholder="[32]"> a sport for me.</p>
+                `,
+                "answers": { "27": "IF", "28": "BEFORE", "29": "IT", "30": "TO", "31": "SO", "32": "NOT" },
+                "explanations": [
+                    { "gap": 27, "html": "<strong>27. IF:</strong> <strong>[If clause]</strong><br>Cấu trúc điều kiện: If you haven’t (tried it) → lời khuyên ở mệnh đề sau.<br>Nghĩa: Nếu bạn chưa từng thử thì lời khuyên của tôi là đừng thử." },
+                    { "gap": 28, "html": "<strong>28. BEFORE:</strong> <strong>[Present perfect + before]</strong><br>Dùng để nói về kinh nghiệm trước đây: 'had done it before' = đã làm điều đó trước đây." },
+                    { "gap": 29, "html": "<strong>29. IT:</strong> <strong>[Dummy Subject]</strong><br>Cấu trúc cố định: 'what it feels like' = cảm giác như thế nào." },
+                    { "gap": 30, "html": "<strong>30. TO:</strong> <strong>[Future Plan]</strong><br>Cấu trúc: 'be going to + verb'." },
+                    { "gap": 31, "html": "<strong>31. SO:</strong> <strong>[Result Clause]</strong><br>Cấu trúc: 'so + adjective + that clause'.<br>Ví dụ: so scared that nobody could persuade me." },
+                    { "gap": 32, "html": "<strong>32. NOT:</strong> <strong>[Negative Phrase]</strong><br>Cấu trúc: 'not a/an + noun phrase'.<br>Nghĩa: không phải môn thể thao dành cho tôi." }
+                ]
+            },
+            {
+                "id": "test2",
+                "title": "Things to do in London",
+                "content_html": `
+                    <p>London has to be one of the most exciting cities in the world, and probably one of the most expensive. However, you don’t have to follow <input type="text" class="gap-input" data-id="27" placeholder="[27]"> usual tourist route.</p>
+                    <p>The museums and galleries are interesting of course, but the city has a lot more to offer to those who want to see <input type="text" class="gap-input" data-id="28" placeholder="[28]"> Londoners live.</p>
+                    <p>This way, you’ll both save some money and you can have a more rewarding experience.</p>
+                    <p>One of the biggest trends in London <input type="text" class="gap-input" data-id="29" placeholder="[29]"> going to street markets, where you can find a real variety of interesting things to buy.</p>
+                    <p>Over the past few years especially, an interesting development has been seen in food street markets, <input type="text" class="gap-input" data-id="30" placeholder="[30]"> you can find amazing tastes and great quality food.</p>
+                    <p>This seems to <input type="text" class="gap-input" data-id="31" placeholder="[31]"> the future of food.</p>
+                    <p>You no longer <input type="text" class="gap-input" data-id="32" placeholder="[32]"> to pay a lot of money to eat well.</p>
+                `,
+                "answers": { "27": "THE", "28": "HOW", "29": "IS", "30": "WHERE", "31": "BE", "32": "NEED" },
+                "explanations": [
+                    { "gap": 27, "html": "<strong>27. THE:</strong> <strong>[Articles]</strong><br>Cụm cố định: 'the usual tourist route' (Lộ trình du lịch thông thường)." },
+                    { "gap": 28, "html": "<strong>28. HOW:</strong> <strong>[Question words]</strong><br>Cấu trúc: 'see how people live' (Xem cách người ta sống)." },
+                    { "gap": 29, "html": "<strong>29. IS:</strong> <strong>[Linking verbs]</strong><br>Chủ ngữ: 'One of the biggest trends' là số ít → cần động từ 'is'." },
+                    { "gap": 30, "html": "<strong>30. WHERE:</strong> <strong>[Relative adverbs]</strong><br>Mệnh đề quan hệ chỉ nơi chốn (food street markets), nơi mà bạn có thể tìm thấy..." },
+                    { "gap": 31, "html": "<strong>31. BE:</strong> <strong>[Verb patterns]</strong><br>Sau cấu trúc 'seem to' → dùng bare infinitive (động từ nguyên thể)." },
+                    { "gap": 32, "html": "<strong>32. NEED:</strong> <strong>[Modals/Semi-modals]</strong><br>Cấu trúc: 'need to + verb' (cần phải làm gì)." }
+                ]
+            },
+            {
+                "id": "test3",
+                "title": "Sharks",
+                "content_html": `
+                    <p>The word shark usually creates fear, but in reality sharks have more reasons to be afraid of people <input type="text" class="gap-input" data-id="27" placeholder="[27]"> people to be afraid of them.</p>
+                    <p>The fact is, about one hundred million sharks are killed by humans every year. That’s mainly because people in a lot of countries, <input type="text" class="gap-input" data-id="28" placeholder="[28]"> Japan and Australia, eat sharks.</p>
+                    <p>Sharks also get caught in the huge fishing nets that are used nowadays on factory ships, <input type="text" class="gap-input" data-id="29" placeholder="[29]"> do many other sea animals.</p>
+                    <p>But as sharks are attracted by movement, <input type="text" class="gap-input" data-id="30" placeholder="[30]"> they see a person swimming in the sea, they could accidentally attack him or her.</p>
+                    <p><input type="text" class="gap-input" data-id="31" placeholder="[31]"> at the top of the food chain, however, sharks keep populations of other fish healthy.</p>
+                    <p>This is <input type="text" class="gap-input" data-id="32" placeholder="[32]"> we must act now.</p>
+                `,
+                "answers": { "27": "THAN", "28": "INCLUDING", "29": "AS", "30": "WHEN", "31": "BEING", "32": "WHY" },
+                "explanations": [
+                    { "gap": 27, "html": "<strong>27. THAN:</strong> <strong>[Comparatives]</strong><br>Cấu trúc so sánh hơn: 'more reasons... than...'." },
+                    { "gap": 28, "html": "<strong>28. INCLUDING:</strong> <strong>[Prepositions]</strong><br>Nghĩa: bao gồm (đưa ra ví dụ các quốc gia)." },
+                    { "gap": 29, "html": "<strong>29. AS:</strong> <strong>[As + auxiliary inversion]</strong><br>Cấu trúc đảo: 'as do many other animals' (như nhiều loài động vật khác cũng vậy)." },
+                    { "gap": 30, "html": "<strong>30. WHEN:</strong> <strong>[Time clauses]</strong><br>Liên từ chỉ thời điểm: Khi chúng nhìn thấy một người bơi..." },
+                    { "gap": 31, "html": "<strong>31. BEING:</strong> <strong>[V-ing clauses]</strong><br>V-ing phrase đứng đầu câu rút gọn mệnh đề chỉ nguyên nhân/trạng thái." },
+                    { "gap": 32, "html": "<strong>32. WHY:</strong> <strong>[Fixed phrase]</strong><br>Cấu trúc quen thuộc: 'This is why...' (Đây là lý do tại sao)." }
+                ]
+            },
+            {
+                "id": "test4",
+                "title": "Fishing for plastic",
+                "content_html": `
+                    <p><input type="text" class="gap-input" data-id="27" placeholder="[27]"> August last year, in Kollam, a fishing town in India’s southernmost state, Kerala, fishermen have been bringing all the plastic they find in the sea back <input type="text" class="gap-input" data-id="28" placeholder="[28]"> land.</p>
+                    <p><input type="text" class="gap-input" data-id="29" placeholder="[29]"> years, fishermen have been complaining about plastic getting caught in their nets.</p>
+                    <p>Not <input type="text" class="gap-input" data-id="30" placeholder="[30]"> has this plastic caused them problems, but it has also killed sea life.</p>
+                    <p>This has affected how <input type="text" class="gap-input" data-id="31" placeholder="[31]"> fish they can catch.</p>
+                    <p>As most of the plastic rubbish they fish out is <input type="text" class="gap-input" data-id="32" placeholder="[32]"> damaged to recycle normally, they cut it into very small pieces.</p>
+                `,
+                "answers": { "27": "SINCE", "28": "TO", "29": "FOR", "30": "ONLY", "31": "MANY", "32": "TOO" },
+                "explanations": [
+                    { "gap": 27, "html": "<strong>27. SINCE:</strong> <strong>[Present perfect]</strong><br>Thì hiện tại hoàn thành + mốc thời gian -> dùng 'since'." },
+                    { "gap": 28, "html": "<strong>28. TO:</strong> <strong>[Phrasal structure]</strong><br>Cụm từ: 'bring something back to land' (mang trở về đất liền)." },
+                    { "gap": 29, "html": "<strong>29. FOR:</strong> <strong>[Time prepositions]</strong><br>Đi với khoảng thời gian: 'for years' (trong nhiều năm)." },
+                    { "gap": 30, "html": "<strong>30. ONLY:</strong> <strong>[Inversion]</strong><br>Cấu trúc đảo ngữ: 'Not only... but also' (Không những... mà còn)." },
+                    { "gap": 31, "html": "<strong>31. MANY:</strong> <strong>[Quantifiers]</strong><br>Dùng với danh từ đếm được số nhiều: 'how many fish' (số lượng bao nhiêu cá)." },
+                    { "gap": 32, "html": "<strong>32. TOO:</strong> <strong>[Adverb of degree]</strong><br>Cấu trúc: 'too + adjective + to V' (Quá... để làm gì đó)." }
+                ]
+            }
+        ];
+
+        // Format Dates
+        function getNgayThangNam(date) {
+            if (!date) return "";
+            const d = date.getDate().toString().padStart(2, '0');
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const y = date.getFullYear().toString().slice(-2);
+            return `${d}/${m}/${y}`;
+        }
+
+        function getGioPhut(date) {
+            if (!date) return "";
+            const hh = date.getHours().toString().padStart(2, '0');
+            const mm = date.getMinutes().toString().padStart(2, '0');
+            return `${hh}:${mm}`;
+        }
+
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                endTime: null,
+                userAnswers: {}, 
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false 
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name || !id) { alert("Please enter both Student ID and Full Name!"); return; }
+                
+                thoiGianBatDau = new Date();
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = thoiGianBatDau; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            renderTest() {
+                const test = db[this.state.currentTestIdx];
+                
+                document.getElementById('text-title').textContent = test.title;
+                document.getElementById('header-title').textContent = `Test ${this.state.currentTestIdx + 1}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                
+                const expBox = document.getElementById('explanation-box');
+                const expContent = document.getElementById('explanation-content');
+                
+                if (this.state.testCompleted && this.state.testPassed) {
+                    expBox.classList.remove('hidden');
+                    expContent.innerHTML = test.explanations.map(e => e.html).join('<div class="my-3 border-b border-rose-100"></div>');
+                } else {
+                    expBox.classList.add('hidden');
+                    expContent.innerHTML = '';
+                }
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                const contentDiv = document.getElementById('reading-content');
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+                
+                // Re-bind events for inputs
+                const inputs = contentDiv.querySelectorAll('.gap-input');
+                inputs.forEach(input => {
+                    const qId = input.getAttribute('data-id');
+                    const key = `${test.id}-${qId}`;
+                    
+                    input.classList.remove('correct', 'wrong');
+                    
+                    if (this.state.userAnswers[key]) {
+                        input.value = this.state.userAnswers[key];
+                    } else {
+                        input.value = '';
+                    }
+
+                    if (this.state.testCompleted) {
+                        input.readOnly = true;
+                    } else {
+                        input.readOnly = false;
+                        input.oninput = (e) => {
+                            this.state.userAnswers[key] = e.target.value.trim().toUpperCase();
+                            this.updateTracker();
+                        };
+                    }
+                });
+
+                this.updateTracker();
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Submit <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+            },
+
+            updateTracker() {
+                const test = db[this.state.currentTestIdx];
+                const container = document.getElementById('tracker-container');
+                container.innerHTML = '';
+
+                const qIds = Object.keys(test.answers);
+                
+                qIds.forEach(qId => {
+                    const key = `${test.id}-${qId}`;
+                    const val = this.state.userAnswers[key] || "";
+                    
+                    const div = document.createElement('div');
+                    div.className = "bg-white border border-slate-200 p-3 rounded-lg flex justify-between items-center shadow-sm";
+                    
+                    let statusHtml = "";
+                    if (val) {
+                        statusHtml = `<span class="font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded uppercase tracking-wider">${val}</span>`;
+                    } else {
+                        statusHtml = `<span class="text-slate-400 italic text-sm">Waiting...</span>`;
+                    }
+
+                    if (this.state.testCompleted) {
+                        const isCorrect = val === test.answers[qId];
+                        if (isCorrect) {
+                            statusHtml = `<span class="font-bold text-green-700 bg-green-100 px-3 py-1 rounded uppercase tracking-wider">${val} <i class="fas fa-check ml-1"></i></span>`;
+                        } else {
+                            statusHtml = `<span class="font-bold text-red-700 bg-red-100 px-3 py-1 rounded uppercase tracking-wider">${val || '-'} <i class="fas fa-times ml-1"></i></span>`;
+                        }
+                    }
+
+                    div.innerHTML = `<span class="font-bold text-slate-700">Gap ${qId}</span> ${statusHtml}`;
+                    container.appendChild(div);
+                });
+            },
+
+            checkAnswers() {
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                const totalQuestions = Object.keys(test.answers).length; 
+
+                const inputs = document.querySelectorAll('.gap-input');
+
+                inputs.forEach(input => {
+                    const val = input.value.trim().toUpperCase();
+                    if (val) answeredCount++;
+                });
+
+                if (answeredCount < totalQuestions) {
+                    alert("Please fill in all gaps before checking.");
+                    return;
+                }
+
+                inputs.forEach(input => {
+                    const qId = input.getAttribute('data-id');
+                    const val = input.value.trim().toUpperCase();
+                    if (val === test.answers[qId]) correctCount++;
+                });
+
+                // Pass condition: >= 4 correct out of 6
+                if (correctCount >= 4) {
+                    this.showFeedback(true);
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Not enough points to pass (need 4/6). You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                        document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+                    } else {
+                        this.showFeedback(false); 
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const test = db[this.state.currentTestIdx];
+                 document.querySelectorAll('.gap-input').forEach(input => {
+                    const qId = input.getAttribute('data-id');
+                    const val = input.value.trim().toUpperCase();
+                    
+                    input.classList.remove('wrong', 'correct');
+                    
+                    if (val && val !== test.answers[qId]) {
+                        void input.offsetWidth; // trigger reflow
+                        input.classList.add('wrong'); 
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                
+                const test = db[this.state.currentTestIdx];
+
+                document.querySelectorAll('.gap-input').forEach(input => {
+                    const qId = input.getAttribute('data-id');
+                    const val = input.value.trim().toUpperCase();
+                    const correctAns = test.answers[qId];
+                    
+                    input.classList.remove('wrong', 'correct');
+                    input.readOnly = true;
+
+                    if (passed) {
+                        if (val === correctAns) {
+                            input.classList.add('correct'); 
+                        } else {
+                            input.classList.add('wrong'); 
+                            input.value = `${val} ➔ ${correctAns}`;
+                            input.style.width = "auto";
+                            input.style.minWidth = "120px";
+                        }
+                    } else {
+                        if (val !== correctAns) {
+                            input.classList.add('wrong');
+                            input.value = `${val} ➔ ${correctAns}`;
+                            input.style.width = "auto";
+                            input.style.minWidth = "120px";
+                        } else {
+                            input.classList.add('correct');
+                        }
+                    }
+                });
+
+                if (passed) {
+                    alert("Great job! You passed this test.");
+                } else {
+                    alert("Out of attempts. Please review the correct answers and continue.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.renderTest();
+            },
+
+            finishExam() {
+                this.state.endTime = new Date();
+                
+                const diffMs = this.state.endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let totalScore = 0;
+                let totalQ = 0;
+                let breakdownHtml = "";
+
+                db.forEach((test, idx) => {
+                    let testScore = 0;
+                    const qIds = Object.keys(test.answers);
+                    let testTotal = qIds.length;
+                    totalQ += testTotal;
+                    
+                    qIds.forEach(qId => {
+                        const key = `${test.id}-${qId}`;
+                        const userAns = this.state.userAnswers[key];
+                        if (userAns === test.answers[qId]) {
+                            testScore++;
+                            totalScore++;
+                        }
+                    });
+
+                    breakdownHtml += `
+                        <div class="flex justify-between items-center p-3 bg-rose-50 rounded-lg border border-rose-100">
+                            <span class="font-bold text-slate-700">Test ${idx + 1}: ${test.title}</span>
+                            <span class="font-bold text-rose-600">${testScore}/${testTotal} correct</span>
+                        </div>
+                    `;
+                });
+
+                const percent = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+                
+                const ngayLam = getNgayThangNam(this.state.startTime);
+                const gioBD = getGioPhut(this.state.startTime);
+                const gioKT = getGioPhut(this.state.endTime);
+
+                // --- GỌI HÀM GỬI GOOGLE SHEETS ---
+                guiKetQua10Cot(
+                    TEN_SHEET_NAY, 
+                    this.state.studentId,
+                    this.state.userName, 
+                    ngayLam,
+                    gioBD,
+                    gioKT,
+                    durationStr,
+                    totalScore, // Số câu đúng
+                    percent + "%"
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                
+                // Hiển thị dữ liệu lên màn hình tổng kết
+                document.getElementById('result-percent-large').textContent = `${percent}%`;
+                document.getElementById('res-student-name').textContent = this.state.userName;
+                document.getElementById('res-student-id').textContent = this.state.studentId;
+                document.getElementById('res-start-time').textContent = `${ngayLam} ${gioBD}`;
+                document.getElementById('res-end-time').textContent = `${ngayLam} ${gioKT}`;
+                document.getElementById('result-breakdown').innerHTML = breakdownHtml;
+                document.getElementById('result-score').textContent = totalScore;
+            }
+        };
+
+        // --- GOOGLE SHEET SEND FUNCTION ---
+        function guiKetQua10Cot(tenBai, maHS, tenHS, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
+            if (!LINK_APP_SCRIPT) return;
+            
+            const statusEl = document.getElementById('sheet-status');
+            statusEl.textContent = "Sending data to system...";
+            
+            const formData = new URLSearchParams();
+            formData.append("tenSheet", "Succeed Test 1 - 4");
+            formData.append("tenBai", tenBai);
+            formData.append("maHocSinh", maHS);
+            formData.append("hoTen", tenHS);
+            formData.append("ngay", ngay);
+            formData.append("gioBatDau", gioBatDau);
+            formData.append("gioNop", gioNop);
+            formData.append("thoiGianLam", thoiGianLamBai);
+            formData.append("soCauDung", diemSo);
+            formData.append("phanTram", phanTram);
+
+            fetch(LINK_APP_SCRIPT, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData.toString()
+            })
+            .then(() => {
+                console.log("✅ Sent to Google Sheets");
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results saved successfully!</span>';
+            })
+            .catch(err => {
+                console.error("❌ Error:", err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Error sending results. Please check your network connection.</span>';
+            });
+        }
+    </script>
+</body>
+</html>
