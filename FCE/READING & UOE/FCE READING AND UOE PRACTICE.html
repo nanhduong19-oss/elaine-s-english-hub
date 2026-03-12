@@ -81,28 +81,47 @@
         .inline-expand-input {
             min-width: 80px; width: 80px; max-width: 250px;
             border: none; border-bottom: 2px solid #8bc34a;
-            background: transparent; color: #166534; font-weight: 700; text-align: center;
+            background: transparent; color: #166534; font-weight: 800; text-align: center;
             font-family: 'Nunito', sans-serif; outline: none; margin: 0 6px; padding: 0 4px;
             transition: border-color 0.2s;
         }
         .inline-expand-input:focus { border-bottom: 2px solid #689f38; background: #f1f8e9; border-radius: 4px 4px 0 0; }
 
+        /* MULTIPLE CHOICE RADIO BUTTONS (Xóa viền đen mặc định) */
+        .cbt-radio {
+            appearance: none; -webkit-appearance: none;
+            width: 1.25rem; height: 1.25rem; flex-shrink: 0;
+            border: 2px solid #9ca3af; border-radius: 50%;
+            display: grid; place-content: center;
+            margin-top: 0.15rem; transition: all 0.2s; outline: none; cursor: pointer;
+            background-color: white;
+        }
+        .cbt-radio::before {
+            content: ""; width: 0.65rem; height: 0.65rem;
+            border-radius: 50%; transform: scale(0);
+            transition: 0.15s transform ease-in-out;
+            background-color: #8bc34a;
+        }
+        .cbt-radio:checked { border-color: #8bc34a; }
+        .cbt-radio:checked::before { transform: scale(1); }
+
         /* PART 6: Khung thả (Dropzone) và thẻ kéo (Draggable) */
         .fce-dropzone {
             display: inline-flex; align-items: center; justify-content: center;
-            min-width: 60px; height: 32px; border: 2px dashed #8bc34a; border-radius: 6px;
-            background: #f1f8e9; margin: 0 4px; vertical-align: middle; transition: all 0.2s;
+            min-width: 40px; height: 28px; border: 2px dashed #8bc34a; border-radius: 4px;
+            background: #f1f8e9; margin: 0 6px; vertical-align: middle; transition: all 0.2s;
+            font-weight: bold; color: #689f38; font-size: 0.9em;
         }
         .fce-dropzone.drag-over { background: #c5e1a5; border-style: solid; transform: scale(1.05); }
+        
         .fce-draggable {
-            background: #fff; border: 1px solid #d1d5db; padding: 10px 16px; margin-bottom: 8px;
-            border-radius: 8px; cursor: grab; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            background: #fff; border: 1px solid #d1d5db; padding: 12px 16px; margin-bottom: 12px;
+            border-radius: 8px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             font-weight: 500; transition: all 0.2s; display: flex; gap: 12px; align-items: flex-start;
         }
-        .fce-draggable:hover { border-color: #8bc34a; box-shadow: 0 4px 6px rgba(139, 195, 74, 0.15); transform: translateY(-1px); }
+        .fce-draggable:hover { border-color: #8bc34a; box-shadow: 0 4px 8px rgba(139, 195, 74, 0.15); transform: translateY(-2px); }
         .fce-draggable:active { cursor: grabbing; }
-        .fce-draggable.dropped { padding: 2px 8px; margin: 0; box-shadow: none; border-color: #8bc34a; background: #8bc34a; color: white; border-radius: 4px; }
-        
+
         /* Giao diện Footer Tabs */
         footer { border-top: 1px solid #d1d5db; display: flex; overflow-x: auto; }
         .tab-btn {
@@ -125,6 +144,9 @@
         body.contrast-dark .fce-dropzone { border-color: #d97706 !important; background: #222 !important; }
         body.contrast-dark .tab-active { background-color: #8B4513 !important; color: #ffffff !important; }
         body.contrast-dark .tab-inactive { background-color: #1a1a1a !important; color: #9ca3af !important; }
+        body.contrast-dark .cbt-radio { background-color: transparent !important; border-color: #9ca3af !important; }
+        body.contrast-dark .cbt-radio:checked { border-color: #d97706 !important; }
+        body.contrast-dark .cbt-radio:checked::before { background-color: #d97706 !important; }
 
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -222,26 +244,26 @@
             <div class="bg-red-500 px-6 py-5 text-center relative">
                 <button onclick="document.getElementById('error-modal').classList.add('hidden')" class="absolute top-4 right-4 text-white hover:scale-110"><i class="fa-solid fa-xmark text-xl"></i></button>
                 <i class="fa-solid fa-triangle-exclamation text-5xl text-white mb-3"></i>
-                <h2 class="text-xl font-bold text-white tracking-wide" id="error-modal-title">LỖI HỆ THỐNG</h2>
+                <h2 class="text-xl font-bold text-white tracking-wide" id="error-modal-title">SYSTEM ERROR</h2>
             </div>
             <div class="p-6">
                 <p class="text-gray-700 mb-4 text-[15px]" id="error-modal-message"></p>
-                <button onclick="document.getElementById('error-modal').classList.add('hidden')" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3.5 px-4 rounded-xl">Đóng</button>
+                <button onclick="document.getElementById('error-modal').classList.add('hidden')" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3.5 px-4 rounded-xl">Close</button>
             </div>
         </div>
     </div>
     
     <div id="loading-overlay" class="hidden fixed inset-0 z-[100] bg-brand-lightest/90 backdrop-blur-sm flex flex-col items-center justify-center">
         <div class="w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-6"></div>
-        <h2 class="text-2xl font-bold text-brand-dark mb-2" id="loading-title">Đang xử lý...</h2>
+        <h2 class="text-2xl font-bold text-brand-dark mb-2" id="loading-title">Processing...</h2>
     </div>
 
     <!-- MÀN HÌNH 3: KẾT QUẢ -->
     <main id="screen-3" class="hidden min-h-screen bg-gray-100 p-4 md:p-8">
         <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 text-center">
-            <h1 class="text-3xl font-black text-brand-primary mb-4">THI XONG RỒI!</h1>
-            <p>Hệ thống nộp bài thành công. Do bạn yêu cầu tập trung sửa UI màn hình làm bài, phần Review chi tiết sẽ được kết nối sau.</p>
-            <button onclick="location.reload()" class="mt-8 bg-gray-800 text-white px-8 py-3 rounded-xl font-bold">Làm bài khác</button>
+            <h1 class="text-3xl font-black text-brand-primary mb-4">TEST SUBMITTED!</h1>
+            <p class="text-lg text-gray-700 mb-6">Your test has been successfully submitted. Detailed review will be available later.</p>
+            <button onclick="location.reload()" class="mt-8 bg-gray-800 hover:bg-black transition text-white px-8 py-3 rounded-xl font-bold">Take Another Test</button>
         </div>
     </main>
 
@@ -255,8 +277,8 @@
             test: { id: '', name: '', data: null },
             timer: { duration: 75 * 60, remaining: 75 * 60, intervalId: null },
             exam: { isRunning: false, currentPart: null, partKeys: [] },
-            answers: {}, // Lưu đáp án
-            activePopupGap: null // Lưu ID của lỗ trống đang mở popup (Part 1)
+            answers: {}, 
+            activePopupGap: null 
         };
 
         const elements = { toast: document.getElementById('toast-container'), loadingOverlay: document.getElementById('loading-overlay') };
@@ -269,7 +291,7 @@
                 const response = await fetch(`${GITHUB_FOLDER_URL}index.json?v=${new Date().getTime()}`);
                 if (!response.ok) throw new Error();
                 const testList = await response.json();
-                select.innerHTML = '<option value="" disabled selected>Chọn một đề thi...</option>';
+                select.innerHTML = '<option value="" disabled selected>Select a test...</option>';
                 testList.forEach(test => {
                     if (!test.status || test.status === "ready" || test.status === "active") {
                         const opt = document.createElement('option');
@@ -279,14 +301,13 @@
                     }
                 });
             } catch (error) {
-                select.innerHTML = '<option value="" disabled selected>Lỗi tải danh sách đề.</option>';
+                select.innerHTML = '<option value="" disabled selected>Error loading test list.</option>';
             }
         }
 
         function setupEventListeners() {
             document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); startExam(); });
             
-            // Xử lý tự động lưu câu trả lời cho mọi Input/Select/Textarea
             document.getElementById('exam-content-container').addEventListener('input', (e) => {
                 if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
                     const qId = e.target.id || e.target.name;
@@ -297,7 +318,6 @@
                 }
             });
 
-            // Xử lý ẩn Popup Part 1 khi click ra ngoài
             document.addEventListener('click', (e) => {
                 const popup = document.getElementById('p1-popup');
                 if(!popup.classList.contains('hidden') && !e.target.closest('#p1-popup') && !e.target.closest('.p1-gap-btn')) {
@@ -321,7 +341,7 @@
             try {
                 const response = await fetch(`${GITHUB_FOLDER_URL}${encodeURIComponent(select.value)}?v=${new Date().getTime()}`);
                 if (!response.ok) {
-                    throw new Error(`Lỗi kết nối máy chủ GitHub (Mã lỗi: ${response.status}).`);
+                    throw new Error(`Failed to connect to GitHub Server (Status Code: ${response.status}).`);
                 }
                 
                 const textData = await response.text();
@@ -329,27 +349,26 @@
                 try { testData = JSON.parse(textData); } 
                 catch (jsonErr) { throw new Error(`JSON_ERROR:${jsonErr.message}`); }
                 
-                // MỚI: Trích xuất đúng đường dẫn content.reading.parts từ JSON mới
                 const partsData = testData.content?.reading?.parts || testData.parts;
                 
                 if (!partsData || !Array.isArray(partsData)) {
-                    throw new Error("Lỗi cấu trúc JSON: Không tìm thấy mảng 'parts' hợp lệ.");
+                    throw new Error("JSON Structure Error: Cannot find a valid 'parts' array.");
                 }
 
                 STATE.test.data = testData;
-                STATE.test.data.parts = partsData; // Gán lại thành mảng để dễ dùng
+                STATE.test.data.parts = partsData; 
                 STATE.test.name = select.options[select.selectedIndex].text;
                 
                 document.getElementById('header-test-name').textContent = STATE.test.name;
                 document.getElementById('header-student-name').textContent = STATE.student.name;
                 document.getElementById('header-student-id').textContent = STATE.student.id;
 
-                const duration = STATE.test.data.content?.reading?.metadata?.duration || STATE.test.data.timeLimit || 75;
-                const timeLimit = duration * 60; // Mặc định 75p
+                // FIXED: Lấy thông số thời gian chuẩn xác và an toàn
+                const durationStr = STATE.test.data.content?.reading?.metadata?.duration || STATE.test.data.timeLimit || 75;
+                const timeLimit = parseInt(durationStr, 10) * 60; 
                 STATE.timer.duration = timeLimit;
                 STATE.timer.remaining = timeLimit;
 
-                // TÍNH TOÁN VÀ RENDER
                 calculateQuestionRanges();
                 renderAllPartsHTML();
 
@@ -359,7 +378,6 @@
                 STATE.exam.isRunning = true; 
                 STATE.exam.startTime = new Date();
                 
-                // Lưu mảng các chỉ số Part [0, 1, 2, 3...]
                 STATE.exam.partKeys = partsData.map((_, index) => index);
                 if (STATE.exam.partKeys.length > 0) {
                     switchTab(STATE.exam.partKeys[0]); 
@@ -368,10 +386,10 @@
 
             } catch (error) {
                 const isJsonError = error.message.includes('JSON_ERROR:');
-                document.getElementById('error-modal-title').innerText = isJsonError ? 'LỖI CÚ PHÁP JSON TRÊN GITHUB' : 'LỖI TẢI ĐỀ THI';
+                document.getElementById('error-modal-title').innerText = isJsonError ? 'GITHUB JSON SYNTAX ERROR' : 'TEST LOADING ERROR';
                 
                 if (isJsonError) {
-                    document.getElementById('error-modal-message').innerHTML = `File JSON của bạn trên GitHub đang bị sai cú pháp.<br><br><strong>Chi tiết:</strong> ${error.message.replace('JSON_ERROR:', '')}<br><br>Hãy dùng <a href="https://jsonlint.com/" target="_blank" class="text-blue-500 font-bold underline">jsonlint.com</a> để kiểm tra và sửa lại file!`;
+                    document.getElementById('error-modal-message').innerHTML = `Your JSON file on GitHub has a syntax error.<br><br><strong>Details:</strong> ${error.message.replace('JSON_ERROR:', '')}<br><br>Please use <a href="https://jsonlint.com/" target="_blank" class="text-blue-500 font-bold underline">jsonlint.com</a> to validate and fix your file!`;
                 } else {
                     document.getElementById('error-modal-message').innerHTML = error.message;
                 }
@@ -396,17 +414,13 @@
             });
         }
 
-        // =========================================================================
-        // ENGINE VẼ GIAO DIỆN (ĐÃ FIX LỖI ĐỒNG BỘ VỚI JSON)
-        // =========================================================================
         function renderAllPartsHTML() {
             const container = document.getElementById('exam-content-container');
             container.innerHTML = '';
             
             STATE.test.data.parts.forEach((p, index) => {
-                // Đảm bảo lấy đúng số thứ tự Part từ JSON (p.part), nếu không có mới dùng index
                 const partNum = p.part || (index + 1); 
-                const isSplitLayout = (partNum >= 5 && partNum <= 7); // Part 5, 6, 7 chia đôi màn hình
+                const isSplitLayout = (partNum >= 5 && partNum <= 7); 
 
                 const wrapper = document.createElement('div');
                 wrapper.id = `content-${index}`;
@@ -418,9 +432,8 @@
                                        </div>`;
 
                 let contentHTML = '';
-
-                // XỬ LÝ NỘI DUNG VĂN BẢN (TEXT/BLOCKS)
                 let textContent = '';
+                
                 if (p.media && p.media.blocks) {
                     p.media.blocks.forEach(block => {
                         if (block.type === 'title') {
@@ -433,15 +446,12 @@
                                 if (seg.t === 'text') {
                                     textContent += seg.v.replace(/\n/g, '<br>');
                                 } else if (seg.t === 'gap' || seg.t === 'drop') {
-                                    // Part 6 có Khung Dropzone để kéo thả, được xử lý trực tiếp luôn
                                     if (partNum === 6) {
-                                        textContent += `<div class="fce-dropzone" id="dz-${seg.label || seg.gapId}" data-q="${seg.label || seg.gapId}" ondragover="allowDrop(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">${seg.label || seg.gapId}</div>`;
+                                        textContent += `<span class="fce-dropzone" id="dz-${seg.label || seg.gapId}" data-q="${seg.label || seg.gapId}" ondragover="allowDrop(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">${seg.label || seg.gapId}</span>`;
                                     } else if (isSplitLayout) {
-                                        // Các phần chia cột khác (như Part 5, 7) nếu có gap thì chỉ in nhãn
                                         textContent += `<strong class="inline-block px-1 mx-1 bg-gray-100 border border-gray-300 rounded text-brand-primary">${seg.label || seg.gapId}</strong>`;
                                     } else {
-                                        // Part 1,2,3,4: dùng placeholder để thay thế ở dưới
-                                        textContent += `___${seg.label || seg.gapId}___`;
+                                        textContent += `[${seg.label || seg.gapId}]`;
                                     }
                                 }
                             });
@@ -449,28 +459,27 @@
                         }
                     });
                 } else if (p.text) {
-                    textContent = p.text; // Dự phòng nếu JSON dùng key cũ 'text'
+                    textContent = p.text;
                 }
 
-                // TẠO GIAO DIỆN DỰA TRÊN TỪNG PART
+                // TẠO GIAO DIỆN THEO PART
                 if (partNum === 1) {
-                    // PART 1: Đoạn văn đục lỗ + Nút bấm mở Popup
                     contentHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto leading-[2.5rem] text-[1.1rem] text-justify">`;
                     if (p.questions) {
                         p.questions.forEach(q => {
                             const ops = Object.values(q.options || {}).join('|');
                             const btnHtml = `<button class="p1-gap-btn" id="gap-btn-${q.displayNumber}" onclick="openPart1Popup(this, '${q.displayNumber}', '${ops}')">${q.displayNumber}</button>`;
-                            textContent = textContent.replace(`___${q.displayNumber}___`, btnHtml).replace(`[${q.displayNumber}]`, btnHtml);
+                            // FIXED: Regex quét an toàn cả ___1___ và [1]
+                            let regex = new RegExp(`___${q.displayNumber}___|\\[${q.displayNumber}\\]`, 'g');
+                            textContent = textContent.replace(regex, btnHtml);
                         });
                     }
                     contentHTML += textContent + `</div>`;
                 } 
                 else if (partNum === 2 || partNum === 3 || partNum === 4) {
-                    // PART 2, 3, 4: Ô điền từ hoặc viết lại câu
                     contentHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto leading-[3rem] text-[1.1rem]">`;
                     
                     if (partNum === 4) {
-                        // Viết lại câu (Key Word Transformation)
                         if (p.questions) {
                             p.questions.forEach(q => {
                                 contentHTML += `<div class="mb-8 border-b pb-6 last:border-0">
@@ -492,14 +501,15 @@
                             });
                         }
                     } else {
-                        // Open Cloze & Word Formation (Part 2 & 3)
                         if (p.questions) {
                             p.questions.forEach(q => {
                                 let inp = `<input type="text" class="inline-expand-input uppercase" id="q${q.displayNumber}" name="q${q.displayNumber}" oninput="autoResizeInput(this)" autocomplete="off">`;
                                 if (partNum === 3 && q.wordGiven) {
-                                    inp += ` <span class="font-black text-gray-800 tracking-wider ml-2">(${q.wordGiven})</span>`;
+                                    // FIXED: Thêm Keyword vào bên trong dấu ngoặc đơn in đậm
+                                    inp += `<span class="font-black text-gray-800 tracking-wider ml-2 uppercase">(${q.wordGiven})</span>`;
                                 }
-                                textContent = textContent.replace(`___${q.displayNumber}___`, inp).replace(`[${q.displayNumber}]`, inp);
+                                let regex = new RegExp(`___${q.displayNumber}___|\\[${q.displayNumber}\\]`, 'g');
+                                textContent = textContent.replace(regex, inp);
                             });
                         }
                         contentHTML += textContent;
@@ -507,35 +517,35 @@
                     contentHTML += `</div>`;
                 }
                 else if (isSplitLayout) {
-                    // PART 5, 6, 7: CHIA MÀN HÌNH 65/35
-                    
-                    // Cột trái (Bài đọc)
                     let leftCol = `<div class="w-full lg:w-[65%] h-full overflow-y-auto p-6 border-r border-gray-200 bg-white">`;
                     leftCol += instructionHTML;
                     leftCol += `<div class="text-[1.05rem] text-justify text-gray-800">${textContent}</div></div>`;
 
-                    // Cột phải (Câu hỏi)
                     let rightCol = `<div class="w-full lg:w-[35%] h-full overflow-y-auto p-6 bg-[#fcfcfc]">`;
                     
-                    // Part 6 có optionsContent rời để kéo thả
+                    // FIXED: Thêm Header hướng dẫn cho Part 7
+                    if (partNum === 7) {
+                        rightCol += `<h4 class="font-bold mb-4 text-gray-800 text-lg">${p.questionsInstruction || 'Answer the questions below:'}</h4>`;
+                    }
+
                     if (partNum === 6 && p.questions && p.questions[0] && p.questions[0].options) {
-                        rightCol += `<h4 class="font-bold mb-4 text-brand-primary"><i class="fa-solid fa-hand-pointer mr-2"></i>Kéo thả lựa chọn vào ô trống:</h4>`;
+                        rightCol += `<h4 class="font-bold mb-4 text-brand-primary"><i class="fa-solid fa-hand-pointer mr-2"></i>Drag the options into the gaps:</h4>`;
                         Object.entries(p.questions[0].options).forEach(([key, val]) => {
                             rightCol += `<div class="fce-draggable" draggable="true" id="drag-${key}" data-val="${key}" ondragstart="drag(event)">
                                             <span class="font-black text-gray-400 mt-0.5">${key}</span>
-                                            <span>${val}</span>
+                                            <span class="leading-relaxed">${val}</span>
                                          </div>`;
                         });
                     } else if (p.questions) {
-                        // Trắc nghiệm bình thường Part 5, 7
                         p.questions.forEach(q => {
                             rightCol += `<div class="mb-6 p-4 bg-white rounded-xl shadow-sm border border-gray-100">
                                             <p class="font-bold mb-3 flex gap-2"><span class="bg-brand-primary text-white w-6 h-6 flex items-center justify-center rounded shrink-0">${q.displayNumber}</span> <span>${q.text || ''}</span></p>`;
                             if (q.options) {
                                 Object.entries(q.options).forEach(([key, val]) => {
+                                    // FIXED: Sử dụng thẻ Input type radio tuỳ chỉnh CSS
                                     rightCol += `<label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-brand-lightest bg-white mb-2 transition">
-                                                    <input type="radio" name="q${q.displayNumber}" value="${key}" onchange="saveAnswer('${q.displayNumber}', '${key}')" class="mt-1 w-4 h-4 text-brand-primary focus:ring-brand-primary accent-brand-primary shrink-0">
-                                                    <div class="leading-snug"><span class="font-bold text-gray-500 mr-2">${key}</span> <span class="text-gray-700">${val}</span></div>
+                                                    <input type="radio" name="q${q.displayNumber}" value="${key}" onchange="saveAnswer('${q.displayNumber}', '${key}')" class="cbt-radio">
+                                                    <div class="leading-snug"><span class="font-bold text-gray-600 mr-2">${key}</span> <span class="text-gray-700">${val}</span></div>
                                                  </label>`;
                                 });
                             }
@@ -546,20 +556,14 @@
 
                     wrapper.innerHTML = leftCol + rightCol;
                     container.appendChild(wrapper);
-                    return; // Đã chèn xong cấu trúc Split, thoát
+                    return; 
                 }
 
-                // Chèn vào DOM cho các Part không Split
                 wrapper.innerHTML = instructionHTML + contentHTML;
                 container.appendChild(wrapper);
             });
         }
 
-        // =========================================================================
-        // TƯƠNG TÁC GIAO DIỆN (JS LÀM CHO WEB SỐNG ĐỘNG)
-        // =========================================================================
-
-        // PART 1: Mở popup chọn từ
         function openPart1Popup(btnEl, qNum, optionsStr) {
             STATE.activePopupGap = qNum;
             const popup = document.getElementById('p1-popup');
@@ -568,7 +572,7 @@
             
             let html = `<button class="close-btn" onclick="closePart1Popup()"><i class="fa-solid fa-xmark"></i></button>`;
             options.forEach(opt => {
-                html += `<button onclick="selectPart1Option('${qNum}', '${opt}')">${opt}</button>`;
+                html += `<button onclick="selectPart1Option('${qNum}', '${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
             });
             popup.innerHTML = html;
             
@@ -587,13 +591,11 @@
             closePart1Popup();
         }
 
-        // PART 2, 3: Tự động co giãn ô nhập liệu
         function autoResizeInput(el) {
             saveAnswer(el.id.replace('q', ''), el.value.toUpperCase());
             el.style.width = Math.max(80, el.value.length * 14) + 'px';
         }
 
-        // PART 6: KÉO THẢ (DRAG & DROP NATIVE HTML5)
         function drag(ev) {
             ev.dataTransfer.setData("text", ev.target.id);
             ev.target.style.opacity = '0.4';
@@ -611,22 +613,19 @@
             if (!draggedEl) return;
             draggedEl.style.opacity = '1';
 
-            dropzone.innerHTML = '';
-            dropzone.innerText = draggedEl.getAttribute('data-val'); 
+            // FIXED: Gán chữ cái A, B, C vào dropzone
+            const val = draggedEl.getAttribute('data-val');
+            dropzone.innerHTML = val; 
             dropzone.classList.add('bg-brand-primary', 'text-white', 'border-transparent', 'font-black');
             
-            saveAnswer(dropzone.getAttribute('data-q'), draggedEl.getAttribute('data-val'));
+            saveAnswer(dropzone.getAttribute('data-q'), val);
         }
 
-        // Lưu đáp án chung và cập nhật Footer
         function saveAnswer(qNumStr, value) {
             STATE.answers[`q${qNumStr}`] = value;
             renderFooterTabs();
         }
 
-        // =========================================================================
-        // ĐIỀU HƯỚNG VÀ FOOTER
-        // =========================================================================
         function renderFooterTabs() {
             const footer = document.getElementById('exam-footer-tabs');
             footer.innerHTML = '';
@@ -647,7 +646,6 @@
                     if (p.questions) {
                         p.questions.forEach(q => {
                             const qIdStr = q.displayNumber;
-                            // Check xem học sinh đã điền đáp án cho câu này chưa
                             const isAnswered = STATE.answers[`q${qIdStr}`] && STATE.answers[`q${qIdStr}`].trim() !== '';
                             const answerClass = isAnswered ? 'answered text-white' : 'text-white/60';
                             qHtml += `<span class="qnum-indicator ${answerClass}">${qIdStr}</span>`;
@@ -698,7 +696,7 @@
         }
 
         function confirmSubmit(isAuto = false) {
-            if(isAuto || confirm("Bạn chắc chắn muốn nộp bài?")) {
+            if(isAuto || confirm("Are you sure you want to submit your test?")) {
                 clearInterval(STATE.timer.intervalId);
                 document.getElementById('screen-2').classList.replace('flex', 'hidden');
                 document.getElementById('screen-3').classList.remove('hidden');
