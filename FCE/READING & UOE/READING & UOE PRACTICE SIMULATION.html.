@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cambridge FCE Reading & Use of English Practice Test</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        cbt: {
+                            bg: '#f0f2f5',       /* Nền xám nhạt của khu vực làm bài */
+                            teal: '#007c89',     /* Xanh ngọc đặc trưng của Cambridge */
+                            tealdark: '#00636e',
+                            graytab: '#e5e5e5',  /* Xám của Tab chưa chọn */
+                            text: '#333333',
+                            border: '#cccccc'
+                        },
+                        brand: {
+                            lightest: '#f1f8e9',
+                            primary: '#8bc34a',
+                            dark: '#689f38',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #f1f8e9; color: #333333; transition: background-color 0.3s ease, color 0.3s ease; }
+
+        /* =========================================================
+           CBT UI STYLES (ĐỊNH DẠNG RIÊNG CHO NỘI DUNG TỪ JSON)
+           ========================================================= */
+        /* Style cho khung hướng dẫn đầu mỗi Part (Instruction Box) */
+        .cbt-instruction-box {
+            background-color: white;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+        .cbt-instruction-box h3 { font-weight: bold; font-size: 15px; margin-bottom: 4px; }
+        .cbt-instruction-box p { font-size: 14px; color: #333; }
+
+        /* Form Controls trong bài làm (Giới hạn chỉ áp dụng trong khu vực đề thi) */
+        #exam-content-container input[type="text"], 
+        #exam-content-container select {
+            border: 1px solid #9ca3af;
+            padding: 2px 8px;
+            border-radius: 4px;
+            outline: none;
+            font-family: inherit;
+        }
+        #exam-content-container input[type="text"]:focus, 
+        #exam-content-container select:focus {
+            border-color: #007c89; /* Xanh ngọc CBT */
+            box-shadow: 0 0 0 2px rgba(0, 124, 137, 0.2);
+        }
+
+        /* =========================================================
+           CHẾ ĐỘ HIGH CONTRAST (CHUẨN CAMBRIDGE CBT)
+           ========================================================= */
+        body.contrast-dark { background-color: #000000 !important; color: #ffffff !important; }
+
+        body.contrast-dark #screen-1, body.contrast-dark #screen-2, body.contrast-dark #screen-3,
+        body.contrast-dark header, body.contrast-dark footer, body.contrast-dark #exam-content-container {
+            background-color: #000000 !important; border-color: #ffffff !important; color: #ffffff !important;
+        }
+
+        body.contrast-dark .bg-white, body.contrast-dark .bg-gray-50, body.contrast-dark .bg-gray-100,
+        body.contrast-dark .bg-gray-200, body.contrast-dark .bg-brand-lightest, body.contrast-dark .bg-cbt-bg {
+            background-color: #000000 !important; border-color: #ffffff !important; color: #ffffff !important;
+        }
+
+        /* Bo viền cam đất cho các ô điền từ trong đề thi */
+        body.contrast-dark #exam-content-container input[type="text"], 
+        body.contrast-dark #exam-content-container select {
+            background-color: #000000 !important; color: #ffffff !important; border: 1px solid #d97706 !important; 
+        }
+        body.contrast-dark #exam-content-container input[type="text"]:focus, 
+        body.contrast-dark #exam-content-container select:focus { border-color: #ffffff !important; }
+
+        /* Đảm bảo ô input màn hình chào giữ được độ mượt mà khi bật Dark Mode */
+        body.contrast-dark #screen-1 input[type="text"],
+        body.contrast-dark #screen-1 select {
+            background-color: #1a1a1a !important; color: #ffffff !important; border: none !important;
+        }
+
+        body.contrast-dark .cbt-instruction-box { background-color: transparent !important; border-color: #ffffff !important; }
+        body.contrast-dark .cbt-instruction-box * { color: #ffffff !important; }
+
+        body.contrast-dark .text-brand-text, body.contrast-dark .text-gray-900, body.contrast-dark .text-gray-800, 
+        body.contrast-dark .text-gray-700, body.contrast-dark .text-gray-600, body.contrast-dark .text-gray-500,
+        body.contrast-dark #exam-content-container * { color: #ffffff !important; background-color: transparent !important; }
+        
+        body.contrast-dark #exam-content-container div { border-color: #ffffff !important; }
+        body.contrast-dark .text-red-500, body.contrast-dark .text-red-600 { color: #ff6b6b !important; }
+        body.contrast-dark .bg-red-50 { background-color: #2a0000 !important; border-color: #ff6b6b !important; color: #ffffff !important; }
+
+        /* FOOTER TABS CHUẨN CBT DARK MODE */
+        body.contrast-dark footer { border-top: 1px solid #ffffff; }
+        body.contrast-dark .cbt-tab-inactive { background-color: #1a1a1a !important; border-right-color: #ffffff !important; color: #9ca3af !important; }
+        body.contrast-dark .cbt-tab-active { background-color: #8B4513 !important; border-right-color: #ffffff !important; color: #ffffff !important; }
+        body.contrast-dark .cbt-tab-qnum.answered { border-bottom-color: #ffffff !important; color: #ffffff !important; }
+        body.contrast-dark .cbt-footer-btn-nav { border-color: #ffffff !important; }
+
+        /* SCALING TEXT */
+        #check-size-base, #check-size-lg, #check-size-xl { color: transparent; }
+        body[data-text-size="base"] #check-size-base { color: currentColor; }
+        body[data-text-size="lg"] #check-size-lg { color: currentColor; }
+        body[data-text-size="xl"] #check-size-xl { color: currentColor; }
+
+        body[data-text-size="lg"] .scalable-text, body[data-text-size="lg"] .scalable-text * { font-size: 1.15rem !important; line-height: 1.7 !important; }
+        body[data-text-size="xl"] .scalable-text, body[data-text-size="xl"] .scalable-text * { font-size: 1.3rem !important; line-height: 1.9 !important; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        body.contrast-dark ::-webkit-scrollbar-thumb { background: #555; }
+
+        .no-select { user-select: none; -webkit-user-select: none; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans relative overflow-x-hidden" data-text-size="base">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: WELCOME & LOGIN                  -->
+    <!-- ========================================== -->
+    <main id="screen-1" class="flex-grow flex flex-col items-center justify-center p-4 min-h-screen bg-brand-lightest">
+        <div class="bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] w-full max-w-[420px] relative pt-12 pb-10 px-6 sm:px-8 z-10 overflow-hidden">
+            <!-- Thanh màu xanh vắt ngang trên cùng -->
+            <div class="absolute top-0 left-0 w-full h-4 bg-brand-primary"></div>
+
+            <div class="mx-auto bg-brand-primary text-white w-[76px] h-[76px] rounded-[1.25rem] flex items-center justify-center mb-6 relative shadow-sm">
+                <i class="fa-solid fa-laptop text-[34px] mb-1"></i>
+                <!-- Badge bút chì màu xanh nền trắng -->
+                <div class="absolute -bottom-2 -right-2 bg-white text-brand-primary rounded-full w-[30px] h-[30px] flex items-center justify-center shadow-md">
+                    <i class="fa-solid fa-pencil text-[13px]"></i>
+                </div>
+            </div>
+            
+            <div class="text-center mb-8">
+                <!-- Giữ tiêu đề Reading & Use of English nhưng áp dụng phong cách thiết kế của ảnh -->
+                <h1 class="text-2xl font-black text-brand-primary tracking-wide mb-2 leading-tight uppercase">READING & USE OF ENGLISH</h1>
+                <p class="text-[11px] text-gray-500 font-bold tracking-[0.15em] uppercase" id="welcome-test-title">Computer-Based Test Environment</p>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <select id="test-selector" class="w-full px-5 py-4 rounded-xl bg-[#f2f7f2] text-gray-700 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium cursor-pointer border-none" required>
+                        <option value="" disabled selected>Loading data from GitHub...</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="text" id="student-name" class="w-full px-5 py-4 rounded-xl bg-[#f2f7f2] text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium border-none" placeholder="Full Name" required>
+                </div>
+                <div class="flex gap-4">
+                    <div class="w-1/2">
+                        <input type="text" id="student-id" class="w-full px-5 py-4 rounded-xl bg-[#f2f7f2] text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium border-none" placeholder="Student ID" required>
+                    </div>
+                    <div class="w-1/2">
+                        <input type="text" id="student-class" class="w-full px-5 py-4 rounded-xl bg-[#f2f7f2] text-gray-700 placeholder-gray-400 focus:ring-2 focus:ring-brand-primary outline-none transition font-medium border-none" placeholder="Class" required>
+                    </div>
+                </div>
+                
+                <div class="bg-[#fcfdfc] border border-gray-100 rounded-2xl p-5 mt-2 shadow-sm">
+                    <h3 class="font-bold text-red-600 text-[13px] mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shield"></i> PRACTICE RULES
+                    </h3>
+                    <ul class="text-[13px] space-y-2.5 text-gray-600 font-medium">
+                        <li class="flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-gray-400 mr-3 shrink-0"></span>Duration: 75 minutes</li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Fullscreen mode is strictly required.</strong></li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Copy/Paste is DISABLED.</strong></li>
+                        <li class="flex items-center text-red-600"><span class="w-1.5 h-1.5 rounded-full bg-red-600 mr-3 shrink-0"></span><strong>Max 2 violations = Auto-submit.</strong></li>
+                    </ul>
+                </div>
+                
+                <button id="btn-start" type="submit" class="w-full bg-brand-primary hover:bg-brand-dark text-white font-bold py-4 px-4 rounded-xl mt-4 transition shadow-md hover:shadow-lg flex items-center justify-center gap-2 text-[15px]">
+                    <i class="fa-solid fa-expand"></i> START PRACTICE
+                </button>
+            </form>
+        </div>
+        
+        <div class="mt-8 text-center w-full relative z-10 pb-4">
+            <h3 class="text-gray-500 font-bold uppercase tracking-wider text-[11px] sm:text-[12px] mb-1.5">
+                COMPILED AND DIGITIZED BY <span class="text-brand-primary">ELAINE NGUYỄN</span>
+            </h3>
+            <p class="text-gray-400 italic text-[11px] sm:text-[12px]">Empowering students through knowledge and technology</p>
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: EXAM INTERFACE                   -->
+    <!-- ========================================== -->
+    <main id="screen-2" class="hidden flex-col h-screen w-full bg-cbt-bg">
+        <header class="bg-white border-b border-gray-200 h-[60px] flex items-center justify-between px-6 shrink-0 z-20">
+            <div class="flex items-center gap-4 h-full">
+                <div class="font-bold text-[17px] text-gray-800 pr-4 flex items-center h-full" id="header-test-name">FCE Test</div>
+                <div class="text-sm text-gray-500 border-l border-gray-300 pl-4 h-full flex items-center">
+                    <span id="header-student-name" class="font-semibold mr-1">Name</span> 
+                    <span class="text-xs mt-0.5">(<span id="header-student-id">ID</span> - <span id="header-student-class">Class</span>)</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-5 h-full">
+                <div class="flex items-center gap-4 border-r border-gray-300 pr-5 h-full">
+                    <button onclick="toggleContrast()" class="text-gray-500 hover:text-cbt-teal text-[22px] transition-colors" title="Toggle Contrast (Dark Mode)">
+                        <i class="fa-solid fa-circle-half-stroke"></i>
+                    </button>
+                    <button onclick="openTextSizeModal()" class="text-gray-500 hover:text-cbt-teal font-bold flex items-center gap-1 text-[20px] transition-colors" title="Change Text Size">
+                        <i class="fa-solid fa-text-height"></i>
+                    </button>
+                </div>
+                <div class="text-red-500 font-medium flex items-center gap-1.5 text-sm" title="Anti-cheat violations">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span id="violation-count">0/2</span>
+                </div>
+                <div id="exam-timer" class="font-mono text-xl font-bold bg-gray-100 text-gray-700 px-4 py-1.5 rounded border border-gray-200 tracking-wider">75:00</div>
+            </div>
+        </header>
+
+        <!-- CONTAINER CHỨA NỘI DUNG ĐỀ (HTML từ JSON tự lo Layout: Full hoặc Split screen) -->
+        <div class="flex-grow overflow-y-auto p-4 md:p-8 scalable-text no-select w-full" id="exam-content-container">
+            <!-- Nội dung các Parts sẽ được JS render ở đây -->
+        </div>
+        
+        <!-- FOOTER ĐIỀU HƯỚNG CHUẨN CBT -->
+        <footer class="h-14 bg-cbt-graytab border-t border-gray-300 shrink-0 z-20 flex justify-between">
+            <div id="exam-footer-tabs" class="flex h-full overflow-x-auto hide-scrollbar flex-grow">
+                <!-- Tabs sẽ được tạo tự động bằng JS -->
+            </div>
+            <!-- CỤM NÚT ĐIỀU HƯỚNG BÊN PHẢI -->
+            <div class="flex h-full border-l border-gray-300 shrink-0">
+                <button onclick="navigatePart('prev')" class="w-14 h-full flex justify-center items-center bg-[#6b7280] text-white hover:bg-gray-600 transition cbt-footer-btn-nav border-r border-gray-500">
+                    <i class="fa-solid fa-arrow-left text-xl"></i>
+                </button>
+                <button onclick="navigatePart('next')" class="w-14 h-full flex justify-center items-center bg-cbt-teal text-white hover:bg-cbt-tealdark transition cbt-footer-btn-nav">
+                    <i class="fa-solid fa-arrow-right text-xl"></i>
+                </button>
+                <button onclick="confirmSubmit()" class="w-14 h-full flex justify-center items-center bg-[#e5e7eb] text-gray-500 border-l border-gray-300 hover:bg-gray-300 transition cbt-footer-btn-nav" title="Finish Test">
+                    <i class="fa-solid fa-check text-2xl"></i>
+                </button>
+            </div>
+        </footer>
+    </main>
+
+    <!-- MODALS & OVERLAYS -->
+    <div id="text-size-modal" class="hidden fixed inset-0 z-[110] bg-black/40 flex flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-lg shadow-2xl w-full max-w-xl overflow-hidden relative border border-gray-200">
+            <div class="flex justify-between items-center p-4 border-b border-gray-200">
+                <button onclick="closeTextSizeModal()" class="text-gray-800 font-bold hover:text-cbt-teal flex items-center gap-1 transition"><i class="fa-solid fa-chevron-left text-sm"></i> Options</button>
+                <h2 class="text-xl font-bold text-gray-900">Text size</h2>
+                <button onclick="closeTextSizeModal()" class="text-gray-800 text-xl font-bold hover:text-cbt-teal transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 flex justify-center pb-8">
+                <div class="w-full max-w-sm border border-gray-300 rounded-lg overflow-hidden mt-2 bg-white">
+                    <div onclick="changeTextSize('base')" class="p-5 border-b border-gray-300 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-base" class="fa-solid fa-check absolute left-5 text-lg text-cbt-teal"></i>
+                        <span class="text-base font-medium text-gray-800">Regular</span>
+                    </div>
+                    <div onclick="changeTextSize('lg')" class="p-5 border-b border-gray-300 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-lg" class="fa-solid fa-check absolute left-5 text-lg text-cbt-teal"></i>
+                        <span class="text-lg font-medium text-gray-800">Large</span>
+                    </div>
+                    <div onclick="changeTextSize('xl')" class="p-5 cursor-pointer hover:bg-gray-50 transition flex items-center justify-center gap-3 relative">
+                        <i id="check-size-xl" class="fa-solid fa-check absolute left-5 text-lg text-cbt-teal"></i>
+                        <span class="text-xl font-medium text-gray-800">Extra large</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="anti-cheat-overlay" class="hidden fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 max-w-lg text-center shadow-2xl border-4 border-red-500">
+            <i class="fa-solid fa-triangle-exclamation text-6xl text-red-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-red-600 mb-2">WARNING: SUSPICIOUS ACTIVITY</h2>
+            <p class="text-gray-700 mb-4 text-lg">You have left the exam window or exited fullscreen.</p>
+            <div class="bg-red-50 p-4 rounded-lg mb-6 border border-red-200">
+                <p class="font-bold text-red-800">Violations: <span id="overlay-violation-count">1</span>/2</p>
+                <p class="text-sm mt-1 text-red-600">If you leave the screen again, your exam will be automatically submitted.</p>
+            </div>
+            <button onclick="returnToExam()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition">
+                Return to Exam
+            </button>
+        </div>
+    </div>
+    <div id="loading-overlay" class="hidden fixed inset-0 z-[100] bg-brand-lightest/90 backdrop-blur-md flex flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mb-6"></div>
+        <h2 class="text-2xl font-bold text-brand-dark mb-2" id="loading-title">Connecting...</h2>
+        <p class="text-gray-500 animate-pulse" id="loading-subtext">Please wait a moment.</p>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- SCREEN 3: RESULTS & AI FEEDBACK            -->
+    <!-- ========================================== -->
+    <main id="screen-3" class="hidden min-h-screen bg-gray-100 p-4 md:p-8">
+        <div class="max-w-6xl mx-auto space-y-6">
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden print-break-inside-avoid">
+                <div class="bg-brand-primary text-white p-6 flex flex-col md:flex-row justify-between items-center no-print">
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">READING & USE OF ENGLISH RESULTS</h1>
+                        <p class="text-brand-lightest mt-1 opacity-90" id="res-test-name">FCE Test 1</p>
+                    </div>
+                    <button onclick="exportPDF()" class="mt-4 md:mt-0 bg-white/20 hover:bg-white/30 border border-white/50 px-4 py-2 rounded-lg font-bold transition flex items-center gap-2 text-white shadow-sm">
+                        <i class="fa-solid fa-download"></i> Save Result As
+                    </button>
+                </div>
+                <div class="hidden print:block border-b-2 border-brand-primary pb-4 mb-4">
+                    <h1 class="text-3xl font-bold text-center uppercase tracking-wider text-brand-dark">Cambridge Practice Result</h1>
+                </div>
+                <div class="p-6 grid grid-cols-1 md:grid-cols-5 gap-4 text-center divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Student</p>
+                        <p class="font-bold text-lg text-brand-text truncate" id="res-student-name">Name</p>
+                        <p class="text-sm text-gray-500" id="res-student-info">ID - Class</p>
+                    </div>
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Time / Violations</p>
+                        <p class="font-bold text-lg" id="res-time-taken">45m 0s</p>
+                        <p class="text-sm text-red-500 font-medium" id="res-violations">0 Violations</p>
+                    </div>
+                    <div class="pt-4 md:pt-0 bg-blue-50/50 rounded-lg p-2">
+                        <p class="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Reading Score</p>
+                        <p class="text-3xl font-black text-blue-600" id="res-reading-score">0/42</p>
+                        <p class="text-xs font-bold mt-1 text-gray-500">Cam: <span id="res-reading-cam">0</span></p>
+                    </div>
+                    <div class="pt-4 md:pt-0 bg-green-50/50 rounded-lg p-2">
+                        <p class="text-xs text-green-800 uppercase font-bold tracking-wider mb-1">Use of Eng Score</p>
+                        <p class="text-3xl font-black text-green-600" id="res-uoe-score">0/28</p>
+                        <p class="text-xs font-bold mt-1 text-gray-500">Cam: <span id="res-uoe-cam">0</span></p>
+                    </div>
+                    <div class="pt-4 md:pt-0">
+                        <p class="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Overall Grade</p>
+                        <p class="text-4xl font-black" id="res-grade">Fail</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- REVIEW SECTION -->
+            <div id="locked-message" class="bg-red-50 border border-red-200 p-8 rounded-2xl text-center no-print">
+                <i class="fa-solid fa-lock text-5xl text-red-400 mb-4"></i>
+                <h3 class="text-xl font-bold text-red-700 mb-2">Detailed Review Locked</h3>
+                <p class="text-gray-700">You must score at least <strong>30/42 in Reading</strong> and <strong>21/28 in Use of English</strong> to unlock the detailed feedback and answers. Keep practicing and try again!</p>
+                <div class="mt-6">
+                    <button onclick="location.reload()" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-lg">Take Another Test</button>
+                </div>
+            </div>
+
+            <div id="review-container" class="hidden space-y-6">
+                <div class="bg-blue-50 text-blue-800 p-4 rounded-xl border border-blue-200 flex items-center gap-3 no-print">
+                    <i class="fa-solid fa-unlock-keyhole text-2xl text-green-600"></i>
+                    <p><strong>Review Unlocked!</strong> Excellent job. Below is the detailed breakdown of your answers.</p>
+                </div>
+                
+                <div id="review-content" class="space-y-8 print:mt-8">
+                    <!-- Javascript will inject the feedback/answers here -->
+                </div>
+                
+                <div class="text-center pt-4 pb-8 no-print">
+                    <button onclick="location.reload()" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-lg">Take Another Test</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ========================================== -->
+    <!-- JAVASCRIPT LOGIC                           -->
+    <!-- ========================================== -->
+    <script>
+        /**
+         * GLOBAL CONFIGURATION & STATE
+         */
+
+        // =========================================================================
+        // 🚀 CẤU HÌNH GITHUB VÀ API (BẮT BUỘC ĐIỀN)
+        // =========================================================================
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9kwtAKiaz5DhHEBEs2tbvY25ap-Jbr-fX-5z2PlZ-pQSc2OJ_KFL9wLZGLGAA-7F4lA/exec'; 
+        
+        // Cập nhật đường dẫn thư mục FCE
+        const GITHUB_FOLDER_URL = 'https://raw.githubusercontent.com/nanhduong19-oss/my-test-bank/refs/heads/main/FCE/';
+        // =========================================================================
+
+        const STATE = {
+            student: { name: '', id: '', class: '' },
+            test: { id: '', name: '', data: null },
+            timer: { duration: 75 * 60, remaining: 75 * 60, intervalId: null, startTime: null },
+            antiCheat: { enabled: true, violations: 0, maxViolations: 2 },
+            exam: { isRunning: false, currentPart: null, partKeys: [] },
+            answers: {} // Sẽ lưu dạng { "q1": "A", "q9": "apple", ... }
+        };
+
+        const screens = { login: document.getElementById('screen-1'), exam: document.getElementById('screen-2'), result: document.getElementById('screen-3') };
+        const elements = { toast: document.getElementById('toast-container'), antiCheatOverlay: document.getElementById('anti-cheat-overlay'), loadingOverlay: document.getElementById('loading-overlay') };
+
+        window.onload = () => { 
+            document.getElementById('welcome-test-title').innerText = document.title;
+            loadDashboard(); 
+            setupEventListeners(); 
+        };
+
+        // HÀM ĐẾM VÀ TẢI DANH SÁCH ĐỀ TỪ GITHUB (index.json)
+        async function loadDashboard() {
+            const select = document.getElementById('test-selector');
+            select.innerHTML = '<option value="" disabled selected>Loading data from GitHub...</option>';
+            
+            try {
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`${GITHUB_FOLDER_URL}index.json?v=${cacheBuster}`);
+                if (!response.ok) throw new Error('Cannot load index.json');
+                const testList = await response.json();
+                
+                select.innerHTML = '<option value="" disabled selected>Select a test...</option>';
+                let count = 0;
+                
+                testList.forEach(test => {
+                    if (!test.status || test.status === "ready" || test.status === "active") {
+                        const opt = document.createElement('option');
+                        let fileName = test.file || test.dataFile || `${test.id}.json`;
+                        fileName = fileName.replace('FCE/', ''); 
+                        opt.value = fileName; 
+                        opt.textContent = test.name || test.title || test.id;
+                        opt.setAttribute('data-test-name', opt.textContent);
+                        opt.setAttribute('data-id', test.id || test.testId);
+                        select.appendChild(opt);
+                        count++;
+                    }
+                });
+                
+                if(count === 0) {
+                    select.innerHTML = '<option value="" disabled selected>No tests currently available.</option>';
+                } else {
+                    select.options[0].text = `Select a test (${count} loaded)...`;
+                }
+
+            } catch (error) {
+                console.error("Error loading test bank:", error);
+                select.innerHTML = '<option value="" disabled selected>Error loading test list from server.</option>';
+                showToast("Error loading test list from server.", "error");
+            }
+        }
+
+        // HÀM CHUYỂN ĐỔI MARKDOWN THÀNH HTML
+        function formatMarkdownHighlights(text) {
+            if (!text) return "";
+            let safeText = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            safeText = safeText.replace(/&lt;br&gt;/gi, '<br>').replace(/&lt;b&gt;/gi, '<b>').replace(/&lt;\/b&gt;/gi, '</b>');
+            return safeText.replace(/(\*\*|\*|`)(.*?)\1/g, '<span class="text-red-600 font-bold bg-red-50 px-1 rounded">$2</span>');
+        }
+
+        function exportPDF() {
+            const originalTitle = document.title;
+            const safeTestName = STATE.test.name.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            const safeStudentId = STATE.student.id.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            const safeStudentName = STATE.student.name.replace(/[^a-zA-Z0-9\s-]/g, '').trim();
+            document.title = `${safeTestName}_${safeStudentId}_${safeStudentName}`;
+            window.print();
+            setTimeout(() => { document.title = originalTitle; }, 1000);
+        }
+
+        function showToast(message, type = 'error') {
+            const toast = document.createElement('div');
+            const bg = type === 'error' ? 'bg-red-500' : 'bg-green-500';
+            toast.className = `${bg} text-white px-6 py-3 rounded-lg shadow-lg font-medium flex items-center gap-2 transform transition-all duration-300 translate-y-[-100%] opacity-0 z-50`;
+            toast.innerHTML = `<i class="fa-solid fa-${type === 'error' ? 'circle-exclamation' : 'check'}"></i> ${message}`;
+            elements.toast.appendChild(toast);
+            setTimeout(() => { toast.classList.remove('translate-y-[-100%]', 'opacity-0'); }, 10);
+            setTimeout(() => { toast.classList.add('translate-y-[-100%]', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 5000); 
+        }
+
+        function setupEventListeners() {
+            document.getElementById('login-form').addEventListener('submit', (e) => { e.preventDefault(); startExam(); });
+            
+            // LẮNG NGHE SỰ KIỆN NHẬP LIỆU ĐỂ CẬP NHẬT PROGRESS BAR
+            document.getElementById('exam-content-container').addEventListener('input', (e) => {
+                if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                    const qId = e.target.id || e.target.name;
+                    if(qId) {
+                        STATE.answers[qId] = e.target.value;
+                        renderFooterTabs(); // Gọi lại hàm vẽ Footer để cập nhật vạch kẻ xanh
+                    }
+                }
+            });
+
+            document.addEventListener('visibilitychange', () => { if (document.hidden && STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Tab Switch'); });
+            window.addEventListener('blur', () => { if (STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Window Blur'); });
+            document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && STATE.exam.isRunning && STATE.antiCheat.enabled) handleViolation('Exit Fullscreen'); });
+
+            // KHÓA COPY/CUT/PASTE
+            ['copy', 'cut', 'paste'].forEach(evt => {
+                document.addEventListener(evt, (e) => {
+                    if (STATE.exam.isRunning) {
+                        e.preventDefault();
+                        showToast("Copy and Paste are disabled during the practice test!", "error");
+                    }
+                });
+            });
+
+            // KHÓA CHUỘT PHẢI
+            document.addEventListener('contextmenu', (e) => { e.preventDefault(); });
+
+            // KHÓA CÁC PHÍM TẮT DEVTOOLS
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || e.keyCode === 123) e.preventDefault();
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'u') e.preventDefault();
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') e.preventDefault();
+                if ((e.ctrlKey || e.metaKey) && e.shiftKey && ['i', 'j', 'c'].includes(e.key.toLowerCase())) e.preventDefault();
+            });
+        }
+
+        // BẪY DEBUGGER
+        setInterval(function() { Function("debugger")(); }, 1000);
+
+        // HÀM START EXAM
+        async function startExam() {
+            const select = document.getElementById('test-selector');
+            const selectedOption = select.options[select.selectedIndex];
+            
+            if (!selectedOption.value) {
+                showToast("Please select a test!", "error"); return; 
+            }
+
+            const dataFilePath = selectedOption.value.split('/').map(encodeURIComponent).join('/');
+            STATE.student.name = document.getElementById('student-name').value;
+            STATE.student.id = document.getElementById('student-id').value;
+            STATE.student.class = document.getElementById('student-class').value;
+            STATE.test.id = selectedOption.getAttribute('data-id') || 'unknown-id';
+            STATE.test.name = selectedOption.getAttribute('data-test-name');
+
+            const submitBtn = document.getElementById('btn-start');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> LOADING EXAM...';
+            submitBtn.disabled = true;
+
+            const cacheBuster = new Date().getTime();
+            const fetchUrl = `${GITHUB_FOLDER_URL}${dataFilePath}?v=${cacheBuster}`;
+
+            try {
+                const response = await fetch(fetchUrl);
+                if (!response.ok) throw new Error(`Error ${response.status}: Failed to load exam content from ${fetchUrl}`);
+                
+                const textData = await response.text();
+                let testData;
+                try { 
+                    testData = JSON.parse(textData); 
+                } catch (jsonErr) {
+                    throw new Error(`LỖI ĐỊNH DẠNG JSON TRÊN GITHUB!\n\nFile ${decodeURIComponent(dataFilePath)} của bạn đang bị thiếu dấu phẩy (,), ngoặc kép (") hoặc ngoặc vuông (]) ở vị trí dòng ${jsonErr.message.match(/line \\d+/) || 'không xác định'}.\n\nChi tiết kỹ thuật: ${jsonErr.message}\n\nHƯỚNG DẪN SỬA:\n1. Mở file JSON trên GitHub.\n2. Copy toàn bộ nội dung.\n3. Dán vào trang web https://jsonlint.com/ và bấm "Validate JSON" để tìm đúng dòng bị lỗi và thêm dấu còn thiếu.`);
+                }
+                
+                // TỰ ĐỘNG NHẬN DIỆN "parts", "reading" HOẶC "writing" LÀM NỘI DUNG ĐỀ
+                const partsData = testData.parts || testData.reading || testData.writing;
+                
+                if (!partsData) {
+                    throw new Error("Lỗi cấu trúc JSON: Không tìm thấy trường 'parts', 'reading' hoặc 'writing' chứa nội dung đề thi. Vui lòng kiểm tra lại file JSON trên GitHub.");
+                }
+
+                // Gán ngược lại vào biến STATE.test.data.parts để các hàm phía sau dễ dàng truy xuất
+                testData.parts = partsData;
+                STATE.test.data = testData;
+
+                document.title = `${STATE.test.name}`;
+                document.getElementById('header-test-name').textContent = STATE.test.name;
+                document.getElementById('header-student-name').textContent = STATE.student.name;
+                document.getElementById('header-student-id').textContent = STATE.student.id;
+                document.getElementById('header-student-class').textContent = STATE.student.class;
+
+                const timeLimit = (STATE.test.data.timeLimit || 75) * 60;
+                STATE.timer.duration = timeLimit;
+                STATE.timer.remaining = timeLimit;
+
+                // TÍNH TOÁN SỐ THỨ TỰ CÂU HỎI TRƯỚC KHI RENDER
+                calculateQuestionRanges();
+                renderExamContent();
+
+                try { if (document.documentElement.requestFullscreen) { await document.documentElement.requestFullscreen(); } } catch (err) {}
+
+                screens.login.classList.add('hidden');
+                screens.exam.classList.replace('hidden', 'flex');
+                
+                STATE.exam.isRunning = true; 
+                STATE.exam.startTime = new Date();
+                
+                // Mặc định mở Part đầu tiên
+                STATE.exam.partKeys = Object.keys(STATE.test.data.parts);
+                if (STATE.exam.partKeys.length > 0) {
+                    switchTab(STATE.exam.partKeys[0]); 
+                }
+                startTimer();
+
+            } catch (error) {
+                console.error("Exam load error:", error);
+                alert(error.message);
+                showToast("Error loading exam content.", "error");
+            } finally {
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // TÍNH START & END QUESTION CHO TỪNG PART ĐỂ HIỂN THỊ DƯỚI FOOTER
+        function calculateQuestionRanges() {
+            let currentQNum = 1;
+            const parts = STATE.test.data.parts;
+            if(!parts) return;
+            Object.keys(parts).forEach(partKey => {
+                const numQ = parts[partKey].numQuestions || 0;
+                parts[partKey]._startQ = currentQNum;
+                parts[partKey]._endQ = currentQNum + numQ - 1;
+                currentQNum += numQ;
+            });
+        }
+
+        // RENDER NỘI DUNG TỪNG PART VÀO CONTAINER CHÍNH
+        function renderExamContent() {
+            const container = document.getElementById('exam-content-container');
+            container.innerHTML = '';
+            const parts = STATE.test.data.parts;
+            if(!parts) {
+                container.innerHTML = '<p class="text-red-500">Error: JSON missing "parts" object.</p>';
+                return;
+            }
+
+            Object.keys(parts).forEach((partKey) => {
+                const partDiv = document.createElement('div');
+                partDiv.id = `content-${partKey}`;
+                partDiv.className = 'exam-part-wrapper hidden w-full h-full'; 
+                // Nạp trực tiếp HTML của bạn vào. HTML của bạn sẽ quyết định nó là 1 cột hay 2 cột (split screen)
+                partDiv.innerHTML = parts[partKey].htmlContent || `<p class="text-red-500">Missing content for ${partKey}</p>`;
+                container.appendChild(partDiv);
+            });
+        }
+
+        // VẼ THANH FOOTER (CẬP NHẬT LIÊN TỤC MỖI KHI CÓ THAY ĐỔI / ĐIỀN TỪ)
+        function renderFooterTabs() {
+            const footer = document.getElementById('exam-footer-tabs');
+            footer.innerHTML = '';
+            const parts = STATE.test.data.parts;
+            if(!parts) return;
+
+            Object.keys(parts).forEach((partKey, index) => {
+                const p = parts[partKey];
+                const isActive = STATE.exam.currentPart === partKey;
+                
+                const tabBtn = document.createElement('div');
+                tabBtn.className = `flex items-center px-4 md:px-6 cursor-pointer border-r border-gray-300 h-full transition-colors ${isActive ? 'bg-white cbt-tab-active' : 'bg-cbt-graytab hover:bg-gray-300 cbt-tab-inactive'}`;
+                tabBtn.onclick = () => switchTab(partKey);
+
+                if (isActive) {
+                    // TAB ACTIVE: Hiển thị thanh chứa số câu hỏi (1 2 3 4...)
+                    let qHtml = `<span class="font-bold text-gray-800 mr-4 text-[13px] whitespace-nowrap title-text">${p.title || `Part ${index+1}`}</span>`;
+                    qHtml += `<div class="flex items-center gap-2 overflow-x-auto hide-scrollbar">`;
+                    
+                    for(let i = p._startQ; i <= p._endQ; i++) {
+                        // Kiểm tra xem câu này đã được trả lời chưa
+                        const qIdStr = i.toString();
+                        let isAnswered = false;
+                        
+                        // Check xem trong STATE.answers có key nào bắt đầu bằng 'q' + số i không.
+                        // (Ví dụ: q1, q2, q3)
+                        for(let key in STATE.answers) {
+                            // Cắt bỏ chữ cái, lấy số để so sánh (Phòng trường hợp ID là q1, Q1, part1_q1...)
+                            const numMatch = key.match(/\d+/);
+                            if (numMatch && parseInt(numMatch[0]) === i && STATE.answers[key].trim() !== '') {
+                                isAnswered = true;
+                                break;
+                            }
+                        }
+
+                        // Giao diện: Nếu trả lời rồi thì có gạch dưới màu xanh ngọc
+                        const answerClass = isAnswered ? 'border-b-2 border-cbt-teal font-bold text-gray-900 cbt-tab-qnum answered' : 'text-gray-500 cbt-tab-qnum';
+                        qHtml += `<span class="w-6 h-7 flex items-center justify-center text-[13px] cursor-pointer ${answerClass}">${i}</span>`;
+                    }
+                    qHtml += `</div>`;
+                    tabBtn.innerHTML = qHtml;
+                    tabBtn.classList.add('flex-grow'); // Trải dài phần còn lại
+                } else {
+                    // TAB INACTIVE: Hiển thị (Part X   Y of Z)
+                    let answeredCount = 0;
+                    for(let i = p._startQ; i <= p._endQ; i++) {
+                        for(let key in STATE.answers) {
+                            const numMatch = key.match(/\d+/);
+                            if (numMatch && parseInt(numMatch[0]) === i && STATE.answers[key].trim() !== '') {
+                                answeredCount++;
+                                break;
+                            }
+                        }
+                    }
+                    tabBtn.innerHTML = `<span class="text-gray-600 text-[13px] whitespace-nowrap flex gap-2"><span class="font-bold">${p.title || `Part ${index+1}`}</span><span class="opacity-70">${answeredCount} of ${p.numQuestions}</span></span>`;
+                }
+                footer.appendChild(tabBtn);
+            });
+        }
+
+        function switchTab(partId) {
+            STATE.exam.currentPart = partId;
+            
+            // Ẩn tất cả nội dung, hiện part tương ứng
+            document.querySelectorAll('.exam-part-wrapper').forEach(el => el.classList.add('hidden'));
+            const targetContent = document.getElementById(`content-${partId}`);
+            if(targetContent) targetContent.classList.remove('hidden');
+
+            // Vẽ lại toàn bộ Footer để cập nhật hiệu ứng Active/Inactive
+            renderFooterTabs();
+        }
+
+        // HÀM ĐIỀU HƯỚNG BẰNG MŨI TÊN
+        function navigatePart(direction) {
+            if (STATE.exam.partKeys.length === 0) return;
+            const currentIndex = STATE.exam.partKeys.indexOf(STATE.exam.currentPart);
+            let nextIndex = currentIndex;
+            
+            if (direction === 'next' && currentIndex < STATE.exam.partKeys.length - 1) {
+                nextIndex++;
+            } else if (direction === 'prev' && currentIndex > 0) {
+                nextIndex--;
+            }
+            
+            if (nextIndex !== currentIndex) {
+                switchTab(STATE.exam.partKeys[nextIndex]);
+            }
+        }
+
+        function toggleContrast() { document.body.classList.toggle('contrast-dark'); }
+        function openTextSizeModal() { document.getElementById('text-size-modal').classList.remove('hidden'); }
+        function closeTextSizeModal() { document.getElementById('text-size-modal').classList.add('hidden'); }
+        function changeTextSize(size) { document.body.setAttribute('data-text-size', size); closeTextSizeModal(); }
+
+        function startTimer() {
+            const timerEl = document.getElementById('exam-timer');
+            STATE.timer.intervalId = setInterval(() => {
+                STATE.timer.remaining--;
+                const m = Math.floor(STATE.timer.remaining / 60).toString().padStart(2, '0');
+                const s = (STATE.timer.remaining % 60).toString().padStart(2, '0');
+                timerEl.textContent = `${m}:${s}`;
+                if (STATE.timer.remaining <= 300) { timerEl.classList.remove('bg-gray-100', 'text-gray-700'); timerEl.classList.add('bg-red-500', 'text-white', 'animate-pulse'); }
+                if (STATE.timer.remaining <= 0) { clearInterval(STATE.timer.intervalId); autoSubmit("Time's up!"); }
+            }, 1000);
+        }
+
+        function handleViolation(reason) {
+            STATE.antiCheat.violations++;
+            document.getElementById('violation-count').textContent = `${STATE.antiCheat.violations}/${STATE.antiCheat.maxViolations}`;
+            if (STATE.antiCheat.violations >= STATE.antiCheat.maxViolations) { autoSubmit("Maximum violations reached."); } else {
+                document.getElementById('overlay-violation-count').textContent = STATE.antiCheat.violations;
+                elements.antiCheatOverlay.classList.remove('hidden');
+            }
+        }
+        function returnToExam() { elements.antiCheatOverlay.classList.add('hidden'); try { if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen(); } catch(e){} }
+        function confirmSubmit() { if(confirm("Are you sure you want to submit your exam? You cannot undo this action.")) { processSubmission(); } }
+        function autoSubmit(reason) { showToast(`Auto-submitting: ${reason}`, 'error'); setTimeout(processSubmission, 1500); }
+
+        async function processSubmission() {
+            STATE.exam.isRunning = false;
+            clearInterval(STATE.timer.intervalId);
+            document.getElementById('btn-submit-exam').disabled = true;
+            document.getElementById('btn-submit-exam').innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+            
+            document.getElementById('loading-title').innerText = "Connecting...";
+            document.getElementById('loading-subtext').innerText = "Submitting to server for automatic grading...";
+            elements.loadingOverlay.classList.remove('hidden');
+
+            const timeTakenSecs = STATE.timer.duration - STATE.timer.remaining;
+            const timeStr = `${Math.floor(timeTakenSecs / 60)}m ${timeTakenSecs % 60}s`;
+
+            const pad = n => n.toString().padStart(2, '0');
+            const now = new Date();
+            const startString = STATE.exam.startTime 
+                ? `${pad(STATE.exam.startTime.getHours())}:${pad(STATE.exam.startTime.getMinutes())}:${pad(STATE.exam.startTime.getSeconds())}` 
+                : `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const endString = `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+            const dateString = now.toLocaleDateString('vi-VN'); 
+
+            const payload = {
+                action: 'save_and_grade',
+                kyNang: 'READING_UOE', // Cho Backend nhận diện
+                testId: STATE.test.name,
+                studentId: STATE.student.id,
+                studentName: STATE.student.name,
+                studentClass: STATE.student.class,
+                date: dateString,
+                startTime: startString,
+                endTime: endString,
+                timeTaken: timeStr,
+                violations: STATE.antiCheat.violations,
+                answers: STATE.answers // Gửi nguyên object đáp án sang Backend để check
+            };
+
+            try {
+                const responseData = await fetchWithBackoff(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+
+                const rawText = responseData._rawText;
+                let finalResult = null;
+                try { finalResult = JSON.parse(rawText); } catch(e) { finalResult = extractJSONFromString(rawText); }
+
+                if (finalResult && finalResult.status === 'success') {
+                    // Nhận điểm trực tiếp từ Backend theo đúng yêu cầu
+                    finalResult.totalReading = finalResult.r_total_raw || 0;
+                    finalResult.camReading = finalResult.r_cam || 0;
+                    finalResult.totalUoE = finalResult.u_total_raw || 0;
+                    finalResult.camUoE = finalResult.u_cam || 0;
+                    finalResult.grade = finalResult.grade || "Fail";
+                    
+                    renderResults(finalResult, timeStr);
+                } 
+                else {
+                    throw new Error("Lỗi cấu trúc phản hồi từ Server.");
+                }
+
+            } catch (error) {
+                console.error("Submission Error:", error);
+                alert("Đã xảy ra lỗi khi gửi bài: " + error.message);
+                // Giả lập giao diện lỗi
+                renderResults({
+                    isError: true,
+                    totalReading: 0, camReading: 0, totalUoE: 0, camUoE: 0, grade: "ERROR"
+                }, timeStr);
+            }
+        }
+
+        async function fetchWithBackoff(url, options, retries = 2, delay = 2000) {
+            try {
+                const res = await fetch(url, options);
+                const textData = await res.text();
+                return { _rawText: textData };
+            } catch (err) {
+                if (retries <= 0) throw err; 
+                console.warn(`Retrying...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return fetchWithBackoff(url, options, retries - 1, delay * 2);
+            }
+        }
+
+        function extractJSONFromString(text) {
+            if (!text) return null;
+            try { return JSON.parse(text.replace(/```json/gi, '').replace(/```/gi, '').trim()); } 
+            catch (e) {
+                try { const match = text.match(/\{[\s\S]*\}/); if (match) return JSON.parse(match[0]); } catch(e2) {}
+            }
+            return null;
+        }
+
+        function renderResults(data, timeStr) {
+            try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+
+            elements.loadingOverlay.classList.add('hidden');
+            screens.exam.classList.replace('flex', 'hidden');
+            screens.result.classList.remove('hidden');
+
+            document.getElementById('res-test-name').textContent = STATE.test.name;
+            document.getElementById('res-student-name').textContent = STATE.student.name;
+            document.getElementById('res-student-info').textContent = `${STATE.student.id} | Class: ${STATE.student.class}`;
+            document.getElementById('res-time-taken').textContent = timeStr;
+            document.getElementById('res-violations').textContent = `${STATE.antiCheat.violations} Violations`;
+            
+            // Render 2 điểm tách biệt
+            document.getElementById('res-reading-score').textContent = `${data.totalReading}/42`;
+            document.getElementById('res-reading-cam').textContent = data.camReading;
+            document.getElementById('res-uoe-score').textContent = `${data.totalUoE}/28`;
+            document.getElementById('res-uoe-cam').textContent = data.camUoE;
+
+            const gradeEl = document.getElementById('res-grade');
+            gradeEl.textContent = data.grade;
+            
+            if (data.grade === 'A' || data.grade === 'Grade A') gradeEl.className = `text-4xl font-black text-blue-600`;
+            else if (data.grade === 'B' || data.grade === 'Grade B') gradeEl.className = `text-4xl font-black text-green-500`;
+            else if (data.grade === 'C' || data.grade === 'Grade C') gradeEl.className = `text-4xl font-black text-yellow-500`;
+            else gradeEl.className = `text-4xl font-black text-red-500`;
+
+            // ĐIỀU KIỆN MỞ KHÓA REVIEW: Reading >= 30 VÀ UoE >= 21
+            if (data.totalReading >= 30 && data.totalUoE >= 21) {
+                document.getElementById('locked-message').classList.add('hidden');
+                document.getElementById('review-container').classList.remove('hidden');
+                
+                // Trích xuất Review Html do Backend gửi về
+                let reviewHtmlContent = "";
+                if(data.reviewHtml) {
+                    reviewHtmlContent = data.reviewHtml;
+                } else {
+                    reviewHtmlContent = `<div class="bg-white p-6 rounded border border-gray-200">Giáo viên chưa cung cấp lời giải chi tiết cho đề này.</div>`;
+                }
+                
+                document.getElementById('review-content').innerHTML = formatMarkdownHighlights(reviewHtmlContent);
+            } else {
+                // Khóa Review
+                document.getElementById('locked-message').classList.remove('hidden');
+                document.getElementById('review-container').classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
