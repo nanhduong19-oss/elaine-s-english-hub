@@ -105,15 +105,26 @@
         .cbt-radio:checked { border-color: #8bc34a; }
         .cbt-radio:checked::before { transform: scale(1); }
 
-        /* PART 6: Khung thả (Dropzone) và thẻ kéo (Draggable) */
+        /* PART 6: Khung thả (Dropzone) trống */
         .fce-dropzone {
             display: inline-flex; align-items: center; justify-content: center;
             min-width: 40px; height: 28px; border: 2px dashed #8bc34a; border-radius: 4px;
             background: #f1f8e9; margin: 0 6px; vertical-align: middle; transition: all 0.2s;
-            font-weight: bold; color: #689f38; font-size: 0.9em;
+            font-weight: bold; color: #689f38; font-size: 0.9em; cursor: pointer;
         }
         .fce-dropzone.drag-over { background: #c5e1a5; border-style: solid; transform: scale(1.05); }
         
+        /* PART 6: Dropzone Đã điền câu (Hiển thị ngay trên đoạn văn) */
+        .fce-dropzone-filled {
+            display: inline; line-height: 1.6;
+            background: #f1f8e9; border: 2px solid #8bc34a; border-radius: 6px;
+            padding: 2px 6px; margin: 0 4px; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .fce-dropzone-filled.drag-over { background: #c5e1a5; }
+        .fce-dropzone-filled:hover { background: #e0f2ce; }
+        
+        /* PART 6: Thẻ kéo (Draggable) */
         .fce-draggable {
             background: #fff; border: 1px solid #d1d5db; padding: 12px 16px; margin-bottom: 12px;
             border-radius: 8px; cursor: grab; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -141,7 +152,7 @@
         }
         body.contrast-dark .cbt-instruction, body.contrast-dark .fce-draggable { background: #111 !important; border-color: #555 !important; }
         body.contrast-dark .inline-expand-input { color: #fff !important; border-bottom-color: #d97706 !important; }
-        body.contrast-dark .fce-dropzone { border-color: #d97706 !important; background: #222 !important; }
+        body.contrast-dark .fce-dropzone, body.contrast-dark .fce-dropzone-filled { border-color: #d97706 !important; background: #222 !important; color: #fff !important; }
         body.contrast-dark .tab-active { background-color: #8B4513 !important; color: #ffffff !important; }
         body.contrast-dark .tab-inactive { background-color: #1a1a1a !important; color: #9ca3af !important; }
         body.contrast-dark .cbt-radio { background-color: transparent !important; border-color: #9ca3af !important; }
@@ -218,7 +229,7 @@
 
         <!-- CONTAINER HIỂN THỊ NỘI DUNG (Động theo Part) -->
         <div class="flex-grow overflow-hidden w-full relative" id="exam-content-container">
-            <!-- JS sẽ tự động inject lưới Layout (1 cột hoặc 2 cột) vào đây -->
+            <!-- JS sẽ tự động inject lưới Layout vào đây -->
         </div>
 
         <!-- POPUP ĐIỀN TỪ PART 1 (Ẩn mặc định) -->
@@ -363,9 +374,9 @@
                 document.getElementById('header-student-name').textContent = STATE.student.name;
                 document.getElementById('header-student-id').textContent = STATE.student.id;
 
-                // FIXED: Lấy thông số thời gian chuẩn xác và an toàn
-                const durationStr = STATE.test.data.content?.reading?.metadata?.duration || STATE.test.data.timeLimit || 75;
-                const timeLimit = parseInt(durationStr, 10) * 60; 
+                const durationStr = STATE.test.data.content?.reading?.metadata?.duration || STATE.test.data.timeLimit || "75";
+                const parsedDuration = parseInt(durationStr, 10);
+                const timeLimit = (isNaN(parsedDuration) ? 75 : parsedDuration) * 60; 
                 STATE.timer.duration = timeLimit;
                 STATE.timer.remaining = timeLimit;
 
@@ -426,50 +437,24 @@
                 wrapper.id = `content-${index}`;
                 wrapper.className = `exam-part-wrapper hidden h-full w-full ${isSplitLayout ? 'flex flex-col lg:flex-row' : 'overflow-y-auto p-4 md:p-8'}`;
                 
-                let instructionHTML = `<div class="cbt-instruction ${isSplitLayout ? 'mb-4' : 'max-w-4xl mx-auto'}">
+                let instructionHTML = `<div class="cbt-instruction ${isSplitLayout ? 'mb-4 mx-4 mt-4 lg:mx-0 lg:mt-0' : 'max-w-4xl mx-auto'}">
                                           <h3>${p.title || `Part ${partNum}`}</h3>
                                           <p class="text-gray-600">${p.instruction || ''}</p>
                                        </div>`;
 
                 let contentHTML = '';
-                let textContent = '';
+                let textContent = p.text ? p.text.replace(/\n/g, '<br>') : '';
                 
-                if (p.media && p.media.blocks) {
-                    p.media.blocks.forEach(block => {
-                        if (block.type === 'title') {
-                            textContent += `<h4 class="text-center font-bold text-xl mb-4">${block.text}</h4>`;
-                        } else if (block.type === 'sectionHeader') {
-                            textContent += `<h5 class="font-bold text-lg mt-6 mb-2 border-b pb-1">${block.text}</h5>`;
-                        } else if (block.type === 'paragraph' && block.segments) {
-                            textContent += `<p class="mb-4 leading-loose text-[1.1rem] text-justify text-gray-800">`;
-                            block.segments.forEach(seg => {
-                                if (seg.t === 'text') {
-                                    textContent += seg.v.replace(/\n/g, '<br>');
-                                } else if (seg.t === 'gap' || seg.t === 'drop') {
-                                    if (partNum === 6) {
-                                        textContent += `<span class="fce-dropzone" id="dz-${seg.label || seg.gapId}" data-q="${seg.label || seg.gapId}" ondragover="allowDrop(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">${seg.label || seg.gapId}</span>`;
-                                    } else if (isSplitLayout) {
-                                        textContent += `<strong class="inline-block px-1 mx-1 bg-gray-100 border border-gray-300 rounded text-brand-primary">${seg.label || seg.gapId}</strong>`;
-                                    } else {
-                                        textContent += `[${seg.label || seg.gapId}]`;
-                                    }
-                                }
-                            });
-                            textContent += `</p>`;
-                        }
-                    });
-                } else if (p.text) {
-                    textContent = p.text;
-                }
-
-                // TẠO GIAO DIỆN THEO PART
                 if (partNum === 1) {
                     contentHTML = `<div class="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto leading-[2.5rem] text-[1.1rem] text-justify">`;
                     if (p.questions) {
                         p.questions.forEach(q => {
                             const ops = Object.values(q.options || {}).join('|');
-                            const btnHtml = `<button class="p1-gap-btn" id="gap-btn-${q.displayNumber}" onclick="openPart1Popup(this, '${q.displayNumber}', '${ops}')">${q.displayNumber}</button>`;
-                            // FIXED: Regex quét an toàn cả ___1___ và [1]
+                            const ans = STATE.answers[`q${q.displayNumber}`];
+                            const btnText = ans ? ans : q.displayNumber;
+                            const filledClass = ans ? 'filled' : '';
+                            const btnHtml = `<button class="p1-gap-btn ${filledClass}" id="gap-btn-${q.displayNumber}" onclick="openPart1Popup(this, '${q.displayNumber}', '${ops.replace(/'/g, "\\'")}')">${btnText}</button>`;
+                            
                             let regex = new RegExp(`___${q.displayNumber}___|\\[${q.displayNumber}\\]`, 'g');
                             textContent = textContent.replace(regex, btnHtml);
                         });
@@ -482,6 +467,8 @@
                     if (partNum === 4) {
                         if (p.questions) {
                             p.questions.forEach(q => {
+                                const ans = STATE.answers[`q${q.displayNumber}`] || '';
+                                const width = Math.max(250, ans.length * 14);
                                 contentHTML += `<div class="mb-8 border-b pb-6 last:border-0">
                                                     <div class="flex gap-4 mb-2">
                                                         <div class="font-bold text-brand-primary w-8">${q.displayNumber}</div>
@@ -489,12 +476,12 @@
                                                     </div>
                                                     <div class="flex gap-4 items-center mb-2">
                                                         <div class="w-8"></div>
-                                                        <span class="font-black bg-gray-200 px-3 py-1 rounded tracking-widest uppercase">${q.keyword || ''}</span>
+                                                        <span class="font-black bg-gray-200 px-3 py-1 rounded tracking-widest uppercase">(${q.keyword || ''})</span>
                                                     </div>
                                                     <div class="flex gap-4">
                                                         <div class="w-8"></div>
                                                         <div class="leading-loose">
-                                                            ${(q.sentence2Template || '').replace('__________________________', `<input type="text" class="inline-expand-input uppercase text-center w-64" id="q${q.displayNumber}" name="q${q.displayNumber}" oninput="autoResizeInput(this)" autocomplete="off">`)}
+                                                            ${(q.sentence2Template || '').replace('__________________________', `<input type="text" class="inline-expand-input uppercase text-center" style="width: ${width}px" id="q${q.displayNumber}" name="q${q.displayNumber}" value="${ans}" oninput="autoResizeInput(this)" autocomplete="off">`)}
                                                         </div>
                                                     </div>
                                                 </div>`;
@@ -503,9 +490,11 @@
                     } else {
                         if (p.questions) {
                             p.questions.forEach(q => {
-                                let inp = `<input type="text" class="inline-expand-input uppercase" id="q${q.displayNumber}" name="q${q.displayNumber}" oninput="autoResizeInput(this)" autocomplete="off">`;
+                                const ans = STATE.answers[`q${q.displayNumber}`] || '';
+                                const width = Math.max(80, ans.length * 14);
+                                let inp = `<input type="text" class="inline-expand-input uppercase" style="width: ${width}px" id="q${q.displayNumber}" name="q${q.displayNumber}" value="${ans}" oninput="autoResizeInput(this)" autocomplete="off">`;
+                                
                                 if (partNum === 3 && q.wordGiven) {
-                                    // FIXED: Thêm Keyword vào bên trong dấu ngoặc đơn in đậm
                                     inp += `<span class="font-black text-gray-800 tracking-wider ml-2 uppercase">(${q.wordGiven})</span>`;
                                 }
                                 let regex = new RegExp(`___${q.displayNumber}___|\\[${q.displayNumber}\\]`, 'g');
@@ -517,24 +506,46 @@
                     contentHTML += `</div>`;
                 }
                 else if (isSplitLayout) {
-                    let leftCol = `<div class="w-full lg:w-[65%] h-full overflow-y-auto p-6 border-r border-gray-200 bg-white">`;
+                    let leftCol = `<div class="w-full lg:w-[65%] h-full overflow-y-auto p-4 md:p-6 border-r border-gray-200 bg-white">`;
                     leftCol += instructionHTML;
-                    leftCol += `<div class="text-[1.05rem] text-justify text-gray-800">${textContent}</div></div>`;
-
-                    let rightCol = `<div class="w-full lg:w-[35%] h-full overflow-y-auto p-6 bg-[#fcfcfc]">`;
                     
-                    // FIXED: Thêm Header hướng dẫn cho Part 7
+                    if (partNum === 6 && p.questions) {
+                        p.questions.forEach(q => {
+                            const ans = STATE.answers[`q${q.displayNumber}`];
+                            let dropzone = '';
+                            if (ans && p.questions[0].options && p.questions[0].options[ans]) {
+                                const text = p.questions[0].options[ans];
+                                dropzone = `<span class="fce-dropzone-filled" id="dz-${q.displayNumber}" data-q="${q.displayNumber}" ondragover="allowDrop(event)" ondrop="drop(event)" ondragleave="dragLeave(event)" onclick="removeDrop('${q.displayNumber}')"><span class="font-bold text-brand-dark mr-1">[${ans}]</span><span class="text-gray-800 font-medium">${text}</span></span>`;
+                            } else {
+                                dropzone = `<span class="fce-dropzone" id="dz-${q.displayNumber}" data-q="${q.displayNumber}" ondragover="allowDrop(event)" ondrop="drop(event)" ondragleave="dragLeave(event)">${q.displayNumber}</span>`;
+                            }
+                            let regex = new RegExp(`___${q.displayNumber}___|\\[${q.displayNumber}\\]`, 'g');
+                            textContent = textContent.replace(regex, dropzone);
+                        });
+                    }
+
+                    leftCol += `<div class="text-[1.05rem] text-justify text-gray-800 leading-loose">${textContent}</div></div>`;
+
+                    let rightCol = `<div class="w-full lg:w-[35%] h-full overflow-y-auto p-4 md:p-6 bg-[#fcfcfc]">`;
+                    
                     if (partNum === 7) {
-                        rightCol += `<h4 class="font-bold mb-4 text-gray-800 text-lg">${p.questionsInstruction || 'Answer the questions below:'}</h4>`;
+                        rightCol += `<h4 class="font-bold mb-4 text-gray-800 text-lg">${p.questionsInstruction || 'In which section does the writer...'}</h4>`;
                     }
 
                     if (partNum === 6 && p.questions && p.questions[0] && p.questions[0].options) {
                         rightCol += `<h4 class="font-bold mb-4 text-brand-primary"><i class="fa-solid fa-hand-pointer mr-2"></i>Drag the options into the gaps:</h4>`;
                         Object.entries(p.questions[0].options).forEach(([key, val]) => {
-                            rightCol += `<div class="fce-draggable" draggable="true" id="drag-${key}" data-val="${key}" ondragstart="drag(event)">
-                                            <span class="font-black text-gray-400 mt-0.5">${key}</span>
-                                            <span class="leading-relaxed">${val}</span>
-                                         </div>`;
+                            const safeVal = val.replace(/"/g, '&quot;');
+                            let isUsed = false;
+                            for (let q in STATE.answers) {
+                                if (STATE.answers[q] === key) isUsed = true;
+                            }
+                            if (!isUsed) {
+                                rightCol += `<div class="fce-draggable" draggable="true" id="drag-${key}" data-val="${key}" data-text="${safeVal}" ondragstart="drag(event)">
+                                                <span class="font-black text-gray-400 mt-0.5">${key}</span>
+                                                <span class="leading-relaxed">${val}</span>
+                                             </div>`;
+                            }
                         });
                     } else if (p.questions) {
                         p.questions.forEach(q => {
@@ -542,9 +553,9 @@
                                             <p class="font-bold mb-3 flex gap-2"><span class="bg-brand-primary text-white w-6 h-6 flex items-center justify-center rounded shrink-0">${q.displayNumber}</span> <span>${q.text || ''}</span></p>`;
                             if (q.options) {
                                 Object.entries(q.options).forEach(([key, val]) => {
-                                    // FIXED: Sử dụng thẻ Input type radio tuỳ chỉnh CSS
+                                    const isChecked = STATE.answers[`q${q.displayNumber}`] === key ? 'checked' : '';
                                     rightCol += `<label class="flex items-start gap-3 cursor-pointer p-3 rounded-lg border border-gray-200 hover:bg-brand-lightest bg-white mb-2 transition">
-                                                    <input type="radio" name="q${q.displayNumber}" value="${key}" onchange="saveAnswer('${q.displayNumber}', '${key}')" class="cbt-radio">
+                                                    <input type="radio" name="q${q.displayNumber}" value="${key}" ${isChecked} onchange="saveAnswer('${q.displayNumber}', '${key}')" class="cbt-radio mt-0.5">
                                                     <div class="leading-snug"><span class="font-bold text-gray-600 mr-2">${key}</span> <span class="text-gray-700">${val}</span></div>
                                                  </label>`;
                                 });
@@ -613,12 +624,17 @@
             if (!draggedEl) return;
             draggedEl.style.opacity = '1';
 
-            // FIXED: Gán chữ cái A, B, C vào dropzone
             const val = draggedEl.getAttribute('data-val');
-            dropzone.innerHTML = val; 
-            dropzone.classList.add('bg-brand-primary', 'text-white', 'border-transparent', 'font-black');
             
             saveAnswer(dropzone.getAttribute('data-q'), val);
+            renderAllPartsHTML();
+            renderFooterTabs();
+        }
+
+        function removeDrop(qNumStr) {
+            STATE.answers[`q${qNumStr}`] = '';
+            renderAllPartsHTML();
+            renderFooterTabs();
         }
 
         function saveAnswer(qNumStr, value) {
@@ -670,7 +686,8 @@
         function switchTab(index) {
             STATE.exam.currentPart = index;
             document.querySelectorAll('.exam-part-wrapper').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`content-${index}`).classList.remove('hidden');
+            const target = document.getElementById(`content-${index}`);
+            if (target) target.classList.remove('hidden');
             renderFooterTabs();
         }
 
@@ -683,6 +700,7 @@
         }
 
         function toggleContrast() { document.body.classList.toggle('contrast-dark'); }
+        
         function startTimer() {
             const timerEl = document.getElementById('exam-timer');
             STATE.timer.intervalId = setInterval(() => {
