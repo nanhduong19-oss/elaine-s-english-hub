@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Practice - Oxford Reading Part 3 Test 1 - 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Reading Text Styles */
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.0; 
+            text-align: justify; 
+        }
+
+        /* Evidence Mode Style for Reading Text */
+        .evidence-mode {
+            outline: 2px dashed #facc15; /* yellow-400 */
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #fefce8; /* yellow-50 */
+            transition: all 0.3s ease;
+        }
+
+        /* Highlight Label Style */
+        .evidence-label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #713f12; /* yellow-900 */
+            background-color: #facc15; /* yellow-400 */
+            padding: 2px 5px;
+            border-radius: 4px;
+            margin-right: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            user-select: none;
+            display: inline-block;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        
+        #questions-container { overflow-anchor: none !important; }
+    </style>
+</head>
+<body class="bg-slate-50 h-screen flex flex-col text-slate-800 overflow-hidden">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-slate-50 flex flex-col items-center justify-center p-4">
+        <div class="bg-white max-w-md w-full rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+            <div class="h-2 bg-rose-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h2 class="text-sm font-bold text-rose-500 uppercase tracking-widest mb-1">PET Reading Practice</h2>
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-2">Oxford Reading Part 3</h1>
+                <p class="text-slate-500 mb-6 font-medium">Test 1 - 2</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1 rounded-full text-xs font-bold tracking-wider mb-8">
+                    STRICT EVIDENCE MODE
+                </div>
+                <div class="text-left mb-6">
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Student ID</label>
+                    <input type="text" id="user-id-input" placeholder="e.g., 71001BT..." 
+                        class="w-full px-4 py-3 mb-4 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium">
+
+                    <label class="block text-sm font-bold text-slate-700 mb-2 ml-1">Full Name</label>
+                    <input type="text" id="user-name-input" placeholder="Enter your full name..." 
+                        class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none transition-all font-medium"
+                        onkeypress="if(event.key === 'Enter') app.startExam()">
+                </div>
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98]">
+                    Start Practice
+                </button>
+            </div>
+        </div>
+        
+        <!-- Footer Welcome -->
+        <div class="mt-8 text-center text-slate-400 text-xs">
+            <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+            <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-slate-200 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div class="px-3 py-1 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-sm flex items-center gap-2">
+                        <i class="far fa-clock"></i> <span id="timer-display">00:00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-lg truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-sm">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-slate-200 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-xl text-slate-800">1/2</span>
+                    
+                    <div id="controls-area" class="flex gap-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-5 h-9 rounded-full bg-slate-800 text-white font-bold text-sm shadow hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-5 h-9 rounded-full bg-rose-600 text-white font-bold text-sm shadow hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-slate-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-slate-200 overflow-y-auto custom-scrollbar p-6 lg:p-10 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        
+                        <!-- Dynamic Evidence Banner -->
+                        <div id="evidence-instruction-banner" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded-r-xl shadow-sm transition-all animate-pulse">
+                            <h4 class="font-bold text-yellow-800 flex items-center gap-2"><i class="fas fa-search text-yellow-600"></i> Evidence Mode Active</h4>
+                            <p class="text-sm text-yellow-700 mt-1">Please select the text in the passage below, then click <b>Confirm Evidence</b> under the question on the right.</p>
+                        </div>
+
+                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-2xl font-extrabold text-slate-800 mb-6">Article Title</h2>
+                        
+                        <!-- Text Content -->
+                        <div id="reading-content" class="reading-content text-lg text-slate-700 font-normal transition-all duration-300" spellcheck="false">
+                            <!-- Text Injected Here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions Area (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-slate-50 flex flex-col border-t lg:border-t-0 border-slate-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10 relative">
+                    
+                    <div class="p-4 bg-white border-b border-slate-200 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-sm uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Questions
+                        </h3>
+                        <div id="attempts-display" class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    
+                    <div id="questions-container" class="flex-grow overflow-y-auto custom-scrollbar p-4 space-y-4 pb-20">
+                        <!-- Questions Injected Here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-slate-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex flex-col items-center justify-start p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-lg"></div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-8 border border-slate-200 shadow-sm text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-rose-500"></div>
+                    
+                    <div class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2 mt-2">Total Accuracy</div>
+                    <div id="result-percent-large" class="text-7xl font-extrabold text-rose-600 mb-6">0%</div>
+                    
+                    <!-- Thông tin Học sinh và Thời gian -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-6">
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-1">Student Info</p>
+                            <p class="font-bold text-slate-700 text-lg truncate"><span id="res-student-name"></span></p>
+                            <p class="text-sm text-slate-500">ID: <span id="res-student-id"></span></p>
+                        </div>
+                        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col justify-center">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-2">Time Info</p>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Date</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-date"></p>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">Start</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-start-time"></p>
+                                </div>
+                                <div class="bg-white p-2 rounded shadow-sm border border-slate-100">
+                                    <p class="text-[10px] text-slate-400 uppercase font-bold">End</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-end-time"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bảng thống kê số câu đúng từng bài -->
+                    <div class="text-left mb-4">
+                        <h3 class="font-bold text-slate-700 uppercase text-xs tracking-wider mb-3">Score Breakdown</h3>
+                        <div id="result-breakdown" class="space-y-2"></div>
+                        <div class="mt-3 text-right text-lg font-bold text-slate-800">
+                            Total Score: <span id="result-score" class="text-rose-600">0</span><span class="text-slate-400" id="result-max">/10</span>
+                        </div>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-4 text-sm font-medium text-slate-400">Sending data to system...</div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg hover:bg-slate-900 transition-all active:scale-[0.99]">Practice Again</button>
+            </div>
+            
+            <!-- Footer Result -->
+            <div class="mt-auto pt-10 text-center text-slate-400 text-xs">
+                <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+                <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const TEN_SHEET_NAY = "Oxford Reading Part 3 Test 1 - 2"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; 
+
+        // --- DATA ---
+        const db = [
+            {
+                "id": "test1",
+                "title": "Jessica Hail – Comedian",
+                "content_html": `
+                    <p>I've always enjoyed performing and making people laugh. When I was at school, I used to annoy some of my teachers as I was always telling jokes in class. All my classmates used to laugh a lot and I had a great time.</p>
+                    <p>When I left school, I got a job in a fast food restaurant during the day and took acting classes in the evening. I also started performing in theatres at the weekends. Sometimes the audience loved me, but other times nobody laughed at my jokes. That was the worst feeling in the world.</p>
+                    <p>After two or three years, I appeared on TV a few times and became better known. I finally got a part in a TV comedy show and I've worked on TV ever since. I still do theatre work, and although it's harder than being on TV, I enjoy it much more. During those years when I performed in theatres, I learned so much. It was great to start performing while I was still young. It gave me a lot of experience and it helped me become confident on stage.</p>
+                    <p>It isn't easy to keep on being successful because trying to think of new ideas is difficult all the time. When I can't think of anything to write about, I get very miserable. Then I usually go for a walk. Walking is a great way to relax and it also helps you to think. I can go out for a walk in the morning with no ideas in my head. When I return, my head is full of them and I can't wait to write them down!</p>
+                    <p>As well as walking, mountain climbing and diving help me to relax, too. I'm planning a climbing trip to Nepal soon, which I'm really looking forward to! I'm sure I'll come back with a lot of new jokes and ideas. Inspiration is very important in my profession. If I'm inspired, I can create new performances and make people laugh out loud! It's fantastic. I think comedy is the cure for many things. It can take away your worries and help you relax.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "What does Jessica say about her life at school?",
+                        "options": {
+                            "A": "Her friends were very funny.",
+                            "B": "She enjoyed performing for her classmates.",
+                            "C": "She disliked the teachers.",
+                            "D": "Her jokes were bad."
+                        },
+                        "correct": "B",
+                        "explanation": "<strong>11. B:</strong> In paragraph 1, she mentions: <i>'All my classmates used to laugh a lot and I had a great time.'</i> which shows she enjoyed performing for them."
+                    },
+                    {
+                        "id": 12,
+                        "text": "What did Jessica do when she left school?",
+                        "options": {
+                            "A": "She trained to be a teacher.",
+                            "B": "She started performing in a restaurant.",
+                            "C": "She got a job and studied acting.",
+                            "D": "She got a job in a theatre."
+                        },
+                        "correct": "C",
+                        "explanation": "<strong>12. C:</strong> In paragraph 2, she states: <i>'I got a job in a fast food restaurant during the day and took acting classes in the evening.'</i>"
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does she say about her working life?",
+                        "options": {
+                            "A": "People have always enjoyed her performances.",
+                            "B": "Being on TV is the most difficult thing she's done.",
+                            "C": "Her first job was in a theatre.",
+                            "D": "She's worked in a variety of places."
+                        },
+                        "correct": "D",
+                        "explanation": "<strong>13. D:</strong> Throughout the text, she mentions working in a fast food restaurant, in theatres, and on TV shows."
+                    },
+                    {
+                        "id": 14,
+                        "text": "Why does Jessica like walking?",
+                        "options": {
+                            "A": "It makes her laugh.",
+                            "B": "It helps her to get ideas.",
+                            "C": "It takes away her worries.",
+                            "D": "It allows her to empty her mind."
+                        },
+                        "correct": "B",
+                        "explanation": "<strong>14. B:</strong> In paragraph 4, she notes: <i>'Walking is a great way to relax and it also helps you to think... When I return, my head is full of them (ideas).'</i>"
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which of the following is the best description of the writer?",
+                        "options": {
+                            "A": "The comedian who never stops laughing herself.",
+                            "B": "The funny person who loves her work but never has time to relax.",
+                            "C": "The successful comedian who is always looking for new ideas.",
+                            "D": "The popular star who loves being on TV more than anything else."
+                        },
+                        "correct": "C",
+                        "explanation": "<strong>15. C:</strong> The text highlights her success, her constant need to brainstorm new material, and her trips to find inspiration."
+                    }
+                ]
+            },
+            {
+                "id": "test2",
+                "title": "Kirsty Wade, young athlete",
+                "content_html": `
+                    <p>I've always been keen on sport and very fit so a few years ago I decided to join my local athletics club. In the beginning I put all my effort into the long jump because it was my best event, but the coach encouraged me to try different things.</p>
+                    <p>I ended up as a middle-distance runner, which means I don't run the short distances like 100 metres, or long cross-country races, but the in-between ones like 800 metres. It's an interesting type of running because you have to mix speed with strength. You also have to think a lot about how you race, and choose the right moment to run at your maximum speed. You need to do quite a lot of regular training when you first start and it helps if you have a good coach who can keep you motivated and teach you the basics.</p>
+                    <p>I take part in quite major competitions now, but I still remember my first race. I was so nervous before it started. And when it finished, I could still feel my hands shaking. It was a great race and I came second so I was very pleased. Since then I've learned how to stay calm before and during races. I do a lot of breathing exercises that help me stay focused and relaxed. Competing has really helped me to trust in my own abilities. And now I find that I love running in front of a crowd – I suppose it's a sort of performance.</p>
+                    <p>One thing I don't enjoy so much is how hard you have to work to stay fit and strong enough to race, although it helps that I often train with others. I try to eat and sleep well, but I don't have a special diet. Mostly it's a case of getting plenty of variety and eating more of everything because I'm so active.</p>
+                    <p>I sometimes watch Olympic athletes on TV and imagine myself in their position. It must be a fantastic experience, but at the moment I don't feel that is necessarily where I'm aiming. I think you have to give up so much if you want to reach that level.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "Why did the writer join an athletics club?",
+                        "options": {
+                            "A": "Because she enjoyed taking part in sports.",
+                            "B": "Because she thought she should get more exercise.",
+                            "C": "Because she wanted to become an athletics coach.",
+                            "D": "Because she wanted to become a professional long jumper."
+                        },
+                        "correct": "A",
+                        "explanation": "<strong>11. A:</strong> In paragraph 1, she explains: <i>'I've always been keen on sport and very fit so a few years ago I decided to join my local athletics club.'</i>"
+                    },
+                    {
+                        "id": 12,
+                        "text": "What does the writer say about 800-metre running?",
+                        "options": {
+                            "A": "You have to know when to run fastest.",
+                            "B": "It's harder than running in the 100 metres.",
+                            "C": "It's more important to be quick than strong.",
+                            "D": "You need to forget everything and just run."
+                        },
+                        "correct": "A",
+                        "explanation": "<strong>12. A:</strong> In paragraph 2, she states: <i>'...choose the right moment to run at your maximum speed.'</i>"
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does the writer say about competing in races now?",
+                        "options": {
+                            "A": "It always makes her feel scared.",
+                            "B": "It feels good to be in front during the race.",
+                            "C": "It's helped her to develop new skills.",
+                            "D": "She enjoys people watching her race."
+                        },
+                        "correct": "D",
+                        "explanation": "<strong>13. D:</strong> In paragraph 3, she admits: <i>'And now I find that I love running in front of a crowd...'</i>"
+                    },
+                    {
+                        "id": 14,
+                        "text": "What does the writer say about the food she eats?",
+                        "options": {
+                            "A": "If she eats a lot, she can run faster.",
+                            "B": "Eating plenty of food helps her to sleep better.",
+                            "C": "She eats the same kind of things as other people.",
+                            "D": "She would like to eat different types of food."
+                        },
+                        "correct": "C",
+                        "explanation": "<strong>14. C:</strong> In paragraph 4, she points out: <i>'I don't have a special diet. Mostly it's a case of getting plenty of variety and eating more of everything...'</i> meaning she eats normal foods, just in larger quantities."
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which best describes the writer?",
+                        "options": {
+                            "A": "A young athlete who trains hard and hopes to be selected for the Olympics in the future.",
+                            "B": "A girl who was good at the long jump and likes running, but who doesn't see herself becoming an international athlete.",
+                            "C": "A girl who is a keen athlete, but doesn't like running in front of a crowd and finds the training very boring.",
+                            "D": "A keen athlete who finds it enjoyable to practise with other people and compete as part of a team."
+                        },
+                        "correct": "B",
+                        "explanation": "<strong>15. B:</strong> This correctly summarizes her background (long jump), her passion for running, and her final statement that she isn't necessarily aiming for the Olympic level because of the sacrifices required."
+                    }
+                ]
+            }
+        ];
+
+        // Format Dates
+        function getNgayThangNam(date) {
+            if (!date) return "";
+            const d = date.getDate().toString().padStart(2, '0');
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const y = date.getFullYear().toString().slice(-2);
+            return `${d}/${m}/${y}`;
+        }
+
+        function getGioPhut(date) {
+            if (!date) return "";
+            const hh = date.getHours().toString().padStart(2, '0');
+            const mm = date.getMinutes().toString().padStart(2, '0');
+            return `${hh}:${mm}`;
+        }
+
+        const app = {
+            state: {
+                currentTestIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                endTime: null,
+                userAnswers: {}, 
+                questionStates: {}, // To track per-question evidence state
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false,
+                activeEvidenceQId: null // Tracks which question is awaiting evidence highlighting
+            },
+
+            init() {
+                db.forEach(test => {
+                    test.questions.forEach(q => {
+                        const key = `${test.id}-${q.id}`;
+                        this.state.questionStates[key] = { hasEvidence: false };
+                    });
+                });
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name || !id) { alert("Please enter both Student ID and Full Name!"); return; }
+                
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = new Date(); 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                setInterval(() => {
+                    const now = new Date();
+                    const diff = now - this.state.startTime;
+                    const d = new Date(diff);
+                    document.getElementById('timer-display').textContent = d.toISOString().substr(11, 8);
+                }, 1000);
+            },
+
+            // Highlighting via user selection
+            confirmEvidence(key) {
+                const selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0 || selection.toString().trim() === "") {
+                    alert("Please select/highlight the evidence text in the reading passage first!");
+                    return;
+                }
+
+                const contentDiv = document.getElementById('reading-content');
+                if (!contentDiv.contains(selection.anchorNode)) {
+                    alert("Please select text inside the reading passage!");
+                    return;
+                }
+
+                const qNum = key.split('-')[1];
+                const range = selection.getRangeAt(0);
+                
+                // Toggle contentEditable to safely use execCommand
+                contentDiv.contentEditable = "true";
+                contentDiv.focus(); 
+                
+                // Re-apply range to ensure correct selection
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                // Highlight yellow
+                document.execCommand('hiliteColor', false, '#fef08a');
+                
+                // Create and insert [Qx] label
+                const label = document.createElement('span');
+                label.className = 'evidence-label';
+                label.textContent = `[Q${qNum}]`;
+                range.insertNode(label);
+                
+                contentDiv.contentEditable = "false";
+                selection.removeAllRanges();
+
+                // Mark as found
+                this.state.questionStates[key].hasEvidence = true;
+                this.state.activeEvidenceQId = null;
+                
+                this.renderTest(true);
+            },
+
+            requestEvidence(key) {
+                this.state.activeEvidenceQId = key;
+                this.renderTest(true);
+            },
+
+            cancelEvidence() {
+                this.state.activeEvidenceQId = null;
+                this.renderTest(true);
+            },
+
+            renderTest(preserveScroll = false) {
+                const test = db[this.state.currentTestIdx];
+                
+                // 1. Capture Scroll & Blur Focus
+                const container = document.getElementById('questions-container');
+                let scrollPos = 0;
+                
+                if (preserveScroll && container) {
+                    scrollPos = container.scrollTop;
+                    if (document.activeElement && document.activeElement.tagName === 'BUTTON') {
+                        document.activeElement.blur();
+                    }
+                }
+
+                document.getElementById('header-title').textContent = `${test.id.toUpperCase()}: ${test.title}`;
+                document.getElementById('header-progress').textContent = `${this.state.currentTestIdx + 1}/${db.length}`;
+                document.getElementById('text-title').textContent = test.title;
+                
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                // Evidence Banner Setup
+                const banner = document.getElementById('evidence-instruction-banner');
+                const contentDiv = document.getElementById('reading-content');
+                
+                if (this.state.activeEvidenceQId && !this.state.testCompleted) {
+                    banner.classList.remove('hidden');
+                    contentDiv.classList.add('evidence-mode');
+                } else {
+                    banner.classList.add('hidden');
+                    contentDiv.classList.remove('evidence-mode');
+                }
+
+                // Preserve innerHTML if rendering the same test to keep highlights intact
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+
+                this.renderQuestions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentTestIdx === db.length - 1) {
+                         btnNext.innerHTML = 'Submit <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+
+                // 2. Restore Scroll
+                if (preserveScroll && container) {
+                    requestAnimationFrame(() => {
+                         container.scrollTop = scrollPos;
+                    });
+                }
+            },
+
+            renderQuestions(test) {
+                const container = document.getElementById('questions-container');
+                container.innerHTML = '';
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const selectedAns = this.state.userAnswers[key];
+                    const state = this.state.questionStates[key];
+                    const isCompleted = this.state.testCompleted;
+                    
+                    const qCard = document.createElement('div');
+                    let qCardClasses = "bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition-all ";
+                    
+                    if (isCompleted) {
+                        if (selectedAns === q.correct) {
+                            qCardClasses += 'border-green-300 bg-green-50/30 ';
+                        } else {
+                            qCardClasses += 'border-red-300 bg-red-50/30 ';
+                        }
+                    }
+                    
+                    // Highlight the card currently requesting evidence
+                    if (this.state.activeEvidenceQId === key) {
+                        qCardClasses += 'ring-2 ring-yellow-400 ring-offset-2 ';
+                    }
+
+                    qCard.className = qCardClasses;
+                    qCard.id = `qcard-${key}`;
+
+                    // Question Title
+                    const qTitle = document.createElement('h4');
+                    qTitle.className = "font-bold text-slate-800 mb-4 leading-relaxed";
+                    qTitle.innerHTML = `<span class="bg-slate-800 text-white px-2 py-0.5 rounded text-sm mr-2">${q.id}</span> ${q.text}`;
+                    qCard.appendChild(qTitle);
+
+                    // Options Grid
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = "space-y-2";
+                    
+                    for (const [optKey, optVal] of Object.entries(q.options)) {
+                        const btn = document.createElement('button');
+                        let btnClass = "w-full text-left p-3 rounded-lg border transition-all flex items-start gap-3 ";
+                        
+                        let isSelected = selectedAns === optKey;
+                        let isCorrectOpt = optKey === q.correct;
+
+                        if (!isCompleted) {
+                            if (isSelected) {
+                                btnClass += "border-rose-500 bg-rose-600 text-white shadow-md font-medium";
+                            } else {
+                                btnClass += "border-slate-200 text-slate-600 hover:bg-rose-50 hover:border-rose-300";
+                            }
+                            btn.onclick = () => this.handleAnswer(test.id, q.id, optKey);
+                        } else {
+                            btn.disabled = true;
+                            if (isCorrectOpt) {
+                                btnClass += "border-green-500 bg-green-100 text-green-800 font-bold";
+                                btn.innerHTML = `<i class="fas fa-check text-green-600 mt-1"></i> `;
+                            } else if (isSelected && !isCorrectOpt) {
+                                btnClass += "border-red-500 bg-red-100 text-red-800";
+                                btn.innerHTML = `<i class="fas fa-times text-red-600 mt-1"></i> `;
+                            } else {
+                                btnClass += "border-slate-100 text-slate-400 opacity-60";
+                            }
+                        }
+
+                        if (!isCompleted) {
+                            btn.innerHTML = `<span class="font-bold ${isSelected ? 'text-white' : 'text-slate-400'} w-5 shrink-0">${optKey}</span> <span>${optVal}</span>`;
+                        } else {
+                            btn.innerHTML += `<span class="font-bold w-5 shrink-0">${optKey}</span> <span>${optVal}</span>`;
+                        }
+                        
+                        btn.className = btnClass;
+                        optionsDiv.appendChild(btn);
+                    }
+                    
+                    qCard.appendChild(optionsDiv);
+
+                    // Evidence Interaction Area
+                    if (!isCompleted) {
+                        if (this.state.activeEvidenceQId === key) {
+                            // Active Evidence Mode Prompt
+                            const activeDiv = document.createElement('div');
+                            activeDiv.className = "mt-4 bg-yellow-50 border border-yellow-300 p-3 rounded-lg flex flex-col gap-2 animate-pulse";
+                            activeDiv.innerHTML = `
+                                <p class="text-sm font-bold text-yellow-800"><i class="fas fa-highlighter mr-1"></i> Highlight the evidence sentence in the paragraph.</p>
+                                <div class="flex gap-2 mt-1">
+                                    <button onclick="app.confirmEvidence('${key}')" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-4 py-2 rounded shadow-sm text-sm transition-colors w-full">
+                                        <i class="fas fa-check"></i> Confirm Evidence
+                                    </button>
+                                    <button onclick="app.cancelEvidence()" class="bg-white border border-yellow-300 text-slate-500 hover:bg-slate-50 font-bold px-4 py-2 rounded shadow-sm text-sm transition-colors">
+                                        Cancel
+                                    </button>
+                                </div>
+                            `;
+                            qCard.appendChild(activeDiv);
+                        } else if (state.hasEvidence) {
+                            // Evidence Found State
+                            const foundDiv = document.createElement('div');
+                            foundDiv.className = "mt-4 bg-green-50 border border-green-200 p-2 rounded-lg flex justify-between items-center";
+                            foundDiv.innerHTML = `
+                                <span class="text-xs font-bold text-green-700"><i class="fas fa-check-circle"></i> Evidence Recorded</span>
+                                <button onclick="app.requestEvidence('${key}')" class="text-xs text-slate-500 hover:text-slate-700 underline font-semibold">Edit Evidence</button>
+                            `;
+                            qCard.appendChild(foundDiv);
+                        }
+                    }
+
+                    // Explanation (if completed)
+                    if (isCompleted) {
+                        const expDiv = document.createElement('div');
+                        expDiv.className = `mt-4 p-4 rounded-lg text-sm border ${selectedAns === q.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`;
+                        expDiv.innerHTML = q.explanation;
+                        qCard.appendChild(expDiv);
+                    }
+
+                    container.appendChild(qCard);
+                });
+            },
+
+            handleAnswer(testId, qId, optKey) {
+                if (this.state.testCompleted) return;
+
+                const key = `${testId}-${qId}`;
+                const state = this.state.questionStates[key];
+
+                // Save selected answer
+                this.state.userAnswers[key] = optKey;
+                
+                // Auto-trigger Evidence Mode if not yet found
+                if (!state.hasEvidence) {
+                    this.state.activeEvidenceQId = key;
+                }
+
+                this.renderTest(true);
+            },
+
+            checkAnswers() {
+                if (this.state.activeEvidenceQId) {
+                    alert("Please confirm your highlighted evidence before submitting!");
+                    return;
+                }
+
+                const test = db[this.state.currentTestIdx];
+                let correctCount = 0;
+                let answeredCount = 0;
+                let evidenceCount = 0;
+                const totalQuestions = test.questions.length; 
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    if (this.state.userAnswers[key]) answeredCount++;
+                    if (this.state.questionStates[key].hasEvidence) evidenceCount++;
+                });
+
+                if (answeredCount < totalQuestions || evidenceCount < totalQuestions) {
+                    alert("Action Required: Please select an answer AND highlight evidence for ALL questions.");
+                    return;
+                }
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    if (this.state.userAnswers[key] === q.correct) correctCount++;
+                });
+
+                // Pass condition for Part 3: >= 4 correct out of 5 (80%)
+                if (correctCount >= 4) {
+                    this.showFeedback(true);
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Not enough points to pass (need 4/5). You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                        document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+                    } else {
+                        this.showFeedback(false); 
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const test = db[this.state.currentTestIdx];
+                 test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const val = this.state.userAnswers[key];
+                    const qCard = document.getElementById(`qcard-${key}`);
+                    
+                    if (val && val !== q.correct) {
+                        qCard.classList.remove('shake-animation');
+                        void qCard.offsetWidth; // trigger reflow
+                        qCard.classList.add('shake-animation', 'border-red-400'); 
+                        setTimeout(() => qCard.classList.remove('border-red-400'), 500);
+                    }
+                 });
+            },
+
+            showFeedback(passed) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                this.state.activeEvidenceQId = null; // Clear any active evidence prompt
+
+                if (passed) {
+                    alert("Great job! You passed this test.");
+                } else {
+                    alert("Out of attempts. Please review the correct answers.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentTestIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.state.activeEvidenceQId = null;
+                
+                this.renderTest();
+            },
+
+            finishExam() {
+                this.state.endTime = new Date();
+                
+                const diffMs = this.state.endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let totalScore = 0;
+                let totalQ = 0;
+                let breakdownHtml = "";
+
+                db.forEach((test, idx) => {
+                    let testScore = 0;
+                    let testTotal = test.questions.length;
+                    totalQ += testTotal;
+                    
+                    test.questions.forEach(q => {
+                        const key = `${test.id}-${q.id}`;
+                        if (this.state.userAnswers[key] === q.correct) {
+                            testScore++;
+                            totalScore++;
+                        }
+                    });
+
+                    breakdownHtml += `
+                        <div class="flex justify-between items-center p-3 bg-rose-50 rounded-lg border border-rose-100">
+                            <span class="font-bold text-slate-700">Test ${idx + 1}: ${test.title}</span>
+                            <span class="font-bold text-rose-600">${testScore}/${testTotal} correct</span>
+                        </div>
+                    `;
+                });
+
+                const percent = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+                
+                const ngayLam = getNgayThangNam(this.state.startTime);
+                const gioBD = getGioPhut(this.state.startTime);
+                const gioKT = getGioPhut(this.state.endTime);
+
+                // --- GỌI HÀM GỬI GOOGLE SHEETS ---
+                guiKetQua10Cot(
+                    TEN_SHEET_NAY, 
+                    this.state.studentId,
+                    this.state.userName, 
+                    ngayLam,
+                    gioBD,
+                    gioKT,
+                    durationStr,
+                    totalScore, 
+                    percent + "%"
+                );
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                
+                // Hiển thị dữ liệu lên màn hình tổng kết
+                document.getElementById('result-percent-large').textContent = `${percent}%`;
+                document.getElementById('res-student-name').textContent = this.state.userName;
+                document.getElementById('res-student-id').textContent = this.state.studentId;
+                document.getElementById('res-date').textContent = ngayLam;
+                document.getElementById('res-start-time').textContent = gioBD;
+                document.getElementById('res-end-time').textContent = gioKT;
+                document.getElementById('result-breakdown').innerHTML = breakdownHtml;
+                document.getElementById('result-score').textContent = totalScore;
+                document.getElementById('result-max').textContent = "/" + totalQ;
+            }
+        };
+
+        // Initialize state
+        app.init();
+
+        // --- GOOGLE SHEET SEND FUNCTION ---
+        function guiKetQua10Cot(tenBai, maHS, tenHS, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
+            if (!LINK_APP_SCRIPT) return;
+            
+            const statusEl = document.getElementById('sheet-status');
+            if (statusEl) statusEl.textContent = "Sending data to system...";
+            
+            const formData = new URLSearchParams();
+            formData.append("tenSheet", TEN_SHEET_NAY); // Thêm biến tenSheet để App Script tự tạo đúng tab
+            formData.append("TÊN BÀI", tenBai);
+            formData.append("MÃ HỌC SINH", maHS);
+            formData.append("HỌ VÀ TÊN", tenHS);
+            formData.append("NGÀY", ngay);
+            formData.append("GIỜ BẮT ĐẦU", gioBatDau);
+            formData.append("GIỜ NỘP", gioNop);
+            formData.append("THỜI GIAN LÀM", thoiGianLamBai);
+            formData.append("SỐ CÂU ĐÚNG", diemSo);
+            formData.append("% ĐÚNG", phanTram);
+
+            fetch(LINK_APP_SCRIPT, {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: formData.toString()
+            })
+            .then(() => {
+                const jsonPayload = {
+                    "tenSheet": TEN_SHEET_NAY,
+                    "TÊN BÀI": tenBai, "MÃ HỌC SINH": maHS, "HỌ VÀ TÊN": tenHS,
+                    "NGÀY": ngay, "GIỜ BẮT ĐẦU": gioBatDau, "GIỜ NỘP": gioNop,
+                    "THỜI GIAN LÀM": thoiGianLamBai, "SỐ CÂU ĐÚNG": diemSo, "% ĐÚNG": phanTram
+                };
+                fetch(LINK_APP_SCRIPT, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(jsonPayload)
+                }).catch(e => console.log("JSON fallback ignore", e));
+
+                fetch(LINK_APP_SCRIPT + "?" + formData.toString(), {
+                    method: "GET",
+                    mode: "no-cors"
+                }).catch(e => console.log("GET fallback ignore", e));
+
+                console.log("✅ Sent to Google Sheets");
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results saved successfully!</span>';
+            })
+            .catch(err => {
+                console.error("❌ Error:", err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Error sending results. Please check your network connection.</span>';
+            });
+        }
+    </script>
+</body>
+</html>
