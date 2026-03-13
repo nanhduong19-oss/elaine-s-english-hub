@@ -91,7 +91,6 @@
 
                 <!-- Practice Mode Selection (Tabs) -->
                 <div class="bg-red-50/50 p-5 rounded-2xl border border-red-100 mb-6">
-                    <!-- Tabs -->
                     <div class="flex rounded-xl bg-slate-200/70 p-1.5 mb-4">
                         <button id="tab-select" onclick="app.switchMode('select')" class="flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all">Select Tests</button>
                         <button id="tab-random" onclick="app.switchMode('random')" class="flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Random</button>
@@ -109,7 +108,10 @@
                     <div id="mode-random-area" class="text-left hidden">
                         <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Number of random tests:</label>
                         <select id="random-count" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none font-bold text-slate-700 shadow-sm cursor-pointer text-base">
-                            <!-- Options injected here by JS -->
+                            <option value="1">1 Test (8 Minutes)</option>
+                            <option value="2" selected>2 Tests (16 Minutes)</option>
+                            <option value="3">3 Tests (24 Minutes)</option>
+                            <option value="4">4 Tests (32 Minutes)</option>
                         </select>
                     </div>
                 </div>
@@ -265,7 +267,8 @@
 
     <script>
         // --- GOOGLE SHEET CONFIGURATION ---
-        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; // VUI LÒNG THAY ĐƯỜNG LINK MỚI VÀO ĐÂY
+        const TEN_SHEET_NAY = "Oxford Reading Part 3 Tests 1 - 4"; 
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbyCKIVCrDYbpU7H4QvyaGeVmS5jWEoNxcg_M-ytFiEZRxOr1XYTzp-K9L_cG0d5UdPl/exec"; 
 
         // --- DATA WITH EVIDENCE KEYWORDS ---
         const db = [
@@ -1408,8 +1411,8 @@
 
         // --- GOOGLE SHEET SEND FUNCTION ---
         function guiKetQua10Cot(phanThi, tenBai, maHS, tenHS, cheDoLamBai, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
-            // ĐÃ CẬP NHẬT LINK GOOGLE SCRIPT MỚI NHẤT CỦA CÔ
-            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycby9iUgq_-1C3-CshCTYMQaFJ5dFtqAQ2iqAt-uPTkvy6Vg9xZLT4NzNAT0YVGJBjtgJ/exec"; 
+            // ĐÃ CẬP NHẬT ĐƯỜNG LINK GOOGLE APPS SCRIPT MỚI NHẤT CỦA CÔ
+            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbyCKIVCrDYbpU7H4QvyaGeVmS5jWEoNxcg_M-ytFiEZRxOr1XYTzp-K9L_cG0d5UdPl/exec"; 
             
             const statusEl = document.getElementById('sheet-status');
             if (statusEl) statusEl.textContent = "Sending data to system...";
@@ -1430,8 +1433,8 @@
 
             fetch(LINK_APP_SCRIPT, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                mode: "no-cors", // Bỏ qua lỗi CORS trên trình duyệt
+                headers: { "Content-Type": "text/plain" }, // Sử dụng text/plain để gửi đi an toàn
                 body: JSON.stringify(duLieuGuiDi)
             })
             .then(() => {
