@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PET Reading Practice - Reading Part 3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #fca5a5; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f87171; }
+
+        .reading-content p { 
+            margin-bottom: 1.5em; 
+            line-height: 2.2; 
+            text-align: justify; 
+        }
+
+        .evidence-mode {
+            outline: 2px dashed #facc15; 
+            padding: 12px;
+            border-radius: 8px;
+            background-color: #fefce8; 
+            transition: all 0.3s ease;
+        }
+
+        .evidence-label {
+            font-size: 13px;
+            font-weight: 800;
+            color: #713f12; 
+            background-color: #facc15; 
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 6px;
+            text-transform: uppercase;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            user-select: none;
+            display: inline-block;
+            vertical-align: text-bottom;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .shake-animation { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        
+        #questions-container { overflow-anchor: none !important; }
+        
+        .time-warning { animation: pulseRed 1s infinite; color: #ef4444 !important; border-color: #fca5a5 !important; background-color: #fef2f2 !important;}
+        @keyframes pulseRed {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body class="bg-red-50 h-screen flex flex-col text-slate-800 overflow-hidden text-[16px]">
+
+    <!-- SCREEN 1: WELCOME -->
+    <div id="screen-welcome" class="fixed inset-0 z-50 bg-red-50 flex flex-col items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white max-w-md w-full rounded-3xl shadow-2xl border border-red-100 overflow-hidden my-auto">
+            <div class="h-2 bg-rose-600 w-full"></div>
+            <div class="p-8 text-center">
+                <h1 class="text-3xl font-extrabold text-slate-800 mb-1">PET READING PRACTICE</h1>
+                <p class="text-slate-500 mb-4 font-bold uppercase tracking-wider text-sm">Reading Part 3</p>
+                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider mb-6">
+                    <i class="fas fa-stopwatch mr-1"></i> 8 MINUTES / TEST LIMIT
+                </div>
+
+                <!-- Form Nhập Thông Tin -->
+                <div class="text-left mb-4">
+                    <div class="flex gap-3 mb-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Student ID</label>
+                            <input type="text" id="user-id-input" placeholder="e.g. 71001BT" class="w-full px-3 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium">
+                        </div>
+                        <div class="flex-[2]">
+                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Full Name</label>
+                            <input type="text" id="user-name-input" placeholder="Enter your name..." class="w-full px-3 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium" onkeypress="if(event.key === 'Enter') app.startExam()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Practice Mode Selection (Tabs) -->
+                <div class="bg-red-50/50 p-5 rounded-2xl border border-red-100 mb-6">
+                    <!-- Tabs -->
+                    <div class="flex rounded-xl bg-slate-200/70 p-1.5 mb-4">
+                        <button id="tab-select" onclick="app.switchMode('select')" class="flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all">Select Tests</button>
+                        <button id="tab-random" onclick="app.switchMode('random')" class="flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Random</button>
+                    </div>
+
+                    <!-- Select Specific Tests Area -->
+                    <div id="mode-select-area" class="text-left">
+                        <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Check the tests to practice:</label>
+                        <div class="grid grid-cols-2 gap-3" id="test-checkboxes">
+                            <!-- Checkboxes injected here by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Random Tests Area -->
+                    <div id="mode-random-area" class="text-left hidden">
+                        <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Number of random tests:</label>
+                        <select id="random-count" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none font-bold text-slate-700 shadow-sm cursor-pointer text-base">
+                            <!-- Options injected here by JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98] text-lg">
+                    Start Practice
+                </button>
+
+                <!-- Lịch sử làm bài -->
+                <div id="history-area" class="mt-6 text-left hidden border-t border-red-100 pt-5">
+                    <h3 class="font-bold text-slate-700 text-base mb-3 flex items-center gap-2"><i class="fas fa-history text-slate-400"></i> Recent Practice History</h3>
+                    <div id="history-list" class="space-y-2 max-h-32 overflow-y-auto custom-scrollbar text-sm">
+                        <!-- Sinh tự động bằng JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-6 mb-4 text-center text-slate-400 text-sm">
+            <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+            <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: MAIN APP -->
+    <div id="screen-app" class="hidden flex-col h-full">
+        <!-- Header -->
+        <header class="bg-white border-b border-red-100 h-16 flex-none z-20">
+            <div class="h-full max-w-[1920px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <div id="timer-container" class="px-4 py-1.5 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 font-mono font-bold text-base flex items-center gap-2 transition-colors">
+                        <i class="fas fa-hourglass-half"></i> <span id="timer-display">00:00</span>
+                    </div>
+                    <h2 id="header-title" class="font-bold text-slate-800 text-xl truncate">Test 1</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                     <div class="text-right hidden md:block">
+                        <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider">Candidate</p>
+                        <p id="header-name" class="font-bold text-slate-700 text-base">Guest</p>
+                    </div>
+                    <div class="h-8 w-px bg-red-100 hidden md:block"></div>
+                    <span id="header-progress" class="font-bold text-2xl text-slate-800">1/2</span>
+                    
+                    <div id="controls-area" class="flex gap-2 ml-2">
+                        <button onclick="app.checkAnswers()" id="btn-check" class="px-6 h-10 rounded-full bg-slate-800 text-white font-bold text-base shadow-md hover:bg-slate-900 transition-all flex items-center gap-2">
+                            <i class="fas fa-check"></i> Check
+                        </button>
+                        <button onclick="app.nextTest()" id="btn-next" class="hidden px-6 h-10 rounded-full bg-rose-600 text-white font-bold text-base shadow-md hover:bg-rose-700 transition-all flex items-center gap-2">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-grow flex overflow-hidden bg-red-100 relative">
+            <div class="w-full h-full flex flex-col lg:flex-row">
+                <!-- Text Area (65%) -->
+                <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-red-200 overflow-y-auto custom-scrollbar p-6 lg:p-12 relative">
+                    <div class="max-w-4xl mx-auto pb-20">
+                        
+                        <div id="evidence-instruction-banner" class="hidden bg-yellow-50 border-l-4 border-yellow-400 p-5 mb-6 rounded-r-xl shadow-sm transition-all animate-pulse">
+                            <h4 class="font-bold text-yellow-800 flex items-center gap-2 text-lg"><i class="fas fa-search text-yellow-600"></i> Evidence Mode Active</h4>
+                            <p class="text-base text-yellow-700 mt-1">Please select/highlight the exact sentence (max 300 chars) in the passage below, then click <b>Confirm Evidence</b> under the question on the right.</p>
+                        </div>
+
+                        <h3 class="font-bold text-slate-400 text-sm uppercase tracking-wider mb-2">Reading Article</h3>
+                        <h2 id="text-title" class="text-3xl font-extrabold text-slate-800 mb-8">Article Title</h2>
+                        
+                        <div id="reading-content" class="reading-content text-xl text-slate-800 font-normal transition-all duration-300 leading-[2.2]" spellcheck="false">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Questions Area (35%) -->
+                <div class="w-full lg:w-[35%] h-1/2 lg:h-full bg-red-50 flex flex-col border-t lg:border-t-0 border-red-200 shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.05)] z-10 relative">
+                    <div class="p-5 bg-white border-b border-red-100 shadow-sm flex-none flex justify-between items-center">
+                        <h3 class="font-bold text-rose-700 flex items-center gap-2 text-base uppercase tracking-wider">
+                            <i class="fas fa-list-ul"></i> Questions
+                        </h3>
+                        <div id="attempts-display" class="text-sm font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-md">
+                            Attempts left: 2
+                        </div>
+                    </div>
+                    <div id="questions-container" class="flex-grow overflow-y-auto custom-scrollbar p-5 space-y-5 pb-20">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden fixed inset-0 z-50 bg-red-50 overflow-y-auto custom-scrollbar">
+        <div class="min-h-screen w-full flex flex-col items-center justify-start p-6 md:py-12">
+            <div class="max-w-2xl w-full flex flex-col gap-6">
+                <div class="text-center mb-2">
+                    <h1 class="text-4xl font-extrabold text-slate-800">Final Results</h1>
+                    <div id="result-status-msg" class="flex items-center justify-center gap-2 mt-3 font-bold text-xl"></div>
+                </div>
+                
+                <div class="bg-white rounded-3xl p-8 border border-red-100 shadow-xl text-center relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-3 bg-rose-500"></div>
+                    
+                    <div class="text-base font-bold text-slate-400 uppercase tracking-wider mb-2 mt-4">Total Accuracy</div>
+                    <div id="result-percent-large" class="text-8xl font-extrabold text-rose-600 mb-8">0%</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 text-left mb-8">
+                        <div class="p-5 bg-red-50/50 rounded-2xl border border-red-100">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-1">Student Info</p>
+                            <p class="font-bold text-slate-700 text-xl truncate"><span id="res-student-name"></span></p>
+                            <p class="text-base text-slate-500 mt-1">ID: <span id="res-student-id"></span></p>
+                        </div>
+                        <div class="p-5 bg-red-50/50 rounded-2xl border border-red-100 flex flex-col justify-center">
+                            <p class="text-xs text-slate-400 font-bold uppercase mb-3">Time Info</p>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-white p-2.5 rounded-xl shadow-sm border border-red-50">
+                                    <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Date</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-date"></p>
+                                </div>
+                                <div class="bg-white p-2.5 rounded-xl shadow-sm border border-red-50">
+                                    <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">Start</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-start-time"></p>
+                                </div>
+                                <div class="bg-white p-2.5 rounded-xl shadow-sm border border-red-50">
+                                    <p class="text-[11px] text-slate-400 uppercase font-bold mb-1">End</p>
+                                    <p class="text-sm font-bold text-slate-700" id="res-end-time"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-left mb-4">
+                        <h3 class="font-bold text-slate-700 uppercase text-sm tracking-wider mb-4">Score Breakdown</h3>
+                        <div id="result-breakdown" class="space-y-3"></div>
+                        <div class="mt-5 text-right text-2xl font-bold text-slate-800 border-t border-red-100 pt-4">
+                            Total Score: <span id="result-score" class="text-rose-600 text-3xl">0</span><span class="text-slate-400" id="result-max">/10</span>
+                        </div>
+                    </div>
+                    
+                    <div id="sheet-status" class="mt-6 text-base font-medium text-slate-400">Sending data to system...</div>
+                </div>
+                
+                <button onclick="location.reload()" class="w-full bg-slate-800 text-white font-bold py-5 text-lg rounded-2xl shadow-lg hover:bg-slate-900 transition-all active:scale-[0.99]">Practice Again</button>
+            </div>
+            
+            <div class="mt-auto pt-10 text-center text-slate-400 text-sm">
+                <p class="font-semibold text-slate-500">Compiled and Digitized by Elaine Nguyễn</p>
+                <p class="mt-1 italic">Empowering students through knowledge and technology</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- GOOGLE SHEET CONFIGURATION ---
+        const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; // VUI LÒNG THAY ĐƯỜNG LINK MỚI VÀO ĐÂY
+
+        // --- DATA WITH EVIDENCE KEYWORDS ---
+        const db = [
+            {
+                "id": "oxford_test1",
+                "title": "Jessica Hail – Comedian",
+                "content_html": `
+                    <p>I've always enjoyed performing and making people laugh. When I was at school, I used to annoy some of my teachers as I was always telling jokes in class. All my classmates used to laugh a lot and I had a great time.</p>
+                    <p>When I left school, I got a job in a fast food restaurant during the day and took acting classes in the evening. I also started performing in theatres at the weekends. Sometimes the audience loved me, but other times nobody laughed at my jokes. That was the worst feeling in the world.</p>
+                    <p>After two or three years, I appeared on TV a few times and became better known. I finally got a part in a TV comedy show and I've worked on TV ever since. I still do theatre work, and although it's harder than being on TV, I enjoy it much more. During those years when I performed in theatres, I learned so much. It was great to start performing while I was still young. It gave me a lot of experience and it helped me become confident on stage.</p>
+                    <p>It isn't easy to keep on being successful because trying to think of new ideas is difficult all the time. When I can't think of anything to write about, I get very miserable. Then I usually go for a walk. Walking is a great way to relax and it also helps you to think. I can go out for a walk in the morning with no ideas in my head. When I return, my head is full of them and I can't wait to write them down!</p>
+                    <p>As well as walking, mountain climbing and diving help me to relax, too. I'm planning a climbing trip to Nepal soon, which I'm really looking forward to! I'm sure I'll come back with a lot of new jokes and ideas. Inspiration is very important in my profession. If I'm inspired, I can create new performances and make people laugh out loud! It's fantastic. I think comedy is the cure for many things. It can take away your worries and help you relax.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "What does Jessica say about her life at school?",
+                        "options": {
+                            "A": "Her friends were very funny.",
+                            "B": "She enjoyed performing for her classmates.",
+                            "C": "She disliked the teachers.",
+                            "D": "Her jokes were bad."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["laugh", "great time", "classmates", "funny"],
+                        "explanation": "<strong>11. B:</strong> Đoạn 1 viết: <i>'All my classmates used to laugh a lot and I had a great time.'</i> chứng tỏ cô ấy rất thích biểu diễn cho bạn bè xem."
+                    },
+                    {
+                        "id": 12,
+                        "text": "What did Jessica do when she left school?",
+                        "options": {
+                            "A": "She trained to be a teacher.",
+                            "B": "She started performing in a restaurant.",
+                            "C": "She got a job and studied acting.",
+                            "D": "She got a job in a theatre."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["acting classes", "job", "restaurant", "studied acting"],
+                        "explanation": "<strong>12. C:</strong> Đoạn 2 viết: <i>'I got a job in a fast food restaurant during the day and took acting classes in the evening.'</i> (Tìm việc và học diễn xuất)."
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does she say about her working life?",
+                        "options": {
+                            "A": "People have always enjoyed her performances.",
+                            "B": "Being on TV is the most difficult thing she's done.",
+                            "C": "Her first job was in a theatre.",
+                            "D": "She's worked in a variety of places."
+                        },
+                        "correct": "D",
+                        "evidenceKeywords": ["restaurant", "theatres", "tv", "worked on tv", "variety of places"],
+                        "explanation": "<strong>13. D:</strong> Xuyên suốt bài, cô ấy nhắc đến việc làm ở nhà hàng thức ăn nhanh, ở nhà hát, và trên các chương trình TV."
+                    },
+                    {
+                        "id": 14,
+                        "text": "Why does Jessica like walking?",
+                        "options": {
+                            "A": "It makes her laugh.",
+                            "B": "It helps her to get ideas.",
+                            "C": "It takes away her worries.",
+                            "D": "It allows her to empty her mind."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["think", "head is full", "ideas", "return"],
+                        "explanation": "<strong>14. B:</strong> Đoạn 4 viết: <i>'Walking is a great way to relax and it also helps you to think... When I return, my head is full of them (ideas).'</i>"
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which of the following is the best description of the writer?",
+                        "options": {
+                            "A": "The comedian who never stops laughing herself.",
+                            "B": "The funny person who loves her work but never has time to relax.",
+                            "C": "The successful comedian who is always looking for new ideas.",
+                            "D": "The popular star who loves being on TV more than anything else."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["inspiration", "ideas", "create", "successful", "miserable"],
+                        "explanation": "<strong>15. C:</strong> Bài viết mô tả một diễn viên hài thành công nhưng luôn gặp khó khăn trong việc tìm ý tưởng mới và phải thường xuyên đi tìm nguồn cảm hứng."
+                    }
+                ]
+            },
+            {
+                "id": "oxford_test2",
+                "title": "Kirsty Wade, young athlete",
+                "content_html": `
+                    <p>I've always been keen on sport and very fit so a few years ago I decided to join my local athletics club. In the beginning I put all my effort into the long jump because it was my best event, but the coach encouraged me to try different things.</p>
+                    <p>I ended up as a middle-distance runner, which means I don't run the short distances like 100 metres, or long cross-country races, but the in-between ones like 800 metres. It's an interesting type of running because you have to mix speed with strength. You also have to think a lot about how you race, and choose the right moment to run at your maximum speed. You need to do quite a lot of regular training when you first start and it helps if you have a good coach who can keep you motivated and teach you the basics.</p>
+                    <p>I take part in quite major competitions now, but I still remember my first race. I was so nervous before it started. And when it finished, I could still feel my hands shaking. It was a great race and I came second so I was very pleased. Since then I've learned how to stay calm before and during races. I do a lot of breathing exercises that help me stay focused and relaxed. Competing has really helped me to trust in my own abilities. And now I find that I love running in front of a crowd – I suppose it's a sort of performance.</p>
+                    <p>One thing I don't enjoy so much is how hard you have to work to stay fit and strong enough to race, although it helps that I often train with others. I try to eat and sleep well, but I don't have a special diet. Mostly it's a case of getting plenty of variety and eating more of everything because I'm so active.</p>
+                    <p>I sometimes watch Olympic athletes on TV and imagine myself in their position. It must be a fantastic experience, but at the moment I don't feel that is necessarily where I'm aiming. I think you have to give up so much if you want to reach that level.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "Why did the writer join an athletics club?",
+                        "options": {
+                            "A": "Because she enjoyed taking part in sports.",
+                            "B": "Because she thought she should get more exercise.",
+                            "C": "Because she wanted to become an athletics coach.",
+                            "D": "Because she wanted to become a professional long jumper."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["keen on sport", "keen", "sport"],
+                        "explanation": "<strong>11. A:</strong> Đoạn 1 viết: <i>'I've always been keen on sport and very fit so a few years ago I decided to join my local athletics club.'</i>"
+                    },
+                    {
+                        "id": 12,
+                        "text": "What does the writer say about 800-metre running?",
+                        "options": {
+                            "A": "You have to know when to run fastest.",
+                            "B": "It's harder than running in the 100 metres.",
+                            "C": "It's more important to be quick than strong.",
+                            "D": "You need to forget everything and just run."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["right moment", "maximum speed", "speed"],
+                        "explanation": "<strong>12. A:</strong> Đoạn 2 viết: <i>'...choose the right moment to run at your maximum speed.'</i> (chọn đúng thời điểm để chạy tốc độ tối đa)."
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does the writer say about competing in races now?",
+                        "options": {
+                            "A": "It always makes her feel scared.",
+                            "B": "It feels good to be in front during the race.",
+                            "C": "It's helped her to develop new skills.",
+                            "D": "She enjoys people watching her race."
+                        },
+                        "correct": "D",
+                        "evidenceKeywords": ["front of a crowd", "crowd", "love running"],
+                        "explanation": "<strong>13. D:</strong> Đoạn 3 cô ấy thừa nhận: <i>'And now I find that I love running in front of a crowd...'</i> (Tôi yêu việc chạy trước đám đông)."
+                    },
+                    {
+                        "id": 14,
+                        "text": "What does the writer say about the food she eats?",
+                        "options": {
+                            "A": "If she eats a lot, she can run faster.",
+                            "B": "Eating plenty of food helps her to sleep better.",
+                            "C": "She eats the same kind of things as other people.",
+                            "D": "She would like to eat different types of food."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["variety", "more of everything", "special diet"],
+                        "explanation": "<strong>14. C:</strong> Đoạn 4 viết: <i>'I don't have a special diet. Mostly it's a case of getting plenty of variety and eating more of everything...'</i> nghĩa là cô ấy ăn đồ ăn bình thường giống người khác, chỉ là ăn nhiều hơn thôi."
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which best describes the writer?",
+                        "options": {
+                            "A": "A young athlete who trains hard and hopes to be selected for the Olympics in the future.",
+                            "B": "A girl who was good at the long jump and likes running, but who doesn't see herself becoming an international athlete.",
+                            "C": "A girl who is a keen athlete, but doesn't like running in front of a crowd and finds the training very boring.",
+                            "D": "A keen athlete who finds it enjoyable to practise with other people and compete as part of a team."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["aiming", "give up", "long jump", "olympics"],
+                        "explanation": "<strong>15. B:</strong> Đoạn này tóm tắt đúng nhất về quá khứ nhảy xa của cô ấy, đam mê chạy bộ hiện tại, và câu chốt cuối bài rằng cô ấy không nhất thiết phải hướng tới cấp độ Olympic quốc tế."
+                    }
+                ]
+            },
+            {
+                "id": "oxford_test3",
+                "title": "My Life as a Teenage Travel Blogger",
+                "content_html": `
+                    <p>When I was thirteen, my parents decided to take a year off work and travel around the world. At first, I was upset about leaving my friends and my school, but my parents promised I could keep in touch online. That’s when I decided to start a blog. I wanted to share my experiences with my friends back home. Little did I know that my blog would become popular with thousands of teenagers everywhere!</p>
+                    <p>I started by writing short posts about the strange foods we ate or the funny things that happened when we tried to speak different languages. After a few months, I noticed that people I didn’t even know were leaving comments. They wanted advice on places to visit and what to pack. It was surprising, but it made me want to write more detailed and helpful articles.</p>
+                    <p>Of course, travelling for a year wasn’t just a holiday. I still had to keep up with my education. My parents acted as my teachers, and I spent about three hours every morning doing Maths, Science, and English. It was challenging to focus when there was a beautiful beach or an exciting city waiting outside, but I quickly learned to manage my time. If I didn't finish my schoolwork, I wasn't allowed to go exploring or work on my blog.</p>
+                    <p>The most difficult part of blogging while travelling was finding a reliable internet connection. There were times in remote villages where I couldn't upload anything for a week. I used to get stressed about it, thinking I would lose all my followers. However, I realised that my readers actually enjoyed reading about these ‘offline’ adventures once I finally got back online.</p>
+                    <p>Now that I’m back home and back at a regular school, things feel a bit boring. However, my blog is still going strong. I write about local travel and give tips on how teenagers can explore their own countries. My advice to anyone who wants to start a blog is simple: don’t do it just to get famous. Write about something you genuinely care about, and the right audience will find you.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "Why did the writer originally start her blog?",
+                        "options": {
+                            "A": "To become famous on the internet.",
+                            "B": "To help other teenagers plan their travels.",
+                            "C": "To stay connected with her friends at home.",
+                            "D": "To practise her writing skills for school."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["share my experiences", "friends back home", "keep in touch"],
+                        "explanation": "<strong>11. C:</strong> Đoạn 1 viết: <i>'I wanted to share my experiences with my friends back home.'</i> (Tôi muốn chia sẻ trải nghiệm với bạn bè ở nhà)."
+                    },
+                    {
+                        "id": 12,
+                        "text": "What surprised the writer about her blog?",
+                        "options": {
+                            "A": "How much time it took to write detailed posts.",
+                            "B": "That strangers were reading and commenting on it.",
+                            "C": "That her friends stopped reading it after a few months.",
+                            "D": "How difficult it was to write about food."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["didn't even know", "strangers", "leaving comments", "surprising"],
+                        "explanation": "<strong>12. B:</strong> Đoạn 2 viết: <i>'After a few months, I noticed that people I didn’t even know were leaving comments... It was surprising'</i> (Những người không quen biết cũng để lại bình luận)."
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does the writer say about her education during the trip?",
+                        "options": {
+                            "A": "She didn't have to do any schoolwork for a year.",
+                            "B": "She found it hard to concentrate on her studies.",
+                            "C": "Her parents sent her to local schools in different countries.",
+                            "D": "She preferred studying to exploring new cities."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["challenging to focus", "focus", "beach", "schoolwork"],
+                        "explanation": "<strong>13. B:</strong> Đoạn 3 viết: <i>'It was challenging to focus when there was a beautiful beach or an exciting city waiting outside'</i> (Rất khó để tập trung khi có cảnh đẹp chờ đợi bên ngoài)."
+                    },
+                    {
+                        "id": 14,
+                        "text": "How did the writer feel about bad internet connections?",
+                        "options": {
+                            "A": "She liked being disconnected from the world.",
+                            "B": "She used the offline time to write more blog posts.",
+                            "C": "She worried that people would stop following her blog.",
+                            "D": "She blamed her parents for visiting remote places."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["stressed", "lose all my followers", "followers"],
+                        "explanation": "<strong>14. C:</strong> Đoạn 4 viết: <i>'I used to get stressed about it, thinking I would lose all my followers.'</i> (Tôi từng bị stress, nghĩ rằng sẽ mất hết người theo dõi)."
+                    },
+                    {
+                        "id": 15,
+                        "text": "What is the writer's main advice for new bloggers?",
+                        "options": {
+                            "A": "Focus on a topic that you are truly interested in.",
+                            "B": "Write about travel because it is very popular.",
+                            "C": "Try to get as many followers as possible quickly.",
+                            "D": "Make sure you have a reliable internet connection."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["genuinely care about", "care about", "not just to get famous", "topic"],
+                        "explanation": "<strong>15. A:</strong> Đoạn cuối viết: <i>'Write about something you genuinely care about...'</i> (Hãy viết về thứ mà bạn thực sự quan tâm)."
+                    }
+                ]
+            },
+            {
+                "id": "oxford_test4",
+                "title": "Photographing Nature",
+                "content_html": `
+                    <p>Tom is only sixteen, but he has already won several awards for his wildlife photography. His bedroom is covered in pictures of birds, insects, and mammals that he has taken in the woods near his home. Tom’s passion for photography started when he was ten. His grandfather gave him an old camera and taught him how to be patient. "You can't rush nature," his grandfather used to say, and Tom quickly learned that this was true.</p>
+                    <p>Taking good photos of animals is not as easy as it looks. You need to understand the behaviour of the animal you are trying to photograph. Tom spends hours reading about local wildlife before he even picks up his camera. He needs to know where the animals live, what they eat, and what time of day they are most active. If you just walk into the forest and expect to see a fox, you will probably be disappointed.</p>
+                    <p>Many people think that the hardest part of wildlife photography is dealing with bad weather. While sitting in the rain or freezing cold isn't fun, Tom says that the real challenge is staying completely still. Sometimes he has to hide in the bushes for four or five hours without moving a muscle. If he sneezes or steps on a dry branch, the animal will run away, and his chance of getting the perfect shot is gone.</p>
+                    <p>Despite the challenges, Tom describes the feeling of getting a great photo as "pure magic". He loves the moment when an animal steps into the light and looks directly at the camera. He says it makes all the cold, wet, and boring hours totally worth it. Recently, a national magazine published one of his photos of an owl, which made him incredibly proud.</p>
+                    <p>Looking ahead, Tom isn't sure if he wants to be a professional photographer. He loves it as a hobby, but he worries that doing it for money might take the fun out of it. For now, he is planning to study biology at university. He believes that understanding nature is more important than just taking pictures of it, but he definitely won't be leaving his camera at home.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "How did Tom first learn about wildlife photography?",
+                        "options": {
+                            "A": "By reading books about birds and insects.",
+                            "B": "From his grandfather who gave him a camera.",
+                            "C": "By taking photography classes at school.",
+                            "D": "By exploring the woods near his home."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["grandfather", "taught him", "camera"],
+                        "explanation": "<strong>11. B:</strong> Đoạn 1 viết: <i>'His grandfather gave him an old camera and taught him how to be patient.'</i>"
+                    },
+                    {
+                        "id": 12,
+                        "text": "What does Tom do before he goes out to take photos?",
+                        "options": {
+                            "A": "He practices taking photos of his pets.",
+                            "B": "He walks through the forest to find good spots.",
+                            "C": "He researches the habits of the animals.",
+                            "D": "He checks the weather forecast for rain."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["reading about", "wildlife", "where the animals live", "what they eat", "habit"],
+                        "explanation": "<strong>12. C:</strong> Đoạn 2 viết: <i>'Tom spends hours reading about local wildlife before he even picks up his camera.'</i> (Nghiên cứu về tập tính của động vật)."
+                    },
+                    {
+                        "id": 13,
+                        "text": "According to Tom, what is the most difficult thing about his hobby?",
+                        "options": {
+                            "A": "Taking photos in the rain or snow.",
+                            "B": "Finding animals in the dark.",
+                            "C": "Keeping his camera equipment safe.",
+                            "D": "Having to remain completely motionless."
+                        },
+                        "correct": "D",
+                        "evidenceKeywords": ["completely still", "moving a muscle", "still", "hide"],
+                        "explanation": "<strong>13. D:</strong> Đoạn 3 viết: <i>'...Tom says that the real challenge is staying completely still.'</i> (Thử thách thực sự là phải đứng hoàn toàn bất động)."
+                    },
+                    {
+                        "id": 14,
+                        "text": "How does Tom feel about the hours he spends waiting?",
+                        "options": {
+                            "A": "He finds them completely boring and a waste of time.",
+                            "B": "He feels they are justified when he gets a good picture.",
+                            "C": "He prefers waiting in the cold rather than the heat.",
+                            "D": "He wishes he didn't have to wait so long for the animals."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["worth it", "pure magic", "boring hours"],
+                        "explanation": "<strong>14. B:</strong> Đoạn 4 viết: <i>'He says it makes all the cold, wet, and boring hours totally worth it.'</i> (Thành quả đạt được khiến những giờ chờ đợi trở nên hoàn toàn xứng đáng)."
+                    },
+                    {
+                        "id": 15,
+                        "text": "What are Tom's plans for the future?",
+                        "options": {
+                            "A": "He wants to become a professional photographer.",
+                            "B": "He wants to work for a national nature magazine.",
+                            "C": "He plans to study biology and keep photography as a hobby.",
+                            "D": "He is going to stop taking photos when he goes to university."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["study biology", "won't be leaving his camera", "hobby", "future"],
+                        "explanation": "<strong>15. C:</strong> Đoạn cuối viết: <i>'he is planning to study biology at university... but he definitely won't be leaving his camera at home'</i> (Học sinh học và giữ nhiếp ảnh làm sở thích)."
+                    }
+                ]
+            }
+        ];
+
+        // --- APP LOGIC ---
+        const app = {
+            state: {
+                selectedTests: [],
+                currentIdx: 0,
+                userName: "Student",
+                studentId: "",
+                startTime: null,
+                endTime: null,
+                userAnswers: {}, 
+                questionStates: {}, 
+                attemptsLeft: 2, 
+                testCompleted: false,
+                testPassed: false,
+                activeEvidenceQId: null, 
+                lastSavedRange: null,
+                globalTimer: null,
+                timeLeftSeconds: 0,
+                history: []
+            },
+
+            init() {
+                try {
+                    const savedHistory = localStorage.getItem('pet_part3_history_oxford');
+                    if (savedHistory) {
+                        this.state.history = JSON.parse(savedHistory);
+                        this.renderHistory();
+                    }
+                } catch(e) {
+                    console.error("Error parsing history:", e);
+                    this.state.history = [];
+                }
+
+                // Render Checkboxes
+                const cbContainer = document.getElementById('test-checkboxes');
+                if (cbContainer) {
+                    cbContainer.innerHTML = '';
+                    db.forEach((test, idx) => {
+                        let displayName = `Test ${idx + 1}`;
+                        if(test.id.startsWith("oxford_test")) {
+                            displayName = `Oxford Test ${test.id.replace("oxford_test", "")}`;
+                        }
+                        cbContainer.innerHTML += `
+                            <label class="flex items-center p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-rose-50 hover:border-rose-200 transition-colors bg-white shadow-sm">
+                                <input type="checkbox" value="${test.id}" class="test-cb w-5 h-5 text-rose-600 border-slate-300 rounded focus:ring-rose-500" ${idx === 0 ? 'checked' : ''}>
+                                <span class="ml-3 text-base font-bold text-slate-700">${displayName}</span>
+                            </label>
+                        `;
+                    });
+                }
+
+                // Render Random Count Options Dynamically
+                const randomSelect = document.getElementById('random-count');
+                if (randomSelect) {
+                    randomSelect.innerHTML = '';
+                    for (let i = 1; i <= db.length; i++) {
+                        let time = i * 8; // 8 minutes per test
+                        let selected = (i === 2) ? 'selected' : '';
+                        let textLabel = i > 1 ? 'Tests' : 'Test';
+                        randomSelect.innerHTML += `<option value="${i}" ${selected}>${i} ${textLabel} (${time} Minutes)</option>`;
+                    }
+                }
+
+                // Listen to selection changes for iPad text highlighting support
+                document.addEventListener('selectionchange', () => {
+                    const selection = window.getSelection();
+                    if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
+                        const contentDiv = document.getElementById('reading-content');
+                        if (contentDiv && contentDiv.contains(selection.anchorNode)) {
+                            this.state.lastSavedRange = selection.getRangeAt(0).cloneRange();
+                        }
+                    }
+                });
+            },
+
+            switchMode(mode) {
+                const btnSelect = document.getElementById('tab-select');
+                const btnRandom = document.getElementById('tab-random');
+                const areaSelect = document.getElementById('mode-select-area');
+                const areaRandom = document.getElementById('mode-random-area');
+
+                if (mode === 'select') {
+                    btnSelect.className = "flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
+                    btnRandom.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
+                    areaSelect.classList.remove('hidden');
+                    areaRandom.classList.add('hidden');
+                } else {
+                    btnRandom.className = "flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
+                    btnSelect.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
+                    areaRandom.classList.remove('hidden');
+                    areaSelect.classList.add('hidden');
+                }
+            },
+
+            startExam() {
+                const name = document.getElementById('user-name-input').value.trim();
+                const id = document.getElementById('user-id-input').value.trim();
+                
+                if (!name || !id) { alert("Please enter both Student ID and Full Name!"); return; }
+                
+                this.state.selectedTests = [];
+                const isSelectMode = !document.getElementById('mode-select-area').classList.contains('hidden');
+                
+                if (isSelectMode) {
+                    const checkboxes = document.querySelectorAll('.test-cb:checked');
+                    checkboxes.forEach(cb => this.state.selectedTests.push(cb.value));
+                } else {
+                    const count = parseInt(document.getElementById('random-count').value);
+                    const shuffled = [...db].sort(() => 0.5 - Math.random());
+                    this.state.selectedTests = shuffled.slice(0, count).map(t => t.id);
+                }
+
+                if (this.state.selectedTests.length === 0) {
+                    alert("Please select at least 1 test!");
+                    return;
+                }
+
+                // Reset states (Including new strict validation trackers)
+                this.state.userAnswers = {};
+                this.state.questionStates = {};
+                this.state.selectedTests.forEach(testId => {
+                    const test = db.find(t => t.id === testId);
+                    test.questions.forEach(q => {
+                        this.state.questionStates[`${testId}-${q.id}`] = { 
+                            hasEvidence: false,
+                            typedEvidence: "", 
+                            highlightedText: "", // Keep track of literal text highlighted
+                            isEvidenceValid: false,
+                            isFullyCorrect: false
+                        };
+                    });
+                });
+
+                this.state.userName = name;
+                this.state.studentId = id;
+                this.state.startTime = new Date(); 
+                this.state.currentIdx = 0;
+                
+                // 8 minutes per test (480 seconds)
+                this.state.timeLeftSeconds = this.state.selectedTests.length * 480; 
+                
+                document.getElementById('header-name').textContent = name;
+                document.getElementById('screen-welcome').classList.add('hidden');
+                document.getElementById('screen-app').classList.remove('hidden');
+                document.getElementById('screen-app').classList.add('flex');
+                
+                this.startTimer();
+                this.renderTest();
+            },
+
+            startTimer() {
+                this.updateTimerDisplay();
+                this.state.globalTimer = setInterval(() => {
+                    this.state.timeLeftSeconds--;
+                    this.updateTimerDisplay();
+
+                    if (this.state.timeLeftSeconds <= 0) {
+                        clearInterval(this.state.globalTimer);
+                        alert("Time's up! The system will auto-submit your answers.");
+                        if (!this.state.testCompleted) {
+                            this.showFeedback(false, true); 
+                        } else {
+                            this.finishExam();
+                        }
+                    }
+                }, 1000);
+            },
+
+            updateTimerDisplay() {
+                const timerContainer = document.getElementById('timer-container');
+                const timerDisplay = document.getElementById('timer-display');
+                
+                if(this.state.timeLeftSeconds <= 0) {
+                    timerDisplay.textContent = "00:00";
+                    return;
+                }
+
+                const m = Math.floor(this.state.timeLeftSeconds / 60).toString().padStart(2, '0');
+                const s = (this.state.timeLeftSeconds % 60).toString().padStart(2, '0');
+                timerDisplay.textContent = `${m}:${s}`;
+
+                if (this.state.timeLeftSeconds <= 60) {
+                    timerContainer.classList.add('time-warning');
+                } else {
+                    timerContainer.classList.remove('time-warning');
+                }
+            },
+
+            // --- STRICT EVIDENCE LOGIC FOR Q11-Q14 (HIGHLIGHT) ---
+            confirmEvidence(key) {
+                let selection = window.getSelection();
+                let range = null;
+
+                if (selection && selection.rangeCount > 0 && selection.toString().trim() !== "") {
+                    range = selection.getRangeAt(0);
+                } else if (this.state.lastSavedRange) {
+                    range = this.state.lastSavedRange;
+                }
+
+                if (!range || range.toString().trim() === "") {
+                    alert("Please select/highlight the evidence text in the reading passage first!");
+                    return;
+                }
+
+                const contentDiv = document.getElementById('reading-content');
+                if (!contentDiv.contains(range.commonAncestorContainer)) {
+                    alert("Please select text inside the reading passage!");
+                    return;
+                }
+
+                // Anti-Cheat: Limit highlighting length to prevent highlighting the whole paragraph
+                const highlightedText = range.toString().trim();
+                if (highlightedText.length > 300) {
+                    alert("Your highlighted text is too long! Please only highlight the specific sentence or phrase that contains the evidence.");
+                    return;
+                }
+
+                const qNum = key.split('-')[1];
+                
+                contentDiv.setAttribute("inputmode", "none");
+                contentDiv.contentEditable = "true";
+                contentDiv.focus(); 
+                
+                selection.removeAllRanges();
+                selection.addRange(range);
+                
+                if (!document.execCommand('hiliteColor', false, '#fef08a')) {
+                    document.execCommand('BackColor', false, '#fef08a');
+                }
+                
+                const label = document.createElement('span');
+                label.className = 'evidence-label';
+                label.textContent = `[Q${qNum}]`;
+                range.insertNode(label);
+                
+                contentDiv.contentEditable = "false";
+                contentDiv.removeAttribute("inputmode");
+                selection.removeAllRanges();
+                this.state.lastSavedRange = null;
+
+                // Save exact text for strict validation later
+                this.state.questionStates[key].highlightedText = highlightedText;
+                this.state.questionStates[key].hasEvidence = true;
+                this.state.activeEvidenceQId = null;
+                
+                this.renderTest(true);
+            },
+
+            // --- STRICT EVIDENCE LOGIC FOR Q15 (TYPE) ---
+            confirmTypedEvidence(key) {
+                const textarea = document.getElementById(`typed-evidence-${key}`);
+                if(!textarea) return;
+                
+                const text = textarea.value.trim();
+                if (!text) {
+                    alert("Please type your reasoning/evidence before confirming!");
+                    return;
+                }
+                
+                this.state.questionStates[key].typedEvidence = text;
+                this.state.questionStates[key].hasEvidence = true;
+                this.state.activeEvidenceQId = null;
+                
+                this.renderTest(true);
+            },
+
+            requestEvidence(key) {
+                this.state.activeEvidenceQId = key;
+                this.renderTest(true);
+            },
+
+            cancelEvidence() {
+                this.state.activeEvidenceQId = null;
+                this.renderTest(true);
+            },
+
+            renderTest(preserveScroll = false) {
+                const testId = this.state.selectedTests[this.state.currentIdx];
+                const test = db.find(t => t.id === testId);
+                
+                const container = document.getElementById('questions-container');
+                let scrollPos = 0;
+                
+                if (preserveScroll && container) {
+                    scrollPos = container.scrollTop;
+                    if (document.activeElement && document.activeElement.tagName === 'BUTTON') {
+                        document.activeElement.blur();
+                    }
+                }
+
+                const displayNum = this.state.currentIdx + 1;
+                const totalNum = this.state.selectedTests.length;
+                
+                let displayTitle = test.title;
+                if(test.id.startsWith("oxford_test")) {
+                    const testNum = test.id.replace("oxford_test", "");
+                    document.getElementById('header-title').textContent = `Oxford Test ${testNum}: ${test.title}`;
+                } else {
+                    document.getElementById('header-title').textContent = `Test ${displayNum}: ${test.title}`;
+                }
+
+                document.getElementById('header-progress').textContent = `${displayNum}/${totalNum}`;
+                document.getElementById('text-title').textContent = displayTitle;
+                document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+
+                const banner = document.getElementById('evidence-instruction-banner');
+                const contentDiv = document.getElementById('reading-content');
+                
+                const isQ15Active = this.state.activeEvidenceQId && this.state.activeEvidenceQId.endsWith('-15');
+                
+                if (this.state.activeEvidenceQId && !this.state.testCompleted && !isQ15Active) {
+                    banner.classList.remove('hidden');
+                    contentDiv.classList.add('evidence-mode');
+                } else {
+                    banner.classList.add('hidden');
+                    contentDiv.classList.remove('evidence-mode');
+                }
+
+                if (contentDiv.getAttribute('data-test-id') !== test.id) {
+                     contentDiv.innerHTML = test.content_html;
+                     contentDiv.setAttribute('data-test-id', test.id);
+                }
+
+                this.renderQuestions(test);
+
+                const btnCheck = document.getElementById('btn-check');
+                const btnNext = document.getElementById('btn-next');
+                
+                if (this.state.testCompleted) {
+                    btnCheck.classList.add('hidden');
+                    btnNext.classList.remove('hidden');
+                    if (this.state.currentIdx === totalNum - 1) {
+                         btnNext.innerHTML = 'Submit <i class="fas fa-flag-checkered"></i>';
+                         btnNext.onclick = () => this.finishExam();
+                    } else {
+                         btnNext.innerHTML = 'Next Test <i class="fas fa-arrow-right"></i>';
+                         btnNext.onclick = () => this.nextTest();
+                    }
+                } else {
+                    btnCheck.classList.remove('hidden');
+                    btnNext.classList.add('hidden');
+                }
+
+                if (preserveScroll && container) {
+                    requestAnimationFrame(() => {
+                         container.scrollTop = scrollPos;
+                    });
+                }
+            },
+
+            renderQuestions(test) {
+                const container = document.getElementById('questions-container');
+                const firstKey = `${test.id}-${test.questions[0].id}`;
+                const firstCard = document.getElementById(`qcard-${firstKey}`);
+                const isUpdate = !!firstCard;
+
+                if (!isUpdate) {
+                    container.innerHTML = '';
+                }
+
+                test.questions.forEach((q, idx) => {
+                    const key = `${test.id}-${q.id}`;
+                    const selectedAns = this.state.userAnswers[key];
+                    const state = this.state.questionStates[key];
+                    const isCompleted = this.state.testCompleted;
+                    
+                    const qCard = document.createElement('div');
+                    let qCardClasses = "bg-white p-6 rounded-2xl border border-red-200 shadow-sm transition-all ";
+                    
+                    if (isCompleted) {
+                        // Strict validation UI switch
+                        if (state.isFullyCorrect) {
+                            qCardClasses += 'border-green-400 bg-green-50/40 ';
+                        } else {
+                            qCardClasses += 'border-red-400 bg-red-50/40 ';
+                        }
+                    }
+                    
+                    if (this.state.activeEvidenceQId === key) {
+                        qCardClasses += 'ring-2 ring-yellow-400 ring-offset-2 ';
+                    }
+
+                    qCard.className = qCardClasses;
+                    qCard.id = `qcard-${key}`;
+
+                    // Question Title
+                    const qTitle = document.createElement('h4');
+                    qTitle.className = "font-bold text-slate-800 mb-5 leading-relaxed text-lg";
+                    qTitle.innerHTML = `<span class="bg-slate-800 text-white px-3 py-1 rounded-md text-base mr-3">${q.id}</span> ${q.text}`;
+                    qCard.appendChild(qTitle);
+
+                    // Options Grid
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = "space-y-3";
+                    
+                    for (const [optKey, optVal] of Object.entries(q.options)) {
+                        const btn = document.createElement('button');
+                        let btnClass = "group relative w-full text-left px-5 py-4 rounded-xl border text-base font-bold transition-all duration-200 flex items-center gap-4 ";
+                        let labelClass = "w-8 h-8 rounded-md flex items-center justify-center text-sm font-extrabold shrink-0 transition-colors ";
+                        
+                        let isSelected = selectedAns === optKey;
+                        let isCorrectOpt = optKey === q.correct;
+
+                        if (!isCompleted) {
+                            if (isSelected) {
+                                btnClass += "border-rose-500 bg-rose-600 text-white shadow-md";
+                                labelClass += "bg-white/20 text-white";
+                            } else {
+                                btnClass += "border-slate-200 text-slate-600 hover:bg-rose-50 hover:border-rose-300 hover:text-rose-700";
+                                labelClass += "bg-slate-100 text-slate-500 group-hover:bg-rose-200 group-hover:text-rose-700";
+                            }
+                            btn.onclick = () => this.handleAnswer(test.id, q.id, optKey);
+                        } else {
+                            btn.disabled = true;
+                            // Still highlight the correct MULTIPLE CHOICE option, regardless of evidence validation
+                            if (isCorrectOpt) {
+                                btnClass += "border-green-500 bg-green-100 text-green-800 font-bold";
+                                labelClass += "bg-green-200 text-green-800";
+                                btn.innerHTML = `<i class="fas fa-check absolute right-4 text-green-600 text-lg"></i> `;
+                            } else if (isSelected && !isCorrectOpt) {
+                                btnClass += "border-red-500 bg-red-100 text-red-800";
+                                labelClass += "bg-red-200 text-red-800";
+                                btn.innerHTML = `<i class="fas fa-times absolute right-4 text-red-600 text-lg"></i> `;
+                            } else {
+                                btnClass += "border-slate-100 text-slate-400 opacity-60";
+                                labelClass += "bg-slate-100 text-slate-400";
+                            }
+                        }
+
+                        if (!isCompleted) {
+                            btn.innerHTML = `<span class="${labelClass}">${optKey}</span> <span>${optVal}</span>`;
+                        } else {
+                            btn.innerHTML += `<span class="${labelClass}">${optKey}</span> <span>${optVal}</span>`;
+                        }
+                        
+                        btn.className = btnClass;
+                        optionsDiv.appendChild(btn);
+                    }
+                    
+                    qCard.appendChild(optionsDiv);
+
+                    // Evidence Request Prompt
+                    if (!isCompleted) {
+                        if (this.state.activeEvidenceQId === key) {
+                            const activeDiv = document.createElement('div');
+                            activeDiv.className = "mt-5 bg-yellow-50 border border-yellow-300 p-4 rounded-xl flex flex-col gap-3 animate-pulse shadow-sm";
+                            
+                            if (q.id === 15) {
+                                // Question 15: Type reasoning
+                                activeDiv.innerHTML = `
+                                    <p class="text-base font-bold text-yellow-800"><i class="fas fa-keyboard mr-1"></i> Provide your reasoning/evidence for the global meaning.</p>
+                                    <textarea id="typed-evidence-${key}" class="w-full mt-2 p-3 border border-yellow-300 rounded-lg text-base outline-none focus:ring-2 focus:ring-yellow-400" rows="3" placeholder="Type your reasoning here...">${state.typedEvidence || ''}</textarea>
+                                    <div class="flex gap-2 mt-2">
+                                        <button onclick="app.confirmTypedEvidence('${key}')" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-5 py-3 rounded-lg shadow-sm text-sm transition-colors w-full">
+                                            <i class="fas fa-check"></i> Confirm Reasoning
+                                        </button>
+                                        <button onclick="app.cancelEvidence()" class="bg-white border border-yellow-300 text-slate-500 hover:bg-slate-50 font-bold px-5 py-3 rounded-lg shadow-sm text-sm transition-colors">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                `;
+                            } else {
+                                // Questions 11-14: Highlight text
+                                activeDiv.innerHTML = `
+                                    <p class="text-base font-bold text-yellow-800"><i class="fas fa-highlighter mr-1"></i> Highlight the evidence sentence in the paragraph (max 300 chars).</p>
+                                    <div class="flex gap-2 mt-1">
+                                        <button onclick="app.confirmEvidence('${key}')" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold px-5 py-3 rounded-lg shadow-sm text-sm transition-colors w-full">
+                                            <i class="fas fa-check"></i> Confirm Evidence
+                                        </button>
+                                        <button onclick="app.cancelEvidence()" class="bg-white border border-yellow-300 text-slate-500 hover:bg-slate-50 font-bold px-5 py-3 rounded-lg shadow-sm text-sm transition-colors">
+                                            Cancel
+                                        </button>
+                                    </div>
+                                `;
+                            }
+                            qCard.appendChild(activeDiv);
+                            
+                        } else if (state.hasEvidence) {
+                            const foundDiv = document.createElement('div');
+                            foundDiv.className = "mt-5 bg-green-50 border border-green-200 p-3 rounded-xl flex flex-col justify-between";
+                            
+                            if (q.id === 15) {
+                                foundDiv.innerHTML = `
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="text-sm font-bold text-green-700"><i class="fas fa-check-circle"></i> Reasoning Recorded</span>
+                                        <button onclick="app.requestEvidence('${key}')" class="text-sm text-slate-500 hover:text-slate-700 underline font-semibold">Edit Reasoning</button>
+                                    </div>
+                                    <p class="text-sm text-slate-600 bg-white p-3 rounded border border-green-100 italic">"${state.typedEvidence}"</p>
+                                `;
+                            } else {
+                                foundDiv.innerHTML = `
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-sm font-bold text-green-700"><i class="fas fa-check-circle"></i> Evidence Recorded</span>
+                                        <button onclick="app.requestEvidence('${key}')" class="text-sm text-slate-500 hover:text-slate-700 underline font-semibold">Edit Evidence</button>
+                                    </div>
+                                `;
+                            }
+                            qCard.appendChild(foundDiv);
+                        }
+                    }
+
+                    // Strict Explanation & Feedback Box
+                    if (isCompleted) {
+                        const expDiv = document.createElement('div');
+                        expDiv.className = `mt-5 p-5 rounded-xl border text-base ${state.isFullyCorrect ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'}`;
+                        
+                        let customStatus = "";
+                        if (!state.isFullyCorrect && selectedAns === q.correct) {
+                            customStatus = `<p class="font-bold text-red-600 mb-3 pb-2 border-b border-red-200"><i class="fas fa-exclamation-triangle mr-1"></i> Option is correct, but your evidence is invalid/missing keyword!</p>`;
+                        } else if (!state.isFullyCorrect) {
+                            customStatus = `<p class="font-bold text-red-600 mb-3 pb-2 border-b border-red-200"><i class="fas fa-times-circle mr-1"></i> Incorrect Option.</p>`;
+                        } else {
+                            customStatus = `<p class="font-bold text-green-700 mb-3 pb-2 border-b border-green-200"><i class="fas fa-check-circle mr-1"></i> Option & Evidence Correct!</p>`;
+                        }
+
+                        expDiv.innerHTML = customStatus + q.explanation;
+                        qCard.appendChild(expDiv);
+                    }
+
+                    if (isUpdate) {
+                        const oldCard = document.getElementById(`qcard-${key}`);
+                        if (oldCard) oldCard.replaceWith(qCard);
+                    } else {
+                        container.appendChild(qCard);
+                    }
+                });
+            },
+
+            handleAnswer(testId, qId, optKey) {
+                if (this.state.testCompleted) return;
+
+                const key = `${testId}-${qId}`;
+                const state = this.state.questionStates[key];
+
+                this.state.userAnswers[key] = optKey;
+                
+                if (!state.hasEvidence) {
+                    this.state.activeEvidenceQId = key;
+                }
+
+                this.renderTest(true);
+            },
+
+            checkAnswers() {
+                if (this.state.activeEvidenceQId) {
+                    alert("Please confirm your pending evidence before checking!");
+                    return;
+                }
+
+                const testId = this.state.selectedTests[this.state.currentIdx];
+                const test = db.find(t => t.id === testId);
+                
+                let correctCount = 0;
+                let answeredCount = 0;
+                let evidenceCount = 0;
+                const totalQuestions = test.questions.length; 
+
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    if (this.state.userAnswers[key]) answeredCount++;
+                    if (this.state.questionStates[key].hasEvidence) evidenceCount++;
+                });
+
+                if (answeredCount < totalQuestions || evidenceCount < totalQuestions) {
+                    alert("ACTION REQUIRED: You must select an answer AND provide evidence for ALL questions.");
+                    return;
+                }
+
+                // STRICT VALIDATION LOOP
+                test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const userAns = this.state.userAnswers[key];
+                    const state = this.state.questionStates[key];
+                    
+                    let evidenceValid = false;
+                    const keywords = q.evidenceKeywords || [];
+                    
+                    if (q.id === 15) {
+                         const typed = (state.typedEvidence || "").toLowerCase();
+                         evidenceValid = keywords.some(kw => typed.includes(kw.toLowerCase()));
+                    } else {
+                         const highlighted = (state.highlightedText || "").toLowerCase();
+                         evidenceValid = keywords.some(kw => highlighted.includes(kw.toLowerCase()));
+                    }
+                    
+                    state.isEvidenceValid = evidenceValid;
+                    state.isFullyCorrect = (userAns === q.correct && evidenceValid);
+
+                    if (state.isFullyCorrect) correctCount++;
+                });
+
+                if (correctCount >= 4) {
+                    this.showFeedback(true);
+                } else {
+                    if (this.state.attemptsLeft > 0) {
+                        this.state.attemptsLeft--;
+                        alert(`Not enough points to pass (need 4/5). NOTE: Both your selected option AND your evidence (must contain key info) need to be correct to score a point! You have ${this.state.attemptsLeft} attempt(s) left.`);
+                        this.highlightErrorsOnly(); 
+                        document.getElementById('attempts-display').textContent = `Attempts left: ${this.state.attemptsLeft}`;
+                    } else {
+                        this.showFeedback(false); 
+                    }
+                }
+            },
+
+            highlightErrorsOnly() {
+                 const testId = this.state.selectedTests[this.state.currentIdx];
+                 const test = db.find(t => t.id === testId);
+                 
+                 test.questions.forEach(q => {
+                    const key = `${test.id}-${q.id}`;
+                    const state = this.state.questionStates[key];
+                    const qCard = document.getElementById(`qcard-${key}`);
+                    
+                    if (!state.isFullyCorrect) {
+                        qCard.classList.remove('shake-animation');
+                        void qCard.offsetWidth; 
+                        qCard.classList.add('shake-animation', 'border-red-400'); 
+                        setTimeout(() => qCard.classList.remove('border-red-400'), 500);
+                    }
+                 });
+            },
+
+            showFeedback(passed, isTimeOut = false) {
+                this.state.testCompleted = true;
+                this.state.testPassed = passed;
+                this.state.activeEvidenceQId = null;
+
+                if (isTimeOut) {
+                    this.finishExam();
+                    return;
+                }
+
+                if (passed) {
+                    alert("Great job! You passed this test.");
+                } else {
+                    alert("Out of attempts. Review the correct answers and move to the next test.");
+                }
+
+                this.renderTest(); 
+            },
+
+            nextTest() {
+                this.state.currentIdx++;
+                this.state.attemptsLeft = 2; 
+                this.state.testCompleted = false;
+                this.state.testPassed = false;
+                this.state.activeEvidenceQId = null;
+                
+                this.renderTest();
+            },
+
+            finishExam() {
+                clearInterval(this.state.globalTimer);
+                this.state.endTime = new Date();
+                
+                const diffMs = this.state.endTime - this.state.startTime;
+                const minutes = Math.floor(diffMs / 60000);
+                const seconds = Math.floor(((diffMs % 60000) / 1000));
+                const durationStr = `${minutes} min ${seconds} sec`;
+
+                let totalScore = 0;
+                let totalQ = 0;
+                let breakdownHtml = "";
+
+                // Calculate strict scores for the final report
+                this.state.selectedTests.forEach((testId, index) => {
+                    const test = db.find(t => t.id === testId);
+                    let testScore = 0;
+                    let testTotal = test.questions.length;
+                    totalQ += testTotal;
+                    
+                    test.questions.forEach(q => {
+                        const key = `${test.id}-${q.id}`;
+                        const userAns = this.state.userAnswers[key];
+                        const state = this.state.questionStates[key];
+                        
+                        let evidenceValid = false;
+                        const keywords = q.evidenceKeywords || [];
+                        
+                        if (q.id === 15) {
+                             const typed = (state.typedEvidence || "").toLowerCase();
+                             evidenceValid = keywords.some(kw => typed.includes(kw.toLowerCase()));
+                        } else {
+                             const highlighted = (state.highlightedText || "").toLowerCase();
+                             evidenceValid = keywords.some(kw => highlighted.includes(kw.toLowerCase()));
+                        }
+
+                        if (userAns === q.correct && evidenceValid) {
+                            testScore++;
+                            totalScore++;
+                        }
+                    });
+
+                    let displayTitle = test.title;
+                    if(test.id.startsWith("oxford_test")) {
+                        const testNum = test.id.replace("oxford_test", "");
+                        displayTitle = `Oxford Test ${testNum}`;
+                    }
+
+                    breakdownHtml += `
+                        <div class="flex justify-between items-center p-4 bg-red-50 rounded-xl border border-red-100">
+                            <span class="font-bold text-slate-700 text-base">${displayTitle}</span>
+                            <span class="font-bold text-rose-600 text-lg">${testScore}/${testTotal} correct</span>
+                        </div>
+                    `;
+                });
+
+                const percent = totalQ > 0 ? Math.round((totalScore / totalQ) * 100) : 0;
+                
+                const ngayLam = this.getNgayThangNam(this.state.startTime);
+                const gioBD = this.getGioPhut(this.state.startTime);
+                const gioKT = this.getGioPhut(this.state.endTime);
+
+                // Lấy thông tin chế độ làm bài để ghi vào log/sheet
+                let modeText = "";
+                if (document.getElementById('mode-select-area').classList.contains('hidden')) {
+                    modeText = "Random: " + document.getElementById('random-count').options[document.getElementById('random-count').selectedIndex].text.split('(')[0].trim();
+                } else {
+                    const checked = Array.from(document.querySelectorAll('.test-cb:checked')).map(cb => {
+                        const test = db.find(t => t.id === cb.value);
+                        if(test && test.id.startsWith("oxford_test")) {
+                             return `T${test.id.replace("oxford_test", "")}`;
+                        }
+                        return cb.value;
+                    }).join(', ');
+                    modeText = "Selected: " + checked;
+                }
+
+                // Gửi về Google Sheets bằng cấu trúc JSON mới
+                guiKetQua10Cot(
+                    "Reading Part 3",       // phanThi
+                    "Oxford Tests 1-4",     // tenBai
+                    this.state.studentId,   // maHocSinh
+                    this.state.userName,    // tenHsNhap
+                    modeText,               // cheDoLamBai
+                    ngayLam,                // ngay
+                    gioBD,                  // gioBatDau
+                    gioKT,                  // gioNop
+                    durationStr,            // thoiGianLam
+                    `${totalScore}/${totalQ}`,// soCauDung
+                    percent + "%"           // phanTramDung
+                );
+
+                this.saveHistory(percent, totalScore, totalQ, durationStr);
+
+                document.getElementById('screen-app').classList.add('hidden');
+                document.getElementById('screen-result').classList.remove('hidden');
+                
+                document.getElementById('result-percent-large').textContent = `${percent}%`;
+                document.getElementById('res-student-name').textContent = this.state.userName;
+                document.getElementById('res-student-id').textContent = this.state.studentId;
+                document.getElementById('res-date').textContent = ngayLam;
+                document.getElementById('res-start-time').textContent = gioBD;
+                document.getElementById('res-end-time').textContent = gioKT;
+                document.getElementById('result-breakdown').innerHTML = breakdownHtml;
+                document.getElementById('result-score').textContent = totalScore;
+                document.getElementById('result-max').textContent = "/" + totalQ;
+            },
+
+            getNgayThangNam(date) {
+                if (!date) return "";
+                const d = date.getDate().toString().padStart(2, '0');
+                const m = (date.getMonth() + 1).toString().padStart(2, '0');
+                const y = date.getFullYear().toString().slice(-2);
+                return `${d}/${m}/${y}`;
+            },
+
+            getGioPhut(date) {
+                if (!date) return "";
+                const hh = date.getHours().toString().padStart(2, '0');
+                const mm = date.getMinutes().toString().padStart(2, '0');
+                return `${hh}:${mm}`;
+            },
+
+            saveHistory(percent, score, total, duration) {
+                let modeText = "";
+                if (document.getElementById('mode-select-area').classList.contains('hidden')) {
+                    modeText = "Random: " + document.getElementById('random-count').options[document.getElementById('random-count').selectedIndex].text.split('(')[0].trim();
+                } else {
+                    const checked = Array.from(document.querySelectorAll('.test-cb:checked')).map(cb => {
+                        const test = db.find(t => t.id === cb.value);
+                        if(test && test.id.startsWith("oxford_test")) {
+                             return `T${test.id.replace("oxford_test", "")}`;
+                        }
+                        return cb.value;
+                    }).join(', ');
+                    modeText = "Selected: " + checked;
+                }
+                
+                const session = {
+                    date: this.getNgayThangNam(new Date()) + " " + this.getGioPhut(new Date()),
+                    percent: percent,
+                    score: `${score}/${total}`,
+                    duration: duration,
+                    mode: modeText
+                };
+                this.state.history.unshift(session);
+                if (this.state.history.length > 5) this.state.history.pop(); 
+                localStorage.setItem('pet_part3_history_oxford', JSON.stringify(this.state.history));
+            },
+
+            renderHistory() {
+                const historyArea = document.getElementById('history-area');
+                const historyList = document.getElementById('history-list');
+                
+                if (this.state.history.length > 0) {
+                    historyArea.classList.remove('hidden');
+                    historyList.innerHTML = this.state.history.map(item => `
+                        <div class="flex justify-between items-center p-3 bg-white border border-red-100 rounded-lg">
+                            <div>
+                                <p class="font-bold text-slate-700 text-base">${item.percent}% <span class="text-slate-400 font-normal ml-1 text-sm">(${item.score})</span></p>
+                                <p class="text-slate-400 text-sm mt-0.5">${item.date} • ${item.mode}</p>
+                            </div>
+                            <span class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-md font-bold text-sm border border-rose-100">${item.duration}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+        };
+
+        app.init();
+
+        // --- GOOGLE SHEET SEND FUNCTION ---
+        function guiKetQua10Cot(phanThi, tenBai, maHS, tenHS, cheDoLamBai, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
+            // NẾU CÔ CÓ LINK GOOGLE SCRIPT MỚI, HÃY DÁN VÀO BIẾN DƯỚI ĐÂY:
+            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbw7vccUhGqXewhQEh8zPw3mvAHT_lDNWqeDY2KYS5ZsG_B2yYeVr6SNCWkMmC_5HkAxcg/exec"; 
+            
+            const statusEl = document.getElementById('sheet-status');
+            if (statusEl) statusEl.textContent = "Sending data to system...";
+            
+            const duLieuGuiDi = {
+                phanThi: phanThi,
+                tenBai: tenBai,
+                maHocSinh: maHS,
+                tenHsNhap: tenHS,
+                cheDoLamBai: cheDoLamBai,
+                ngay: ngay,
+                gioBatDau: gioBatDau,
+                gioNop: gioNop,
+                thoiGianLam: thoiGianLamBai,
+                soCauDung: diemSo,
+                phanTramDung: phanTram
+            };
+
+            fetch(LINK_APP_SCRIPT, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+                body: JSON.stringify(duLieuGuiDi)
+            })
+            .then(() => {
+                console.log("✅ Sent to Google Sheets");
+                if(statusEl) statusEl.innerHTML = '<span class="text-green-600"><i class="fas fa-check-circle"></i> Results saved successfully!</span>';
+            })
+            .catch(err => {
+                console.error("❌ Error:", err);
+                if(statusEl) statusEl.innerHTML = '<span class="text-red-500">Error sending results. Please check your network connection.</span>';
+            });
+        }
+    </script>
+</body>
+</html>
