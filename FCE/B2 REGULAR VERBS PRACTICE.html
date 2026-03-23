@@ -600,7 +600,7 @@
 
         function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
             // URL MỚI CỦA BẠN ĐÃ ĐƯỢC CHÈN VÀO ĐÂY
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7M8A9Kazjzb-bIHxcXAI3_sZSYJdrtglUaM32wmgjikRX2JJ4Yb5Vq39U7DvkYBXR/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwo1gi4Mkk2xErjvzK6I85S9TtUV_-22sd2o_rFjGsTCLyqHXJCNDMpCmg078wRI63E/exec"; 
             const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
 
             var gio = thoiGianBatDauHoc.getHours();
@@ -630,18 +630,18 @@
             .then(response => response.json())
             .then(data => {
                 if (data.result === "success") {
-                    console.log("Đã gửi dữ liệu thành công!");
-                    saveStatus.innerText = "✅ Kết quả đã được tự động lưu lên Google Sheets!";
+                    console.log("Data sent successfully!");
+                    saveStatus.innerText = "✅ Result successfully saved to Google Sheets!";
                     saveStatus.className = "mb-8 text-sm font-bold text-green-500 h-6";
                 } else {
-                    console.error("Lỗi từ Server:", data.error);
-                    saveStatus.innerText = "❌ Lỗi lưu điểm: " + data.error;
+                    console.error("Server Error:", data.error);
+                    saveStatus.innerText = "❌ Error saving result: " + data.error;
                     saveStatus.className = "mb-8 text-sm font-bold text-red-500 h-6";
                 }
             })
             .catch(err => {
-                console.error("Lỗi kết nối:", err);
-                saveStatus.innerText = "❌ Lỗi mạng: Không thể lưu kết quả. Vui lòng báo Giáo viên!";
+                console.error("Connection Error:", err);
+                saveStatus.innerText = "❌ Network Error: Could not save result. Please notify your teacher!";
                 saveStatus.className = "mb-8 text-sm font-bold text-red-500 h-6";
             });
         }
@@ -663,7 +663,7 @@
             document.getElementById('preview-count').innerText = `${filtered.length} words`;
             
             if (filtered.length === 0) {
-                document.getElementById('preview-list').innerHTML = "<span class='text-gray-400 text-sm'>Không tìm thấy từ nào.</span>";
+                document.getElementById('preview-list').innerHTML = "<span class='text-gray-400 text-sm'>No words found.</span>";
             } else {
                 document.getElementById('preview-list').innerHTML = filtered.map(v => 
                     `<span class="bg-[#fff3ec] text-[#ef6c33] px-3 py-1.5 rounded-xl font-bold text-[11px]">#${v.id} ${v.word.toUpperCase()}</span>`
@@ -961,7 +961,7 @@
 
             // Gọi trạng thái đang lưu (hiển thị cho user dễ nhìn)
             const saveStatus = document.getElementById('save-status');
-            saveStatus.innerText = "⏳ Đang lưu kết quả lên hệ thống...";
+            saveStatus.innerText = "⏳ Saving result to database...";
             saveStatus.className = "mb-8 text-sm font-bold text-blue-500 animate-pulse h-6";
 
             guiKetQuaTuVung(
