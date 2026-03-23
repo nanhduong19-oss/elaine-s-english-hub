@@ -66,64 +66,79 @@
 
     <!-- SCREEN 1: WELCOME -->
     <div id="screen-welcome" class="fixed inset-0 z-50 bg-red-50 flex flex-col items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white max-w-md w-full rounded-3xl shadow-2xl border border-red-100 overflow-hidden my-auto">
-            <div class="h-2 bg-rose-600 w-full"></div>
-            <div class="p-8 text-center">
-                <h1 class="text-3xl font-extrabold text-slate-800 mb-1">PET READING PRACTICE</h1>
-                <p class="text-slate-500 mb-4 font-bold uppercase tracking-wider text-sm">Reading Part 3</p>
-                <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider mb-6">
-                    <i class="fas fa-stopwatch mr-1"></i> 8 MINUTES / TEST LIMIT
-                </div>
-
-                <!-- Form Nhập Thông Tin -->
-                <div class="text-left mb-4">
-                    <div class="flex gap-3 mb-4">
-                        <div class="flex-1">
-                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Student ID</label>
-                            <input type="text" id="user-id-input" placeholder="e.g. 71001BT" class="w-full px-3 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium">
+        <div class="bg-white max-w-4xl w-full rounded-3xl shadow-2xl border border-red-100 overflow-hidden my-auto flex flex-col">
+            <div class="h-2 bg-rose-600 w-full flex-none"></div>
+            
+            <div class="p-8 lg:p-10">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    
+                    <!-- CỘT TRÁI: Thông tin & Nút bắt đầu -->
+                    <div class="flex flex-col justify-center text-left">
+                        <h1 class="text-4xl font-extrabold text-slate-800 mb-2">PET READING</h1>
+                        <p class="text-slate-500 mb-6 font-bold uppercase tracking-wider text-sm">Practice Part 3</p>
+                        
+                        <div class="mb-8">
+                            <div class="inline-block bg-rose-100 text-rose-700 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider">
+                                <i class="fas fa-stopwatch mr-1"></i> 8 MINUTES / TEST LIMIT
+                            </div>
                         </div>
-                        <div class="flex-[2]">
-                            <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Full Name</label>
-                            <input type="text" id="user-name-input" placeholder="Enter your name..." class="w-full px-3 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium" onkeypress="if(event.key === 'Enter') app.startExam()">
+
+                        <!-- Form Nhập Thông Tin -->
+                        <div class="space-y-5 mb-8">
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Student ID</label>
+                                <input type="text" id="user-id-input" placeholder="e.g. 71001BT" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-slate-700 mb-1 ml-1">Full Name</label>
+                                <input type="text" id="user-name-input" placeholder="Enter your name..." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none text-base font-medium" onkeypress="if(event.key === 'Enter') app.startExam()">
+                            </div>
+                        </div>
+
+                        <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98] text-lg mt-auto">
+                            Start Practice
+                        </button>
+                    </div>
+
+                    <!-- CỘT PHẢI: Tùy chỉnh chế độ -->
+                    <div class="flex flex-col">
+                        <div class="bg-red-50/50 p-6 rounded-2xl border border-red-100 h-full flex flex-col">
+                            <h3 class="font-bold text-slate-800 text-lg mb-5 flex items-center gap-2">
+                                <i class="fas fa-sliders-h text-rose-500"></i> Practice Mode
+                            </h3>
+                            
+                            <!-- Tabs -->
+                            <div class="flex rounded-xl bg-slate-200/70 p-1.5 mb-6">
+                                <button id="tab-select" onclick="app.switchMode('select')" class="flex-1 py-2.5 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all">Select Tests</button>
+                                <button id="tab-random" onclick="app.switchMode('random')" class="flex-1 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Random</button>
+                            </div>
+
+                            <!-- Select Specific Tests Area -->
+                            <div id="mode-select-area" class="text-left flex-grow flex flex-col">
+                                <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Check the tests to practice:</label>
+                                <!-- Khu vực cuộn danh sách bài test -->
+                                <div class="overflow-y-auto custom-scrollbar pr-2 flex-grow" style="max-height: 260px;">
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3" id="test-checkboxes">
+                                        <!-- Checkboxes injected here by JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Random Tests Area -->
+                            <div id="mode-random-area" class="text-left hidden flex-grow">
+                                <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Number of random tests:</label>
+                                <select id="random-count" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none font-bold text-slate-700 shadow-sm cursor-pointer text-base">
+                                    <!-- Options injected here by JS -->
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- Practice Mode Selection (Tabs) -->
-                <div class="bg-red-50/50 p-5 rounded-2xl border border-red-100 mb-6">
-                    <div class="flex rounded-xl bg-slate-200/70 p-1.5 mb-4">
-                        <button id="tab-select" onclick="app.switchMode('select')" class="flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all">Select Tests</button>
-                        <button id="tab-random" onclick="app.switchMode('random')" class="flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all">Random</button>
-                    </div>
-
-                    <!-- Select Specific Tests Area -->
-                    <div id="mode-select-area" class="text-left">
-                        <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-3">Check the tests to practice:</label>
-                        <div class="grid grid-cols-2 gap-3" id="test-checkboxes">
-                            <!-- Checkboxes injected here by JS -->
-                        </div>
-                    </div>
-
-                    <!-- Random Tests Area -->
-                    <div id="mode-random-area" class="text-left hidden">
-                        <label class="block text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Number of random tests:</label>
-                        <select id="random-count" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-rose-500 outline-none font-bold text-slate-700 shadow-sm cursor-pointer text-base">
-                            <option value="1">1 Test (8 Minutes)</option>
-                            <option value="2" selected>2 Tests (16 Minutes)</option>
-                            <option value="3">3 Tests (24 Minutes)</option>
-                            <option value="4">4 Tests (32 Minutes)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button onclick="app.startExam()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-rose-200 transition-transform active:scale-[0.98] text-lg">
-                    Start Practice
-                </button>
 
                 <!-- Lịch sử làm bài -->
-                <div id="history-area" class="mt-6 text-left hidden border-t border-red-100 pt-5">
-                    <h3 class="font-bold text-slate-700 text-base mb-3 flex items-center gap-2"><i class="fas fa-history text-slate-400"></i> Recent Practice History</h3>
-                    <div id="history-list" class="space-y-2 max-h-32 overflow-y-auto custom-scrollbar text-sm">
+                <div id="history-area" class="mt-8 text-left hidden border-t border-red-100 pt-6">
+                    <h3 class="font-bold text-slate-700 text-base mb-4 flex items-center gap-2"><i class="fas fa-history text-slate-400"></i> Recent Practice History</h3>
+                    <div id="history-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-36 overflow-y-auto custom-scrollbar text-sm pr-2">
                         <!-- Sinh tự động bằng JS -->
                     </div>
                 </div>
@@ -168,7 +183,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="flex-grow flex overflow-hidden bg-red-100 relative">
+        <main class="flex-grow flex overflow-hidden relative">
             <div class="w-full h-full flex flex-col lg:flex-row">
                 <!-- Text Area (65%) -->
                 <div class="w-full lg:w-[65%] h-1/2 lg:h-full bg-white border-r border-red-200 overflow-y-auto custom-scrollbar p-6 lg:p-12 relative">
@@ -583,6 +598,321 @@
                         "explanation": "<strong>15. C:</strong> Đoạn cuối viết: <i>'he is planning to study biology at university... but he definitely won't be leaving his camera at home'</i> (Học sinh học và giữ nhiếp ảnh làm sở thích)."
                     }
                 ]
+            },
+            {
+                "id": "readyforpet_test1",
+                "title": "Let's sing along!",
+                "content_html": `
+                    <p><i>13-year-old Helena Hutchinsons talks about the benefits of singing</i></p>
+                    <p>Have you ever wondered why people often catch themselves singing while having a shower or making dinner? Or why karaoke has been popular since it appeared in the 1980s? We still have to understand a lot about the effects of music on our brain, but many studies already show it is good for our mind and our body alike.</p>
+                    <p>The first reason you feel like singing along when you listen to a song is that it makes you feel less lonely. Whether you are cycling home, doing your homework or cheering at your favourite pop star's concert, singing is communication. It is like sharing a moment with the singer or the people around you: this is why babies often stop crying when they hear music and all children enjoy singing.</p>
+                    <p>All types of singing can make you feel better, but group singing has the best effects on people's lives. Singing in a group in front of a crowd builds confidence, which explains why joining a choir can decrease anxiety in depressed patients. When you sing, it's nearly impossible to think about other things. Since you must focus on what you are doing, singing stops you being worried about stressful situations.</p>
+                    <p>Singing can also improve speech development. Children learn to speak faster if they regularly sing from an early age and they are often better at communicating through language. When you sing you need to remember words and tunes, so this activity is also an excellent way to learn a foreign language and make your pronunciation sound more natural.</p>
+                    <p>You can also improve your physical health when you sing. Since you need to breathe properly, when you sing you breathe out more carbon dioxide and take in more oxygen, which makes your body fitter and stronger against illnesses. So if you decide to take up a new hobby, singing could be the best way for you to have fun, make new friends and improve your health at the same time.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "The first paragraph says that",
+                        "options": {
+                            "A": "people prefer singing when they have a meal.",
+                            "B": "singing can help us understand the brain better.",
+                            "C": "we can improve our health when we sing.",
+                            "D": "karaoke isn't as popular as in the 1980s."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["good for our mind", "our body alike", "studies already show"],
+                        "explanation": "<strong>11. C:</strong> Đoạn 1 viết: <i>'many studies already show it is good for our mind and our body alike.'</i> => hát có lợi cho sức khỏe (tinh thần + thể chất) = <b>improve our health</b>.<br><b>Paraphrase:</b> good for our mind and our body alike = improve our health.<br><b>Loại A:</b> đoạn chỉ nêu ví dụ 'having a shower or making dinner' chứ không nói 'prefer singing when they have a meal'.<br><b>Loại B:</b> đoạn nói <i>'We still have to understand a lot...'</i> (chưa hiểu nhiều), không phải hát giúp hiểu não hơn.<br><b>Loại D:</b> đoạn nói karaoke <i>'has been popular since... the 1980s'</i> (vẫn phổ biến từ đó đến nay), không hề nói kém phổ biến.<br><b>Key takeaway:</b> Gặp câu hỏi “đoạn nói gì”, ưu tiên câu tóm ý chung có đúng 1-2 bằng chứng rõ."
+                    },
+                    {
+                        "id": 12,
+                        "text": "What happens when you sing along to a song?",
+                        "options": {
+                            "A": "It makes you feel connected to others.",
+                            "B": "It's like being at the concert of your favourite singer.",
+                            "C": "You may feel like a pop star.",
+                            "D": "Children develop their musicality when they listen to a song."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["singing is communication", "sharing a moment", "people around you"],
+                        "explanation": "<strong>12. A:</strong> Đoạn 2 viết: <i>'singing is communication. It is like sharing a moment with the singer or the people around you.'</i> => hát cùng giúp cảm thấy được kết nối với người khác.<br><b>Paraphrase:</b> sharing a moment with others = feel connected to others.<br><b>Loại B:</b> đoạn chỉ lấy concert làm ví dụ tình huống, không nói “giống như đang ở concert”.<br><b>Loại C:</b> không có ý nào nói “feel like a pop star”.<br><b>Loại D:</b> đoạn nói về cảm giác bớt cô đơn/kết nối, không nói về phát triển musicality khi nghe bài hát.<br><b>Key takeaway:</b> Part này thường lấy <u>ý chính</u> (communication/connected) chứ không lấy ví dụ phụ."
+                    },
+                    {
+                        "id": 13,
+                        "text": "What does the writer say about joining a choir?",
+                        "options": {
+                            "A": "It helps you when you perform in a crowded building.",
+                            "B": "It makes you feel less depressed in front of an audience.",
+                            "C": "You can't sing unless you are relaxed.",
+                            "D": "You will be able to solve your everyday problems."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["in front of a crowd", "builds confidence", "joining a choir"],
+                        "explanation": "<strong>13. A:</strong> Đoạn 3 viết: <i>'Singing in a group in front of a crowd builds confidence, which explains why joining a choir...'</i> => tham gia dàn hợp xướng giúp tự tin khi hát trước đám đông (perform in front of many people).<br><b>Paraphrase:</b> in front of a crowd builds confidence = helps you perform before many people.<br><b>Loại B:</b> bài nói <i>'decrease anxiety in depressed patients'</i> (giảm lo âu ở người trầm cảm), không phải “less depressed in front of an audience”. Sai trọng tâm và sai từ (anxiety ≠ depressed).<br><b>Loại C:</b> không có ý “chỉ hát được khi thư giãn”.<br><b>Loại D:</b> bài nói “khó nghĩ chuyện khác”, không hề nói “giải quyết vấn đề hằng ngày”.<br><b>Key takeaway:</b> Đừng bị bẫy “đúng một phần”. Phải khớp đúng <u>cụm bằng chứng</u> và đúng nghĩa."
+                    },
+                    {
+                        "id": 14,
+                        "text": "Singing can help children",
+                        "options": {
+                            "A": "not to take in carbon dioxide.",
+                            "B": "to increase their communication skills.",
+                            "C": "to spell words properly.",
+                            "D": "to learn the words of a song."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["improve speech development", "better at communicating", "learn to speak faster"],
+                        "explanation": "<strong>14. B:</strong> Đoạn 4 viết: <i>'Children learn to speak faster... and they are often better at communicating through language.'</i> => hát giúp trẻ cải thiện giao tiếp/ngôn ngữ.<br><b>Paraphrase:</b> better at communicating through language = increase communication skills.<br><b>Loại A:</b> carbon dioxide/oxygen thuộc đoạn 5 (sức khỏe thể chất), không phải ý chính về trẻ ở đoạn 4.<br><b>Loại C:</b> không có ý về spelling.<br><b>Loại D:</b> bài nói “need to remember words and tunes” (yêu cầu khi hát), không khẳng định mục tiêu là “learn the words of a song”.<br><b>Key takeaway:</b> Xác định đúng đoạn chứa ý (speech development/communicating) rồi mới chọn đáp án."
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which of the following sums up the ideas in the article?",
+                        "options": {
+                            "A": "You should sing with other people if you want to have fun and improve your health.",
+                            "B": "People who are fond of singing have more friends than those who don't enjoy singing.",
+                            "C": "There are several positive effects on how you feel when you take up singing as a hobby.",
+                            "D": "Children that don't like singing may not be as confident as those that join a choir."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["have fun", "make new friends", "improve your health", "best way"],
+                        "explanation": "<strong>15. A:</strong> Kết bài (đoạn 5) viết: <i>'singing could be the best way for you to have fun, make new friends and improve your health at the same time.'</i> => tóm ý toàn bài: hát (đặc biệt nhóm) vừa vui, vừa kết nối, vừa tốt cho sức khỏe.<br><b>Paraphrase:</b> have fun + make new friends + improve your health = sing with other people to have fun and improve health.<br><b>Loại B:</b> bài chỉ nói “make new friends”, không hề so sánh “more friends than those who don't”. Bị bẫy suy diễn quá mức.<br><b>Loại C:</b> quá hẹp (chỉ nói cảm xúc), thiếu lợi ích thể chất và ngôn ngữ.<br><b>Loại D:</b> chỉ là 1 ý nhỏ (confidence/choir), không tóm toàn bài.<br><b>Key takeaway:</b> Câu “sums up” phải bao quát nhiều ý chính, không chọn đáp án chỉ nói 1 mảnh."
+                    }
+                ]
+            },
+            {
+                "id": "readyforpet_test2",
+                "title": "Decluttering",
+                "content_html": `
+                    <p><em>13-year-old Tom Trent tell us about his new habits</em></p>
+                    <p>When Tom Trent started his school project on environmental issues, he had no idea environmental pollution depends on the fact that we all own a lot of things which end up turning into rubbish. Although we don’t need many of the things we own, most of us still waste a lot of money on more clothes, devices and objects we could easily live without. This is why he soon decided to make a change and start decluttering his room, which meant getting rid of all the things he hardly used.</p>
+                    <p>He first made a list of all the stuff he never used: he wrote down the clothes which were never worn, and then added his old phones, MP3 players, old notebooks, and a lot of other old things he kept in his drawers and shelves. He also asked his family to do the same and then he started posting pictures of their things online: some of them were for sale, but he gave most of them away for free. It was a great way to avoid producing more rubbish!</p>
+                    <p>Tom now realises that decluttering can help you achieve more than one goal: if you give your things away you will not only help people who can’t afford to buy them, but you will also help the environment. In fact, the people using your things won’t have to buy new ones. At home, the greatest benefit will be having a lot of extra room. You will find out that when your house is tidier it will take longer for it to become messy again since there are fewer things around. Of course, you must try to avoid buying new things or you’ll quickly fill the empty space with stuff again!</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "The first paragraph says that",
+                        "options": {
+                            "A": "people need a lot of clothes and devices to live well.",
+                            "B": "living in today’s world is very expensive because you need a lot of things.",
+                            "C": "most of the stuff we have is hardly necessary to live a comfortable life.",
+                            "D": "many people want to have more than they can afford."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["don’t need", "live without", "waste", "clothes", "devices"],
+                        "explanation": "<strong>11. C:</strong> Đoạn 1 viết: <i>'Although we don’t need many of the things we own, ... objects we could easily live without.'</i> -> Paraphrase: <i>don’t need / live without</i> = <i>hardly necessary</i> (hầu như không cần thiết).<br><u>Loại đáp án sai:</u> A ngược ý (đoạn nói <i>không cần nhiều</i>), B không hề nói “rất đắt đỏ vì cần nhiều thứ”, D không đề cập “muốn nhiều hơn khả năng chi trả”.<br><b>Key takeaway:</b> Bám câu có từ khóa phủ định/nhấn mạnh: <i>don’t need</i>, <i>live without</i>."
+                    },
+                    {
+                        "id": 12,
+                        "text": "What is ‘decluttering’?",
+                        "options": {
+                            "A": "giving old things to poor people",
+                            "B": "cleaning and tidying up your home",
+                            "C": "making a list of all the things you rarely use",
+                            "D": "removing things you don’t need from your home"
+                        },
+                        "correct": "D",
+                        "evidenceKeywords": ["decluttering", "getting rid of", "hardly used"],
+                        "explanation": "<strong>12. D:</strong> Đoạn 1 viết: <i>'...start decluttering his room, which meant getting rid of all the things he hardly used.'</i> -> <i>decluttering</i> = <i>getting rid of</i> (loại bỏ những thứ không cần/ít dùng).<br><u>Loại đáp án sai:</u> A chỉ là <i>một cách</i> xử lý đồ (cho người nghèo), không phải định nghĩa; B là dọn dẹp chung chung; C chỉ là một bước (lập danh sách), chưa phải “decluttering”.<br><b>Key takeaway:</b> Gặp câu hỏi định nghĩa - tìm ngay cụm <i>meant ... / which meant ...</i>."
+                    },
+                    {
+                        "id": 13,
+                        "text": "How did Tom manage to clear most of the things from his home?",
+                        "options": {
+                            "A": "He sold them to people online.",
+                            "B": "He offered them as gifts.",
+                            "C": "He threw them away.",
+                            "D": "He moved them into an extra room."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["for sale", "gave most", "away for free"],
+                        "explanation": "<strong>13. B:</strong> Đoạn 2 viết: <i>'some of them were for sale, but he gave most of them away for free.'</i> -> “gave ... away for free” = tặng/cho (như quà).<br><u>Loại đáp án sai:</u> A chỉ đúng với <i>some</i> (một vài món bán), nhưng câu hỏi hỏi <i>most</i>; C sai vì không hề nói vứt đi; D sai vì không chuyển sang phòng khác.<br><b>Key takeaway:</b> Luôn soi từ định lượng: <i>some</i> vs <i>most</i> (bẫy rất hay gặp)."
+                    },
+                    {
+                        "id": 14,
+                        "text": "Which advantage has Tom noticed at home after decluttering?",
+                        "options": {
+                            "A": "He doesn’t have to clean it so often as before.",
+                            "B": "The home is always tidy.",
+                            "C": "It is faster to do the cleaning.",
+                            "D": "There are more rooms in his house."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["tidier", "take longer", "messy again", "fewer things"],
+                        "explanation": "<strong>14. A:</strong> Đoạn 3 viết: <i>'when your house is tidier it will take longer for it to become messy again since there are fewer things around.'</i> -> Nhà lâu bừa lại hơn vì ít đồ -> thực tế sẽ <i>không phải dọn thường xuyên như trước</i>.<br><u>Loại đáp án sai:</u> B tuyệt đối hóa “always tidy” (bài chỉ nói <i>take longer</i>, không phải luôn gọn); C không có chi tiết “faster to clean”; D sai vì “extra room” = nhiều khoảng trống hơn, không phải “more rooms”.<br><b>Key takeaway:</b> Tránh bẫy từ tuyệt đối: <i>always/never</i> - bài thường nói mức độ (<i>take longer</i>)."
+                    },
+                    {
+                        "id": 15,
+                        "text": "What other benefit might come from decluttering?",
+                        "options": {
+                            "A": "By selling all the extra things in your home you can earn something and help others save money, too.",
+                            "B": "If you remove all the things you don’t need from your home you will help both people and the planet.",
+                            "C": "Decluttering might increase pollution because you throw away a lot of old things when you clear your home.",
+                            "D": "When you get rid of your old things you will have more space to fill with all the new things you will buy."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["more than one goal", "help people", "help the environment", "give your things away"],
+                        "explanation": "<strong>15. B:</strong> Đoạn 3 viết: <i>'decluttering can help you achieve more than one goal... you will not only help people... but you will also help the environment.'</i> -> Lợi ích kép: giúp người + giúp môi trường.<br><u>Loại đáp án sai:</u> A nói “selling all” (bài không nói bán hết, thậm chí <i>gave most away for free</i>); C trái ngược nội dung (bài nói giúp môi trường); D là cảnh báo tiêu cực: <i>avoid buying new things</i>, không phải lợi ích.<br><b>Key takeaway:</b> Gặp cấu trúc <i>not only ... but also ...</i> - đáp án thường là ý tổng hợp 2 vế."
+                    }
+                ]
+            },
+            {
+                "id": "readyforpet_test3",
+                "title": "The Way to do Science",
+                "content_html": `
+                    <p><em>14-year-old Jim Doherty tells us the secret to be a good scientist</em></p>
+                    <p>Whenever you want to know the right way to do something, it’s always best to ask an expert. So last week I met with Doctor Watson, a successful scientist who has recently published a book on how to be a good scientist. As I would love to go to university to study science when I’m older, I was really interested to hear what he had to say. Here I’ll try to give you his most useful advice.</p>
+                    <p>First, and most important of all, never do things that bore you. If you’re really interested in what you’re doing, you’ll probably produce valuable results, but if you’re not, you will only waste your time, and probably discover nothing new at all.</p>
+                    <p>Next, and rather strangely, Watson says you should always try to work with people who are cleverer than you are. ‘It’s a bit like learning to play tennis,’ he says, ‘you know you only really get better when you’re playing someone who makes you work harder and try to reach that higher level.’</p>
+                    <p>It sounds like hard work to me!</p>
+                    <p>Thirdly, you have to be ready to take risks. You can’t stay in the ‘safety zone’ all the time, feeling comfortable and knowing all the answers. Instead, science is about the difficult questions we haven’t answered yet, and it’s also about making some mistakes.</p>
+                    <p>Last, and this is Watson’s secret, you must always be willing to let others examine your work and ideas and listen to their views and opinions. Of course, you don’t have to agree with every opinion you hear, but informed judgement from other scientists is the best way to check your work is correct and of value. If other experts approve of your work, it will make you more confident, and their doubts will certainly help your thinking.</p>
+                    <p>By the time I left our meeting, I was beginning to see myself as another Galileo or Einstein. Of course, that’s foolish, but I’m sure they would agree with the rules for science I had learnt from Dr Watson!</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "The writer met with Dr Watson to",
+                        "options": {
+                            "A": "give him some advice.",
+                            "B": "write a book about him.",
+                            "C": "find out how to be a good scientist.",
+                            "D": "get a job as a scientist."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["met with Doctor Watson", "how to be a good scientist", "interested to hear", "useful advice"],
+                        "explanation": "<strong>11. C:</strong> Đoạn 1 viết: <i>'I met with Doctor Watson ... on how to be a good scientist ... interested to hear what he had to say.'</i> => Mục đích gặp là để học/cập nhật <b>cách trở thành nhà khoa học giỏi</b>. (Paraphrase: <i>interested to hear his advice</i> = muốn tìm hiểu cách làm nhà khoa học tốt)."
+                    },
+                    {
+                        "id": 12,
+                        "text": "Watson believes that if you are not interested in your subject",
+                        "options": {
+                            "A": "other people will see that you are bored.",
+                            "B": "you will not be able to persuade people to help you.",
+                            "C": "people will think you are wasting their time.",
+                            "D": "your discoveries will look old and out of date."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["bore you", "waste your time", "discover nothing new"],
+                        "explanation": "<strong>12. C:</strong> Đoạn 2 viết: <i>'... if you’re not, you will only waste your time, and probably discover nothing new ...'</i> => Không hứng thú thì chỉ <b>lãng phí thời gian</b>. Trong các lựa chọn, C là ý gần nhất với “wasting time”. Loại A vì bài nói “bạn chán” nhưng hệ quả chính là lãng phí thời gian/không có phát hiện mới; loại B,D vì không hề nhắc."
+                    },
+                    {
+                        "id": 13,
+                        "text": "Watson says that a scientist should",
+                        "options": {
+                            "A": "only spend time with intelligent people.",
+                            "B": "use sport to get to a higher level of work.",
+                            "C": "avoid taking too many risks.",
+                            "D": "not be worried about making mistakes."
+                        },
+                        "correct": "D",
+                        "evidenceKeywords": ["ready to take risks", "safety zone", "making some mistakes"],
+                        "explanation": "<strong>13. D:</strong> Đoạn 5 viết: <i>'... you have to be ready to take risks ... science is ... also about making some mistakes.'</i> => Nhà khoa học cần chấp nhận rủi ro và <b>không sợ mắc lỗi</b>. Loại C vì trái ngược (bài nói phải dám mạo hiểm); loại A,B vì không phải thông điệp chính."
+                    },
+                    {
+                        "id": 14,
+                        "text": "According to Dr Watson, other scientists’ opinions",
+                        "options": {
+                            "A": "can help you check your work is correct.",
+                            "B": "will make you less confident.",
+                            "C": "are always correct.",
+                            "D": "will make you doubt their work."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["informed judgement", "best way to check", "work is correct"],
+                        "explanation": "<strong>14. A:</strong> Đoạn 6 viết: <i>'... judgement from other scientists is the best way to check your work is correct ...'</i> => Ý kiến nhà khoa học khác giúp <b>kiểm tra độ đúng</b> của nghiên cứu. Loại B vì bài nói được duyệt sẽ “more confident”; loại C,D vì không hề nói “luôn đúng” hay “nghi ngờ họ”."
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which of the following best describes the writer of this article?",
+                        "options": {
+                            "A": "A curious young scientist who is keen to learn.",
+                            "B": "A friendly writer who is happy to share what he learns.",
+                            "C": "A scientist who dreams of success instead of working for it.",
+                            "D": "A writer who believes we have to work hard to understand science."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["Here I'll try to give you", "most useful advice", "share", "what he had to say"],
+                        "explanation": "<strong>15. B:</strong> Đoạn 1 viết: <i>'Here I’ll try to give you his most useful advice.'</i> => Người viết chủ động <b>chia sẻ</b> điều mình học được từ chuyên gia, giọng điệu thân thiện. Loại A vì mô tả đúng một phần nhưng trọng tâm bài là “chia sẻ lời khuyên”; loại C vì người viết có gặp chuyên gia và học hỏi chứ không chỉ mơ mộng; loại D vì bài không nhấn mạnh “phải làm việc rất vất vả để hiểu khoa học” như một niềm tin riêng."
+                    }
+                ]
+            },
+            {
+                "id": "readyforpet_test4",
+                "title": "How to train your dog",
+                "content_html": `
+                    <p><em>15 year-old Pete Grayson tells us about his hobby, training dogs</em></p>
+                    <p>Many families today also include a pet and there are lots of us who enjoy the quiet company of a cat or the relaxing presence of a goldfish. However, lots of people would rather have a dog as their four-legged friend.</p>
+                    <p>Unfortunately, dogs aren’t as easy to look after as you might expect when you finally get your first puppy. You have to feed them, walk them at least 3 times a day and play with them. Dogs also have to be trained to live with people, but there are some owners who don’t understand this, which means that their dogs can develop annoying habits like barking all the time, jumping on people, or even biting strangers.</p>
+                    <p>First of all, dogs need to be taught to be friendly to any human being. Most owners forget that dogs can’t understand words as we do, so most communication should take place through body language or what you do. Dogs won’t stop being aggressive if you just talk to them or even punish them but you can successfully teach them to behave well if you remember to reward them whenever they do what you want them to do.</p>
+                    <p>Finally, remember dogs are animals that used to living in groups ('packs'), so they hate being alone. Although they now live in homes they still need to be part of a family. It’s important to make time to go for walks and play with them, or they will never see you as the pack leader they can trust. If you behave like the boss of the pack, your dog will do anything to make you happy and proud.</p>
+                `,
+                "questions": [
+                    {
+                        "id": 11,
+                        "text": "Pete says that people",
+                        "options": {
+                            "A": "often prefer owning a dog.",
+                            "B": "hardly ever have a pet.",
+                            "C": "are mostly interested in cats and goldfish.",
+                            "D": "don’t usually have dogs because they’re noisy."
+                        },
+                        "correct": "A",
+                        "evidenceKeywords": ["rather have a dog", "four-legged friend", "lots of people"],
+                        "explanation": "<strong>11. A:</strong> Đoạn 1 viết: <i>'However, lots of people would rather have a dog as their four-legged friend.'</i> => <b>would rather have</b> = <b>prefer</b> (thích hơn) nên A đúng. B sai vì đoạn 1 nói <i>'Many families today also include a pet'</i> (nhiều gia đình có thú cưng). C sai vì cat/goldfish chỉ là ví dụ, câu chốt lại là nhiều người thích dog hơn. D sai vì đoạn 1 không hề nhắc chó “noisy” là lý do không nuôi."
+                    },
+                    {
+                        "id": 12,
+                        "text": "Pete thinks that dogs",
+                        "options": {
+                            "A": "can be annoying if you don’t feed them and play with them.",
+                            "B": "bark and bite people if they don’t often go out.",
+                            "C": "are harder to take care of than people think.",
+                            "D": "are easy to look after because they’re friendly."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["aren’t as easy to look after", "as you might expect"],
+                        "explanation": "<strong>12. C:</strong> Đoạn 2 viết: <i>'dogs aren’t as easy to look after as you might expect'</i> => paraphrase: <b>aren’t as easy as you might expect</b> = <b>harder than people think</b> nên C đúng. A sai vì đoạn 2 nói phải feed/walk/play là trách nhiệm chứ không nói “không làm thì chó annoying”. B sai vì barking/biting được nêu là “annoying habits” do owners không hiểu chuyện training, không phải vì “don’t often go out”. D sai vì bài nói ngược lại: không dễ chăm."
+                    },
+                    {
+                        "id": 13,
+                        "text": "How can people successfully communicate with their dog?",
+                        "options": {
+                            "A": "By telling them what to do in a loud voice.",
+                            "B": "By punishing them when they don’t do what you want.",
+                            "C": "By using signals and showing them with hands.",
+                            "D": "By speaking more slowly than with a person."
+                        },
+                        "correct": "C",
+                        "evidenceKeywords": ["communication", "body language", "what you do"],
+                        "explanation": "<strong>13. C:</strong> Đoạn 3 viết: <i>'most communication should take place through body language or what you do'</i> => <b>body language/what you do</b> = ra hiệu, dùng hành động/tay để “show” nên C đúng. A sai vì bài nói dogs <i>'can’t understand words as we do'</i> nên nói to không giải quyết. B sai vì bài viết <i>'Dogs won’t stop being aggressive if you just ... punish them'</i>. D sai vì “nói chậm” vẫn là words, không đúng trọng tâm body language."
+                    },
+                    {
+                        "id": 14,
+                        "text": "Dogs are trained more easily if",
+                        "options": {
+                            "A": "you use a soft voice to talk to them.",
+                            "B": "you give them something nice when they do the right thing.",
+                            "C": "you show them that you are stronger than they are.",
+                            "D": "they are never punished for aggressive behaviour."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["reward them", "whenever", "behave well"],
+                        "explanation": "<strong>14. B:</strong> Đoạn 3 viết: <i>'teach them to behave well ... reward them whenever they do what you want them to do'</i> => <b>reward</b> = thưởng/cho thứ gì đó tốt khi làm đúng, nên B đúng. A sai vì bài không nói giọng nhỏ giúp train dễ hơn; bài nhấn “body language + reward”. C sai vì không có ý “chứng tỏ mạnh hơn”. D sai vì bài không nói “never punished”; bài chỉ nói “punish alone doesn’t work”, giải pháp là reward đúng lúc."
+                    },
+                    {
+                        "id": 15,
+                        "text": "Which sentence best sums up the last paragraph?",
+                        "options": {
+                            "A": "You must treat your dog as a human being if you want it to respect people.",
+                            "B": "You must act as your family group leader if you want your dog to respect you.",
+                            "C": "Dogs are more fun to live with than any other pet because they are cleverer.",
+                            "D": "Dogs become aggressive when they spend too much time on their own."
+                        },
+                        "correct": "B",
+                        "evidenceKeywords": ["packs", "pack leader", "boss of the pack"],
+                        "explanation": "<strong>15. B:</strong> Đoạn cuối viết: <i>'they will never see you as the pack leader they can trust. If you behave like the boss of the pack...'</i> => ý chính: phải đóng vai <b>pack leader/boss</b> để chó tôn trọng và nghe lời, nên B đúng. A sai vì đoạn cuối không nói “treat as human”. C sai vì không hề so sánh chó “cleverer” hay “more fun”. D sai vì đoạn nói dogs “hate being alone” nhưng không kết luận “become aggressive”; trọng tâm là vai trò leader và dành thời gian cho chó."
+                    }
+                ]
             }
         ];
 
@@ -627,11 +957,13 @@
                         let displayName = `Test ${idx + 1}`;
                         if(test.id.startsWith("oxford_test")) {
                             displayName = `Oxford Test ${test.id.replace("oxford_test", "")}`;
+                        } else if(test.id.startsWith("readyforpet_test")) {
+                            displayName = `Ready for PET ${test.id.replace("readyforpet_test", "")}`;
                         }
                         cbContainer.innerHTML += `
-                            <label class="flex items-center p-3.5 border border-slate-200 rounded-xl cursor-pointer hover:bg-rose-50 hover:border-rose-200 transition-colors bg-white shadow-sm">
-                                <input type="checkbox" value="${test.id}" class="test-cb w-5 h-5 text-rose-600 border-slate-300 rounded focus:ring-rose-500" ${idx === 0 ? 'checked' : ''}>
-                                <span class="ml-3 text-base font-bold text-slate-700">${displayName}</span>
+                            <label class="flex items-center p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-rose-50 hover:border-rose-200 transition-colors bg-white shadow-sm">
+                                <input type="checkbox" value="${test.id}" class="test-cb shrink-0 w-5 h-5 text-rose-600 border-slate-300 rounded focus:ring-rose-500" ${idx === 0 ? 'checked' : ''}>
+                                <span class="ml-3 text-[15px] font-bold text-slate-700 leading-tight">${displayName}</span>
                             </label>
                         `;
                     });
@@ -668,15 +1000,17 @@
                 const areaRandom = document.getElementById('mode-random-area');
 
                 if (mode === 'select') {
-                    btnSelect.className = "flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
-                    btnRandom.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
+                    btnSelect.className = "flex-1 py-2.5 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
+                    btnRandom.className = "flex-1 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
                     areaSelect.classList.remove('hidden');
                     areaRandom.classList.add('hidden');
+                    areaSelect.classList.add('flex');
                 } else {
-                    btnRandom.className = "flex-1 py-2 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
-                    btnSelect.className = "flex-1 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
+                    btnRandom.className = "flex-1 py-2.5 text-sm font-bold bg-white rounded-lg shadow-sm text-rose-600 transition-all";
+                    btnSelect.className = "flex-1 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-700 transition-all";
                     areaRandom.classList.remove('hidden');
                     areaSelect.classList.add('hidden');
+                    areaSelect.classList.remove('flex');
                 }
             },
 
@@ -883,6 +1217,9 @@
                 if(test.id.startsWith("oxford_test")) {
                     const testNum = test.id.replace("oxford_test", "");
                     document.getElementById('header-title').textContent = `Oxford Test ${testNum}: ${test.title}`;
+                } else if(test.id.startsWith("readyforpet_test")) {
+                    const testNum = test.id.replace("readyforpet_test", "");
+                    document.getElementById('header-title').textContent = `Ready for PET ${testNum}: ${test.title}`;
                 } else {
                     document.getElementById('header-title').textContent = `Test ${displayNum}: ${test.title}`;
                 }
@@ -1284,6 +1621,9 @@
                     if(test.id.startsWith("oxford_test")) {
                         const testNum = test.id.replace("oxford_test", "");
                         displayTitle = `Oxford Test ${testNum}`;
+                    } else if(test.id.startsWith("readyforpet_test")) {
+                        const testNum = test.id.replace("readyforpet_test", "");
+                        displayTitle = `Ready for PET ${testNum}`;
                     }
 
                     breakdownHtml += `
@@ -1308,7 +1648,9 @@
                     const checked = Array.from(document.querySelectorAll('.test-cb:checked')).map(cb => {
                         const test = db.find(t => t.id === cb.value);
                         if(test && test.id.startsWith("oxford_test")) {
-                             return `T${test.id.replace("oxford_test", "")}`;
+                             return `Ox${test.id.replace("oxford_test", "")}`;
+                        } else if(test && test.id.startsWith("readyforpet_test")) {
+                             return `RfP${test.id.replace("readyforpet_test", "")}`;
                         }
                         return cb.value;
                     }).join(', ');
@@ -1318,7 +1660,7 @@
                 // Gửi về Google Sheets bằng cấu trúc JSON mới
                 guiKetQua10Cot(
                     "Reading Part 3",       // phanThi
-                    "Oxford Tests 1-4",     // tenBai
+                    "Part 3 Practice Tests",// tenBai
                     this.state.studentId,   // maHocSinh
                     this.state.userName,    // tenHsNhap
                     modeText,               // cheDoLamBai
@@ -1369,7 +1711,9 @@
                     const checked = Array.from(document.querySelectorAll('.test-cb:checked')).map(cb => {
                         const test = db.find(t => t.id === cb.value);
                         if(test && test.id.startsWith("oxford_test")) {
-                             return `T${test.id.replace("oxford_test", "")}`;
+                             return `Ox${test.id.replace("oxford_test", "")}`;
+                        } else if(test && test.id.startsWith("readyforpet_test")) {
+                             return `RfP${test.id.replace("readyforpet_test", "")}`;
                         }
                         return cb.value;
                     }).join(', ');
@@ -1412,7 +1756,7 @@
         // --- GOOGLE SHEET SEND FUNCTION ---
         function guiKetQua10Cot(phanThi, tenBai, maHS, tenHS, cheDoLamBai, ngay, gioBatDau, gioNop, thoiGianLamBai, diemSo, phanTram) {
             // ĐÃ CẬP NHẬT ĐƯỜNG LINK GOOGLE APPS SCRIPT MỚI NHẤT CỦA CÔ
-            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbzaWJxnp8I7TJa6R_gmicC5O3FjqYOH4R6w95PJdLa7ztdfI6RVN3NgEgKnkMPdKgAD/exec"; 
+            const LINK_APP_SCRIPT = "https://script.google.com/macros/s/AKfycbyCKIVCrDYbpU7H4QvyaGeVmS5jWEoNxcg_M-ytFiEZRxOr1XYTzp-K9L_cG0d5UdPl/exec"; 
             
             const statusEl = document.getElementById('sheet-status');
             if (statusEl) statusEl.textContent = "Sending data to system...";
