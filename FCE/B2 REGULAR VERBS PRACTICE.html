@@ -76,9 +76,52 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+
+        /* Virtual Keyboard Styles */
+        .vk-btn {
+            flex: 1;
+            background-color: white;
+            border-radius: 6px;
+            padding: 14px 0;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #374151;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            max-width: 45px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation; /* Tăng tốc độ bấm trên mobile */
+        }
+        .vk-btn:active { background-color: #e5e7eb; transform: translateY(1px); box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
+        .vk-btn-wide {
+            flex: 1.5;
+            border-radius: 6px;
+            font-weight: 700;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            max-width: 70px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .vk-btn-wide:active { transform: translateY(1px); opacity: 0.9; box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
+        .vk-btn-space {
+            flex: 4;
+            background-color: white;
+            border-radius: 6px;
+            padding: 14px 0;
+            font-weight: 700;
+            color: #374151;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            max-width: 250px;
+            cursor: pointer;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .vk-btn-space:active { background-color: #e5e7eb; transform: translateY(1px); box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center py-10 px-4">
+<body class="min-h-screen flex flex-col items-center py-10 px-4 transition-all duration-300">
 
     <div id="app" class="w-full max-w-3xl">
         <!-- Logo & Title -->
@@ -272,6 +315,55 @@
                 <button onclick="resetToSetup()" class="btn-primary w-full text-white font-bold py-6 rounded-2xl shadow-xl text-xl uppercase tracking-widest">PRACTICE AGAIN</button>
             </div>
         </div>
+
+        <!-- VIRTUAL KEYBOARD (MOBILE ONLY) -->
+        <div id="virtual-keyboard" class="fixed bottom-0 left-0 w-full bg-[#cbd5e1] p-2 pb-6 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 translate-y-full flex flex-col items-center">
+            <div class="w-full max-w-[600px] flex flex-col gap-2">
+                <!-- Row 1 -->
+                <div class="flex justify-center gap-1 md:gap-2">
+                    <button onclick="vkType('q')" class="vk-btn">q</button>
+                    <button onclick="vkType('w')" class="vk-btn">w</button>
+                    <button onclick="vkType('e')" class="vk-btn">e</button>
+                    <button onclick="vkType('r')" class="vk-btn">r</button>
+                    <button onclick="vkType('t')" class="vk-btn">t</button>
+                    <button onclick="vkType('y')" class="vk-btn">y</button>
+                    <button onclick="vkType('u')" class="vk-btn">u</button>
+                    <button onclick="vkType('i')" class="vk-btn">i</button>
+                    <button onclick="vkType('o')" class="vk-btn">o</button>
+                    <button onclick="vkType('p')" class="vk-btn">p</button>
+                </div>
+                <!-- Row 2 -->
+                <div class="flex justify-center gap-1 md:gap-2 px-4">
+                    <button onclick="vkType('a')" class="vk-btn">a</button>
+                    <button onclick="vkType('s')" class="vk-btn">s</button>
+                    <button onclick="vkType('d')" class="vk-btn">d</button>
+                    <button onclick="vkType('f')" class="vk-btn">f</button>
+                    <button onclick="vkType('g')" class="vk-btn">g</button>
+                    <button onclick="vkType('h')" class="vk-btn">h</button>
+                    <button onclick="vkType('j')" class="vk-btn">j</button>
+                    <button onclick="vkType('k')" class="vk-btn">k</button>
+                    <button onclick="vkType('l')" class="vk-btn">l</button>
+                </div>
+                <!-- Row 3 -->
+                <div class="flex justify-center gap-1 md:gap-2">
+                    <div class="vk-btn-wide invisible pointer-events-none"></div>
+                    <button onclick="vkType('z')" class="vk-btn">z</button>
+                    <button onclick="vkType('x')" class="vk-btn">x</button>
+                    <button onclick="vkType('c')" class="vk-btn">c</button>
+                    <button onclick="vkType('v')" class="vk-btn">v</button>
+                    <button onclick="vkType('b')" class="vk-btn">b</button>
+                    <button onclick="vkType('n')" class="vk-btn">n</button>
+                    <button onclick="vkType('m')" class="vk-btn">m</button>
+                    <button onclick="vkType('DEL')" class="vk-btn-wide bg-gray-500 text-white"><i class="fas fa-backspace"></i></button>
+                </div>
+                <!-- Row 4 -->
+                <div class="flex justify-center gap-1 md:gap-2 w-full max-w-[350px] mx-auto mt-1">
+                    <button onclick="vkType(' ')" class="vk-btn-space" style="max-width: 100%;">SPACE</button>
+                    <button onclick="vkEnter()" class="vk-btn-wide bg-[#ef6c33] text-white" style="max-width: 90px;">ENTER</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Audio Effects -->
@@ -280,6 +372,33 @@
 
     <script>
         var thoiGianBatDauHoc = new Date();
+
+        // 1. Mobile Detection
+        const isMobileDevice = () => {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints && navigator.maxTouchPoints > 2);
+        };
+        const isMobile = isMobileDevice();
+
+        // 2. Virtual Keyboard Logic
+        function vkType(char) {
+            const input = document.getElementById('answer-input');
+            if (input.disabled) return;
+            if (char === 'DEL') {
+                input.value = input.value.slice(0, -1);
+            } else {
+                input.value += char;
+            }
+        }
+
+        function vkEnter() {
+            const checkBtn = document.getElementById('check-btn');
+            const nextBtn = document.getElementById('next-btn');
+            if (checkBtn && !checkBtn.classList.contains('hidden')) {
+                checkAnswer();
+            } else if (nextBtn && !nextBtn.classList.contains('hidden')) {
+                nextQuestion();
+            }
+        }
 
         const verbData = [
 {id:1,word:"abandon",ipa:"/əˈbændən/",meaning:"(v) từ bỏ một việc/kế hoạch; bỏ rơi, ngừng hoàn toàn",example:"He decided to abandon the trip because of the weather."},
@@ -600,7 +719,7 @@
 
         function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
             // URL MỚI CỦA BẠN ĐÃ ĐƯỢC CHÈN VÀO ĐÂY
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1X80kmXF1I2XlPT9UBnFmY17UVzZjl6HWONkrkZw9Mz0UZtXhAuCyuaFcXp-tAW9N/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzh3iJMJW8a7rYP7zJH-fFiLVY6q2-ly4pV4ryFmgFdfxIRSOA1q75GKYKDwNWqv9mO/exec"; 
             const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
 
             var gio = thoiGianBatDauHoc.getHours();
@@ -700,6 +819,11 @@
             document.getElementById('result-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('setup-screen').classList.remove('hidden');
+            
+            // Ẩn bàn phím ảo
+            document.getElementById('virtual-keyboard').classList.add('translate-y-full');
+            document.body.classList.remove('pb-[260px]');
+
             updatePreview();
         }
 
@@ -745,6 +869,12 @@
             masteredWords = [];
             reviewWords = [];
 
+            // Hiển thị bàn phím ảo nếu là điện thoại/ipad
+            if (isMobile) {
+                document.getElementById('virtual-keyboard').classList.remove('translate-y-full');
+                document.body.classList.add('pb-[260px]'); // Đẩy màn hình lên không bị che nút
+            }
+
             loadQuestion();
         }
 
@@ -763,6 +893,11 @@
             input.disabled = false;
             input.className = "w-full text-center text-3xl font-bold py-6 px-8 rounded-2xl border-2 border-[#f1f2f4] bg-[#f8f9fb] text-[#2d3436] focus:bg-white focus:border-[#ef6c33]/30 transition-all uppercase placeholder-gray-200";
             
+            // QUAN TRỌNG: Ngăn chặn bàn phím mặc định của thiết bị bật lên
+            if (isMobile) {
+                input.setAttribute('inputmode', 'none');
+            }
+
             document.getElementById('feedback-box').classList.add('hidden');
             document.getElementById('check-btn').classList.remove('hidden');
             document.getElementById('next-btn').classList.add('hidden');
@@ -878,6 +1013,10 @@
             document.getElementById('result-screen').classList.remove('hidden');
             document.getElementById('result-user').innerText = studentInfo.name;
             
+            // Ẩn bàn phím ảo khi hoàn thành
+            document.getElementById('virtual-keyboard').classList.add('translate-y-full');
+            document.body.classList.remove('pb-[260px]');
+
             document.getElementById('res-correct').innerText = `${correctFirstTryCount}/${totalQuestionsToAsk}`;
             const accuracy = Math.round((correctFirstTryCount / totalQuestionsToAsk) * 100) || 0;
             const accuracyStr = `${accuracy}%`;
