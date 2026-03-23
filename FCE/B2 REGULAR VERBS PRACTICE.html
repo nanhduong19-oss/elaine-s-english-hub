@@ -234,7 +234,9 @@
                 <h2 id="result-title" class="text-4xl font-bold text-[#5c3d2e] mb-2">Great Job!</h2>
                 <p id="result-subtitle" class="text-gray-500 mb-6 text-lg">You have completed the practice.</p>
                 
-                <p id="result-user" class="text-[#ef6c33] font-bold mb-8 text-xl"></p>
+                <p id="result-user" class="text-[#ef6c33] font-bold mb-2 text-xl"></p>
+                <!-- TRẠNG THÁI LƯU KẾT QUẢ ĐƯỢC TÁCH RIÊNG RA ĐÂY -->
+                <div id="save-status" class="mb-8 text-sm font-bold h-6 transition-all duration-300"></div>
                 
                 <div class="grid grid-cols-2 gap-6 mb-10">
                     <div class="bg-[#fafafa] p-8 rounded-[2rem] border border-gray-100 relative overflow-hidden">
@@ -597,6 +599,7 @@
         let usedRandomWordIds = [];
 
         function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
+            // URL MỚI CỦA BẠN ĐÃ ĐƯỢC CHÈN VÀO ĐÂY
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7M8A9Kazjzb-bIHxcXAI3_sZSYJdrtglUaM32wmgjikRX2JJ4Yb5Vq39U7DvkYBXR/exec"; 
             const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
 
@@ -615,17 +618,31 @@
                 phanTramDung: phanTramKetQua
             };
 
-            // Đã đổi Content-Type thành text/plain và bỏ mode: "no-cors"
+            const saveStatus = document.getElementById('save-status');
+
             fetch(SCRIPT_URL, {
                 method: "POST",
                 headers: { 
                     "Content-Type": "text/plain;charset=utf-8" 
                 },
                 body: JSON.stringify(duLieu)
-            }).then(() => {
-                console.log("Đã gửi dữ liệu thành công!");
-            }).catch(err => {
-                console.error("Lỗi gửi sheet:", err);
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === "success") {
+                    console.log("Đã gửi dữ liệu thành công!");
+                    saveStatus.innerText = "✅ Kết quả đã được tự động lưu lên Google Sheets!";
+                    saveStatus.className = "mb-8 text-sm font-bold text-green-500 h-6";
+                } else {
+                    console.error("Lỗi từ Server:", data.error);
+                    saveStatus.innerText = "❌ Lỗi lưu điểm: " + data.error;
+                    saveStatus.className = "mb-8 text-sm font-bold text-red-500 h-6";
+                }
+            })
+            .catch(err => {
+                console.error("Lỗi kết nối:", err);
+                saveStatus.innerText = "❌ Lỗi mạng: Không thể lưu kết quả. Vui lòng báo Giáo viên!";
+                saveStatus.className = "mb-8 text-sm font-bold text-red-500 h-6";
             });
         }
 
@@ -678,7 +695,6 @@
             }
         }
 
-        // Hàm đưa người dùng về màn hình chờ mà không tải lại trang (Giữ nguyên bộ nhớ đã học)
         function resetToSetup() {
             clearInterval(timerInterval);
             document.getElementById('result-screen').classList.add('hidden');
@@ -704,10 +720,8 @@
             } else {
                 const limit = parseInt(document.getElementById('random-limit').value);
                 
-                // Lọc ra các từ chưa được hỏi trong phiên học này
                 let availableWords = verbData.filter(v => !usedRandomWordIds.includes(v.id));
                 
-                // Nếu số từ còn lại ít hơn số lượng cần Random (limit), reset lại kho nhớ
                 if (availableWords.length < limit) {
                     usedRandomWordIds = [];
                     availableWords = [...verbData];
@@ -715,7 +729,6 @@
                 
                 pool = availableWords.sort(() => 0.5 - Math.random()).slice(0, limit);
                 
-                // Đánh dấu các từ này đã được sử dụng
                 pool.forEach(q => usedRandomWordIds.push(q.id));
             }
 
@@ -725,7 +738,6 @@
             document.getElementById('setup-screen').classList.add('hidden');
             document.getElementById('quiz-screen').classList.remove('hidden');
 
-            // Gắn cờ isFirstTry = true
             questionQueue = [...pool].map(q => ({...q, isFirstTry: true})).sort(() => 0.5 - Math.random());
             currentIndex = 0;
             totalQuestionsToAsk = questionQueue.length;
@@ -871,7 +883,6 @@
             const accuracyStr = `${accuracy}%`;
             document.getElementById('res-accuracy').innerText = accuracyStr;
 
-            // XỬ LÝ LỜI KHÍCH LỆ & ICON DỰA TRÊN ĐIỂM SỐ
             const resultTitle = document.getElementById('result-title');
             const resultSubtitle = document.getElementById('result-subtitle');
             const resultIcon = document.getElementById('result-icon');
@@ -904,7 +915,6 @@
                 resultIconContainer.className = "w-24 h-24 bg-[#ef6c33] text-white rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-5xl shadow-xl shadow-orange-200";
             }
 
-            // HIỂN THỊ LIST TỪ ĐÃ THUỘC (Xanh)
             const masteredListContainer = document.getElementById('mastered-list');
             masteredListContainer.innerHTML = '';
             masteredWords.sort((a,b) => a.id - b.id);
@@ -925,7 +935,6 @@
                 });
             }
 
-            // HIỂN THỊ LIST TỪ CẦN ÔN LẠI (Đỏ)
             const reviewListContainer = document.getElementById('need-review-list');
             reviewListContainer.innerHTML = '';
             reviewWords.sort((a,b) => a.id - b.id);
@@ -949,6 +958,11 @@
             const modeLabel = currentMode === 'range' ? 
                 `Range ${document.getElementById('range-start').value}-${document.getElementById('range-end').value}` : 
                 `Random (${document.getElementById('random-limit').value})`;
+
+            // Gọi trạng thái đang lưu (hiển thị cho user dễ nhìn)
+            const saveStatus = document.getElementById('save-status');
+            saveStatus.innerText = "⏳ Đang lưu kết quả lên hệ thống...";
+            saveStatus.className = "mb-8 text-sm font-bold text-blue-500 animate-pulse h-6";
 
             guiKetQuaTuVung(
                 "B2 Verb Master",
