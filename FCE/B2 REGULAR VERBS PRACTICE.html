@@ -260,16 +260,6 @@
                 <!-- BLOCK 2: NEED REVIEW WORDS -->
                 <div class="mb-10 text-left">
                     <h3 class="text-xs font-bold text-red-500 uppercase mb-4 tracking-widest flex items-center">
-                        Words to Review (Mistakes or Timeout)
-                    </h3>
-                    <div id="mastered-list" class="bg-[#f0fff4] rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-[#c6f6d5] grid grid-cols-1 md:grid-cols-2 gap-3">
-                        <!-- Items injected here -->
-                    </div>
-                </div>
-
-                <!-- BLOCK 2: NEED REVIEW WORDS -->
-                <div class="mb-10 text-left">
-                    <h3 class="text-xs font-bold text-red-500 uppercase mb-4 tracking-widest flex items-center">
                         ⚠️ Words to Review (Mistakes or Timeout)
                     </h3>
                     <div id="need-review-list" class="bg-[#fff5f5] rounded-[2rem] p-6 max-h-60 overflow-y-auto border border-[#fed7d7] grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -607,7 +597,7 @@
         let usedRandomWordIds = [];
 
         function guiKetQuaTuVung(tenBaiHoc, maHS, tenHS, cheDo, soTuDaLam, phanTramKetQua) {
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDA2JO5j-aXbvYBIVBYVg4wvQEvLrafuoyPq_XglM-siz1eGQRJcXSMDcuhfBoTCw/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw7M8A9Kazjzb-bIHxcXAI3_sZSYJdrtglUaM32wmgjikRX2JJ4Yb5Vq39U7DvkYBXR/exec"; 
             const TEN_SHEET_LUU = "KET_QUA_TU_VUNG"; 
 
             var gio = thoiGianBatDauHoc.getHours();
@@ -625,13 +615,15 @@
                 phanTramDung: phanTramKetQua
             };
 
+            // Đã đổi Content-Type thành text/plain và bỏ mode: "no-cors"
             fetch(SCRIPT_URL, {
                 method: "POST",
-                mode: "no-cors",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    "Content-Type": "text/plain;charset=utf-8" 
+                },
                 body: JSON.stringify(duLieu)
             }).then(() => {
-                console.log("Gửi thành công");
+                console.log("Đã gửi dữ liệu thành công!");
             }).catch(err => {
                 console.error("Lỗi gửi sheet:", err);
             });
