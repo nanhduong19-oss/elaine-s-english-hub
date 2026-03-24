@@ -1356,8 +1356,8 @@
                 
                 let questionsWithAttempts = INITIAL_QUESTIONS.map(q => ({ ...q, attempts: 0 }));
                 
-                // Trộn ngẫu nhiên mảng câu hỏi
-                questionsWithAttempts = questionsWithAttempts.sort(() => Math.random() - 0.5);
+                // Trộn ngẫu nhiên mảng câu hỏi và chỉ lấy 50 câu
+                questionsWithAttempts = questionsWithAttempts.sort(() => Math.random() - 0.5).slice(0, 50);
 
                 setQueue(questionsWithAttempts);
                 setTotalInitialQuestions(questionsWithAttempts.length);
