@@ -52,48 +52,56 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Virtual Keyboard Styles */
+        /* Virtual Keyboard Styles - Responsive & Scalable */
         .vk-btn {
             flex: 1;
             background-color: white;
             border-radius: 6px;
-            padding: 14px 0;
+            padding: 12px 0;
             text-transform: uppercase;
             font-weight: 700;
             font-size: 1.25rem;
             color: #374151;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            max-width: 45px;
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
         }
         .vk-btn:active { background-color: #e5e7eb; transform: translateY(1px); box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
+        
         .vk-btn-wide {
             flex: 1.5;
             border-radius: 6px;
             font-weight: 700;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            max-width: 70px;
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .vk-btn-wide:active { transform: translateY(1px); opacity: 0.9; box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
+        
         .vk-btn-space {
             flex: 4;
             background-color: white;
             border-radius: 6px;
-            padding: 14px 0;
+            padding: 12px 0;
             font-weight: 700;
             color: #374151;
             box-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            max-width: 250px;
             cursor: pointer;
             user-select: none;
             touch-action: manipulation;
         }
         .vk-btn-space:active { background-color: #e5e7eb; transform: translateY(1px); box-shadow: 0 0px 1px rgba(0,0,0,0.3); }
+
+        /* Tự động làm to phím bấm khi hiển thị trên iPad / Tablet */
+        @media (min-width: 768px) {
+            .vk-btn, .vk-btn-space { padding: 22px 0; font-size: 1.5rem; border-radius: 8px; }
+            .vk-btn-wide { font-size: 1.25rem; border-radius: 8px; }
+        }
     </style>
 </head>
 <body class="min-h-screen pb-10 flex flex-col items-center transition-all duration-300">
@@ -317,9 +325,9 @@
             </div>
         </div>
 
-        <!-- VIRTUAL KEYBOARD (MOBILE ONLY) -->
-        <div id="virtual-keyboard" class="fixed bottom-0 left-0 w-full bg-[#cbd5e1] p-2 pb-6 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 translate-y-full flex flex-col items-center">
-            <div class="w-full max-w-[600px] flex flex-col gap-2">
+        <!-- VIRTUAL KEYBOARD (MOBILE & TABLET) -->
+        <div id="virtual-keyboard" class="fixed bottom-0 left-0 w-full bg-[#cbd5e1] p-2 md:p-4 pb-6 md:pb-8 z-50 shadow-[0_-4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 translate-y-full flex flex-col items-center">
+            <div class="w-full max-w-[900px] flex flex-col gap-2 md:gap-3">
                 <!-- Row 1 -->
                 <div class="flex justify-center gap-1 md:gap-2">
                     <button onclick="vkType('q')" class="vk-btn">q</button>
@@ -334,7 +342,7 @@
                     <button onclick="vkType('p')" class="vk-btn">p</button>
                 </div>
                 <!-- Row 2 -->
-                <div class="flex justify-center gap-1 md:gap-2 px-4">
+                <div class="flex justify-center gap-1 md:gap-2 px-4 md:px-8">
                     <button onclick="vkType('a')" class="vk-btn">a</button>
                     <button onclick="vkType('s')" class="vk-btn">s</button>
                     <button onclick="vkType('d')" class="vk-btn">d</button>
@@ -358,9 +366,9 @@
                     <button onclick="vkType('DEL')" class="vk-btn-wide bg-gray-500 text-white"><i class="fas fa-backspace"></i></button>
                 </div>
                 <!-- Row 4 -->
-                <div class="flex justify-center gap-1 md:gap-2 w-full max-w-[350px] mx-auto mt-1">
-                    <button onclick="vkType(' ')" class="vk-btn-space" style="max-width: 100%;">SPACE</button>
-                    <button onclick="vkEnter()" class="vk-btn-wide bg-yellow-500 text-white" style="max-width: 90px;">ENTER</button>
+                <div class="flex justify-center gap-1 md:gap-3 w-full max-w-[400px] md:max-w-[600px] mx-auto mt-1 md:mt-2">
+                    <button onclick="vkType(' ')" class="vk-btn-space">SPACE</button>
+                    <button onclick="vkEnter()" class="vk-btn-wide bg-yellow-500 text-white">ENTER</button>
                 </div>
             </div>
         </div>
@@ -757,9 +765,9 @@
             document.getElementById('quiz-screen').classList.add('hidden');
             document.getElementById('setup-screen').classList.remove('hidden');
             
-            // Ẩn bàn phím ảo khi quay về màn hình chờ
+            // Ẩn bàn phím ảo khi quay về màn hình chờ và reset padding đáy
             document.getElementById('virtual-keyboard').classList.add('translate-y-full');
-            document.body.classList.remove('pb-[260px]');
+            document.body.style.paddingBottom = '';
 
             updateRangePreview();
         }
@@ -823,10 +831,11 @@
             masteredWords = [];
             reviewWords = [];
 
-            // Kéo bàn phím ảo lên nếu là thiết bị cảm ứng (Mobile/Tablet)
+            // Kéo bàn phím ảo lên nếu là thiết bị cảm ứng (Mobile/Tablet) và đẩy nội dung bài học lên
             if (isMobile) {
                 document.getElementById('virtual-keyboard').classList.remove('translate-y-full');
-                document.body.classList.add('pb-[260px]'); 
+                // Nếu màn hình lớn (iPad) đẩy cao hơn do bàn phím to hơn
+                document.body.style.paddingBottom = window.innerWidth >= 768 ? '400px' : '260px';
             }
 
             loadQuestion();
@@ -984,7 +993,7 @@
             
             // Ẩn bàn phím ảo khi hoàn thành
             document.getElementById('virtual-keyboard').classList.add('translate-y-full');
-            document.body.classList.remove('pb-[260px]');
+            document.body.style.paddingBottom = '';
 
             document.getElementById('res-correct').innerText = `${correctFirstTryCount}/${totalQuestionsToAsk}`;
             const accuracy = Math.round((correctFirstTryCount / totalQuestionsToAsk) * 100) || 0;
