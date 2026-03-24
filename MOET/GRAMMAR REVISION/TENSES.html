@@ -1,0 +1,1703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRAMMAR REVISION - English Tenses</title>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX compilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent; /* Prevent tap highlight on mobile */
+        }
+        
+        /* Custom smooth scrollbar for overflow areas */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .bg-app {
+            background-image: url('https://i.pinimg.com/474x/eb/8c/5e/eb8c5e1401e2ed03660381fc9077059c.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        .bg-app::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            background-color: rgba(255, 255, 255, 0.6); /* Soft overlay to make text readable */
+            z-index: 0;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        .option-label {
+            transition: all 0.2s ease-in-out;
+        }
+        .option-label:hover {
+            transform: translateX(5px);
+        }
+        
+        /* Moodboard Custom Colors checked state */
+        input[type="radio"]:checked + div {
+            border-color: #8dc63f; /* Light Green */
+            background-color: #f7fceb;
+        }
+        input[type="radio"]:checked + div span.letter-badge {
+            background-color: #8dc63f;
+            color: #ffffff;
+        }
+    </style>
+
+    <!-- Script to prevent right-click and viewing source code -->
+    <script>
+        // Vô hiệu hóa chuột phải (Context Menu)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // Vô hiệu hóa các phím tắt xem mã nguồn và DevTools
+        document.addEventListener('keydown', function(e) {
+            // F12
+            if (e.key === 'F12' || e.keyCode === 123) {
+                e.preventDefault();
+            }
+            // Ctrl+Shift+I / Cmd+Option+I (Mở tab Elements)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'i')) {
+                e.preventDefault();
+            }
+            // Ctrl+Shift+J / Cmd+Option+J (Mở tab Console)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'J' || e.key === 'j')) {
+                e.preventDefault();
+            }
+            // Ctrl+Shift+C / Cmd+Option+C (Kiểm tra phần tử)
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+                e.preventDefault();
+            }
+            // Ctrl+U / Cmd+U (Xem mã nguồn trang)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'U' || e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Data containing 10 extracted questions with English explanations
+        const INITIAL_QUESTIONS = [
+            {
+                id: 1,
+                text: "Water _______ of hydrogen and oxygen.",
+                options: [
+                    { id: 'a', text: "is consisting" },
+                    { id: 'b', text: "consists" },
+                    { id: 'c', text: "has consisted" },
+                    { id: 'd', text: "will consist" }
+                ],
+                correct: 'b',
+                explanation: "Sự thật hiển nhiên (Nước bao gồm hydro và oxy) nên dùng thì Hiện tại đơn. Động từ 'consist' (bao gồm) không dùng ở thì tiếp diễn."
+            },
+            {
+                id: 2,
+                text: "Don't give the chocolate to Helen. She _______ it.",
+                options: [
+                    { id: 'a', text: "hates" },
+                    { id: 'b', text: "is hating" },
+                    { id: 'c', text: "has hated" },
+                    { id: 'd', text: "hated" }
+                ],
+                correct: 'a',
+                explanation: "Động từ chỉ cảm xúc 'hate' (ghét) không dùng ở thì tiếp diễn. Diễn tả sở thích/cảm xúc chung ở hiện tại dùng Hiện tại đơn."
+            },
+            {
+                id: 3,
+                text: "The Sun _______ us heat and light.",
+                options: [
+                    { id: 'a', text: "will give" },
+                    { id: 'b', text: "is giving" },
+                    { id: 'c', text: "gives" },
+                    { id: 'd', text: "has given" }
+                ],
+                correct: 'c',
+                explanation: "Sự thật hiển nhiên (Mặt trời cung cấp nhiệt và ánh sáng) nên dùng thì Hiện tại đơn."
+            },
+            {
+                id: 4,
+                text: "We _______ students, so we _______ to school on weekdays.",
+                options: [
+                    { id: 'a', text: "are / go often" },
+                    { id: 'b', text: "are / often go" },
+                    { id: 'c', text: "are / have often gone" },
+                    { id: 'd', text: "have been / are often going" }
+                ],
+                correct: 'b',
+                explanation: "Trạng từ chỉ tần suất 'often' đứng trước động từ thường (go). Diễn tả sự thật và thói quen dùng Hiện tại đơn."
+            },
+            {
+                id: 5,
+                text: "Every day, Peter _______ at 7 o'clock, _______ breakfast, and then _______ to work at 7.30.",
+                options: [
+                    { id: 'a', text: "has often got / will have / go" },
+                    { id: 'b', text: "often gets up / has / goes" },
+                    { id: 'c', text: "is often getting / having / goes" },
+                    { id: 'd', text: "has often got up / had / went" }
+                ],
+                correct: 'b',
+                explanation: "Dấu hiệu 'Every day' (mỗi ngày) chỉ thói quen lặp đi lặp lại. Chuỗi hành động liên tiếp trong hiện tại đều dùng thì Hiện tại đơn."
+            },
+            {
+                id: 6,
+                text: "California _______ in the United Kingdom. It _______ in the US.",
+                options: [
+                    { id: 'a', text: "is not / is" },
+                    { id: 'b', text: "has not been / is" },
+                    { id: 'c', text: "will not be / will be" },
+                    { id: 'd', text: "was not / has been" }
+                ],
+                correct: 'a',
+                explanation: "Diễn tả sự thật về vị trí địa lý, dùng thì Hiện tại đơn với động từ 'to be'."
+            },
+            {
+                id: 7,
+                text: "Cats _______ milk, but birds _______.",
+                options: [
+                    { id: 'a', text: "like / do not" },
+                    { id: 'b', text: "have liked / have not" },
+                    { id: 'c', text: "are liking / are not" },
+                    { id: 'd', text: "were liking / were not" }
+                ],
+                correct: 'a',
+                explanation: "Động từ 'like' không dùng thì tiếp diễn. Diễn tả đặc tính chung dùng thì Hiện tại đơn. Phủ định mượn trợ động từ 'do not'."
+            },
+            {
+                id: 8,
+                text: "Every day, Sarah _______ her children to school and then _______ home to prepare lunch.",
+                options: [
+                    { id: 'a', text: "is taking / returning" },
+                    { id: 'b', text: "takes / returns" },
+                    { id: 'c', text: "has taken / returned" },
+                    { id: 'd', text: "will take / will return" }
+                ],
+                correct: 'b',
+                explanation: "Dấu hiệu 'Every day' và chuỗi hành động liên tiếp dùng thì Hiện tại đơn (chia số ít theo chủ ngữ Sarah)."
+            },
+            {
+                id: 9,
+                text: "The sun _______ the ball of fire in the sky that the Earth _______ round.",
+                options: [
+                    { id: 'a', text: "will be / has gone" },
+                    { id: 'b', text: "will be / will be going" },
+                    { id: 'c', text: "is / goes" },
+                    { id: 'd', text: "has been / is going" }
+                ],
+                correct: 'c',
+                explanation: "Sự thật hiển nhiên trong vũ trụ luôn được chia ở thì Hiện tại đơn."
+            },
+            {
+                id: 10,
+                text: "Sally _______ really hard for her exams this week.",
+                options: [
+                    { id: 'a', text: "takes" },
+                    { id: 'b', text: "will be taking" },
+                    { id: 'c', text: "is taking" },
+                    { id: 'd', text: "had taken" }
+                ],
+                correct: 'c',
+                explanation: "Dấu hiệu 'this week' (tuần này) kết hợp ngữ cảnh sự việc diễn ra tạm thời xung quanh thời điểm nói, dùng Hiện tại tiếp diễn."
+            },
+            {
+                id: 11,
+                text: "Many people ______ living in Seattle because it ______ continually.",
+                options: [
+                    { id: "a", text: "are hating / is often raining" },
+                    { id: "b", text: "have hated / will often rain" },
+                    { id: "c", text: "hate / often rains" },
+                    { id: "d", text: "hated / was often raining" }
+                ],
+                correct: "c",
+                explanation: "Dùng thì Hiện tại đơn để diễn tả một sự thật/trạng thái (hate) và một thói quen/sự việc lặp lại (often rains)."
+            },
+            {
+                id: 12,
+                text: "The sun ______ in the East and ______ in the West.",
+                options: [
+                    { id: "a", text: "rises / sets" },
+                    { id: "b", text: "is rising / is setting" },
+                    { id: "c", text: "has risen / has set" },
+                    { id: "d", text: "will rise / will set" }
+                ],
+                correct: "a",
+                explanation: "Diễn tả một chân lý, sự thật hiển nhiên nên dùng thì Hiện tại đơn."
+            },
+            {
+                id: 13,
+                text: "______ on the computer now?",
+                options: [
+                    { id: "a", text: "Is Peter working" },
+                    { id: "b", text: "Was Peter working" },
+                    { id: "c", "text": "Has Peter worked" },
+                    { id: "d", text: "Will Peter be working" }
+                ],
+                correct: "a",
+                explanation: "Dấu hiệu 'now' chỉ hành động đang xảy ra tại thời điểm nói, dùng Hiện tại tiếp diễn."
+            },
+            {
+                id: 14,
+                text: "Listen! Mr. Jones ______ the piano. You ______ noise.",
+                options: [
+                    { id: "a", text: "is playing / should not make" },
+                    { id: "b", text: "plays / will not make" },
+                    { id: "c", text: "has played / do not make" },
+                    { id: "d", text: "played / would not make" }
+                ],
+                correct: "a",
+                explanation: "Dấu hiệu 'Listen!' dùng Hiện tại tiếp diễn. Vế sau dùng 'should not' để đưa ra lời khuyên."
+            },
+            {
+                id: 15,
+                text: "Right now, Long ______ with his friends. They ______ the differences between British English and American English.",
+                options: [
+                    { id: "a", text: "sits / discuss" },
+                    { id: "b", text: "has been sitting / will discuss" },
+                    { id: "c", text: "was sitting / was discussing" },
+                    { id: "d", text: "is sitting / are discussing" }
+                ],
+                correct: "d",
+                explanation: "Dấu hiệu 'Right now' dùng Hiện tại tiếp diễn cho cả hai vế."
+            },
+            {
+                id: 16,
+                text: "– ______ free this afternoon?\n– No, I ______.\n– What ______?\n– I ______ my dentist.",
+                options: [
+                    { id: "a", text: "Will you be / will not / have you done / have see" },
+                    { id: "b", text: "Have you been / have not / will you do / will see" },
+                    { id: "c", text: "Are you / am not / do you do / see" },
+                    { id: "d", text: "Are you / am not / are you doing / am seeing" }
+                ],
+                correct: "d",
+                explanation: "Dùng Hiện tại tiếp diễn để chỉ một kế hoạch/sự sắp xếp chắc chắn trong tương lai gần."
+            },
+            {
+                id: 17,
+                text: "Listen! Someone ______ at the door. I ______ it.",
+                options: [
+                    { id: "a", text: "knocks / answer" },
+                    { id: "b", text: "has knocked / will be answering" },
+                    { id: "c", text: "was knocking / answered" },
+                    { id: "d", text: "is knocking / will answer" }
+                ],
+                correct: "d",
+                explanation: "Vế đầu dùng Hiện tại tiếp diễn (Listen!). Vế sau dùng tương lai đơn cho một quyết định tức thời."
+            },
+            {
+                id: 18,
+                text: "Every day, John ______ rice and vegetables for lunch, but today he ______ chicken soup and roast beef. Today is his brother’s wedding.",
+                options: [
+                    { id: "a", text: "has / is having" },
+                    { id: "b", text: "has / has had" },
+                    { id: "c", text: "is having / has" },
+                    { id: "d", text: "has had / has" }
+                ],
+                correct: "a",
+                explanation: "Vế đầu là thói quen hàng ngày (Hiện tại đơn), vế sau là sự việc tạm thời xảy ra hôm nay (Hiện tại tiếp diễn)."
+            },
+            {
+                id: 19,
+                text: "It ______, so we can’t go to the beach.",
+                options: [
+                    { id: "a", text: "had rained" },
+                    { id: "b", text: "rained" },
+                    { id: "c", text: "is raining" },
+                    { id: "d", text: "will have rained" }
+                ],
+                correct: "c",
+                explanation: "Sự việc đang xảy ra gây ảnh hưởng đến hiện tại (không đi biển được)."
+            },
+            {
+                id: 20,
+                text: "My father ______ complete silence when he ______.",
+                options: [
+                    { id: "a", text: "is wanting / works" },
+                    { id: "b", text: "wants / is working" },
+                    { id: "c", text: "has wanted / worked" },
+                    { id: "d", text: "had wanted / was working" }
+                ],
+                correct: "b",
+                explanation: "'Want' là động từ trạng thái không dùng tiếp diễn. Vế sau dùng tiếp diễn để chỉ quá trình đang làm việc."
+            },
+            {
+                id: 21,
+                text: "Since 2003 they ______ their son every year.",
+                options: [
+                    { id: "a", text: "visited" },
+                    { id: "b", text: "have visited" },
+                    { id: "c", text: "visit" },
+                    { id: "d", text: "will visit" }
+                ],
+                correct: "b",
+                explanation: "Dấu hiệu 'Since + mốc thời gian' dùng thì Hiện tại hoàn thành."
+            },
+            {
+                id: 22,
+                text: "Usually, Mr. Pile ______ us Physics but today he ______ ill so Mrs. Young ______ us.",
+                options: [
+                    { id: "a", text: "teaches / is / is teaching" },
+                    { id: "b", text: "has taught / is / teaches" },
+                    { id: "c", text: "is teaching / has been / teaches" },
+                    { id: "d", text: "taught / was / was teaching" }
+                ],
+                correct: "a",
+                explanation: "Kết hợp giữa thói quen (Hiện tại đơn) và sự việc tạm thời hôm nay (Hiện tại tiếp diễn)."
+            },
+            {
+                id: 23,
+                text: "I am sorry I cannot hear what you ______ because everybody ______ so loudly.",
+                options: [
+                    { id: "a", text: "are saying / will talk" },
+                    { id: "b", text: "were saying / has talked" },
+                    { id: "c", text: "have just said / is talking" },
+                    { id: "d", text: "said / was talking" }
+                ],
+                correct: "c",
+                explanation: "Kết hợp Hiện tại hoàn thành (vừa mới nói) và Hiện tại tiếp diễn (đang nói ồn)."
+            },
+            {
+                id: 24,
+                text: "I ______ the same car for more than ten years. I ______ about buying a new one.",
+                options: [
+                    { id: "a", text: "have had / am thinking" },
+                    { id: "b", text: "will have / think" },
+                    { id: "c", text: "had / will think" },
+                    { id: "d", text: "am going to have / was thinking" }
+                ],
+                correct: "a",
+                explanation: "Dấu hiệu 'for more than ten years' dùng Hiện tại hoàn thành. Vế sau chỉ ý định đang cân nhắc."
+            },
+            {
+                id: 25,
+                text: "My best friend and I ______ each other for over fifteen years. We still ______ together once a week.",
+                options: [
+                    { id: "a", text: "were knowing / got" },
+                    { id: "b", text: "knew / have got" },
+                    { id: "c", text: "have known / get" },
+                    { id: "d", text: "had known / are getting" }
+                ],
+                correct: "c",
+                explanation: "Hiện tại hoàn thành cho khoảng thời gian và Hiện tại đơn cho thói quen (once a week)."
+            },
+            {
+                id: 26,
+                text: "The secretary ______ on the report for more than three hours. She hopes she may finish it by the lunch time.",
+                options: [
+                    { id: "a", text: "is working" },
+                    { id: "b", text: "will be working" },
+                    { id: "c", text: "has been working" },
+                    { id: "d", text: "had been working" }
+                ],
+                correct: "c",
+                explanation: "Dùng Hiện tại hoàn thành tiếp diễn để nhấn mạnh tính liên tục của hành động kéo dài đến hiện tại."
+            },
+            {
+                id: 27,
+                text: "Please turn off the stove. The water ______ for more than fifteen minutes.",
+                options: [
+                    { id: "a", text: "is boiling" },
+                    { id: "b", text: "was boiling" },
+                    { id: "c", text: "has been boiling" },
+                    { id: "d", text: "will be boiling" }
+                ],
+                correct: "c",
+                explanation: "Tương tự câu 26, dùng Hiện tại hoàn thành tiếp diễn cho hành động kéo dài kèm dấu hiệu 'for'."
+            },
+            {
+                id: 28,
+                text: "In the 19th century, it ______ two or three months to cross North America by covered wagon. The trip ______ very rough and often dangerous.",
+                options: [
+                    { id: "a", text: "took / was" },
+                    { id: "b", text: "had taken / had been" },
+                    { id: "c", text: "took / had been" },
+                    { id: "d", text: "had taken / was" }
+                ],
+                correct: "a",
+                explanation: "Sự việc xảy ra và kết thúc trong quá khứ (In the 19th century) dùng Quá khứ đơn."
+            },
+            {
+                id: 29,
+                text: "My grandfather ______ a very exciting life. When he was young, he ______ on the farm in the country, where there ______ a lot of cattle and meadows.",
+                options: [
+                    { id: "a", text: "has / has lived / have been" },
+                    { id: "b", text: "had / lived / were" },
+                    { id: "c", text: "was having / had lived / had been" },
+                    { id: "d", text: "has had / is living / are" }
+                ],
+                correct: "b",
+                explanation: "Kể về cuộc đời đã qua của ông, dùng Quá khứ đơn cho toàn bộ các vế."
+            },
+            {
+                id: 30,
+                text: "Mary ______ on the essay for two hours now and she ______ that she ______ it in one more hour.",
+                options: [
+                    { id: "a", text: "is working / has hoped / can finish" },
+                    { id: "b", text: "has been working / hopes / will finish" },
+                    { id: "c", text: "will have worked / hopes / finishes" },
+                    { id: "d", text: "had been working / hoped / would finish" }
+                ],
+                correct: "b",
+                explanation: "Hành động kéo dài (HTHTTD) + Hy vọng ở hiện tại + Kết quả trong tương lai (in one more hour)."
+            },
+            {
+                id: 31,
+                text: "I ______ there once a long time ago and ______ back since.",
+                options: [
+                    { id: "a", text: "went / have not been" },
+                    { id: "b", text: "have gone / will not be" },
+                    { id: "c", text: "was going / am not" },
+                    { id: "d", text: "had gone / was not" }
+                ],
+                correct: "a",
+                explanation: "'a long time ago' dùng Quá khứ đơn, 'since' dùng Hiện tại hoàn thành."
+            },
+            {
+                id: 32,
+                text: "Those drivers ______ for three hours when a heavy storm suddenly ______.",
+                options: [
+                    { id: "a", text: "were driving / broke" },
+                    { id: "b", text: "drove / was breaking" },
+                    { id: "c", text: "had driven / was breaking" },
+                    { id: "d", text: "had been driving / broke" }
+                ],
+                correct: "d",
+                explanation: "Hành động xảy ra liên tục trước một thời điểm/hành động khác trong quá khứ (Quá khứ hoàn thành tiếp diễn)."
+            },
+            {
+                id: 33,
+                text: "I ______ to visit you yesterday, but you ______ at home.",
+                options: [
+                    { id: "a", text: "have come / are not" },
+                    { id: "b", text: "had come / were not" },
+                    { id: "c", text: "came / were not" },
+                    { id: "d", text: "was coming / have not been" }
+                ],
+                correct: "c",
+                explanation: "Dấu hiệu 'yesterday', dùng Quá khứ đơn."
+            },
+            {
+                id: 34,
+                text: "What ______ when the accident ______?",
+                options: [
+                    { id: "a", text: "have you been doing / occurs" },
+                    { id: "b", text: "are you doing / will occur" },
+                    { id: "c", text: "will you be doing / has occurred" },
+                    { id: "d", text: "were you doing / occurred" }
+                ],
+                correct: "d",
+                explanation: "Hành động đang diễn ra (QKTD) thì một hành động khác xen vào (QKĐ)."
+            },
+            {
+                id: 35,
+                text: "We ______ TV when it ______ to rain.",
+                options: [
+                    { id: "a", text: "are watching / will start" },
+                    { id: "b", text: "have watched / will be starting" },
+                    { id: "c", text: "had watched / was starting" },
+                    { id: "d", text: "were watching / started" }
+                ],
+                correct: "d",
+                explanation: "Hành động đang diễn ra thì có hành động khác xen vào trong quá khứ."
+            },
+            {
+                id: 36,
+                text: "I ______ a mystery movie on TV when the electricity ______ out.",
+                options: [
+                    { id: "a", text: "will be watching / is going" },
+                    { id: "b", text: "watched / was going" },
+                    { id: "c", text: "was watching / went" },
+                    { id: "d", text: "have watching / goes" }
+                ],
+                correct: "c",
+                explanation: "Đang xem phim (QKTD) thì mất điện (QKĐ)."
+            },
+            {
+                id: 37,
+                text: "While the doctor ______ Mr. Jones, his son ______ outside this morning.",
+                options: [
+                    { id: "a", text: "was examining / was waiting" },
+                    { id: "b", text: "will be examining / are waiting" },
+                    { id: "c", text: "had been examining / was waiting" },
+                    { id: "d", text: "are examining / is going to wait" }
+                ],
+                correct: "a",
+                explanation: "Hai hành động xảy ra song song trong quá khứ dùng Quá khứ tiếp diễn."
+            },
+            {
+                id: 38,
+                text: "When the boss ______ into the office, his secretary ______, and the accountant ______ on the phones.",
+                options: [
+                    { id: "a", text: "was walking / has been typing / has been talking" },
+                    { id: "b", text: "had walked / was typing / had talk" },
+                    { id: "c", text: "walked / was typing / was talking" },
+                    { id: "d", text: "had been walking / had typed / talked" }
+                ],
+                correct: "c",
+                explanation: "Hành động xen vào (QKĐ) khi các hành động khác đang diễn ra (QKTD)."
+            },
+            {
+                id: 39,
+                text: "The guard ______ to his iPod, so he ______ the fire alarm.",
+                options: [
+                    { id: "a", text: "had listened / was not hearing" },
+                    { id: "b", text: "was listening / did not hear" },
+                    { id: "c", text: "listened / had not heard" },
+                    { id: "d", text: "was listening / was not hearing" }
+                ],
+                correct: "b",
+                explanation: "Hành động đang diễn ra dẫn đến kết quả là không nghe thấy (QKĐ)."
+            },
+            {
+                id: 40,
+                text: "The Titanic ______ the Atlantic when it ______ an iceberg.",
+                options: [
+                    { id: "a", text: "was crossing / struck" },
+                    { id: "b", text: "crossed / was striking" },
+                    { id: "c", text: "had crossed / was striking" },
+                    { id: "d", text: "crossed / had struck" }
+                ],
+                correct: "a",
+                explanation: "Đang băng qua đại dương (QKTD) thì đâm phải tảng băng (QKĐ)."
+            },
+            {
+                id: 41,
+                text: "We were late because we had some car problems. By the time we ______ to the train station, Susan ______ for us for more than two hours.",
+                options: [
+                    { id: "a", text: "got / had been waiting" },
+                    { id: "b", text: "had got / were waiting" },
+                    { id: "c", text: "had been getting / waited" },
+                    { id: "d", text: "were getting / waited" }
+                ],
+                correct: "a",
+                explanation: "Cấu trúc 'By the time + QKĐ, QKHTTD' để chỉ hành động xảy ra và kéo dài trước một thời điểm quá khứ."
+            },
+            {
+                id: 42,
+                text: "Mike ______ to sit down because he ______ all day at work.",
+                options: [
+                    { id: "a", text: "had been wanting / was standing" },
+                    { id: "b", text: "had wanted / stood" },
+                    { id: "c", text: "wanted / had been standing" },
+                    { id: "d", text: "was wanting / had stood" }
+                ],
+                correct: "c",
+                explanation: "Muốn (QKĐ) vì trước đó đã phải đứng cả ngày (QKHTTD)."
+            },
+            {
+                id: 43,
+                text: "The motorcycle ______ to George for years before Tina ______ it last week.",
+                options: [
+                    { id: "a", text: "belonged / had bought" },
+                    { id: "b", text: "was belonging / has bought" },
+                    { id: "c", text: "had belonged / bought" },
+                    { id: "d", text: "had been belonging / bought" }
+                ],
+                correct: "c",
+                explanation: "Sở hữu trong một khoảng thời gian trước khi bán (QKHT). 'Belong' không dùng tiếp diễn."
+            },
+            {
+                id: 44,
+                text: "No matter what ______ next, I ______ you.",
+                options: [
+                    { id: "a", text: "will happen / support" },
+                    { id: "b", text: "happened / would have supported" },
+                    { id: "c", text: "happens / will support" },
+                    { id: "d", text: "is happening / have supported" }
+                ],
+                correct: "c",
+                explanation: "Cấu trúc câu điều kiện loại 1: Mệnh đề trạng ngữ chỉ thời gian/sự việc tương lai dùng Hiện tại đơn, mệnh đề chính dùng Tương lai đơn."
+            },
+            {
+                id: 45,
+                text: "Wait a minute. I ______ this box for you.",
+                options: [
+                    { id: "a", text: "am carrying" },
+                    { id: "b", text: "will carry" },
+                    { id: "c", text: "carry" },
+                    { id: "d", text: "am going to carry" }
+                ],
+                correct: "b",
+                explanation: "Dùng thì Tương lai đơn cho một quyết định hoặc lời đề nghị giúp đỡ đưa ra ngay tại thời điểm nói."
+            },
+            {
+                id: 46,
+                text: "I ______ he ______.",
+                options: [
+                    { id: "a", text: "do not think / will come" },
+                    { id: "b", text: "am not thinking / will come" },
+                    { id: "c", text: "have not thought / comes" },
+                    { id: "d", text: "will not think / comes" }
+                ],
+                correct: "a",
+                explanation: "Đưa ra quan điểm cá nhân ở hiện tại về một sự việc trong tương lai."
+            },
+            {
+                id: 47,
+                text: "At this time tomorrow, Peter ______ for the graduation examination, so now he ______ very nervous although he ______ hard for more than 3 years.",
+                options: [
+                    { id: "a", text: "will sit / has been feeling / was learning" },
+                    { id: "b", text: "will be sitting / feels / has been learning" },
+                    { id: "c", text: "sits / will feel / is learning" },
+                    { id: "d", text: "will have sat / is feeling / learns" }
+                ],
+                correct: "b",
+                explanation: "Kết hợp: Tương lai tiếp diễn (thời điểm cụ thể ngày mai), Hiện tại đơn (trạng thái cảm xúc) và Hiện tại hoàn thành tiếp diễn (kéo dài hơn 3 năm)."
+            },
+            {
+                id: 48,
+                text: "By this time next summer, you ______ your studies and ______ a job.",
+                options: [
+                    { id: "a", text: "will be completing / will find" },
+                    { id: "b", text: "had completed / would find" },
+                    { id: "c", text: "have completed / find" },
+                    { id: "d", text: "will have completed / found" }
+                ],
+                correct: "d",
+                explanation: "Dấu hiệu 'By this time + tương lai' dùng thì Tương lai hoàn thành để chỉ hành động sẽ hoàn tất."
+            },
+            {
+                id: 49,
+                text: "By the time I ______ to the office, the meeting ______ without me. My boss ______ furious with me and I ____..",
+                options: [
+                    { id: "a", text: "will get / begins / is / am fired" },
+                    { id: "b", text: "am getting / will begin / is going to be / will be fired" },
+                    { id: "c", text: "got / had already begun / was / was fired" },
+                    { id: "d", text: "have got / began / has been / am firing" }
+                ],
+                correct: "c",
+                explanation: "Kể lại sự việc trong quá khứ: Hành động xảy ra trước một hành động khác trong quá khứ dùng Quá khứ hoàn thành."
+            },
+            {
+                id: 50,
+                text: "By the time he ______ next month, he ______ for our company for ten years.",
+                options: [
+                    { id: "a", text: "retires / will have been working" },
+                    { id: "b", text: "will retire / has been working" },
+                    { id: "c", text: "has retired / is working" },
+                    { id: "d", text: "would retired / was working" }
+                ],
+                correct: "a",
+                explanation: "Cấu trúc 'By the time + Hiện tại đơn, Tương lai hoàn thành tiếp diễn' (nhấn mạnh tính liên tục)."
+            },
+            {
+                id: 51,
+                text: "Look! There are a lot of clouds! It ______ soon.",
+                options: [
+                    { id: "a", text: "is going to rain" },
+                    { id: "b", text: "has been raining" },
+                    { id: "c", text: "will be raining" },
+                    { id: "d", text: "will have rained" }
+                ],
+                correct: "a",
+                explanation: "Dự đoán có căn cứ, dấu hiệu trực quan ở hiện tại (clouds) dùng 'be going to'."
+            },
+            {
+                id: 52,
+                text: "I am busy. I think I ______ my driving test this week.",
+                options: [
+                    { id: "a", text: "have not taken" },
+                    { id: "b", text: "am not going to take" },
+                    { id: "c", text: "will have not taken" },
+                    { id: "d", text: "do not take" }
+                ],
+                correct: "b",
+                explanation: "Dùng 'be going to' để nói về một dự định hoặc kế hoạch cá nhân."
+            },
+            {
+                id: 53,
+                text: "– I called you last night after dinner, but you were not there. Where ______?\n– I ______ overtime at the fitness center.",
+                options: [
+                    { id: "a", text: "has you been / had worked" },
+                    { id: "b", text: "were you / have worked" },
+                    { id: "c", text: "were you / was working" },
+                    { id: "d", text: "you were / worked" }
+                ],
+                correct: "c",
+                explanation: "Hỏi về vị trí trong quá khứ và diễn tả hành động đang diễn ra tại thời điểm đó (đang làm thêm giờ)."
+            },
+            {
+                id: 54,
+                text: "For the last hundred years, traveling ______ much easier and very comfortable. Now you ______ from New York to Los Angeles in a matter of hours.",
+                options: [
+                    { id: "a", text: "becomes / fly" },
+                    { id: "b", text: "had become / flew" },
+                    { id: "c", text: "will have become / will fly" },
+                    { id: "d", text: "has become / can fly" }
+                ],
+                correct: "d",
+                explanation: "Dấu hiệu 'For the last hundred years' dùng Hiện tại hoàn thành. Vế sau chỉ khả năng ở hiện tại."
+            },
+            {
+                id: 55,
+                text: "John ______ for his girlfriend for two hours but she ______. At last, he ______ to the movies without her.",
+                options: [
+                    { id: "a", text: "has been waiting / does not come / has gone" },
+                    { id: "b", text: "will wait / has not come / will go" },
+                    { id: "c", text: "is waiting / will not come / is going" },
+                    { id: "d", text: "had been waiting / did not come / went" }
+                ],
+                correct: "d",
+                explanation: "Kể lại chuỗi hành động trong quá khứ: Chờ đợi kéo dài trước đó (QKHTTD) và các sự việc tiếp theo (QKĐ)."
+            },
+            {
+                id: 56,
+                text: "By the time we ______ the letter, Tom ______ for Paris.",
+                options: [
+                    { id: "a", text: "receive / will have left" },
+                    { id: "b", text: "had received / left" },
+                    { id: "c", text: "have received / will left" },
+                    { id: "d", text: "received / leaves" }
+                ],
+                correct: "a",
+                explanation: "Cấu trúc phối hợp thì: By the time + Hiện tại đơn, Tương lai hoàn thành."
+            },
+            {
+                id: 57,
+                text: "By this time tomorrow, we ______ on the beach of Hawaii, where we ______ before.",
+                options: [
+                    { id: "a", text: "are going to lie / are never" },
+                    { id: "b", text: "have been lying / will never be" },
+                    { id: "c", text: "will be lying / have never been" },
+                    { id: "d", text: "are lying / were never" }
+                ],
+                correct: "c",
+                explanation: "Tương lai tiếp diễn cho thời điểm xác định ngày mai. Hiện tại hoàn thành cho trải nghiệm chưa từng có trước đây."
+            },
+            {
+                id: 58,
+                text: "After the boy ______ that the wallet full of money, he ______ to the police and ______ it in.",
+                options: [
+                    { id: "a", text: "will find / immediately goes / turns" },
+                    { id: "b", text: "has found / will immediately go / turn" },
+                    { id: "c", text: "was finding / went / would return" },
+                    { id: "d", text: "had found / immediately went / turned" }
+                ],
+                correct: "d",
+                explanation: "Hành động tìm thấy cái ví xảy ra trước (QKHT), các hành động đi báo cảnh sát và trả lại xảy ra sau (QKĐ)."
+            },
+            {
+                id: 59,
+                text: "Sandy ______ TV in the living room at the moment. At this time yesterday, she ______ television. That is all she ______ doing the most.",
+                options: [
+                    { id: "a", text: "watches / also watched / is enjoying" },
+                    { id: "b", text: "is watching / was also watching / enjoys" },
+                    { id: "c", text: "is going to watch / has also watched / has enjoyed" },
+                    { id: "d", text: "will be watching / had also watched / will enjoy" }
+                ],
+                correct: "b",
+                explanation: "Hiện tại tiếp diễn (at the moment), Quá khứ tiếp diễn (giờ này hôm qua), Hiện tại đơn (sở thích chung)."
+            },
+            {
+                id: 60,
+                text: "Jeans which ______ by Levi Strauss in 1850 ______ one of the most popular kinds of clothes in our present time.",
+                options: [
+                    { id: "a", text: "are first made / have been" },
+                    { id: "b", text: "were first made / were" },
+                    { id: "c", text: "were first made / are" },
+                    { id: "d", text: "had been made / would be" }
+                ],
+                correct: "c",
+                explanation: "Vế đầu là sự kiện lịch sử (QKĐ bị động), vế sau là trạng thái ở hiện tại (HTĐ)."
+            },
+            {
+                id: 61,
+                text: "He ______ his boss at this time tomorrow.",
+                options: [
+                    { id: "a", text: "is meeting" },
+                    { id: "b", text: "has meet" },
+                    { id: "c", text: "was meeting" },
+                    { id: "d", text: "will be meeting" }
+                ],
+                correct: "d",
+                explanation: "Dùng thì Tương lai tiếp diễn cho một hành động đang diễn ra tại một thời điểm cụ thể trong tương lai."
+            },
+            {
+                id: 62,
+                text: "– How much is this book?\n– $10.\n– OK. I ______ it.",
+                options: [
+                    { id: "a", text: "will take" },
+                    { id: "b", text: "take" },
+                    { id: "c", text: "have taken" },
+                    { id: "d", text: "took" }
+                ],
+                correct: "a",
+                explanation: "Quyết định mua hàng đưa ra ngay lúc nói dùng Tương lai đơn."
+            },
+            {
+                id: 63,
+                text: "What ______ since 8 am up to now?",
+                options: [
+                    { id: "a", text: "you have been doing" },
+                    { id: "b", text: "have you been doing" },
+                    { id: "c", text: "have been you doing" },
+                    { id: "d", text: "have been doing you" }
+                ],
+                correct: "b",
+                explanation: "Dấu hiệu 'since... up to now' dùng thì Hiện tại hoàn thành tiếp diễn (dạng câu hỏi)."
+            },
+            {
+                id: 64,
+                text: "Computers ______ in use since 1946.",
+                options: [
+                    { id: "a", text: "are" },
+                    { id: "b", text: "were" },
+                    { id: "c", text: "have been" },
+                    { id: "d", text: "had been" }
+                ],
+                correct: "c",
+                explanation: "Dùng Hiện tại hoàn thành với dấu hiệu 'since + mốc thời gian'."
+            },
+            {
+                id: 65,
+                text: "______ to Paris before?",
+                options: [
+                    { id: "a", text: "Are you ever" },
+                    { id: "b", text: "Have you ever been" },
+                    { id: "c", text: "Will you ever be" },
+                    { id: "d", text: "Had you ever been" }
+                ],
+                correct: "b",
+                explanation: "Hỏi về trải nghiệm tính đến hiện tại dùng Hiện tại hoàn thành."
+            },
+            {
+                id: 66,
+                text: "Mr. Pike ______ lunch at home with his wife, but today he ______ lunch with his friends. Mrs. Pike ______ to London since two days ago.",
+                options: [
+                    { id: "a", text: "is usually having / has / went" },
+                    { id: "b", text: "has usually had / has / is going" },
+                    { id: "c", text: "usually has / is having / has gone" },
+                    { id: "d", text: "will have / has had / goes" }
+                ],
+                correct: "c",
+                explanation: "Thói quen (HTĐ), sự việc tạm thời (HTTD) và hành động bắt đầu từ quá khứ kéo dài đến nay (HTHT)."
+            },
+            {
+                id: 67,
+                text: "John ______ a lot. In fact, when he ______ only two years old, he first ______ to the USA.",
+                options: [
+                    { id: "a", text: "always travels / was / had flown" },
+                    { id: "b", text: "has always travelled / was / flew" },
+                    { id: "c", text: "is always travelling / had been / flew" },
+                    { id: "d", text: "always travelled / was / has flown" }
+                ],
+                correct: "b",
+                explanation: "Vế đầu nói về thói quen/đặc điểm kéo dài (HTHT). Hai vế sau kể về sự kiện xác định trong quá khứ (QKĐ)."
+            },
+            {
+                id: 68,
+                text: "Before we ______ a computer, we ______ that typewriter to type our assignments.",
+                options: [
+                    { id: "a", text: "bought / have used" },
+                    { id: "b", text: "are buying / use" },
+                    { id: "c", text: "buy / have used" },
+                    { id: "d", text: "bought / had used" }
+                ],
+                correct: "d",
+                explanation: "Dùng Quá khứ hoàn thành cho hành động xảy ra trước một hành động khác (QKĐ) trong quá khứ."
+            },
+            {
+                id: 69,
+                text: "John ______ in France, but his parents ______ in Cologne, Germany after living there for five years.",
+                options: [
+                    { id: "a", text: "was born / had met" },
+                    { id: "b", text: "had been born / met" },
+                    { id: "c", text: "has been born / meet" },
+                    { id: "d", text: "is born / have met" }
+                ],
+                correct: "a",
+                explanation: "Sinh ra (QKĐ), bố mẹ gặp nhau trước đó (QKHT)."
+            },
+            {
+                id: 70,
+                text: "We ______ each other one day while John ______ a book in the library and I ______ down beside him.",
+                options: [
+                    { id: "a", text: "met / was reading / sat" },
+                    { id: "b", text: "had met / was reading / had sat" },
+                    { id: "c", text: "meet / is reading / have sat" },
+                    { id: "d", text: "will meet / reads / sat" }
+                ],
+                correct: "a",
+                explanation: "Hành động đang diễn ra (was reading) thì các hành động khác xen vào hoặc xảy ra nối tiếp (met, sat)."
+            },
+            {
+                id: 71,
+                text: "John ______ his parents in France at the moment. He ______ in New York, but ______ his parents for the past few weeks.",
+                options: [
+                    { id: "a", text: "was visiting / live / had visited" },
+                    { id: "b", text: "has visited / lived / is visiting" },
+                    { id: "c", text: "is visiting / lives / has been visiting" },
+                    { id: "d", text: "has been visiting / had live / has been visiting" }
+                ],
+                correct: "c",
+                explanation: "Đang làm gì (HTTD), nơi sống ổn định (HTĐ) và hành động kéo dài gần đây (HTHTTD)."
+            },
+            {
+                id: 72,
+                text: "– ______ to come over for dinner tonight?\n– Oh, I’m sorry, I can’t. I ______ to a movie tonight with some friends.",
+                options: [
+                    { id: "a", text: "Have you wanted / will go" },
+                    { id: "b", text: "Did you want / went" },
+                    { id: "c", text: "Do you want / am going" },
+                    { id: "d", text: "Are you wanting / go" }
+                ],
+                correct: "c",
+                explanation: "Hỏi ý muốn (HTĐ) và diễn tả một kế hoạch chắc chắn trong tương lai (HTTD)."
+            },
+            {
+                id: 73,
+                text: "He ______ a good day until a thief ______ into his apartment, ______ all his money, and ______ him up.",
+                options: [
+                    { id: "a", text: "has been having / comes / takes / tied" },
+                    { id: "b", text: "had been having / came / took / tied" },
+                    { id: "c", text: "was having / had came / took / tied" },
+                    { id: "d", text: "is having / is coming / has take / ties" }
+                ],
+                correct: "b",
+                explanation: "Diễn tả quá trình đang diễn ra trong quá khứ (QKHTTD) cho đến khi chuỗi hành động khác xảy ra (QKĐ)."
+            },
+            {
+                id: 74,
+                text: "– Where ______ on holiday?\n– I don’t know. We ______ yet.",
+                options: [
+                    { id: "a", text: "will you go / are not going to decide" },
+                    { id: "b", text: "are you going / have not decided" },
+                    { id: "c", text: "have you gone / do not decide" },
+                    { id: "d", text: "did you go / had not decided" }
+                ],
+                correct: "b",
+                explanation: "Hỏi về kế hoạch tương lai (HTTD) và thông báo chưa quyết định tính đến hiện tại (HTHT)."
+            },
+            {
+                id: 75,
+                text: "When I ______ the street I ______ somebody call my name.",
+                options: [
+                    { id: "a", text: "have crossed / hear" },
+                    { id: "b", text: "had crossed / would hear" },
+                    { id: "c", text: "am crossing / will hear" },
+                    { id: "d", text: "was crossing / heard" }
+                ],
+                correct: "d",
+                explanation: "Hành động đang diễn ra trong quá khứ thì một hành động khác bất ngờ xen vào."
+            },
+            {
+                id: 76,
+                text: "The train ______ at 8.58, so we ______ in Scotland by lunchtime.",
+                options: [
+                    { id: "a", text: "leaves / will be" },
+                    { id: "b", text: "left / have been" },
+                    { id: "c", text: "has left / were" },
+                    { id: "d", text: "left / had been" }
+                ],
+                correct: "a",
+                explanation: "Lịch trình tàu chạy dùng Hiện tại đơn. Vế sau dùng Tương lai đơn cho kết quả."
+            },
+            {
+                id: 77,
+                text: "I think by the time we ______ there, Jim ______.",
+                options: [
+                    { id: "a", text: "get / will have left" },
+                    { id: "b", text: "got / has left" },
+                    { id: "c", text: "will get / will leave" },
+                    { id: "d", text: "had got / left" }
+                ],
+                correct: "a",
+                explanation: "Cấu trúc 'By the time + Hiện tại đơn, Tương lai hoàn thành'."
+            },
+            {
+                id: 78,
+                text: "I ______ the time when I ______ as a teacher.",
+                options: [
+                    { id: "a", text: "have never forgot / have first worked" },
+                    { id: "b", text: "am never forgetting / first work" },
+                    { id: "c", text: "will never forget / first worked" },
+                    { id: "d", text: "had never forgot / was first working" }
+                ],
+                correct: "c",
+                explanation: "Lời hứa/khẳng định trong tương lai về một sự kiện khởi đầu trong quá khứ."
+            },
+            {
+                id: 79,
+                text: "Women ______ in presidential elections since 1921.",
+                options: [
+                    { id: "a", text: "vote" },
+                    { id: "b", text: "have voted" },
+                    { id: "c", text: "had voted" },
+                    { id: "d", text: "are voting" }
+                ],
+                correct: "b",
+                explanation: "Hành động bắt đầu trong quá khứ và vẫn tiếp tục ở hiện tại (HTHT)."
+            },
+            {
+                id: 80,
+                text: "By the time the boss ______ at 9.00, his employees ______ for two hours.",
+                options: [
+                    { id: "a", text: "will arrive / are working" },
+                    { id: "b", text: "arrives / will have been working" },
+                    { id: "c", text: "arrived / have been working" },
+                    { id: "d", text: "has arrived / were working" }
+                ],
+                correct: "b",
+                explanation: "Cấu trúc phối hợp thì Tương lai: By the time + HTĐ, TLHTTD."
+            },
+            {
+                id: 81,
+                text: "– I am hungry. I ______ lunch yet.\n– Don’t worry. I ______ you a sandwich.",
+                options: [
+                    { id: "a", text: "have not had / will get" },
+                    { id: "b", text: "do not have / am going to get" },
+                    { id: "c", text: "will not have / have got" },
+                    { id: "d", text: "am not having / get" }
+                ],
+                correct: "a",
+                explanation: "Dấu hiệu 'yet' dùng Hiện tại hoàn thành. Quyết định giúp đỡ tại chỗ dùng Tương lai đơn."
+            },
+            {
+                id: 82,
+                text: "Do you think everything ______ when we ______ from the store?",
+                options: [
+                    { id: "a", text: "will be finished / get back" },
+                    { id: "b", text: "is finished / will get back" },
+                    { id: "c", text: "is going to finish / are getting back" },
+                    { id: "d", text: "has been finished / will have got back" }
+                ],
+                correct: "a",
+                explanation: "Dự đoán sự hoàn tất trong tương lai. Mệnh đề thời gian dùng Hiện tại đơn thay cho tương lai."
+            },
+            {
+                id: 83,
+                text: "Look! Mary ______ a beautiful new dress. She ______ so pretty in the dress.",
+                options: [
+                    { id: "a", text: "was wearing / looked" },
+                    { id: "b", text: "wears / has looked" },
+                    { id: "c", text: "has been wearing / is looking" },
+                    { id: "d", text: "is wearing / looks" }
+                ],
+                correct: "d",
+                explanation: "Đang mặc (HTTD) và trông như thế nào (động từ trạng thái dùng HTĐ)."
+            },
+            {
+                id: 84,
+                text: "I am sick of rain and bad weather! Hopefully, when we ______ up tomorrow morning, the sun ______.",
+                options: [
+                    { id: "a", text: "will wake / will shine" },
+                    { id: "b", text: "are waking / shines" },
+                    { id: "c", text: "are going to wake / is shining" },
+                    { id: "d", text: "wake / will be shining" }
+                ],
+                correct: "d",
+                explanation: "Mệnh đề 'when' dùng Hiện tại đơn. Vế chính dùng Tương lai tiếp diễn cho thời điểm cụ thể sáng mai."
+            },
+            {
+                id: 85,
+                text: "When the president ______ off the plane, the crowd ______ for him for half an hour.",
+                options: [
+                    { id: "a", text: "gets / will wait" },
+                    { id: "b", text: "got / had been waiting" },
+                    { id: "c", text: "had got / was waiting" },
+                    { id: "d", text: "has got / will be waiting" }
+                ],
+                correct: "b",
+                explanation: "Hành động chờ đợi đã diễn ra liên tục trước khi tổng thống bước xuống (Quá khứ hoàn thành tiếp diễn)."
+            },
+            {
+                id: 86,
+                text: "Jane ______ at my house when you ______.",
+                options: [
+                    { id: "a", text: "is / will arrive" },
+                    { id: "b", text: "will be / will arrive" },
+                    { id: "c", text: "will be / arrive" },
+                    { id: "d", text: "is / are going to arrive" }
+                ],
+                correct: "c",
+                explanation: "Diễn tả sự việc ở tương lai. Mệnh đề thời gian không dùng 'will'."
+            },
+            {
+                id: 87,
+                text: "They ______ here for three years before you ______ last week.",
+                options: [
+                    { id: "a", text: "have worked / came" },
+                    { id: "b", text: "have been working / come" },
+                    { id: "c", text: "was working / had come" },
+                    { id: "d", text: "had been working / came" }
+                ],
+                correct: "d",
+                explanation: "Hành động làm việc kéo dài trước một sự kiện trong quá khứ (last week) dùng QKHTTD."
+            },
+            {
+                id: 88,
+                text: "These students ______ hard since the beginning of the school year because they ______ their graduation exam next May.",
+                options: [
+                    { id: "a", text: "studied / are going to take" },
+                    { id: "b", text: "are studying / will be taking" },
+                    { id: "c", text: "study / will have taken" },
+                    { id: "d", text: "have been studying / will take" }
+                ],
+                correct: "d",
+                explanation: "Dấu hiệu 'since' dùng HTHTTD. Kế hoạch tương lai dùng Tương lai đơn."
+            },
+            {
+                id: 90,
+                text: "By the time John ______ to help, we ______ the work.",
+                options: [
+                    { id: "a", text: "comes / finished" },
+                    { id: "b", text: "comes / will have finished" },
+                    { id: "c", text: "will come / will have" },
+                    { id: "d", text: "came / have finished" }
+                ],
+                correct: "b",
+                explanation: "Phối hợp thì Tương lai: By the time + Hiện tại đơn, Tương lai hoàn thành."
+            },
+            {
+                id: 91,
+                text: "Mary sometimes ______ to turn off the computer before she ______ home.",
+                options: [
+                    { id: "a", text: "forgot / had gone" },
+                    { id: "b", text: "has forgot / is going" },
+                    { id: "c", text: "is forgetting / has gone" },
+                    { id: "d", text: "forgets / goes" }
+                ],
+                correct: "d",
+                explanation: "Diễn tả thói quen lặp đi lặp lại ở hiện tại dùng Hiện tại đơn."
+            },
+            {
+                id: 92,
+                text: "They ______ good preparations before they ______ their final examination yesterday.",
+                options: [
+                    { id: "a", text: "made / had taken" },
+                    { id: "b", text: "had made / took" },
+                    { id: "c", text: "have made / take" },
+                    { id: "d", text: "will have made / have taken" }
+                ],
+                correct: "b",
+                explanation: "Hành động chuẩn bị diễn ra trước hành động đi thi trong quá khứ (yesterday)."
+            },
+            {
+                id: 93,
+                text: "He ______ a birthday party tomorrow for his daughter who ______ three.",
+                options: [
+                    { id: "a", text: "is having / turns" },
+                    { id: "b", text: "will have had / will turn" },
+                    { id: "c", text: "is going to have / has turned" },
+                    { id: "d", text: "has had / is going to turn" }
+                ],
+                correct: "a",
+                explanation: "Kế hoạch cho ngày mai (HTTD) và diễn tả tuổi tác (HTĐ)."
+            },
+            {
+                id: 94,
+                text: "When Susan ______ yesterday, Peter ______ dinner. He ______ cooking very much and often ______ the meals himself.",
+                options: [
+                    { id: "a", text: "phoned / was cooking / likes / prepares" },
+                    { id: "b", text: "had phoned / cooked / liked / prepared" },
+                    { id: "c", text: "was phoning / was cooking / has liked / is preparing" },
+                    { id: "d", text: "has phoned / is cooking / is liking / preparing" }
+                ],
+                correct: "a",
+                explanation: "Kết hợp hành động xen vào (QKĐ), hành động đang diễn ra (QKTD) và sở thích/thói quen (HTĐ)."
+            },
+            {
+                id: 95,
+                text: "They ______ to finish their work because they ______ Los Angeles next Sunday.",
+                options: [
+                    { id: "a", text: "are needing / visit" },
+                    { id: "b", text: "need / are going to visit" },
+                    { id: "c", text: "have needed / are visiting" },
+                    { id: "d", text: "needed / have visited" }
+                ],
+                correct: "b",
+                explanation: "Động từ 'need' dùng HTĐ cho nhu cầu hiện tại. Vế sau là kế hoạch tương lai (be going to)."
+            },
+            {
+                id: 96,
+                text: "At present Mary ______ her clothes. She ______ the clothes on Sundays.",
+                options: [
+                    { id: "a", text: "is washing / often washes" },
+                    { id: "b", text: "was washing / has often washed" },
+                    { id: "c", text: "has washed / is often washing" },
+                    { id: "d", text: "washes / often washed" }
+                ],
+                correct: "a",
+                explanation: "Đang làm gì (at present) và thói quen lặp lại (often washes)."
+            },
+            {
+                id: 97,
+                text: "I ______ that movie before last night.",
+                options: [
+                    { id: "a", text: "did not see" },
+                    { id: "b", text: "has not seen" },
+                    { id: "c", text: "had not seen" },
+                    { id: "d", text: "will see" }
+                ],
+                correct: "c",
+                explanation: "Dấu hiệu 'before + mốc quá khứ' dùng thì Quá khứ hoàn thành."
+            },
+            {
+                id: 98,
+                text: "I ______ Lisa at the museum when I ______ to restaurant but she ______ me.",
+                options: [
+                    { id: "a", text: "was seeing / was going / had not seen" },
+                    { id: "b", text: "had seen / went / was not seeing" },
+                    { id: "c", text: "have seen / have gone / does not see" },
+                    { id: "d", text: "saw / was going / did not see" }
+                ],
+                correct: "d",
+                explanation: "Nhìn thấy (hành động ngắn) khi đang đi (hành động dài). Vế cuối là kết quả sự việc trong quá khứ."
+            },
+            {
+                id: 99,
+                text: "Ever since human beings ______ the Earth, they ______ use of various form of communication.",
+                options: [
+                    { id: "a", text: "have inhabited / have made" },
+                    { id: "b", text: "inhabited / are making" },
+                    { id: "c", text: "had inhabited / had made" },
+                    { id: "d", text: "inhabit / make" }
+                ],
+                correct: "a",
+                explanation: "Dùng Hiện tại hoàn thành cho quá trình sinh sống và sử dụng kéo dài từ quá khứ đến nay."
+            },
+            {
+                id: 100,
+                text: "By the time John ______ the destination, he ______ for about three hours.",
+                options: [
+                    { id: "a", text: "will get / has walked" },
+                    { id: "b", text: "gets / will have been walking" },
+                    { id: "c", text: "has got / walks" },
+                    { id: "d", text: "is getting / is walking" }
+                ],
+                correct: "b",
+                explanation: "By the time + Hiện tại đơn, Tương lai hoàn thành tiếp diễn (nhấn mạnh thời gian đi bộ liên tục)."
+            }
+        ];
+
+        // Mood Board Colors Mapping
+        const COLORS = {
+            darkGreen: '#008000',
+            lightGreen: '#8dc63f',
+            yellow: '#fff200',
+            orangeYellow: '#fbb03b',
+            orange: '#f15a24'
+        };
+
+        const App = () => {
+            // States
+            const [step, setStep] = React.useState('welcome'); // welcome, quiz, result
+            const [studentInfo, setStudentInfo] = React.useState({ id: '', name: '' });
+            
+            const [queue, setQueue] = React.useState([]);
+            const [totalInitialQuestions, setTotalInitialQuestions] = React.useState(0);
+            
+            const [selectedOption, setSelectedOption] = React.useState(null);
+            const [feedback, setFeedback] = React.useState({ show: false, type: '', message: '', correctAnswer: '', explanation: '' });
+            
+            const [stats, setStats] = React.useState({ correctFirstTry: 0 });
+            const [times, setTimes] = React.useState({ start: null, end: null });
+
+            // Helper format time
+            const formatDate = (date) => {
+                if (!date) return '';
+                const d = new Date(date);
+                return d.toLocaleTimeString('en-US') + ' | ' + d.toLocaleDateString('en-US');
+            };
+
+            const calculateDuration = (start, end) => {
+                if (!start || !end) return '';
+                const diffSecs = Math.floor((new Date(end) - new Date(start)) / 1000);
+                const minutes = Math.floor(diffSecs / 60);
+                const seconds = diffSecs % 60;
+                return `${minutes} min ${seconds} sec`;
+            };
+
+            // Handlers
+            const handleStart = (e) => {
+                e.preventDefault();
+                if (!studentInfo.id.trim() || !studentInfo.name.trim()) {
+                    alert('Please enter both Student ID and Full Name!');
+                    return;
+                }
+                
+                let questionsWithAttempts = INITIAL_QUESTIONS.map(q => ({ ...q, attempts: 0 }));
+                
+                // Trộn ngẫu nhiên mảng câu hỏi
+                questionsWithAttempts = questionsWithAttempts.sort(() => Math.random() - 0.5);
+
+                setQueue(questionsWithAttempts);
+                setTotalInitialQuestions(questionsWithAttempts.length);
+                setTimes({ start: new Date(), end: null });
+                setStats({ correctFirstTry: 0 });
+                setStep('quiz');
+            };
+
+            const handleSubmitAnswer = () => {
+                if (!selectedOption) return;
+
+                const currentQ = queue[0];
+                const isCorrect = selectedOption === currentQ.correct;
+
+                if (isCorrect) {
+                    if (currentQ.attempts === 0) {
+                        setStats(prev => ({ ...prev, correctFirstTry: prev.correctFirstTry + 1 }));
+                    }
+                    setFeedback({
+                        show: true,
+                        type: 'success',
+                        message: '🎉 Correct Answer!',
+                        correctAnswer: currentQ.options.find(o => o.id === currentQ.correct).text,
+                        explanation: currentQ.explanation
+                    });
+                } else {
+                    const currentAttempts = currentQ.attempts + 1;
+                    
+                    if (currentAttempts < 2) {
+                        setFeedback({
+                            show: true,
+                            type: 'warning',
+                            message: 'Incorrect! This question will be moved to the end for you to try again.',
+                        });
+                        currentQ.attempts = currentAttempts;
+                    } else {
+                        setFeedback({
+                            show: true,
+                            type: 'error',
+                            message: 'Incorrect 2 times! Let\'s see the right answer.',
+                            correctAnswer: currentQ.options.find(o => o.id === currentQ.correct).text,
+                            explanation: currentQ.explanation
+                        });
+                    }
+                }
+            };
+
+            const handleNextQuestion = () => {
+                let currentQueue = [...queue];
+                const currentQ = currentQueue.shift();
+
+                // If incorrect on first try, push it to the end
+                if (feedback.type === 'warning') {
+                    currentQueue.push(currentQ);
+                }
+                
+                setQueue(currentQueue);
+                setSelectedOption(null);
+                setFeedback({ show: false, type: '', message: '', correctAnswer: '', explanation: '' });
+
+                if (currentQueue.length === 0) {
+                    setTimes(prev => ({ ...prev, end: new Date() }));
+                    setStep('result');
+                }
+            };
+
+            // Pre-calculate values for quiz and result screens
+            const currentQuestion = queue.length > 0 ? queue[0] : null;
+            const progressPercentage = totalInitialQuestions > 0 ? ((totalInitialQuestions - queue.length) / totalInitialQuestions) * 100 : 0;
+            const percentage = totalInitialQuestions > 0 ? Math.round((stats.correctFirstTry / totalInitialQuestions) * 100) : 0;
+
+            // Render Screens
+            return (
+                <div className="h-[100dvh] w-full bg-app flex flex-col overflow-hidden relative">
+                    {/* Main Content Area */}
+                    <main className="flex-1 w-full min-h-0 flex flex-col relative z-10">
+                        {/* WELCOME SCREEN */}
+                        {step === 'welcome' && (
+                            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-y-auto">
+                                <div className="bg-white/95 backdrop-blur p-6 sm:p-8 rounded-2xl shadow-xl w-full max-w-md border-t-8 shrink-0 my-auto" style={{borderColor: COLORS.darkGreen}}>
+                                    <div className="text-center mb-6 sm:mb-8">
+                                        <h1 className="text-2xl sm:text-3xl font-extrabold mb-2" style={{color: COLORS.darkGreen}}>GRAMMAR REVISION</h1>
+                                        <p className="text-gray-500 font-medium">English Tenses</p>
+                                    </div>
+                                    
+                                    <form onSubmit={handleStart} className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">Student ID</label>
+                                            <input 
+                                                type="text" 
+                                                value={studentInfo.id}
+                                                onChange={(e) => setStudentInfo({...studentInfo, id: e.target.value})}
+                                                className="w-full px-4 py-3 text-base sm:text-sm rounded-lg border-2 border-gray-200 focus:outline-none transition"
+                                                onFocus={(e) => e.target.style.borderColor = COLORS.lightGreen}
+                                                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                                                placeholder="Enter your ID"
+                                                required
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                                            <input 
+                                                type="text" 
+                                                value={studentInfo.name}
+                                                onChange={(e) => setStudentInfo({...studentInfo, name: e.target.value})}
+                                                className="w-full px-4 py-3 text-base sm:text-sm rounded-lg border-2 border-gray-200 focus:outline-none transition"
+                                                onFocus={(e) => e.target.style.borderColor = COLORS.lightGreen}
+                                                onBlur={(e) => e.target.style.borderColor = '#e5e7eb'}
+                                                placeholder="Enter your full name"
+                                                required
+                                            />
+                                        </div>
+                                        <button 
+                                            type="submit" 
+                                            className="w-full text-white font-bold py-3 sm:py-4 rounded-lg transition duration-200 mt-2 shadow-lg hover:opacity-90"
+                                            style={{backgroundColor: COLORS.orange}}
+                                        >
+                                            Start Quiz
+                                        </button>
+                                    </form>
+                                    <div className="mt-4 sm:mt-6 text-[13px] sm:text-sm text-gray-600 bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-200 leading-relaxed">
+                                        <strong style={{color: COLORS.orange}}>Rules:</strong> If you answer incorrectly, the question moves to the end. You have 2 attempts per question before seeing the explanation.
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* QUIZ SCREEN */}
+                        {step === 'quiz' && currentQuestion && (
+                            <div className="flex-1 flex flex-col p-2 sm:p-4 md:py-6 max-w-3xl w-full mx-auto min-h-0">
+                                {/* Header Info */}
+                                <div className="shrink-0 flex flex-row gap-2 justify-between items-center bg-white/95 backdrop-blur p-3 sm:p-4 rounded-xl shadow-sm mb-2 sm:mb-4 border border-gray-100">
+                                    <div>
+                                        <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-500 block font-bold">Student</span>
+                                        <span className="font-bold text-gray-800 text-sm sm:text-base">{studentInfo.name} <span className="text-gray-400 font-normal">({studentInfo.id})</span></span>
+                                    </div>
+                                    <div className="text-right">
+                                        <span className="text-[10px] sm:text-xs uppercase tracking-wider text-gray-500 block font-bold mb-0.5">Remaining</span>
+                                        <span className="font-bold px-2 sm:px-3 py-1 rounded-full text-white text-[11px] sm:text-sm shadow-sm inline-block" style={{backgroundColor: COLORS.orangeYellow}}>
+                                            {queue.length} Qs
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Question Card */}
+                                <div className="bg-white/95 backdrop-blur rounded-2xl shadow-xl overflow-hidden flex-1 relative flex flex-col min-h-0">
+                                    {/* Progress bar */}
+                                    <div className="h-2 w-full bg-gray-200 shrink-0">
+                                        <div className="h-full transition-all duration-500" 
+                                             style={{
+                                                 width: `${progressPercentage}%`,
+                                                 background: `linear-gradient(to right, ${COLORS.darkGreen}, ${COLORS.lightGreen}, ${COLORS.yellow})`
+                                             }}>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="p-3 sm:p-6 md:p-8 flex-1 flex flex-col min-h-0">
+                                        <div className="flex flex-wrap items-center gap-2 mb-3 sm:mb-4 shrink-0">
+                                            <span className="text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider" style={{backgroundColor: COLORS.darkGreen}}>
+                                                Question {currentQuestion.id}
+                                            </span>
+                                            {currentQuestion.attempts > 0 && (
+                                                <span className="text-white text-[11px] sm:text-xs font-bold px-3 py-1 rounded-full flex items-center" style={{backgroundColor: COLORS.orange}}>
+                                                    Attempt {currentQuestion.attempts + 1}
+                                                </span>
+                                            )}
+                                        </div>
+                                        
+                                        {/* Scrollable area for question and options */}
+                                        <div className="flex-1 overflow-y-auto pr-1 sm:pr-2">
+                                            <h2 className="text-base sm:text-xl md:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 leading-relaxed">
+                                                {currentQuestion.text}
+                                            </h2>
+
+                                            <div className="space-y-2 sm:space-y-3 pb-2">
+                                                {currentQuestion.options.map((opt) => (
+                                                    <label key={opt.id} className="option-label block relative cursor-pointer group">
+                                                        <input 
+                                                            type="radio" 
+                                                            name="answer" 
+                                                            value={opt.id}
+                                                            checked={selectedOption === opt.id}
+                                                            onChange={() => setSelectedOption(opt.id)}
+                                                            disabled={feedback.show}
+                                                            className="peer sr-only"
+                                                        />
+                                                        <div className="p-3 sm:p-4 rounded-xl border-2 border-gray-200 bg-white group-hover:border-gray-300 transition-colors flex items-center">
+                                                            <span className="letter-badge w-7 h-7 sm:w-8 sm:h-8 flex-shrink-0 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 font-bold mr-3 sm:mr-4 transition-colors text-sm sm:text-base">
+                                                                {opt.id.toUpperCase()}
+                                                            </span>
+                                                            <span className="text-gray-700 text-sm sm:text-lg font-medium">{opt.text}</span>
+                                                        </div>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {!feedback.show && (
+                                            <button 
+                                                onClick={handleSubmitAnswer}
+                                                disabled={!selectedOption}
+                                                className={`mt-3 sm:mt-5 w-full py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg transition-all shrink-0 ${
+                                                    selectedOption 
+                                                    ? 'text-white shadow-lg hover:opacity-90' 
+                                                    : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                                                }`}
+                                                style={selectedOption ? {backgroundColor: COLORS.orange} : {}}
+                                            >
+                                                Check Answer
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    {/* Feedback Overlay Modal */}
+                                    {feedback.show && (
+                                        <div className="absolute inset-0 bg-white/95 backdrop-blur-md z-10 flex flex-col p-4 sm:p-6 animate-[fadeIn_0.3s_ease-out]">
+                                            <div className="w-full h-full max-w-xl mx-auto flex flex-col">
+                                                <div className="flex-1 overflow-y-auto flex flex-col justify-center pb-4">
+                                                    {feedback.type === 'success' && (
+                                                        <div className="mb-3 sm:mb-4 flex justify-center shrink-0">
+                                                            <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-green-100">
+                                                                <svg className="w-8 h-8 sm:w-10 sm:h-10" style={{color: COLORS.darkGreen}} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {feedback.type === 'warning' && (
+                                                        <div className="mb-3 sm:mb-4 flex justify-center shrink-0">
+                                                            <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-yellow-100">
+                                                                <svg className="w-8 h-8 sm:w-10 sm:h-10" style={{color: COLORS.orangeYellow}} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    {feedback.type === 'error' && (
+                                                        <div className="mb-3 sm:mb-4 flex justify-center shrink-0">
+                                                            <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-full flex items-center justify-center bg-red-100">
+                                                                <svg className="w-8 h-8 sm:w-10 sm:h-10" style={{color: COLORS.orange}} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" /></svg>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    <h3 className="text-lg sm:text-2xl font-extrabold mb-3 sm:mb-6 text-center shrink-0" style={{
+                                                        color: feedback.type === 'success' ? COLORS.darkGreen : 
+                                                               feedback.type === 'warning' ? COLORS.orangeYellow : COLORS.orange
+                                                    }}>
+                                                        {feedback.message}
+                                                    </h3>
+
+                                                    {(feedback.type === 'error' || feedback.type === 'success') && (
+                                                        <div className="bg-gray-50 p-4 sm:p-6 rounded-2xl border border-gray-200 text-left shrink-0 shadow-inner">
+                                                            <p className="text-gray-500 text-[10px] sm:text-xs uppercase font-extrabold tracking-wider mb-1 sm:mb-2">Correct Answer:</p>
+                                                            <p className="font-bold text-base sm:text-xl mb-3 sm:mb-4" style={{color: COLORS.darkGreen}}>{feedback.correctAnswer}</p>
+                                                            
+                                                            <p className="text-gray-500 text-[10px] sm:text-xs uppercase font-extrabold tracking-wider mb-1 sm:mb-2">Explanation:</p>
+                                                            <p className="text-gray-800 text-sm sm:text-lg leading-relaxed">{feedback.explanation}</p>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <button 
+                                                    onClick={handleNextQuestion}
+                                                    className="w-full text-white font-bold py-3 sm:py-4 px-6 rounded-xl transition-all shadow-lg hover:opacity-90 shrink-0"
+                                                    style={{backgroundColor: COLORS.darkGreen}}
+                                                >
+                                                    Continue
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* RESULT SCREEN */}
+                        {step === 'result' && (
+                            <div className="flex-1 flex items-center justify-center p-4 min-h-0 overflow-y-auto">
+                                <div className="bg-white/95 backdrop-blur p-6 sm:p-8 rounded-3xl shadow-2xl w-full max-w-lg border-t-8 shrink-0 my-auto" style={{borderColor: COLORS.lightGreen}}>
+                                    <div className="text-center">
+                                        <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full mb-4 sm:mb-6" style={{backgroundColor: '#f7fceb'}}>
+                                            <svg className="w-10 h-10 sm:w-12 sm:h-12" style={{color: COLORS.lightGreen}} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        </div>
+                                        <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-800 mb-2">Quiz Completed!</h1>
+                                        <p className="text-gray-500 mb-6 sm:mb-8 font-medium text-sm sm:text-base">Congratulations on completing the revision.</p>
+                                        
+                                        <div className="rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 border" style={{backgroundColor: '#fafafa', borderColor: '#e5e7eb'}}>
+                                            <div className="grid grid-cols-2 gap-y-3 sm:gap-y-4 text-left">
+                                                <div className="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wide">Student ID</div>
+                                                <div className="font-bold text-gray-800 text-right text-sm sm:text-base">{studentInfo.id}</div>
+                                                
+                                                <div className="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wide">Full Name</div>
+                                                <div className="font-bold text-gray-800 text-right text-sm sm:text-base">{studentInfo.name}</div>
+                                                
+                                                <div className="col-span-2 border-t border-gray-200 my-1 sm:my-2"></div>
+                                                
+                                                <div className="text-xs sm:text-sm font-bold text-gray-500 uppercase tracking-wide flex items-center">
+                                                    First Try Accuracy
+                                                </div>
+                                                <div className="font-black text-xl sm:text-2xl text-right flex items-center justify-end" style={{color: COLORS.darkGreen}}>
+                                                    {percentage}% <span className="text-xs sm:text-sm font-normal text-gray-500 ml-1 sm:ml-2">({stats.correctFirstTry}/{totalInitialQuestions})</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="bg-gray-50 rounded-2xl p-4 sm:p-6 text-sm grid grid-cols-1 gap-3 sm:gap-4 text-left border border-gray-100">
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] sm:text-xs">Start</span>
+                                                <span className="text-gray-800 font-mono font-medium text-[10px] sm:text-sm">{formatDate(times.start)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span className="text-gray-500 font-bold uppercase tracking-wider text-[10px] sm:text-xs">End</span>
+                                                <span className="text-gray-800 font-mono font-medium text-[10px] sm:text-sm">{formatDate(times.end)}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center bg-white p-3 sm:p-4 rounded-xl border border-gray-200 mt-1 sm:mt-2 shadow-sm">
+                                                <span className="text-gray-800 font-bold text-xs sm:text-sm">Total Time</span>
+                                                <span className="font-black text-base sm:text-lg" style={{color: COLORS.orange}}>{calculateDuration(times.start, times.end)}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <button 
+                                            onClick={() => window.location.reload()}
+                                            className="mt-6 bg-white border-2 hover:bg-gray-50 text-gray-700 font-bold py-3 sm:py-4 px-8 rounded-xl transition-all w-full shadow-sm text-sm sm:text-base"
+                                            style={{borderColor: COLORS.orangeYellow}}
+                                        >
+                                            Restart Quiz
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </main>
+
+                    {/* FOOTER */}
+                    <footer className="relative z-10 shrink-0 py-2 sm:py-3 px-4 text-center bg-white/60 backdrop-blur-md border-t border-white/50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                        <p className="font-bold text-slate-600 text-[11px] sm:text-[13px] mb-0.5">Compiled and Digitized by Elaine Nguyễn</p>
+                        <p className="italic text-slate-500 text-[10px] sm:text-xs">Empowering students through knowledge and technology</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
