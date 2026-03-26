@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby School - PET Writing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 1. SETUP & PRINT A4 */
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            background-color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .a4-wrapper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: relative;
+            padding: 10mm 15mm; /* Thu nhỏ padding trên/dưới để có thêm không gian */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 2. HEADER */
+        .compact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #dc2626; 
+            padding-bottom: 6px;
+            margin-bottom: 8px; /* Giảm khoảng cách dưới header */
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-info {
+            width: 240px;
+            font-size: 12px; /* Thu nhỏ chữ thông tin học sinh */
+        }
+
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted #9ca3af;
+            margin-bottom: 4px;
+            padding-bottom: 2px;
+        }
+
+        /* 3. PROMPT AREA (THU GỌN) */
+        .prompt-section {
+            font-size: 12px; /* Giảm font-size tổng thể của đề */
+            margin-bottom: 8px;
+        }
+
+        .email-box {
+            border: 1px solid #d1d5db;
+            background-color: #f8fafc;
+            border-radius: 6px;
+            padding: 6px 10px; /* Thu nhỏ padding trong khung email */
+            margin-top: 4px;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+        }
+
+        .email-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+            display: grid;
+            grid-template-columns: 50px 1fr;
+            gap: 4px;
+            background-color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+            font-size: 11px;
+        }
+
+        .handwritten-note {
+            font-family: 'Kalam', cursive;
+            color: #dc2626;
+            font-size: 12px; /* Thu nhỏ chữ viết tay */
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .article-box {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 4px;
+            margin-bottom: 8px;
+        }
+
+        .article-header {
+            background-color: #1f2937;
+            color: white;
+            font-weight: 700;
+            padding: 4px 12px;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* 4. WRITING AREA (EXACTLY 18 LINES) */
+        .writing-area {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            margin: 0 0 8px 0;
+        }
+
+        .writing-line {
+            border-bottom: 1px solid #9ca3af;
+            flex-grow: 1; 
+            min-height: 25px; /* Điều chỉnh chiều cao dòng một chút để chắc chắn vừa 18 dòng */
+        }
+
+        /* 5. FOOTER (HORIZONTAL RUBRIC & COMMENTS) */
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 6px; /* Giảm padding */
+        }
+
+        .horizontal-rubric-container {
+            /* Đã xóa width: 48% để khung tự động ôm sát nội dung */
+        }
+
+        .rubric-title {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .horizontal-rubric {
+            display: flex;
+            border: 1px solid #6b7280;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 11px;
+            background-color: white;
+            width: max-content; /* Ôm sát vừa đủ nội dung bên trong */
+        }
+
+        .rubric-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 6px;
+            border-right: 1px solid #6b7280;
+        }
+
+        .rubric-item:last-child {
+            border-right: none;
+            background-color: #fef2f2; 
+            padding-right: 12px; /* Thêm một chút lề phải để chữ không chạm sát viền */
+        }
+
+        .rubric-label {
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .rubric-score-line {
+            width: 14px;
+            border-bottom: 1px solid #9ca3af;
+            display: inline-block;
+            transform: translateY(3px); /* Hạ thấp gạch ngang xuống */
+        }
+
+        .teacher-comments {
+            flex-grow: 1; /* Tự động kéo dài lấp đầy phần ngang còn lại */
+            margin-left: 40px; /* Tạo khoảng cách với khung điểm */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .comment-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 4px; /* Tăng khoảng cách dưới tiêu đề */
+        }
+
+        .comment-line {
+            border-bottom: 1px dashed #9ca3af;
+            height: 30px; /* Tăng khoảng cách các dòng lên 30px */
+            width: 100%;
+        }
+
+        /* 6. PRINT MEDIA QUERIES */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                gap: 0;
+            }
+            .a4-wrapper {
+                box-shadow: none;
+                margin: 0;
+                page-break-after: always;
+            }
+            .a4-wrapper:last-child {
+                page-break-after: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= PAGE 1: QUESTION 1 (EMAIL) ================= -->
+    <div class="a4-wrapper">
+        
+        <!-- HEADER -->
+        <header class="compact-header">
+            <div class="logo-area">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Ruby School Logo" class="h-11 w-11 object-contain">
+                <div>
+                    <h1 class="text-base font-bold text-gray-900 leading-tight">CAMBRIDGE PET WRITING</h1>
+                    <h2 class="text-[10px] font-bold text-red-600 uppercase tracking-wider leading-tight">Part 1 - Question 1</h2>
+                </div>
+            </div>
+            
+            <div class="student-info">
+                <div class="info-line"><span class="font-bold text-gray-700">Name:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Class:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Student ID:</span></div>
+            </div>
+        </header>
+
+        <!-- PROMPT SECTION -->
+        <section class="prompt-section">
+            <p class="font-medium text-gray-800 mb-1">Read this email from your English-speaking friend Mark and the notes you have made.</p>
+            
+            <div class="email-box">
+                <div class="email-header">
+                    <span class="font-bold text-gray-700">From:</span> <span class="font-medium">Mark</span>
+                    <span class="font-bold text-gray-700">Subject:</span> <span class="font-medium">School garden</span>
+                </div>
+                
+                <!-- Email body with side notes - Tighter spacing -->
+                <div class="text-gray-900 px-2 space-y-2 mt-2 text-xs">
+                    <p>Hey</p>
+                    
+                    <div class="flex items-center">
+                        <div class="w-1/4"></div>
+                        <div class="w-2/4 leading-tight">Guess what? Our school's going to create a garden this year!</div>
+                        <div class="w-1/4 pl-3 handwritten-note transform rotate-1">&larr; Cool!!</div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <div class="w-1/4 text-right pr-3 handwritten-note transform -rotate-2">Tell Mark &rarr;</div>
+                        <div class="w-2/4 leading-tight">What do you think we should grow in it?</div>
+                        <div class="w-1/4"></div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <div class="w-1/4"></div>
+                        <div class="w-2/4 leading-tight">Students can decide what happens to all the food we grow in the garden. Do you think we should sell everything?</div>
+                        <div class="w-1/4 pl-3 handwritten-note transform -rotate-1">&larr; No, because ...</div>
+                    </div>
+
+                    <div class="flex items-center">
+                        <div class="w-1/4 text-right pr-3 handwritten-note transform rotate-1">Yes, but ... &rarr;</div>
+                        <div class="w-2/4 leading-tight">There's a meeting in room 104 about the school garden at noon. Do you want to go with me?</div>
+                        <div class="w-1/4"></div>
+                    </div>
+                    
+                    <p>Let me know soon!<br><br>Mark</p>
+                </div>
+            </div>
+            
+            <p class="mt-3 text-xs text-gray-900">Write your <strong>email</strong> to Mark using <strong>all</strong> the notes.</p>
+        </section>
+
+        <!-- WRITING AREA (18 LINES) -->
+        <div class="writing-area">
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line border-b-2 border-gray-400"></div> <!-- Dòng cuối đậm hơn -->
+        </div>
+
+        <!-- FOOTER: EXAMINER RUBRIC & TEACHER COMMENTS -->
+        <footer class="footer-section">
+            <div class="horizontal-rubric-container">
+                <div class="rubric-title">Examiner Use Only</div>
+                <div class="horizontal-rubric">
+                    <div class="rubric-item"><span class="rubric-label">C</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">CA</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">O</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">L</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item font-bold text-gray-700">
+                        Total: <span class="w-5 border-b border-gray-400 inline-block text-center text-red-600 ml-1 translate-y-[3px]"></span> / 20
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-comments">
+                <div class="comment-title">Teacher's Comments:</div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ================= PAGE 2: QUESTION 2 & 3 (ARTICLE/STORY) ================= -->
+    <div class="a4-wrapper">
+        
+        <!-- HEADER -->
+        <header class="compact-header">
+            <div class="logo-area">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Ruby School Logo" class="h-11 w-11 object-contain">
+                <div>
+                    <h1 class="text-base font-bold text-gray-900 leading-tight">CAMBRIDGE PET WRITING</h1>
+                    <h2 class="text-[10px] font-bold text-red-600 uppercase tracking-wider leading-tight">Part 2</h2>
+                </div>
+            </div>
+            
+            <div class="student-info">
+                <div class="info-line"><span class="font-bold text-gray-700">Name:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Class:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Student ID:</span></div>
+            </div>
+        </header>
+
+        <!-- PROMPT SECTION -->
+        <section class="prompt-section">
+            <p class="font-medium text-gray-800 mb-1">Choose <strong>one</strong> of these questions.<br>Write your answer in about <strong>100 words</strong> on the answer sheet.</p>
+            
+            <hr class="border-t border-dotted border-gray-400 my-2">
+
+            <!-- Question 2 -->
+            <div class="mb-2">
+                <h3 class="font-bold text-gray-900 text-[13px] mb-1">Question 2</h3>
+                <p class="text-[11px] text-gray-700 mb-1">You see this announcement on an English-language website for young people.</p>
+                
+                <div class="article-box w-full max-w-2xl mx-auto">
+                    <div class="article-header text-left">Articles wanted!</div>
+                    <div class="p-3 text-center bg-gray-50 text-xs">
+                        <p class="font-bold uppercase text-[12px] mb-2 text-gray-900 leading-tight">ONLINE VERSUS<br>FACE-TO-FACE</p>
+                        <p class="mb-1 text-gray-800">Do you prefer chatting to your friends face-to-face or online? Why?</p>
+                        <p class="mb-2 text-gray-800">Do you think spending lots of time online each day is a good idea? Why?</p>
+                        <p class="font-medium text-gray-900 mt-2">Write an article answering these questions, and we will publish the most interesting articles on our website.</p>
+                    </div>
+                </div>
+                <p class="text-[12px]">Write your <strong>article</strong>.</p>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="mt-3">
+                <h3 class="font-bold text-gray-900 text-[13px] mb-1">Question 3</h3>
+                <p class="text-[11px] text-gray-700 mb-1">Your English teacher has asked you to write a story. Your story must begin with this sentence.</p>
+                <p class="italic font-medium text-gray-900 text-[12px] ml-4 border-l-2 border-red-600 pl-2 mb-2 mt-2">I was walking in the forest when I heard a loud noise.</p>
+                <p class="text-[12px]">Write your <strong>story</strong>.</p>
+            </div>
+            
+            <!-- Selection Area -->
+            <div class="mt-2 flex items-center justify-center gap-3 bg-red-50 py-1.5 rounded border border-red-100">
+                <span class="font-bold text-red-700 text-xs">Question selected:</span>
+                <span class="w-6 h-6 rounded border border-red-600 flex items-center justify-center font-bold text-red-600 bg-white shadow-sm text-xs">2</span>
+                <span class="font-bold text-gray-400 text-xs">or</span>
+                <span class="w-6 h-6 rounded border border-red-600 flex items-center justify-center font-bold text-red-600 bg-white shadow-sm text-xs">3</span>
+                <span class="text-[10px] text-gray-500 italic ml-2">(Tick your choice)</span>
+            </div>
+        </section>
+
+        <!-- WRITING AREA (18 LINES) -->
+        <div class="writing-area">
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line border-b-2 border-gray-400"></div>
+        </div>
+
+        <!-- FOOTER: EXAMINER RUBRIC & TEACHER COMMENTS -->
+        <footer class="footer-section">
+            <div class="horizontal-rubric-container">
+                <div class="rubric-title">Examiner Use Only</div>
+                <div class="horizontal-rubric">
+                    <div class="rubric-item"><span class="rubric-label">C</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">CA</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">O</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">L</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item font-bold text-gray-700">
+                        Total: <span class="w-5 border-b border-gray-400 inline-block text-center text-red-600 ml-1 translate-y-[3px]"></span> / 20
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-comments">
+                <div class="comment-title">Teacher's Comments:</div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
