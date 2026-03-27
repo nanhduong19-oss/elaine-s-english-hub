@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby School - KET Writing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* 1. SETUP & PRINT A4 */
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            background-color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .a4-wrapper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            position: relative;
+            padding: 10mm 15mm; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 2. HEADER */
+        .compact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #dc2626; 
+            padding-bottom: 6px;
+            margin-bottom: 8px; 
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-info {
+            width: 240px;
+            font-size: 12px; 
+        }
+
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted #9ca3af;
+            margin-bottom: 4px;
+            padding-bottom: 2px;
+        }
+
+        /* 3. PROMPT AREA */
+        .prompt-section {
+            font-size: 12px; 
+            margin-bottom: 4px;
+        }
+
+        .prompt-box {
+            background-color: #f8fafc;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .story-images {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            height: 100px; /* Cố định chiều cao ảnh để không bị tràn trang */
+            margin: 6px 0;
+        }
+
+        .story-images img {
+            height: 100%;
+            object-fit: contain;
+            border: 1px solid #d1d5db;
+            padding: 2px;
+            background-color: white;
+            border-radius: 4px;
+        }
+
+        /* 4. WRITING AREA (FLEXIBLE) */
+        .writing-area {
+            flex-grow: 1; /* Chia đều không gian còn lại cho 2 phần viết */
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8px;
+        }
+
+        .writing-line {
+            border-bottom: 1px solid #9ca3af;
+            flex-grow: 1; 
+            min-height: 24px; /* Đảm bảo đủ rộng cho học sinh THCS viết */
+        }
+
+        /* 5. FOOTER (HORIZONTAL RUBRIC & COMMENTS) */
+        .footer-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 8px;
+        }
+
+        .rubric-title {
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .horizontal-rubric {
+            display: flex;
+            border: 1px solid #6b7280;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 11px;
+            background-color: white;
+            width: max-content; 
+        }
+
+        .rubric-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 6px;
+            border-right: 1px solid #6b7280;
+        }
+
+        .rubric-item.part-label {
+            background-color: #f3f4f6;
+            font-weight: 700;
+            color: #374151;
+            font-size: 10px;
+        }
+
+        .rubric-item:last-child {
+            border-right: none;
+            background-color: #fef2f2; 
+            padding-right: 12px; 
+        }
+
+        .rubric-label {
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .rubric-score-line {
+            width: 14px;
+            border-bottom: 1px solid #9ca3af;
+            display: inline-block;
+            transform: translateY(3px); 
+        }
+
+        .teacher-comments {
+            flex-grow: 1; 
+            margin-left: 20px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .comment-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 4px; 
+        }
+
+        .comment-line {
+            border-bottom: 1px dashed #9ca3af;
+            height: 30px; /* Khoảng cách 30px như bạn yêu cầu */
+            width: 100%;
+        }
+
+        /* 6. PRINT MEDIA QUERIES */
+        @media print {
+            body { background: none; padding: 0; }
+            .a4-wrapper { box-shadow: none; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= 1 PAGE ONLY: KET WRITING (PARTS 6 & 7) ================= -->
+    <div class="a4-wrapper">
+        
+        <!-- HEADER -->
+        <header class="compact-header">
+            <div class="logo-area">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Ruby School Logo" class="h-11 w-11 object-contain">
+                <div>
+                    <h1 class="text-base font-bold text-gray-900 leading-tight">CAMBRIDGE KET WRITING</h1>
+                    <h2 class="text-[10px] font-bold text-red-600 uppercase tracking-wider leading-tight">Parts 6 & 7</h2>
+                </div>
+            </div>
+            
+            <div class="student-info">
+                <div class="info-line"><span class="font-bold text-gray-700">Name:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Class:</span></div>
+                <div class="info-line"><span class="font-bold text-gray-700">Student ID:</span></div>
+            </div>
+        </header>
+
+        <!-- ================= PART 6: QUESTION 31 ================= -->
+        <section class="prompt-section">
+            <h3 class="font-bold text-gray-900 text-[13px]">Question 31</h3>
+            <p class="text-[12px] text-gray-800">You would like to borrow a book from your English-speaking friend, Jackie.<br>Write an email to Jackie. In your email:</p>
+            
+            <div class="prompt-box">
+                <ul class="list-disc pl-5 text-[12px] text-gray-800 space-y-1">
+                    <li><strong>explain</strong> which book you would like to borrow</li>
+                    <li><strong>tell</strong> her why you want to borrow the book</li>
+                    <li><strong>say</strong> when you will return the book</li>
+                </ul>
+            </div>
+            <p class="text-[12px]">Write <strong>25 words</strong> or more.</p>
+        </section>
+
+        <!-- WRITING AREA P6 (9 LINES) -->
+        <div class="writing-area">
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line border-b-2 border-gray-400"></div> 
+        </div>
+
+        <!-- DIVIDER -->
+        <hr class="border-t border-dotted border-gray-400 my-2">
+
+        <!-- ================= PART 7: QUESTION 32 ================= -->
+        <section class="prompt-section">
+            <h3 class="font-bold text-gray-900 text-[13px]">Question 32</h3>
+            <p class="text-[12px] text-gray-800">Look at the three pictures.<br>Write the story shown in the pictures.<br>Write <strong>35 words</strong> or more.</p>
+            
+            <!-- Hình ảnh tự tải lên được link vào đây -->
+            <div class="story-images">
+                <img src="https://www.dropbox.com/scl/fi/5e29s651rdt8sde8ug98k/Gemini_Generated_Image_xkt7r6xkt7r6xkt7.png?rlkey=nuuqyiarjydxev6j0iv1c22z0&st=6biay9s4&raw=1" onerror="this.src='https://placehold.co/600x200?text=Story+Pictures'" alt="Story pictures">
+            </div>
+        </section>
+
+        <!-- WRITING AREA P7 (10 LINES) -->
+        <div class="writing-area">
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line"></div>
+            <div class="writing-line border-b-2 border-gray-400"></div>
+        </div>
+
+        <!-- ================= FOOTER: EXAMINER RUBRIC & TEACHER COMMENTS ================= -->
+        <footer class="footer-section">
+            <div class="horizontal-rubric-container">
+                <div class="rubric-title">Examiner's Use Only</div>
+                <div class="horizontal-rubric">
+                    <!-- Part 6 Rubric -->
+                    <div class="rubric-item part-label">Part 6</div>
+                    <div class="rubric-item"><span class="rubric-label">C</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">O</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">L</span><span class="rubric-score-line"></span></div>
+                    
+                    <!-- Part 7 Rubric -->
+                    <div class="rubric-item part-label border-l-2 border-gray-600">Part 7</div>
+                    <div class="rubric-item"><span class="rubric-label">C</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">O</span><span class="rubric-score-line"></span></div>
+                    <div class="rubric-item"><span class="rubric-label">L</span><span class="rubric-score-line"></span></div>
+                    
+                    <!-- Total -->
+                    <div class="rubric-item font-bold text-gray-700">
+                        Total: <span class="w-5 border-b border-gray-400 inline-block text-center text-red-600 ml-1 translate-y-[3px]"></span> / 30
+                    </div>
+                </div>
+            </div>
+
+            <div class="teacher-comments">
+                <div class="comment-title">Teacher's Comments:</div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+                <div class="comment-line"></div>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
