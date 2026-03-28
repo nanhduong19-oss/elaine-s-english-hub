@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruby School - A2 Speaking Assessment Sheet</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* 1. SETUP & PRINT A4 */
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        body {
+            background-color: #cbd5e1;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+        }
+
+        .a4-wrapper {
+            width: 210mm;
+            height: 297mm;
+            background-color: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 2. HALF PAGE SHEET */
+        .half-sheet {
+            height: 50%;
+            width: 100%;
+            padding: 8mm 12mm;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sheet-divider {
+            border-bottom: 1px dashed #9ca3af;
+            width: calc(100% - 24mm);
+            margin: 0 auto;
+        }
+
+        /* 3. HEADER & INFO */
+        .compact-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 2px solid #dc2626; /* Ruby Red */
+            padding-bottom: 4px;
+            margin-bottom: 4px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .student-info {
+            width: 220px;
+            font-size: 10px;
+        }
+
+        .info-line {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted #9ca3af;
+            margin-bottom: 3px;
+            padding-bottom: 1px;
+        }
+
+        .sub-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 8px; /* Tăng khoảng cách do ít tiêu chí hơn */
+        }
+
+        .sub-info-line {
+            display: flex;
+            width: 48%;
+            border-bottom: 1px dotted #9ca3af;
+        }
+
+        /* 4. GRID LAYOUT FOR CRITERIA */
+        .body-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6mm;
+            flex-grow: 1;
+        }
+
+        /* 5. CRITERIA BLOCKS */
+        .criterion-box {
+            margin-bottom: 5px; 
+        }
+
+        .criterion-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: #0f172a; /* Dark Navy */
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 1px;
+            margin-bottom: 3px;
+        }
+
+        .criterion-sub-title {
+            font-size: 8px;
+            font-style: italic;
+            color: #475569;
+            margin-bottom: 4px;
+            line-height: 1.1;
+        }
+
+        .descriptor-row {
+            display: flex;
+            font-size: 8px; /* Compact font for A4 half-page fit */
+            line-height: 1.2;
+            margin-bottom: 3px;
+            color: #334155;
+        }
+
+        .band-score {
+            font-weight: 700;
+            width: 20px;
+            flex-shrink: 0;
+            color: #0f172a;
+        }
+
+        .scoring-inputs {
+            margin-top: 4px;
+            font-size: 9px;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .score-line-wrapper {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-line {
+            border-bottom: 1px solid #94a3b8;
+            flex-grow: 1;
+            margin-left: 4px;
+            height: 12px;
+        }
+
+        .short-line {
+            width: 40px;
+            flex-grow: 0;
+        }
+
+        /* 6. RIGHT COLUMN SPECIFICS */
+        .final-scoring-box {
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 5px 6px;
+            background-color: #f8fafc;
+            margin-bottom: 6px;
+        }
+
+        .final-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 8px;
+            row-gap: 5px;
+            font-size: 8.5px;
+            font-weight: 600;
+        }
+
+        .total-row {
+            grid-column: span 2;
+            border-top: 1px solid #cbd5e1;
+            margin-top: 3px;
+            padding-top: 3px;
+            text-align: right;
+            font-size: 10px;
+            color: #dc2626; /* Ruby Red for Total */
+        }
+
+        .feedback-box {
+            font-size: 9px;
+            margin-bottom: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .feedback-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .feedback-line {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .feedback-label {
+            font-weight: 600;
+            color: #0f172a;
+            white-space: nowrap;
+            margin-right: 4px;
+        }
+
+        .examiner-box {
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-top: auto; /* Push to bottom of right column */
+        }
+
+        /* 7. PRINT QUERIES */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                margin: 0;
+            }
+            .a4-wrapper {
+                box-shadow: none;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="a4-wrapper">
+        
+        <!-- ================= SHEET 1 (TOP HALF) ================= -->
+        <div class="half-sheet">
+            <!-- Header -->
+            <header class="compact-header">
+                <div class="logo-area">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Ruby School Logo" class="h-9 w-9 object-contain">
+                    <div>
+                        <h1 class="text-[13px] font-bold text-[#0f172a] leading-tight tracking-tight">RUBY SCHOOL - SPEAKING ASSESSMENT SHEET</h1>
+                        <h2 class="text-[10px] font-bold text-[#dc2626] uppercase tracking-wider leading-tight">A2 KEY</h2>
+                    </div>
+                </div>
+                <div class="student-info">
+                    <div class="info-line"><span class="font-bold text-gray-700">Name:</span></div>
+                    <div class="info-line"><span class="font-bold text-gray-700">Class:</span></div>
+                    <div class="info-line"><span class="font-bold text-gray-700">Student ID:</span></div>
+                </div>
+            </header>
+
+            <div class="sub-header">
+                <div class="sub-info-line"><span class="font-bold text-gray-700 mr-2">Date:</span> <span class="input-line border-dotted"></span></div>
+                <div class="sub-info-line"><span class="font-bold text-gray-700 mr-2">Examiner:</span> <span class="input-line border-dotted"></span></div>
+            </div>
+
+            <!-- Body Grid -->
+            <div class="body-grid">
+                <!-- LEFT COLUMN -->
+                <div class="flex flex-col">
+                    <!-- Crit 1 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">1. Grammar and Vocabulary - /10</div>
+                        <div class="criterion-sub-title">Use and control of grammar and vocabulary to express simple ideas.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Good control of simple grammar; uses a range of appropriate vocabulary on everyday topics.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Mostly accurate simple grammar; vocabulary generally appropriate with some variety.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Sufficient control of simple grammar; vocabulary appropriate but limited.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Frequent errors in simple grammar; vocabulary very limited and repetitive.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited control of grammar; vocabulary mostly isolated words/phrases.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Crit 2 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">2. Pronunciation - /10</div>
+                        <div class="criterion-sub-title">Clarity of sounds, stress and intonation so the speaker can be understood.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Mostly clear and intelligible; some control of sounds, word stress and intonation.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Generally intelligible; occasional errors with sounds or stress.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Intelligible but with limited control of sounds and stress; some difficulty for listener.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Frequent errors with sounds and stress; often hard to understand.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited control of pronunciation; often unintelligible.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Crit 3 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">3. Interactive Communication - /10</div>
+                        <div class="criterion-sub-title">Ability to start, respond and maintain simple exchanges.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Maintains simple exchanges well; requires little or no support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Maintains exchanges with some hesitation; sometimes needs support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Can respond and keep exchange going but with some difficulty; often needs prompting.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Has difficulty maintaining exchanges; relies heavily on prompting and support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited interaction; cannot maintain even simple exchanges.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="flex flex-col">
+                    <!-- Crit 4 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">4. Global Achievement - /15</div>
+                        <div class="criterion-sub-title">Overall impression: how well the candidate communicates across the task.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Handles everyday communication effectively; can produce longer responses despite hesitation.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Communicates quite well; mostly clear though some hesitation/errors.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Can communicate basic meaning in familiar situations; answers short, limited complex language.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Basic ideas conveyed with difficulty; frequent hesitation/errors affect clarity.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Only conveys very simple meaning with single words/phrases; frequent pauses.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /15</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Final Scoring Block -->
+                    <div class="final-scoring-box mt-2">
+                        <div class="final-grid">
+                            <div class="flex justify-between"><span>Grammar & Vocabulary:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Pronunciation:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Interactive Comm.:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Global Achievement:</span> <span class="input-line short-line"></span></div>
+                            <div class="total-row flex justify-end items-center">
+                                <span class="mr-1 font-bold">TOTAL:</span> <span class="input-line short-line border-red-400"></span> <span class="ml-1 text-[#0f172a]">/45</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Block -->
+                    <div class="feedback-box mt-2">
+                        <div class="feedback-group">
+                            <div class="feedback-line"><span class="feedback-label">Strengths:</span> <span class="input-line border-dotted"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                        </div>
+                        <div class="feedback-group mt-1">
+                            <div class="feedback-line"><span class="feedback-label">Areas to improve:</span> <span class="input-line border-dotted"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Examiner Section -->
+                    <div class="examiner-box">
+                        <span class="mr-2 text-gray-700">Examiner's signature:</span> <span class="input-line" style="width: 120px;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIVIDER -->
+        <div class="sheet-divider"></div>
+
+        <!-- ================= SHEET 2 (BOTTOM HALF) ================= -->
+        <div class="half-sheet">
+            <!-- Header -->
+            <header class="compact-header">
+                <div class="logo-area">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Ruby School Logo" class="h-9 w-9 object-contain">
+                    <div>
+                        <h1 class="text-[13px] font-bold text-[#0f172a] leading-tight tracking-tight">RUBY SCHOOL - SPEAKING ASSESSMENT SHEET</h1>
+                        <h2 class="text-[10px] font-bold text-[#dc2626] uppercase tracking-wider leading-tight">A2 KEY</h2>
+                    </div>
+                </div>
+                <div class="student-info">
+                    <div class="info-line"><span class="font-bold text-gray-700">Name:</span></div>
+                    <div class="info-line"><span class="font-bold text-gray-700">Class:</span></div>
+                    <div class="info-line"><span class="font-bold text-gray-700">Student ID:</span></div>
+                </div>
+            </header>
+
+            <div class="sub-header">
+                <div class="sub-info-line"><span class="font-bold text-gray-700 mr-2">Date:</span> <span class="input-line border-dotted"></span></div>
+                <div class="sub-info-line"><span class="font-bold text-gray-700 mr-2">Examiner:</span> <span class="input-line border-dotted"></span></div>
+            </div>
+
+            <!-- Body Grid -->
+            <div class="body-grid">
+                <!-- LEFT COLUMN -->
+                <div class="flex flex-col">
+                    <!-- Crit 1 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">1. Grammar and Vocabulary - /10</div>
+                        <div class="criterion-sub-title">Use and control of grammar and vocabulary to express simple ideas.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Good control of simple grammar; uses a range of appropriate vocabulary on everyday topics.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Mostly accurate simple grammar; vocabulary generally appropriate with some variety.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Sufficient control of simple grammar; vocabulary appropriate but limited.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Frequent errors in simple grammar; vocabulary very limited and repetitive.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited control of grammar; vocabulary mostly isolated words/phrases.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Crit 2 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">2. Pronunciation - /10</div>
+                        <div class="criterion-sub-title">Clarity of sounds, stress and intonation so the speaker can be understood.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Mostly clear and intelligible; some control of sounds, word stress and intonation.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Generally intelligible; occasional errors with sounds or stress.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Intelligible but with limited control of sounds and stress; some difficulty for listener.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Frequent errors with sounds and stress; often hard to understand.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited control of pronunciation; often unintelligible.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Crit 3 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">3. Interactive Communication - /10</div>
+                        <div class="criterion-sub-title">Ability to start, respond and maintain simple exchanges.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Maintains simple exchanges well; requires little or no support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Maintains exchanges with some hesitation; sometimes needs support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Can respond and keep exchange going but with some difficulty; often needs prompting.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Has difficulty maintaining exchanges; relies heavily on prompting and support.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Very limited interaction; cannot maintain even simple exchanges.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /10</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="flex flex-col">
+                    <!-- Crit 4 -->
+                    <div class="criterion-box">
+                        <div class="criterion-title">4. Global Achievement - /15</div>
+                        <div class="criterion-sub-title">Overall impression: how well the candidate communicates across the task.</div>
+                        <div class="descriptor-row"><span class="band-score">5</span><span>Handles everyday communication effectively; can produce longer responses despite hesitation.</span></div>
+                        <div class="descriptor-row"><span class="band-score">4</span><span>Communicates quite well; mostly clear though some hesitation/errors.</span></div>
+                        <div class="descriptor-row"><span class="band-score">3</span><span>Can communicate basic meaning in familiar situations; answers short, limited complex language.</span></div>
+                        <div class="descriptor-row"><span class="band-score">2</span><span>Basic ideas conveyed with difficulty; frequent hesitation/errors affect clarity.</span></div>
+                        <div class="descriptor-row"><span class="band-score">1</span><span>Only conveys very simple meaning with single words/phrases; frequent pauses.</span></div>
+                        <div class="scoring-inputs">
+                            <div class="score-line-wrapper">Score: <span class="input-line short-line"></span> /15</div>
+                            <div class="score-line-wrapper text-[8px] font-normal text-gray-600">Evidence / notes: <span class="input-line"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Final Scoring Block -->
+                    <div class="final-scoring-box mt-2">
+                        <div class="final-grid">
+                            <div class="flex justify-between"><span>Grammar & Vocabulary:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Pronunciation:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Interactive Comm.:</span> <span class="input-line short-line"></span></div>
+                            <div class="flex justify-between"><span>Global Achievement:</span> <span class="input-line short-line"></span></div>
+                            <div class="total-row flex justify-end items-center">
+                                <span class="mr-1 font-bold">TOTAL:</span> <span class="input-line short-line border-red-400"></span> <span class="ml-1 text-[#0f172a]">/45</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Block -->
+                    <div class="feedback-box mt-2">
+                        <div class="feedback-group">
+                            <div class="feedback-line"><span class="feedback-label">Strengths:</span> <span class="input-line border-dotted"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                        </div>
+                        <div class="feedback-group mt-1">
+                            <div class="feedback-line"><span class="feedback-label">Areas to improve:</span> <span class="input-line border-dotted"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                            <div class="feedback-line"><span class="input-line border-dotted w-full"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- Examiner Section -->
+                    <div class="examiner-box">
+                        <span class="mr-2 text-gray-700">Examiner's signature:</span> <span class="input-line" style="width: 120px;"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
