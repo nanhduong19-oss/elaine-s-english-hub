@@ -245,35 +245,35 @@ const FIB=[
 // SA: acceptedPhrases = array of minimal correct phrase strings (any one match = correct)
 const SA=[
   {q:'What is an atom?',
-   acceptedPhrases:['smallest particle of an element','smallest unit of an element','smallest part of an element'],
-   ex:'Đáp án gợi ý: "The smallest particle of an element." Nguyên tử là hạt nhỏ nhất của nguyên tố, không thể chia nhỏ hơn bằng phương pháp hóa học.'},
+   acceptedPhrases:['smallest particle of an element','smallest unit of an element','smallest part of an element','smallest particle that makes up','basic unit of matter','basic building block','tiny particle that makes up'],
+   ex:'Đáp án gợi ý: "The smallest particle of an element." Nguyên tử là hạt nhỏ nhất của một nguyên tố, không thể chia nhỏ hơn bằng phương pháp hóa học thông thường.'},
   {q:'What is a molecule made of?',
-   acceptedPhrases:['two or more atoms','2 or more atoms','at least two atoms','multiple atoms bonded'],
-   ex:'Đáp án gợi ý: "Two or more atoms bonded together." Phân tử = 2+ nguyên tử liên kết hóa học.'},
+   acceptedPhrases:['two or more atoms','2 or more atoms','at least two atoms','multiple atoms','atoms bonded','atoms joined','atoms combined','made of atoms'],
+   ex:'Đáp án gợi ý: "Two or more atoms bonded together." Phân tử = 2 hoặc nhiều nguyên tử liên kết hóa học với nhau.'},
   {q:'What is the charge of an electron?',
-   acceptedPhrases:['negative','negative charge','negatively charged'],
-   ex:'Đáp án: "Negative." Electron mang điện tích âm (−).'},
+   acceptedPhrases:['negative','negative charge','negatively charged','it is negative','minus','−1'],
+   ex:'Đáp án: "Negative." Electron mang điện tích âm (−). Trái ngược với proton mang điện dương (+).'},
   {q:'What happens when an atom gains an electron?',
-   acceptedPhrases:['negative ion','becomes negative','forms a negative ion','negatively charged ion','it becomes an anion'],
-   ex:'Đáp án gợi ý: "It becomes a negative ion." Nhận thêm electron → dư điện âm → ion âm.'},
+   acceptedPhrases:['negative ion','becomes negative','forms a negative ion','negatively charged ion','anion','it becomes an anion','negative charge','becomes negatively charged'],
+   ex:'Đáp án gợi ý: "It becomes a negative ion (anion)." Nhận thêm electron (âm) → dư điện tích âm → ion âm.'},
   {q:'What is the center of an atom called?',
-   acceptedPhrases:['nucleus','the nucleus'],
-   ex:'Đáp án: "The nucleus." Hạt nhân chứa proton và neutron, chiếm hầu hết khối lượng nguyên tử.'},
+   acceptedPhrases:['nucleus','the nucleus','called the nucleus','is the nucleus'],
+   ex:'Đáp án: "The nucleus." Hạt nhân (nucleus) chứa proton và neutron, chiếm hầu hết khối lượng của nguyên tử.'},
   {q:'How many protons does a sodium atom have?',
-   acceptedPhrases:['11','eleven'],
-   ex:'Đáp án: "11." Sodium (Na) có số nguyên tử = 11 → có 11 proton trong hạt nhân.'},
+   acceptedPhrases:['11','eleven','has 11','have 11'],
+   ex:'Đáp án: "11." Sodium (Na) có số nguyên tử = 11, nghĩa là có 11 proton trong hạt nhân. Trong nguyên tử trung hòa, số proton = số electron = 11.'},
   {q:'What is a chemical formula?',
-   acceptedPhrases:['shows the atoms in a molecule','shows which atoms','shows what atoms','represents atoms in a molecule','notation showing atoms','symbols showing atoms'],
-   ex:'Đáp án gợi ý: "A way of showing the atoms in a molecule using symbols." Công thức hóa học dùng ký hiệu và chỉ số dưới để biểu thị thành phần phân tử.'},
+   acceptedPhrases:['shows the atoms','shows which atoms','shows what atoms','represents atoms','notation for atoms','symbols for a molecule','symbols and numbers','shows elements','represents a molecule','written representation','shows the elements','combination of symbols','shorthand for'],
+   ex:'Đáp án gợi ý: "A way of showing the atoms in a molecule using symbols and numbers." Công thức hóa học dùng ký hiệu nguyên tố và chỉ số dưới để biểu thị thành phần phân tử. Ví dụ: H₂O, CO₂.'},
   {q:'How is a positive ion formed?',
-   acceptedPhrases:['loses an electron','when an atom loses','by losing an electron','atom loses electron'],
-   ex:'Đáp án gợi ý: "When an atom loses an electron." Mất electron → thừa điện dương → ion dương.'},
+   acceptedPhrases:['loses an electron','when an atom loses','by losing an electron','atom loses electron','loss of an electron','losing electron','gives away an electron'],
+   ex:'Đáp án gợi ý: "When an atom loses an electron." Mất electron → thừa điện tích dương → ion dương (cation).'},
   {q:'What is the difference between a molecule of an element and a compound?',
-   acceptedPhrases:['one type of atom','same type of atom','element has one kind','compound has different','two or more different types','different types of atoms'],
-   ex:'Đáp án gợi ý: "A molecule of an element has one type of atom; a compound has two or more different types." Ví dụ: O₂ (element) vs H₂O (compound).'},
+   acceptedPhrases:['one type of atom','one kind of atom','same type of atom','same kind of atom','only one element','element has one','compound has different','two or more different','different types of atoms','different elements','different kinds of atoms'],
+   ex:'Đáp án gợi ý: "A molecule of an element has one type of atom; a compound has two or more different types." Ví dụ: O₂ là molecule of element (chỉ có oxygen); H₂O là compound (có H và O).'},
   {q:'What is the symbol for a chloride ion?',
-   acceptedPhrases:['cl-','cl⁻','cl −','chloride is cl'],
-   ex:'Đáp án: "Cl⁻". Chlorine nhận thêm 1 electron → điện âm → ký hiệu Cl⁻.'},
+   acceptedPhrases:['cl-','cl⁻','cl-1','cl 1-','chloride ion is cl','symbol is cl'],
+   ex:'Đáp án: "Cl⁻". Chlorine (Cl) nhận thêm 1 electron → mang điện tích âm → ký hiệu Cl⁻.'},
 ];
 
 const MAT_LEFT =['Atom','Molecule','Proton','Neutron','Electron','Ion','H₂O','CO₂','Na⁺','O₂'];
@@ -291,11 +291,9 @@ let matState={},matChecked=false,matCorrectMask={};
 
 /* ===== SA GRADING: match any accepted phrase ===== */
 function gradeSA(val,phrases){
-  const v=val.toLowerCase().replace(/[^a-z0-9\s⁻-]/g,'').trim();
-  return phrases.some(p=>{
-    const pn=p.toLowerCase().replace(/[^a-z0-9\s⁻-]/g,'').trim();
-    return v.includes(pn);
-  });
+  const normalize=s=>s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  const v=normalize(val);
+  return phrases.some(p=>v.includes(normalize(p)));
 }
 
 /* ===== START ===== */
