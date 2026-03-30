@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Chapter 7 - Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:#F9B8C8;--pink-dark:#e07a95;--pink-light:#fde8ef;
+    --lavender:#C8B8F0;--lavender-dark:#8a6fd8;--lavender-light:#ede8fc;
+    --mint:#B8E8D8;--mint-dark:#4cad8a;--mint-light:#e4f7f1;
+    --yellow:#FDE8A8;--yellow-dark:#d4a017;--yellow-light:#fff8e1;
+    --text:#3d2c4e;--text-soft:#7a6589;--white:#ffffff;
+    --shadow:rgba(200,150,180,0.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background-color:#fdf4f8;background-image:radial-gradient(circle at 10% 20%,rgba(200,184,240,.3) 0%,transparent 40%),radial-gradient(circle at 90% 80%,rgba(249,184,200,.3) 0%,transparent 40%),radial-gradient(circle at 50% 50%,rgba(184,232,216,.2) 0%,transparent 60%);min-height:100vh;color:var(--text);overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cellipse cx='40' cy='50' rx='10' ry='8' fill='%23f9b8c8' opacity='0.25'/%3E%3Ccircle cx='28' cy='36' r='5' fill='%23f9b8c8' opacity='0.2'/%3E%3Ccircle cx='52' cy='36' r='5' fill='%23f9b8c8' opacity='0.2'/%3E%3Ccircle cx='33' cy='27' r='4' fill='%23f9b8c8' opacity='0.15'/%3E%3Ccircle cx='47' cy='27' r='4' fill='%23f9b8c8' opacity='0.15'/%3E%3C/svg%3E");background-size:80px 80px;pointer-events:none;z-index:0;}
+  .app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+  .header{text-align:center;padding:24px 0 16px;}
+  .header-cat{font-size:52px;display:block;margin-bottom:4px;animation:float 3s ease-in-out infinite;}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  .header h1{font-family:'Fredoka One',cursive;font-size:28px;color:var(--lavender-dark);letter-spacing:.5px;}
+  .header p{font-size:14px;color:var(--text-soft);margin-top:4px;}
+  .card{background:var(--white);border-radius:24px;padding:28px 24px;box-shadow:0 8px 32px var(--shadow),0 2px 8px rgba(0,0,0,.05);margin-bottom:20px;border:1.5px solid rgba(200,184,240,.3);}
+  #screen-welcome .welcome-icon{font-size:80px;text-align:center;display:block;margin-bottom:12px;}
+  #screen-welcome h2{font-family:'Fredoka One',cursive;font-size:24px;color:var(--lavender-dark);text-align:center;margin-bottom:8px;}
+  #screen-welcome p{text-align:center;color:var(--text-soft);font-size:15px;line-height:1.6;margin-bottom:20px;}
+  .name-input-wrapper{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .name-input-wrapper label{font-weight:700;font-size:15px;color:var(--text);}
+  .name-input-wrapper input{border:2px solid var(--lavender);border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border .2s;background:var(--lavender-light);}
+  .name-input-wrapper input:focus{border-color:var(--lavender-dark);}
+  .info-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+  .chip{background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--yellow-dark);font-weight:700;}
+
+  .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--lavender-dark),var(--pink-dark));color:var(--white);box-shadow:0 4px 16px rgba(138,111,216,.3);}
+  .btn-primary:hover{box-shadow:0 6px 24px rgba(138,111,216,.4);transform:translateY(-1px);}
+  .btn-check{background:linear-gradient(135deg,var(--mint-dark),#2d9e7a);color:var(--white);box-shadow:0 4px 16px rgba(76,173,138,.3);margin-top:16px;}
+  .btn-next{background:linear-gradient(135deg,var(--lavender-dark),var(--pink-dark));color:var(--white);box-shadow:0 4px 16px rgba(138,111,216,.3);margin-top:12px;display:none;}
+  .btn-retry{background:linear-gradient(135deg,#e07a95,#c4546e);color:var(--white);box-shadow:0 4px 16px rgba(224,122,149,.3);margin-top:12px;display:none;}
+  .section-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .section-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:2px solid;cursor:default;transition:all .2s;}
+  .section-pill.locked{background:#f5f0fa;border-color:#d8cce8;color:#b0a0c0;}
+  .section-pill.active{background:var(--lavender-dark);border-color:var(--lavender-dark);color:white;}
+  .section-pill.done{background:var(--mint-light);border-color:var(--mint-dark);color:var(--mint-dark);}
+  .progress-bar-wrap{background:var(--lavender-light);border-radius:10px;height:8px;margin-bottom:20px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--lavender-dark),var(--pink-dark));transition:width .4s ease;}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px dashed rgba(200,184,240,.5);}
+  .section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--lavender-dark);}
+  .section-header p{font-size:13px;color:var(--text-soft);margin-top:2px;}
+  .question-block{margin-bottom:24px;}
+  .question-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5;}
+  .q-num{display:inline-block;background:var(--lavender);color:var(--lavender-dark);font-family:'Fredoka One',cursive;width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:14px;margin-right:8px;flex-shrink:0;}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:2px solid var(--lavender-light);background:var(--lavender-light);cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);transition:all .15s;text-align:left;}
+  .option-btn:hover:not(:disabled){border-color:var(--lavender-dark);background:white;transform:translateX(3px);}
+  .option-btn.selected{border-color:var(--lavender-dark);background:white;}
+  .option-btn.correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+  .option-btn.wrong{border-color:var(--pink-dark);background:var(--pink-light);color:#b03060;}
+  .option-btn.reveal-correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+  .option-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:rgba(138,111,216,.15);color:var(--lavender-dark);flex-shrink:0;}
+  .option-btn.correct .option-badge{background:var(--mint-dark);color:white;}
+  .option-btn.wrong .option-badge{background:var(--pink-dark);color:white;}
+  .option-btn.reveal-correct .option-badge{background:var(--mint-dark);color:white;}
+  .explanation{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--yellow-light);border:1.5px solid var(--yellow);font-size:13px;line-height:1.7;color:#5a4010;}
+  .explanation.show{display:block;}
+  .ex-tag{display:inline-block;background:var(--yellow-dark);color:white;font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:6px;margin-right:6px;vertical-align:middle;}
+  .tf-options{display:flex;gap:10px;}
+  .tf-btn{flex:1;padding:12px;border-radius:14px;border:2px solid var(--lavender-light);background:var(--lavender-light);cursor:pointer;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--text);transition:all .15s;text-align:center;}
+  .tf-btn:hover:not(:disabled){border-color:var(--lavender-dark);background:white;}
+  .tf-btn.selected{border-color:var(--lavender-dark);background:white;}
+  .tf-btn.correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+  .tf-btn.wrong{border-color:var(--pink-dark);background:var(--pink-light);color:#b03060;}
+  .tf-btn.reveal-correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+
+  /* FIB - sticky wordbank */
+  .fib-section-wrap{display:flex;gap:16px;align-items:flex-start;}
+  .fib-questions{flex:1;min-width:0;}
+  .wordbank-sticky{width:160px;flex-shrink:0;position:sticky;top:16px;background:var(--white);border-radius:16px;border:1.5px dashed var(--lavender);padding:12px;box-shadow:0 4px 16px var(--shadow);}
+  .wordbank-sticky .wordbank-label{font-size:11px;font-weight:800;color:var(--lavender-dark);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
+  .wordbank-sticky .wordbank-item{display:block;padding:5px 10px;background:var(--lavender-light);border-radius:10px;font-size:13px;font-weight:700;color:var(--lavender-dark);border:1.5px solid var(--lavender);margin-bottom:6px;text-align:center;cursor:default;}
+  .wordbank-sticky .wordbank-item.used{opacity:.4;text-decoration:line-through;}
+  @media(max-width:600px){.fib-section-wrap{flex-direction:column;}.wordbank-sticky{width:100%;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;}.wordbank-sticky .wordbank-item{display:inline-block;margin-bottom:0;}.wordbank-sticky .wordbank-label{width:100%;}}
+
+  .fib-input{border:2px solid var(--lavender);border-radius:12px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;width:100%;margin-top:8px;background:var(--lavender-light);transition:all .15s;}
+  .fib-input:focus{border-color:var(--lavender-dark);background:white;}
+  .fib-input.correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+  .fib-input.wrong{border-color:var(--pink-dark);background:var(--pink-light);color:#b03060;}
+  .match-select{width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--lavender);background:var(--lavender-light);font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;cursor:pointer;}
+  .match-select.correct{border-color:var(--mint-dark);background:var(--mint-light);color:#2d7a5e;}
+  .match-select.wrong{border-color:var(--pink-dark);background:var(--pink-light);color:#b03060;}
+  .match-item{padding:10px 14px;border-radius:12px;border:2px solid var(--lavender-light);background:var(--lavender-light);font-size:14px;font-weight:600;min-height:44px;display:flex;align-items:center;}
+  .feedback-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:16px;font-size:14px;font-weight:700;line-height:1.5;}
+  .feedback-banner.pass{background:var(--mint-light);border:2px solid var(--mint-dark);color:#2d7a5e;}
+  .feedback-banner.fail{background:var(--pink-light);border:2px solid var(--pink-dark);color:#b03060;}
+  .feedback-banner.show{display:block;}
+  #screen-result{text-align:center;}
+  .result-cat{font-size:72px;display:block;animation:float 3s ease-in-out infinite;margin-bottom:16px;}
+  #screen-result h2{font-family:'Fredoka One',cursive;font-size:26px;color:var(--lavender-dark);margin-bottom:8px;}
+  .result-name{color:var(--pink-dark);}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  .stat-card{background:var(--lavender-light);border-radius:16px;padding:16px;border:1.5px solid var(--lavender);}
+  .stat-label{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+  .stat-value{font-family:'Fredoka One',cursive;font-size:28px;color:var(--lavender-dark);margin-top:4px;}
+  .stat-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .stars{font-size:32px;letter-spacing:4px;margin:12px 0;}
+
+  .hidden{display:none !important;}
+  .divider{height:1px;background:rgba(200,184,240,.3);margin:20px 0;}
+  @media(max-width:500px){.stat-grid{grid-template-columns:1fr 1fr;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <span class="header-cat">🐱</span>
+    <h1>Science Chapter 7</h1>
+    <p>Atoms, Molecules &amp; Ions &nbsp;|&nbsp; Ruby School</p>
+  </div>
+
+  <!-- Welcome -->
+  <div id="screen-welcome" class="card">
+    <span class="welcome-icon">🧪</span>
+    <h2>Hello, young scientist!</h2>
+    <p>Enter your name below to start the Chapter 7 revision.<br>Good luck!</p>
+    <div class="name-input-wrapper">
+      <label>Your name</label>
+      <input type="text" id="student-name" placeholder="e.g. Nguyen Van An" maxlength="50" />
+    </div>
+    <div class="info-chips">
+      <span class="chip">5 sections</span>
+      <span class="chip">40 questions</span>
+      <span class="chip">100% correct to proceed</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz(false)">Start revision</button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="screen-quiz" class="hidden">
+    <div class="section-nav" id="section-nav"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div id="section-content"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" class="card hidden">
+    <span class="result-cat" id="result-emoji">🎉</span>
+    <h2>Results for <span class="result-name" id="result-name-display"></span></h2>
+    <div class="stars" id="result-stars"></div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Correct answers</div><div class="stat-value" id="res-correct"></div><div class="stat-sub">out of total</div></div>
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="res-percent"></div><div class="stat-sub">first attempt</div></div>
+      <div class="stat-card"><div class="stat-label">Time taken</div><div class="stat-value" id="res-time"></div><div class="stat-sub">minutes</div></div>
+      <div class="stat-card"><div class="stat-label">Grade</div><div class="stat-value" id="res-grade"></div><div class="stat-sub">overall result</div></div>
+    </div>
+    <div id="res-message" style="font-size:14px;color:var(--text-soft);line-height:1.7;margin-bottom:20px;"></div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try again from the beginning</button>
+  </div>
+</div>
+
+<script>
+/* ===== DATA ===== */
+const SECTIONS=[
+  {id:'mcq',label:'I. Multiple Choice',icon:'📝',bg:'#ede8fc'},
+  {id:'tf', label:'II. True / False',  icon:'✅',bg:'#e4f7f1'},
+  {id:'fib',label:'III. Fill in the Blank',icon:'✏️',bg:'#fff8e1'},
+  {id:'sa', label:'IV. Short Answer',  icon:'💬',bg:'#fde8ef'},
+  {id:'mat',label:'V. Matching',       icon:'🔗',bg:'#e4f7f1'},
+];
+
+const MCQ=[
+  {q:'What is the smallest particle of an element that can exist?',opts:['Molecule','Atom','Ion','Cell'],ans:1,
+   ex:'Atom (nguyên tử) là hạt nhỏ nhất của một nguyên tố. Molecule gồm nhiều atom. Ion là atom mang điện. Cell (tế bào) thuộc sinh học.'},
+  {q:'Which of the following is a molecule of an element?',opts:['CO','H₂O','O₂','NaCl'],ans:2,
+   ex:'O₂ chỉ gồm 2 atom cùng loại (oxygen) → phân tử nguyên tố. CO, H₂O, NaCl chứa nhiều loại atom khác nhau → hợp chất (compound).'},
+  {q:'What is the charge of a proton?',opts:['Positive','Negative','Neutral','No charge'],ans:0,
+   ex:'Proton mang điện tích dương (+). Electron mang điện âm (−). Neutron không mang điện (trung hòa).'},
+  {q:'Which part of the atom has no charge?',opts:['Proton','Electron','Neutron','Nucleus'],ans:2,
+   ex:'Neutron không mang điện (trung hòa). Proton (+), electron (−). Nucleus là hạt nhân chứa cả proton và neutron.'},
+  {q:'Which particle orbits around the nucleus?',opts:['Proton','Neutron','Electron','Ion'],ans:2,
+   ex:'Electron chuyển động quanh hạt nhân (nucleus). Proton và neutron nằm bên trong hạt nhân.'},
+  {q:'Which is the chemical formula for water?',opts:['CO','H₂O','O₂','H₂'],ans:1,
+   ex:'H₂O là công thức của nước: 2 atom hydrogen (H) + 1 atom oxygen (O).'},
+  {q:'What happens when an atom loses an electron?',opts:['It becomes a neutral atom','It forms a positive ion','It forms a negative ion','It becomes a molecule'],ans:1,
+   ex:'Mất electron (điện âm) → thừa điện tích dương → ion dương (+). Nhận thêm electron → ion âm (−).'},
+  {q:'What type of particle is Na⁺?',opts:['A molecule','A compound','A positive ion','A negative ion'],ans:2,
+   ex:'Na⁺: dấu "+" cho thấy sodium đã mất 1 electron → số proton nhiều hơn electron → ion dương.'},
+  {q:'What does the subscript 2 in H₂O mean?',opts:['There are two oxygen atoms','Two molecules','Two hydrogen atoms','Two water molecules'],ans:2,
+   ex:'Chỉ số dưới "2" trong H₂O cho biết có 2 atom hydrogen trong mỗi phân tử nước. Chỉ số dưới chỉ số atom của nguyên tố đứng trước.'},
+  {q:'Which atom is larger?',opts:['Hydrogen','Gold','Oxygen','Electron'],ans:1,
+   ex:'Gold (vàng, Au) có số nguyên tử 79 — lớn hơn H (1) và O (8). Lưu ý: electron không phải nguyên tử — đây là câu bẫy!'},
+];
+
+const TF=[
+  {q:'An atom is the smallest unit of a compound.',ans:false,
+   ex:'SAI. Atom là đơn vị nhỏ nhất của nguyên TỐ (element), không phải hợp chất (compound). Compound được tạo từ nhiều atom khác loại liên kết hóa học.'},
+  {q:'Molecules are made up of two or more atoms.',ans:true,
+   ex:'ĐÚNG. Phân tử (molecule) gồm 2 hoặc nhiều atom liên kết hóa học. Ví dụ: O₂ có 2 atom; H₂O có 3 atom.'},
+  {q:'Electrons have a positive charge.',ans:false,
+   ex:'SAI. Electron mang điện tích ÂM (−). Proton mới mang điện tích dương (+). Đây là điểm rất hay bị nhầm.'},
+  {q:'Sodium ion (Na⁺) has more electrons than protons.',ans:false,
+   ex:'SAI. Na⁺ mang điện dương → proton NHIỀU HƠN electron. Na bình thường: 11p + 11e. Na⁺ mất 1e → còn 10e nhưng vẫn 11p.'},
+  {q:'A molecule of oxygen has two oxygen atoms.',ans:true,
+   ex:'ĐÚNG. O₂ gồm 2 atom oxygen. Chỉ số dưới "2" cho biết điều này.'},
+  {q:'Protons and neutrons are found in the nucleus.',ans:true,
+   ex:'ĐÚNG. Hạt nhân (nucleus) chứa proton (+) và neutron (trung hòa). Electron nằm ở lớp vỏ bên ngoài.'},
+  {q:'The chemical symbol for chlorine is Cl.',ans:true,
+   ex:'ĐÚNG. Cl là ký hiệu hóa học của chlorine (clo). Chú ý: C hoa, l thường — ký hiệu hóa học luôn bắt đầu bằng chữ hoa.'},
+  {q:'An ion is always neutral.',ans:false,
+   ex:'SAI. Ion LUÔN mang điện (dương hoặc âm). Nguyên tử trung hòa (neutral atom) mới không mang điện. Ion hình thành khi nguyên tử mất hoặc nhận thêm electron.'},
+  {q:'CO is a molecule of a compound.',ans:true,
+   ex:'ĐÚNG. CO (carbon monoxide) gồm 2 loại atom khác nhau: C và O → hợp chất (compound). Molecule của compound ≠ molecule của element.'},
+  {q:'Neutrons have a negative charge.',ans:false,
+   ex:'SAI. Neutron KHÔNG mang điện (trung hòa). Chỉ proton (+) và electron (−) mang điện.'},
+];
+
+const FIB_WORDS=['atom','molecule','proton','electron','neutron','compound','ion','element','symbol','formula'];
+const FIB=[
+  {q:'An _____ is the smallest particle of an element.',ans:'atom',
+   ex:'Atom = nguyên tử, hạt nhỏ nhất của một nguyên tố.'},
+  {q:'A _____ is made up of two or more atoms chemically combined.',ans:'molecule',
+   ex:'Molecule = phân tử, gồm 2+ atom liên kết hóa học.'},
+  {q:'A _____ has a positive charge.',ans:'proton',
+   ex:'Proton mang điện tích dương (+), nằm trong hạt nhân nguyên tử.'},
+  {q:'A _____ moves around the nucleus of an atom.',ans:'electron',
+   ex:'Electron chuyển động quanh hạt nhân theo các lớp vỏ, mang điện (−).'},
+  {q:'A _____ has no charge.',ans:'neutron',
+   ex:'Neutron không mang điện (trung hòa), nằm trong hạt nhân cùng proton.'},
+  {q:'A _____ is made of two or more different atoms.',ans:'compound',
+   ex:'Compound = hợp chất, gồm 2+ loại atom khác nhau. Ví dụ: H₂O (H và O).'},
+  {q:'An _____ has a charge because it lost or gained electrons.',ans:'ion',
+   ex:'Ion: mất electron → ion dương (+); nhận thêm electron → ion âm (−).'},
+  {q:'An _____ is made up of only one kind of atom.',ans:'element',
+   ex:'Element = nguyên tố, chỉ chứa 1 loại atom. Ví dụ: O₂ chỉ có oxygen.'},
+  {q:'Na is the chemical _____ for sodium.',ans:'symbol',
+   ex:'Symbol = ký hiệu hóa học. Na là ký hiệu của sodium (natri).'},
+  {q:'H₂O is the chemical _____ for water.',ans:'formula',
+   ex:'Formula = công thức hóa học. H₂O cho biết 1 phân tử nước gồm 2H + 1O.'},
+];
+
+// SA: acceptedPhrases = array of minimal correct phrase strings (any one match = correct)
+const SA=[
+  {q:'What is an atom?',
+   acceptedPhrases:['smallest particle of an element','smallest unit of an element','smallest part of an element'],
+   ex:'Đáp án gợi ý: "The smallest particle of an element." Nguyên tử là hạt nhỏ nhất của nguyên tố, không thể chia nhỏ hơn bằng phương pháp hóa học.'},
+  {q:'What is a molecule made of?',
+   acceptedPhrases:['two or more atoms','2 or more atoms','at least two atoms','multiple atoms bonded'],
+   ex:'Đáp án gợi ý: "Two or more atoms bonded together." Phân tử = 2+ nguyên tử liên kết hóa học.'},
+  {q:'What is the charge of an electron?',
+   acceptedPhrases:['negative','negative charge','negatively charged'],
+   ex:'Đáp án: "Negative." Electron mang điện tích âm (−).'},
+  {q:'What happens when an atom gains an electron?',
+   acceptedPhrases:['negative ion','becomes negative','forms a negative ion','negatively charged ion','it becomes an anion'],
+   ex:'Đáp án gợi ý: "It becomes a negative ion." Nhận thêm electron → dư điện âm → ion âm.'},
+  {q:'What is the center of an atom called?',
+   acceptedPhrases:['nucleus','the nucleus'],
+   ex:'Đáp án: "The nucleus." Hạt nhân chứa proton và neutron, chiếm hầu hết khối lượng nguyên tử.'},
+  {q:'How many protons does a sodium atom have?',
+   acceptedPhrases:['11','eleven'],
+   ex:'Đáp án: "11." Sodium (Na) có số nguyên tử = 11 → có 11 proton trong hạt nhân.'},
+  {q:'What is a chemical formula?',
+   acceptedPhrases:['shows the atoms in a molecule','shows which atoms','shows what atoms','represents atoms in a molecule','notation showing atoms','symbols showing atoms'],
+   ex:'Đáp án gợi ý: "A way of showing the atoms in a molecule using symbols." Công thức hóa học dùng ký hiệu và chỉ số dưới để biểu thị thành phần phân tử.'},
+  {q:'How is a positive ion formed?',
+   acceptedPhrases:['loses an electron','when an atom loses','by losing an electron','atom loses electron'],
+   ex:'Đáp án gợi ý: "When an atom loses an electron." Mất electron → thừa điện dương → ion dương.'},
+  {q:'What is the difference between a molecule of an element and a compound?',
+   acceptedPhrases:['one type of atom','same type of atom','element has one kind','compound has different','two or more different types','different types of atoms'],
+   ex:'Đáp án gợi ý: "A molecule of an element has one type of atom; a compound has two or more different types." Ví dụ: O₂ (element) vs H₂O (compound).'},
+  {q:'What is the symbol for a chloride ion?',
+   acceptedPhrases:['cl-','cl⁻','cl −','chloride is cl'],
+   ex:'Đáp án: "Cl⁻". Chlorine nhận thêm 1 electron → điện âm → ký hiệu Cl⁻.'},
+];
+
+const MAT_LEFT =['Atom','Molecule','Proton','Neutron','Electron','Ion','H₂O','CO₂','Na⁺','O₂'];
+const MAT_RIGHT=['Water','Carbon dioxide','Smallest part of element','Made of atoms','Positive particle','Negative particle','No charge','Charged particle','Oxygen molecule','Sodium ion'];
+const MAT_ANS  =[2,3,4,6,5,7,0,1,9,8];
+
+/* ===== STATE ===== */
+let studentName='',startTime=0,currentSection=0;
+let sectionStatus=[0,0,0,0,0],firstAttemptScores={};
+let mcqState={},mcqChecked=false;
+let tfState={},tfChecked=false;
+let fibChecked=false,fibCorrectMask={};
+let saChecked=false,saCorrectMask={};
+let matState={},matChecked=false,matCorrectMask={};
+
+/* ===== SA GRADING: match any accepted phrase ===== */
+function gradeSA(val,phrases){
+  const v=val.toLowerCase().replace(/[^a-z0-9\s⁻-]/g,'').trim();
+  return phrases.some(p=>{
+    const pn=p.toLowerCase().replace(/[^a-z0-9\s⁻-]/g,'').trim();
+    return v.includes(pn);
+  });
+}
+
+/* ===== START ===== */
+function startQuiz(){
+  studentName=document.getElementById('student-name').value.trim();
+  if(!studentName){alert('Please enter your name first!');return;}
+  startTime=Date.now();
+  document.getElementById('screen-welcome').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  sectionStatus[0]=1;renderNav();renderSection(0);
+}
+
+function renderNav(){
+  document.getElementById('section-nav').innerHTML=SECTIONS.map((s,i)=>{
+    let cls=sectionStatus[i]===2?'done':sectionStatus[i]===1?'active':'locked';
+    return`<div class="section-pill ${cls}">${sectionStatus[i]===2?'✓ ':''}${s.label}</div>`;
+  }).join('');
+  const done=sectionStatus.filter(s=>s===2).length,active=sectionStatus.filter(s=>s===1).length;
+  document.getElementById('progress-bar').style.width=((done+active*.5)/SECTIONS.length*100)+'%';
+}
+
+function renderSection(idx){
+  currentSection=idx;const s=SECTIONS[idx],el=document.getElementById('section-content');
+  if(idx===0)renderMCQ(el,s);else if(idx===1)renderTF(el,s);
+  else if(idx===2)renderFIB(el,s);else if(idx===3)renderSA(el,s);else renderMAT(el,s);
+}
+
+function sHdr(s,note){return`<div class="card"><div class="section-header"><div class="section-icon" style="background:${s.bg}">${s.icon}</div><div><h2>${s.label}</h2><p>${note}</p></div></div>`;}
+
+/* ===== MCQ ===== */
+function renderMCQ(el,s){
+  mcqState={};mcqChecked=false;
+  el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 10 questions')+
+    MCQ.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="mcq-${i}-${j}" onclick="selMCQ(${i},${j})"><span class="option-badge">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+      <div class="explanation" id="mcq-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join('<div class="divider"></div>')+
+    `<div class="feedback-banner" id="mcq-fb"></div>
+    <button class="btn btn-check" onclick="chkMCQ()">Check answers</button>
+    <button class="btn btn-retry" id="mcq-retry" onclick="retMCQ()">Redo incorrect questions</button>
+    <button class="btn btn-next" id="mcq-next" onclick="goNext()">Next section &rarr;</button></div>`;
+}
+function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
+function chkMCQ(){
+  if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all questions first!');return;}
+  mcqChecked=true;let correct=0;
+  MCQ.forEach((q,i)=>{
+    const ok=mcqState[i]===q.ans;if(ok)correct++;
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
+      b.className=j===mcqState[i]&&ok?'option-btn correct':j===mcqState[i]&&!ok?'option-btn wrong':j===q.ans&&!ok?'option-btn reveal-correct':'option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
+  const fb=document.getElementById('mcq-fb');fb.classList.add('show');
+  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MCQ.length} &mdash; Well done!`;document.getElementById('mcq-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MCQ.length} correct. Read the explanations below and redo the wrong ones.`;document.getElementById('mcq-retry').style.display='block';}
+}
+function retMCQ(){
+  MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=false;b.className='option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.remove('show');});
+  mcqChecked=false;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-fb').classList.remove('show');
+}
+
+/* ===== TF ===== */
+function renderTF(el,s){
+  tfState={};tfChecked=false;
+  el.innerHTML=sHdr(s,'Decide if each statement is True or False &mdash; 10 questions')+
+    TF.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="tf-options"><button class="tf-btn" id="tf-${i}-true" onclick="selTF(${i},true)">True</button><button class="tf-btn" id="tf-${i}-false" onclick="selTF(${i},false)">False</button></div>
+      <div class="explanation" id="tf-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join('<div class="divider"></div>')+
+    `<div class="feedback-banner" id="tf-fb"></div>
+    <button class="btn btn-check" onclick="chkTF()">Check answers</button>
+    <button class="btn btn-retry" id="tf-retry" onclick="retTF()">Redo incorrect questions</button>
+    <button class="btn btn-next" id="tf-next" onclick="goNext()">Next section &rarr;</button></div>`;
+}
+function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
+function chkTF(){
+  if(Object.keys(tfState).length<TF.length){alert('Please answer all questions!');return;}
+  tfChecked=true;let correct=0;
+  TF.forEach((q,i)=>{
+    const ok=tfState[i]===q.ans;if(ok)correct++;
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
+      b.className=bval===tfState[i]&&ok?'tf-btn correct':bval===tfState[i]&&!ok?'tf-btn wrong':bval===q.ans&&!ok?'tf-btn reveal-correct':'tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:TF.length};
+  const fb=document.getElementById('tf-fb');fb.classList.add('show');
+  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${TF.length} &mdash; Excellent!`;document.getElementById('tf-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${TF.length} correct. Read the explanations and redo the wrong ones.`;document.getElementById('tf-retry').style.display='block';}
+}
+function retTF(){
+  TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`);b.disabled=false;b.className='tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.remove('show');});
+  tfChecked=false;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-fb').classList.remove('show');
+}
+
+/* ===== FIB — sticky wordbank ===== */
+function renderFIB(el,s){
+  fibChecked=false;fibCorrectMask={};
+  el.innerHTML=sHdr(s,'Fill in the blank using the word bank &mdash; 10 questions')+
+    `<div class="fib-section-wrap">
+      <div class="fib-questions">
+        ${FIB.map((q,i)=>`<div class="question-block">
+          <div class="question-text"><span class="q-num">${i+1}</span>${q.q.replace('_____','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')}</div>
+          <input class="fib-input" id="fib-in-${i}" placeholder="Type your answer..." oninput="updateWordbank()" />
+          <div class="explanation" id="fib-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+        </div>${i<FIB.length-1?'<div class="divider"></div>':''}`).join('')}
+        <div class="feedback-banner" id="fib-fb"></div>
+        <button class="btn btn-check" onclick="chkFIB()">Check answers</button>
+        <button class="btn btn-retry" id="fib-retry" onclick="retFIB()">Redo incorrect questions</button>
+        <button class="btn btn-next" id="fib-next" onclick="goNext()">Next section &rarr;</button>
+      </div>
+      <div class="wordbank-sticky" id="wordbank-sticky">
+        <span class="wordbank-label">Word bank</span>
+        ${FIB_WORDS.map(w=>`<span class="wordbank-item" id="wb-${w}">${w}</span>`).join('')}
+      </div>
+    </div></div>`;
+}
+
+function updateWordbank(){
+  const used=new Set();
+  FIB.forEach((_,i)=>{
+    const v=document.getElementById(`fib-in-${i}`);
+    if(v&&!v.disabled){const t=v.value.trim().toLowerCase();if(t)used.add(t);}
+  });
+  FIB_WORDS.forEach(w=>{
+    const el=document.getElementById(`wb-${w}`);
+    if(el)el.classList.toggle('used',used.has(w));
+  });
+}
+
+function chkFIB(){
+  let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please fill in all blanks!');return;}
+  fibChecked=true;let correct=0;
+  FIB.forEach((q,i)=>{
+    const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
+    if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    if(!ok)inp.value+=`  →  Answer: ${q.ans}`;
+    document.getElementById(`fib-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:FIB.length};
+  const fb=document.getElementById('fib-fb');fb.classList.add('show');
+  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${FIB.length} &mdash; Great!`;document.getElementById('fib-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${FIB.length} correct. Read the explanations and retry the wrong ones.`;document.getElementById('fib-retry').style.display='block';}
+}
+function retFIB(){
+  FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
+  fibChecked=false;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-fb').classList.remove('show');updateWordbank();
+}
+
+/* ===== SA ===== */
+function renderSA(el,s){
+  saChecked=false;saCorrectMask={};
+  el.innerHTML=sHdr(s,'Write a short answer in English &mdash; 10 questions')+
+    SA.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <input class="fib-input" id="sa-in-${i}" placeholder="Write your answer in English..." />
+      <div class="explanation" id="sa-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join('<div class="divider"></div>')+
+    `<div class="feedback-banner" id="sa-fb"></div>
+    <button class="btn btn-check" onclick="chkSA()">Check answers</button>
+    <button class="btn btn-retry" id="sa-retry" onclick="retSA()">Redo incorrect questions</button>
+    <button class="btn btn-next" id="sa-next" onclick="goNext()">Next section &rarr;</button></div>`;
+}
+function chkSA(){
+  let all=true;SA.forEach((_,i)=>{if(!document.getElementById(`sa-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please answer all questions!');return;}
+  saChecked=true;let correct=0;
+  SA.forEach((q,i)=>{
+    const inp=document.getElementById(`sa-in-${i}`);
+    const ok=gradeSA(inp.value,q.acceptedPhrases);
+    if(ok){correct++;saCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    document.getElementById(`sa-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:SA.length};
+  const fb=document.getElementById('sa-fb');fb.classList.add('show');
+  if(correct===SA.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${SA.length} &mdash; Fantastic!`;document.getElementById('sa-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${SA.length} correct. Your answer is accepted if it contains the key phrase. Read the explanations and retry.`;document.getElementById('sa-retry').style.display='block';}
+}
+function retSA(){
+  SA.forEach((q,i)=>{if(saCorrectMask[i])return;const inp=document.getElementById(`sa-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`sa-ex-${i}`).classList.remove('show');});
+  saChecked=false;document.getElementById('sa-retry').style.display='none';document.getElementById('sa-fb').classList.remove('show');
+}
+
+/* ===== MATCHING ===== */
+function renderMAT(el,s){
+  matState={};matChecked=false;matCorrectMask={};
+  const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+  el.innerHTML=sHdr(s,'Match Column A with Column B &mdash; 10 pairs')+
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
+      <tr><th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column A</th>
+          <th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column B</th></tr>
+      ${MAT_LEFT.map((l,i)=>`<tr>
+        <td style="padding:4px 8px;width:38%"><div class="match-item" id="mat-l-${i}">${l}</div></td>
+        <td style="padding:4px 8px"><select class="match-select" id="mat-s-${i}" onchange="selMAT(${i},this.value)"><option value="">-- Select --</option>${rOpts}</select></td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="feedback-banner" id="mat-fb"></div>
+    <button class="btn btn-check" onclick="chkMAT()">Check answers</button>
+    <button class="btn btn-retry" id="mat-retry" onclick="retMAT()">Redo incorrect pairs</button>
+    <button class="btn btn-next" id="mat-next" onclick="showResult()">See my results</button></div>`;
+}
+function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
+function chkMAT(){
+  if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items!');return;}
+  matChecked=true;let correct=0;
+  MAT_LEFT.forEach((_,i)=>{
+    const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
+    const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
+    sel.disabled=true;sel.className=ok?'match-select correct':'match-select wrong';
+    if(!ok)left.innerHTML+=` &rarr; <strong style="color:var(--mint-dark)">${MAT_RIGHT[MAT_ANS[i]]}</strong>`;
+  });
+  if(!firstAttemptScores[4])firstAttemptScores[4]={correct,total:MAT_LEFT.length};
+  const fb=document.getElementById('mat-fb');fb.classList.add('show');
+  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MAT_LEFT.length} pairs &mdash; Outstanding!`;document.getElementById('mat-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MAT_LEFT.length} correct. The correct match is shown in green. Redo the wrong ones.`;document.getElementById('mat-retry').style.display='block';}
+}
+function retMAT(){
+  MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';document.getElementById(`mat-l-${i}`).innerHTML=MAT_LEFT[i];});
+  matChecked=false;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-fb').classList.remove('show');
+}
+
+/* ===== NAVIGATION ===== */
+function goNext(){
+  sectionStatus[currentSection]=2;const next=currentSection+1;
+  if(next<SECTIONS.length){sectionStatus[next]=1;renderNav();renderSection(next);window.scrollTo({top:0,behavior:'smooth'});}
+  else showResult();
+}
+
+function showResult(){
+  sectionStatus[currentSection]=2;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  const elapsed=Math.round((Date.now()-startTime)/60000*10)/10;
+  let tc=0,tq=0;Object.values(firstAttemptScores).forEach(v=>{tc+=v.correct;tq+=v.total;});
+  const pct=tq>0?Math.round(tc/tq*100):0;
+  document.getElementById('result-name-display').textContent=studentName;
+  document.getElementById('res-correct').textContent=`${tc}/${tq}`;
+  document.getElementById('res-percent').textContent=`${pct}%`;
+  document.getElementById('res-time').textContent=elapsed;
+  let grade,emoji,stars,msg;
+  if(pct>=90){grade='A';emoji='🏆';stars='⭐⭐⭐⭐⭐';msg=`Outstanding, ${studentName}! You have mastered Chapter 7. Keep it up!`;}
+  else if(pct>=70){grade='B';emoji='😺';stars='⭐⭐⭐⭐';msg=`Well done, ${studentName}! You understand most of the content. Review the weaker areas to aim higher.`;}
+  else if(pct>=50){grade='C';emoji='😸';stars='⭐⭐⭐';msg=`Good effort, ${studentName}! Keep studying and practising. You will improve.`;}
+  else{grade='D';emoji='😿';stars='⭐⭐';msg=`Keep going, ${studentName}! Review the lesson notes carefully before trying again.`;}
+  document.getElementById('result-emoji').textContent=emoji;
+  document.getElementById('result-stars').textContent=stars;
+  document.getElementById('res-grade').textContent=grade;
+  document.getElementById('res-message').textContent=msg;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartQuiz(){
+  mcqState={};tfState={};fibCorrectMask={};saCorrectMask={};matCorrectMask={};
+  firstAttemptScores={};sectionStatus=[0,0,0,0,0];sectionStatus[0]=1;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-welcome').classList.remove('hidden');
+  document.getElementById('screen-quiz').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
