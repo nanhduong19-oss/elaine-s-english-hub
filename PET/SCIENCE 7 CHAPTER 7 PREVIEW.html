@@ -283,11 +283,11 @@ const MAT_ANS  =[2,3,4,6,5,7,0,1,9,8];
 /* ===== STATE ===== */
 let studentName='',startTime=0,currentSection=0;
 let sectionStatus=[0,0,0,0,0],firstAttemptScores={};
-let mcqState={},mcqChecked=false;
-let tfState={},tfChecked=false;
-let fibChecked=false,fibCorrectMask={};
-let saChecked=false,saCorrectMask={};
-let matState={},matChecked=false,matCorrectMask={};
+let mcqState={},mcqChecked=false,mcqAttempts=0;
+let tfState={},tfChecked=false,tfAttempts=0;
+let fibChecked=false,fibCorrectMask={},fibAttempts=0;
+let saChecked=false,saCorrectMask={},saAttempts=0;
+let matState={},matChecked=false,matCorrectMask={},matAttempts=0;
 
 /* ===== SA GRADING: match any accepted phrase ===== */
 function gradeSA(val,phrases){
@@ -325,7 +325,7 @@ function sHdr(s,note){return`<div class="card"><div class="section-header"><div 
 
 /* ===== MCQ ===== */
 function renderMCQ(el,s){
-  mcqState={};mcqChecked=false;
+  mcqState={};mcqChecked=false;mcqAttempts=0;
   el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 10 questions')+
     MCQ.map((q,i)=>`<div class="question-block">
       <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
@@ -340,7 +340,7 @@ function renderMCQ(el,s){
 function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
 function chkMCQ(){
   if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all questions first!');return;}
-  mcqChecked=true;let correct=0;
+  mcqChecked=true;mcqAttempts++;let correct=0;
   MCQ.forEach((q,i)=>{
     const ok=mcqState[i]===q.ans;if(ok)correct++;
     q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
@@ -349,8 +349,17 @@ function chkMCQ(){
   });
   if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
   const fb=document.getElementById('mcq-fb');fb.classList.add('show');
-  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MCQ.length} &mdash; Well done!`;document.getElementById('mcq-next').style.display='block';}
-  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MCQ.length} correct. Read the explanations below and redo the wrong ones.`;document.getElementById('mcq-retry').style.display='block';}
+  if(correct===MCQ.length){
+    fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MCQ.length} &mdash; Well done!`;
+    document.getElementById('mcq-next').style.display='block';
+  } else if(mcqAttempts>=2){
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MCQ.length} correct after 2 attempts. Review the explanations and move on.`;
+    document.getElementById('mcq-retry').style.display='none';
+    document.getElementById('mcq-next').style.display='block';
+  } else {
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MCQ.length} correct. Read the explanations below and redo the wrong ones. (Attempt ${mcqAttempts}/2)`;
+    document.getElementById('mcq-retry').style.display='block';
+  }
 }
 function retMCQ(){
   MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
@@ -361,7 +370,7 @@ function retMCQ(){
 
 /* ===== TF ===== */
 function renderTF(el,s){
-  tfState={};tfChecked=false;
+  tfState={};tfChecked=false;tfAttempts=0;
   el.innerHTML=sHdr(s,'Decide if each statement is True or False &mdash; 10 questions')+
     TF.map((q,i)=>`<div class="question-block">
       <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
@@ -376,7 +385,7 @@ function renderTF(el,s){
 function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
 function chkTF(){
   if(Object.keys(tfState).length<TF.length){alert('Please answer all questions!');return;}
-  tfChecked=true;let correct=0;
+  tfChecked=true;tfAttempts++;let correct=0;
   TF.forEach((q,i)=>{
     const ok=tfState[i]===q.ans;if(ok)correct++;
     ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
@@ -385,8 +394,17 @@ function chkTF(){
   });
   if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:TF.length};
   const fb=document.getElementById('tf-fb');fb.classList.add('show');
-  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${TF.length} &mdash; Excellent!`;document.getElementById('tf-next').style.display='block';}
-  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${TF.length} correct. Read the explanations and redo the wrong ones.`;document.getElementById('tf-retry').style.display='block';}
+  if(correct===TF.length){
+    fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${TF.length} &mdash; Excellent!`;
+    document.getElementById('tf-next').style.display='block';
+  } else if(tfAttempts>=2){
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${TF.length} correct after 2 attempts. Review the explanations and move on.`;
+    document.getElementById('tf-retry').style.display='none';
+    document.getElementById('tf-next').style.display='block';
+  } else {
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${TF.length} correct. Read the explanations and redo the wrong ones. (Attempt ${tfAttempts}/2)`;
+    document.getElementById('tf-retry').style.display='block';
+  }
 }
 function retTF(){
   TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
@@ -397,7 +415,7 @@ function retTF(){
 
 /* ===== FIB — sticky wordbank ===== */
 function renderFIB(el,s){
-  fibChecked=false;fibCorrectMask={};
+  fibChecked=false;fibCorrectMask={};fibAttempts=0;
   el.innerHTML=sHdr(s,'Fill in the blank using the word bank &mdash; 10 questions')+
     `<div class="fib-section-wrap">
       <div class="fib-questions">
@@ -433,7 +451,7 @@ function updateWordbank(){
 function chkFIB(){
   let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
   if(!all){alert('Please fill in all blanks!');return;}
-  fibChecked=true;let correct=0;
+  fibChecked=true;fibAttempts++;let correct=0;
   FIB.forEach((q,i)=>{
     const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
     if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
@@ -442,8 +460,17 @@ function chkFIB(){
   });
   if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:FIB.length};
   const fb=document.getElementById('fib-fb');fb.classList.add('show');
-  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${FIB.length} &mdash; Great!`;document.getElementById('fib-next').style.display='block';}
-  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${FIB.length} correct. Read the explanations and retry the wrong ones.`;document.getElementById('fib-retry').style.display='block';}
+  if(correct===FIB.length){
+    fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${FIB.length} &mdash; Great!`;
+    document.getElementById('fib-next').style.display='block';
+  } else if(fibAttempts>=2){
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${FIB.length} correct after 2 attempts. Review the explanations and move on.`;
+    document.getElementById('fib-retry').style.display='none';
+    document.getElementById('fib-next').style.display='block';
+  } else {
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${FIB.length} correct. Read the explanations and retry the wrong ones. (Attempt ${fibAttempts}/2)`;
+    document.getElementById('fib-retry').style.display='block';
+  }
 }
 function retFIB(){
   FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
@@ -452,7 +479,7 @@ function retFIB(){
 
 /* ===== SA ===== */
 function renderSA(el,s){
-  saChecked=false;saCorrectMask={};
+  saChecked=false;saCorrectMask={};saAttempts=0;
   el.innerHTML=sHdr(s,'Write a short answer in English &mdash; 10 questions')+
     SA.map((q,i)=>`<div class="question-block">
       <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
@@ -467,7 +494,7 @@ function renderSA(el,s){
 function chkSA(){
   let all=true;SA.forEach((_,i)=>{if(!document.getElementById(`sa-in-${i}`).value.trim())all=false;});
   if(!all){alert('Please answer all questions!');return;}
-  saChecked=true;let correct=0;
+  saChecked=true;saAttempts++;let correct=0;
   SA.forEach((q,i)=>{
     const inp=document.getElementById(`sa-in-${i}`);
     const ok=gradeSA(inp.value,q.acceptedPhrases);
@@ -476,8 +503,17 @@ function chkSA(){
   });
   if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:SA.length};
   const fb=document.getElementById('sa-fb');fb.classList.add('show');
-  if(correct===SA.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${SA.length} &mdash; Fantastic!`;document.getElementById('sa-next').style.display='block';}
-  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${SA.length} correct. Your answer is accepted if it contains the key phrase. Read the explanations and retry.`;document.getElementById('sa-retry').style.display='block';}
+  if(correct===SA.length){
+    fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${SA.length} &mdash; Fantastic!`;
+    document.getElementById('sa-next').style.display='block';
+  } else if(saAttempts>=2){
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${SA.length} correct after 2 attempts. Review the explanations and move on.`;
+    document.getElementById('sa-retry').style.display='none';
+    document.getElementById('sa-next').style.display='block';
+  } else {
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${SA.length} correct. Your answer is accepted if it contains the key phrase. Read the explanations and retry. (Attempt ${saAttempts}/2)`;
+    document.getElementById('sa-retry').style.display='block';
+  }
 }
 function retSA(){
   SA.forEach((q,i)=>{if(saCorrectMask[i])return;const inp=document.getElementById(`sa-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`sa-ex-${i}`).classList.remove('show');});
@@ -486,7 +522,7 @@ function retSA(){
 
 /* ===== MATCHING ===== */
 function renderMAT(el,s){
-  matState={};matChecked=false;matCorrectMask={};
+  matState={};matChecked=false;matCorrectMask={};matAttempts=0;
   const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
   el.innerHTML=sHdr(s,'Match Column A with Column B &mdash; 10 pairs')+
     `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
@@ -505,7 +541,7 @@ function renderMAT(el,s){
 function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
 function chkMAT(){
   if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items!');return;}
-  matChecked=true;let correct=0;
+  matChecked=true;matAttempts++;let correct=0;
   MAT_LEFT.forEach((_,i)=>{
     const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
     const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
@@ -514,8 +550,17 @@ function chkMAT(){
   });
   if(!firstAttemptScores[4])firstAttemptScores[4]={correct,total:MAT_LEFT.length};
   const fb=document.getElementById('mat-fb');fb.classList.add('show');
-  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MAT_LEFT.length} pairs &mdash; Outstanding!`;document.getElementById('mat-next').style.display='block';}
-  else{fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MAT_LEFT.length} correct. The correct match is shown in green. Redo the wrong ones.`;document.getElementById('mat-retry').style.display='block';}
+  if(correct===MAT_LEFT.length){
+    fb.className='feedback-banner pass show';fb.innerHTML=`All correct! ${correct}/${MAT_LEFT.length} pairs &mdash; Outstanding!`;
+    document.getElementById('mat-next').style.display='block';
+  } else if(matAttempts>=2){
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MAT_LEFT.length} correct after 2 attempts. Review the explanations and move on.`;
+    document.getElementById('mat-retry').style.display='none';
+    document.getElementById('mat-next').style.display='block';
+  } else {
+    fb.className='feedback-banner fail show';fb.innerHTML=`${correct}/${MAT_LEFT.length} correct. The correct match is shown in green. Redo the wrong ones. (Attempt ${matAttempts}/2)`;
+    document.getElementById('mat-retry').style.display='block';
+  }
 }
 function retMAT(){
   MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';document.getElementById(`mat-l-${i}`).innerHTML=MAT_LEFT[i];});
@@ -554,6 +599,7 @@ function showResult(){
 
 function restartQuiz(){
   mcqState={};tfState={};fibCorrectMask={};saCorrectMask={};matCorrectMask={};
+  mcqAttempts=0;tfAttempts=0;fibAttempts=0;saAttempts=0;matAttempts=0;
   firstAttemptScores={};sectionStatus=[0,0,0,0,0];sectionStatus[0]=1;
   document.getElementById('screen-result').classList.add('hidden');
   document.getElementById('screen-welcome').classList.remove('hidden');
