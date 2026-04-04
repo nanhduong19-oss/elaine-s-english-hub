@@ -6,14 +6,6 @@
     <title>Elaine's English Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     
-    <script>
-        var password = prompt("Please enter the password to access Elaine's materials:");
-        if (password !== "thuong19111995") { 
-            alert("Wrong password. Access denied!");
-            window.location.href = "about:blank"; 
-        }
-    </script>
-
     <style>
         :root {
             --ket-mint: #D5F5E3;
@@ -23,14 +15,121 @@
             --starters-blue: #CDE4FE; 
             --movers-purple: #E1D5E7;
             --flyers-peach: #FFE5B4;
-            --science-teal: #A2D9CE; /* Màu xanh ngọc mới cho tab Science */
+            --science-teal: #A2D9CE; 
             
             --navy-text: #1A365D;
             --bg-body: #FDFCF0;
             --active-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        body { font-family: 'Quicksand', sans-serif; background-color: var(--bg-body); margin: 0; padding: 0; color: var(--navy-text); }
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background-color: var(--bg-body); 
+            margin: 0; 
+            padding: 0; 
+            color: var(--navy-text); 
+        }
+
+        /* =========================================
+           GIAO DIỆN ĐĂNG NHẬP (LOGIN OVERLAY)
+           ========================================= */
+        #login-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Dùng hình ảnh của cô làm hình nền mờ */
+            background: linear-gradient(rgba(253, 252, 240, 0.8), rgba(253, 252, 240, 0.8)), 
+                        url('https://www.dropbox.com/scl/fi/xoezyi8amvz22hi373rfq/english-hub-banner.png?rlkey=ki9t38vctuhowi8obebw1da3y&raw=1') no-repeat center center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid var(--fce-green);
+        }
+
+        .login-box h2 {
+            margin-top: 0;
+            color: var(--navy-text);
+            font-size: 1.8em;
+        }
+
+        .login-box p {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            margin: 20px 0;
+            border: 2px solid #E1D5E7;
+            border-radius: 15px;
+            font-size: 1.2em;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+            letter-spacing: 3px;
+            font-family: monospace;
+            transition: 0.3s;
+        }
+
+        .login-box input:focus {
+            border-color: var(--navy-text);
+            box-shadow: 0 0 10px rgba(26, 54, 93, 0.1);
+        }
+
+        .login-box button {
+            background: var(--navy-text);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 20px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .login-box button:hover {
+            background: #112244;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 54, 93, 0.2);
+        }
+
+        #login-error {
+            color: #E74C3C;
+            font-weight: 700;
+            margin-top: 15px;
+            display: none;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* =========================================
+           NỘI DUNG CHÍNH (Ẩn đi cho đến khi đăng nhập)
+           ========================================= */
+        #main-content {
+            display: none;
+        }
+
         .container { max-width: 1000px; margin: 10px auto; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 35px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); }
         .banner { width: 100%; border-radius: 25px; margin-bottom: 20px; }
         
@@ -55,7 +154,7 @@
         @media (max-width: 768px) {
             .main-tabs { grid-template-columns: repeat(2, 1fr); }
             .tab-btn { font-size: 0.9em; padding: 12px 5px; }
-            .tab-btn[data-target="moet"], .tab-btn[data-target="science"] { grid-column: 1 / -1 !important; } /* Tràn viền trên mobile */
+            .tab-btn[data-target="moet"], .tab-btn[data-target="science"] { grid-column: 1 / -1 !important; } 
         }
         
         /* Hiệu ứng màu nền các Tab */
@@ -115,8 +214,19 @@
     </style>
 </head>
 <body class="pet-active"> 
-<div class="container">
-    <img src="https://www.dropbox.com/scl/fi/xoezyi8amvz22hi373rfq/english-hub-banner.png?rlkey=ki9t38vctuhowi8obebw1da3y&st=l4u8bdj3&dl=1" class="banner" alt="Banner">
+
+<div id="login-overlay">
+    <div class="login-box">
+        <h2>🔒 Security Check</h2>
+        <p>Please enter the password to access<br>Elaine's Materials</p>
+        <input type="password" id="password-input" placeholder="Password...">
+        <button id="login-btn">Access Hub</button>
+        <p id="login-error">Wrong password. Try again!</p>
+    </div>
+</div>
+
+<div class="container" id="main-content">
+    <img src="https://www.dropbox.com/scl/fi/xoezyi8amvz22hi373rfq/english-hub-banner.png?rlkey=ki9t38vctuhowi8obebw1da3y&raw=1" class="banner" alt="Banner">
     
     <h1>ELAINE'S ENGLISH HUB</h1>
 
@@ -216,7 +326,6 @@
              <li><a href="PET/READING & UOE/PET READING PART 5 - B1 SIMPLY - TEST 1 - 4.html">Reading P5 - Simply 1-4</a></li>
              <li><a href="PET/READING & UOE/PET READING PART 5 - B1 SIMPLY - TEST 5 - 8.HTML">Reading P5 - Simply 5-8</a></li>
              <li><a href="PET/READING & UOE/PET READING PART 6 - B1 SUCCEED - TEST 1 - 4.html">Reading P6 - Succeed 1-4</a></li>
-             
         </ul>
     </div>
     <div id="pet-writing" class="content-area">
@@ -251,12 +360,10 @@
             <li><a href="FCE/READING & UOE/FCE READING PART 6 - BOOK 2 - TEST 3 - 4.html">Reading P6 - Book 2 Test 3-4</a></li>
             <li><a href="FCE/READING & UOE/FCE READING PART 6 - BOOK 3 - TEST 1 - 2.html">Reading P6 - Book 3 Test 1-2</a></li>
             <li><a href="FCE/READING & UOE/FCE READING PART 6 - BOOK 3 - TEST 3 - 4.html">Reading P6 - Book 3 Test 3-4</a></li>
-            
         </ul>
     </div>
     <div id="fce-writing" class="content-area">
             <li><a href="FCE/WRITING/FCE WRITING PRACTICE.html">FCE WRITING PRACTICE</a></li>
-        </ul>
     </div>
         
     <div id="fce-gv" class="content-area">
@@ -312,6 +419,38 @@
 </div>
 
 <script>
+    // ==============================================================
+    // LOGIC XỬ LÝ ĐĂNG NHẬP
+    // ==============================================================
+    const loginBtn = document.getElementById('login-btn');
+    const pwdInput = document.getElementById('password-input');
+    const errorMsg = document.getElementById('login-error');
+
+    function checkPassword() {
+        if (pwdInput.value === 'thuong19111995') {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } else {
+            errorMsg.style.display = 'block';
+            // Khởi động lại animation rung lắc
+            errorMsg.style.animation = 'none';
+            errorMsg.offsetHeight; /* trigger reflow */
+            errorMsg.style.animation = null; 
+            pwdInput.value = '';
+            pwdInput.focus();
+        }
+    }
+
+    loginBtn.addEventListener('click', checkPassword);
+    pwdInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkPassword();
+        }
+    });
+
+    // ==============================================================
+    // LOGIC CHUYỂN TAB CŨ
+    // ==============================================================
     const mainBtns = document.querySelectorAll('.tab-btn');
     const subTabGroups = document.querySelectorAll('.sub-tabs');
     const subBtns = document.querySelectorAll('.sub-btn');
