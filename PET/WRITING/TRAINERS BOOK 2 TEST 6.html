@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PET Writing - Trainer Book 2 Test 6</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -360,8 +361,8 @@
                     <p class="text-lg font-bold text-gray-800 dark:text-white" id="res-name">Student Name</p>
                     <p class="text-gray-500 dark:text-gray-400 text-sm">ID: <span id="res-id"></span> | Class: <span id="res-class"></span></p>
                     <p class="text-gray-500 dark:text-gray-400 text-sm mt-1 mb-2">Time taken: <span id="res-time" class="font-bold text-pet"></span> | Violations: <span id="res-vio" class="text-red-500 dark:text-red-400 font-bold"></span></p>
-                    <button onclick="window.print()" class="print-hide bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition shadow-md flex items-center justify-center gap-2 border border-transparent dark:border-gray-600">
-                        <i class="fas fa-print"></i> Print / Export PDF
+                    <button onclick="downloadPDF()" data-html2canvas-ignore="true" class="print-hide bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded-lg font-bold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition shadow-md flex items-center justify-center gap-2 border border-transparent dark:border-gray-600">
+                        <i class="fas fa-download"></i> Save Result
                     </button>
                 </div>
             </div>
@@ -1206,6 +1207,102 @@ ${ans2}
             .catch(error => {
                 console.error('Error saving to sheets:', error);
                 statusEl.innerHTML = `<span class="text-red-500"><i class="fas fa-times-circle mr-1"></i> Failed to save</span>`;
+            });
+        }
+
+        // --- BẮT ĐẦU FIX LỖI BỊ ÉP LỀ TRÁI MẤT CHỮ ---
+        function downloadPDF() {
+            const element = document.getElementById('screen-result');
+            const innerContainer = element.querySelector('.max-w-6xl');
+            
+            // Format Date: DD-MM-YYYY
+            const today = new Date();
+            const dateStr = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth()+1).toString().padStart(2, '0')}-${today.getFullYear()}`;
+            
+            // Format Filename: [Test Name]-[Student Name]-[ID]-[Date]
+            const testName = document.title.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
+            const studentName = state.student.name.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
+            const studentId = state.student.id.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
+            
+            // Thay thế khoảng trắng bằng dấu gạch dưới để tên file đẹp hơn
+            const fileName = `${testName}-${studentName}-${studentId}-${dateStr}.pdf`.replace(/\s+/g, '_');
+
+            // Lưu lại style hiện tại để khôi phục sau
+            const originalCssText = element.style.cssText;
+            const originalInnerClassName = innerContainer ? innerContainer.className : '';
+            
+            // Gỡ bỏ hoàn toàn class căn giữa (mx-auto) để tránh html2canvas chụp bị lệch toạ độ X
+            if (innerContainer) {
+                innerContainer.classList.remove('mx-auto');
+                innerContainer.classList.remove('max-w-6xl');
+            }
+
+            // Ép phần tử này thành 1200px cố định, đẩy sát lề trái trên cùng bằng absolute
+            element.style.width = '1200px';
+            element.style.margin = '0';
+            element.style.padding = '30px';
+            element.style.position = 'absolute';
+            element.style.top = '0';
+            element.style.left = '0';
+            element.style.zIndex = '9999';
+            
+            // Đặt background cứng để PDF không bị trong suốt
+            const isDark = document.documentElement.classList.contains('dark');
+            element.style.backgroundColor = isDark ? '#111827' : '#fdf2f8';
+
+            // Cuộn lên top cùng để tránh lỗi offset (lệch khung) của html2canvas
+            window.scrollTo(0, 0);
+
+            const opt = {
+                margin:       10, // 10mm
+                filename:     fileName,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    windowWidth: 1200,
+                    x: 0,
+                    y: 0,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' } // Lưu định dạng A4 khổ ngang
+            };
+
+            // Vô hiệu hóa nút và hiện trạng thái Loading
+            const btn = document.querySelector('button[onclick="downloadPDF()"]');
+            const originalText = btn ? btn.innerHTML : '';
+            if (btn) {
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving PDF...';
+                btn.disabled = true;
+                btn.classList.add('opacity-70', 'cursor-not-allowed');
+            }
+
+            // Khởi tạo và lưu PDF
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Khôi phục lại giao diện
+                element.style.cssText = originalCssText;
+                if (innerContainer) innerContainer.className = originalInnerClassName;
+                
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
+                showToast("PDF Saved Successfully!", "success");
+            }).catch(err => {
+                console.error("PDF generation error:", err);
+                
+                // Khôi phục lại giao diện nếu lỗi
+                element.style.cssText = originalCssText;
+                if (innerContainer) innerContainer.className = originalInnerClassName;
+
+                showToast("Failed to save PDF.", "error");
+                if (btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                }
             });
         }
     </script>
