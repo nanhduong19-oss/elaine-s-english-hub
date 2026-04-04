@@ -8,10 +8,11 @@
     
     <style>
         :root {
+            /* Định nghĩa lại các mã màu để cô tiện sử dụng */
             --ket-mint: #D5F5E3;
-            --pet-pink: #FFD1DC;
+            --pet-pink: #FFD1DC; /* Màu hồng nhạt - PET */
             --fce-green: #C1E1C1;
-            --moet-yellow: #FEF9E7;
+            --moet-yellow: #FEF9E7; /* Màu vàng nhạt - MOET */
             --starters-blue: #CDE4FE; 
             --movers-purple: #E1D5E7;
             --flyers-peach: #FFE5B4;
@@ -32,11 +33,12 @@
 
         /* =========================================
            GIAO DIỆN ĐĂNG NHẬP (LOGIN OVERLAY)
+           CẬP NHẬT MÀU SẮC MỚI
            ========================================= */
         #login-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            /* Dùng hình ảnh của cô làm hình nền mờ */
+            /* Nền mờ ảo, lấy hình banner làm hình nền mờ */
             background: linear-gradient(rgba(253, 252, 240, 0.8), rgba(253, 252, 240, 0.8)), 
                         url('https://www.dropbox.com/scl/fi/xoezyi8amvz22hi373rfq/english-hub-banner.png?rlkey=ki9t38vctuhowi8obebw1da3y&raw=1') no-repeat center center/cover;
             display: flex;
@@ -47,14 +49,18 @@
         }
 
         .login-box {
-            background: rgba(255, 255, 255, 0.95);
+            /* ĐIỂM CẬP NHẬT: Thay đổi nền thành dải màu gradient Vàng nhạt và Hồng */
+            background: linear-gradient(to right bottom, rgba(254, 249, 231, 0.95), rgba(255, 209, 220, 0.95));
+            
             padding: 40px;
             border-radius: 30px;
             text-align: center;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 90%;
-            border: 2px solid var(--fce-green);
+            
+            /* ĐIỂM CẬP NHẬT: Thay đổi màu viền thành một màu trung tính nhẹ hơn */
+            border: 1px solid rgba(0,0,0,0.05);
         }
 
         .login-box h2 {
@@ -432,7 +438,6 @@
             document.getElementById('main-content').style.display = 'block';
         } else {
             errorMsg.style.display = 'block';
-            // Khởi động lại animation rung lắc
             errorMsg.style.animation = 'none';
             errorMsg.offsetHeight; /* trigger reflow */
             errorMsg.style.animation = null; 
