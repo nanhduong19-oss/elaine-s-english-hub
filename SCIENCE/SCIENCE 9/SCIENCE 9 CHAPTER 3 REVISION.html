@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Chapter 3 - Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  /* ── OTTER WALLPAPER PALETTE ──
+     Background teal   : #e8f7f5  /  deep #4db8b8
+     Otter brown       : #8b5e3c  /  light #f5e6d8
+     Fish blue         : #5b9bd5  /  light #ddeeff
+     Coffee cream      : #f0d9b5
+     Text              : #1e3a38
+  */
+  :root{
+    --teal:#4db8b8;--teal-dark:#2e8a8a;--teal-light:#e8f7f5;--teal-mid:#6fcece;
+    --brown:#8b5e3c;--brown-dark:#5c3a1e;--brown-light:#f5e6d8;
+    --fish:#5b9bd5;--fish-dark:#3a78b0;--fish-light:#ddeeff;
+    --coffee:#f0d9b5;--coffee-dark:#c4933f;
+    --text:#1e3a38;--text-soft:#4a7070;--white:#ffffff;
+    --shadow:rgba(46,138,138,0.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--teal-light);
+    min-height:100vh;color:var(--text);overflow-x:hidden;
+  }
+
+  /* Watercolor brushstroke texture overlay */
+  body::before{
+    content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(ellipse at 20% 30%, rgba(77,184,184,.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 70%, rgba(91,155,213,.10) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%, rgba(139,94,60,.05) 0%, transparent 65%);
+  }
+
+  /* Floating otter decoration */
+  body::after{
+    content:'🦦';position:fixed;bottom:20px;right:20px;font-size:44px;
+    opacity:.2;pointer-events:none;z-index:0;
+    animation:swim 4s ease-in-out infinite;
+  }
+  @keyframes swim{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-12px) rotate(5deg);}}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+
+  .app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+
+  /* ── HEADER ── */
+  .header{text-align:center;padding:28px 0 16px;}
+  .header-icon{font-size:56px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite;}
+  .header h1{font-family:'Fredoka One',cursive;font-size:28px;color:var(--teal-dark);letter-spacing:.5px;}
+  .header p{font-size:14px;color:var(--text-soft);margin-top:4px;}
+
+  /* ── CARD ── */
+  .card{
+    background:rgba(255,255,255,.95);
+    border-radius:24px;padding:28px 24px;
+    box-shadow:0 6px 32px var(--shadow),0 1px 4px rgba(0,0,0,.06);
+    margin-bottom:20px;
+    border:2px solid rgba(77,184,184,.18);
+  }
+
+  /* ── WELCOME ── */
+  #screen-welcome .welcome-icon{font-size:72px;text-align:center;display:block;margin-bottom:10px;}
+  #screen-welcome h2{font-family:'Fredoka One',cursive;font-size:24px;color:var(--teal-dark);text-align:center;margin-bottom:8px;}
+  #screen-welcome p{text-align:center;color:var(--text-soft);font-size:15px;line-height:1.6;margin-bottom:20px;}
+  .name-input-wrapper{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .name-input-wrapper label{font-weight:700;font-size:15px;color:var(--text);}
+  .name-input-wrapper input{border:2px solid var(--teal);border-radius:14px;padding:12px 16px;
+    font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;
+    transition:border .2s;background:var(--teal-light);}
+  .name-input-wrapper input:focus{border-color:var(--teal-dark);}
+  .info-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+  .chip{background:var(--brown-light);border:1.5px solid var(--brown);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--brown-dark);font-weight:700;}
+
+  /* ── BUTTONS ── */
+  .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;
+    font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;
+    transition:all .18s;text-align:center;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(46,138,138,.35);}
+  .btn-primary:hover{box-shadow:0 6px 24px rgba(46,138,138,.5);transform:translateY(-1px);}
+  .btn-check{background:linear-gradient(135deg,var(--fish),var(--fish-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(91,155,213,.3);margin-top:16px;}
+  .btn-next{background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(46,138,138,.35);margin-top:12px;display:none;}
+  .btn-retry{background:linear-gradient(135deg,var(--brown),var(--brown-dark));
+    color:var(--white);box-shadow:0 4px 12px rgba(139,94,60,.3);margin-top:12px;display:none;}
+
+  /* ── SECTION NAV ── */
+  .section-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .section-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:2px solid;cursor:default;transition:all .2s;}
+  .section-pill.locked{background:#e8f2f2;border-color:#bcdede;color:#7aaabb;}
+  .section-pill.active{background:var(--teal-dark);border-color:var(--teal-dark);color:white;}
+  .section-pill.done{background:var(--fish-light);border-color:var(--fish-dark);color:var(--fish-dark);}
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap{background:rgba(77,184,184,.2);border-radius:10px;height:8px;margin-bottom:20px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:10px;
+    background:linear-gradient(90deg,var(--teal),var(--fish));transition:width .4s ease;}
+
+  /* ── SECTION HEADER ── */
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;
+    padding-bottom:16px;border-bottom:2px dashed rgba(77,184,184,.3);}
+  .section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+    justify-content:center;font-size:24px;flex-shrink:0;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--teal-dark);}
+  .section-header p{font-size:13px;color:var(--text-soft);margin-top:2px;}
+
+  /* ── QUESTIONS ── */
+  .question-block{margin-bottom:24px;}
+  .question-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5;}
+  .q-num{display:inline-block;background:var(--teal-light);color:var(--teal-dark);
+    font-family:'Fredoka One',cursive;width:28px;height:28px;border-radius:50%;
+    text-align:center;line-height:28px;font-size:14px;margin-right:8px;
+    flex-shrink:0;border:1.5px solid var(--teal);}
+
+  /* ── MCQ ── */
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;
+    border:2px solid var(--fish-light);background:var(--fish-light);cursor:pointer;
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);
+    transition:all .15s;text-align:left;}
+  .option-btn:hover:not(:disabled){border-color:var(--fish-dark);background:white;transform:translateX(3px);}
+  .option-btn.selected{border-color:var(--fish-dark);background:white;}
+  .option-btn.correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+  .option-btn.wrong{border-color:var(--brown-dark);background:var(--brown-light);color:#5c3a1e;}
+  .option-btn.reveal-correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+  .option-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:800;
+    background:rgba(91,155,213,.2);color:var(--fish-dark);flex-shrink:0;}
+  .option-btn.correct .option-badge{background:var(--teal-dark);color:white;}
+  .option-btn.wrong .option-badge{background:var(--brown-dark);color:white;}
+  .option-btn.reveal-correct .option-badge{background:var(--teal-dark);color:white;}
+
+  /* ── EXPLANATION ── */
+  .explanation{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;
+    background:var(--coffee);border:1.5px solid var(--coffee-dark);
+    font-size:13px;line-height:1.7;color:#5a3c00;}
+  .explanation.show{display:block;}
+  .ex-tag{display:inline-block;background:var(--brown);color:white;font-size:10px;
+    font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:6px;
+    margin-right:6px;vertical-align:middle;}
+
+  /* ── TF ── */
+  .tf-options{display:flex;gap:10px;}
+  .tf-btn{flex:1;padding:12px;border-radius:14px;border:2px solid var(--fish-light);
+    background:var(--fish-light);cursor:pointer;font-family:'Nunito',sans-serif;
+    font-size:15px;font-weight:700;color:var(--text);transition:all .15s;text-align:center;}
+  .tf-btn:hover:not(:disabled){border-color:var(--fish-dark);background:white;}
+  .tf-btn.selected{border-color:var(--fish-dark);background:white;}
+  .tf-btn.correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+  .tf-btn.wrong{border-color:var(--brown-dark);background:var(--brown-light);color:#5c3a1e;}
+  .tf-btn.reveal-correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+
+  /* ── FIB STICKY WORDBANK ── */
+  .fib-section-wrap{display:flex;gap:16px;align-items:flex-start;}
+  .fib-questions{flex:1;min-width:0;}
+  .wordbank-sticky{width:155px;flex-shrink:0;position:sticky;top:16px;
+    background:var(--white);border-radius:16px;border:2px dashed var(--teal);
+    padding:12px;box-shadow:0 4px 16px var(--shadow);}
+  .wordbank-sticky .wordbank-label{font-size:11px;font-weight:800;color:var(--teal-dark);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
+  .wordbank-sticky .wordbank-item{display:block;padding:5px 8px;background:var(--teal-light);
+    border-radius:10px;font-size:12px;font-weight:700;color:var(--teal-dark);
+    border:1.5px solid var(--teal);margin-bottom:6px;text-align:center;cursor:default;}
+  .wordbank-sticky .wordbank-item.used{opacity:.4;text-decoration:line-through;}
+  @media(max-width:600px){
+    .fib-section-wrap{flex-direction:column;}
+    .wordbank-sticky{width:100%;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;}
+    .wordbank-sticky .wordbank-item{display:inline-block;margin-bottom:0;}
+    .wordbank-sticky .wordbank-label{width:100%;}
+  }
+  .fib-input{border:2px solid var(--teal);border-radius:12px;padding:10px 14px;
+    font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;
+    width:100%;margin-top:8px;background:var(--teal-light);transition:all .15s;}
+  .fib-input:focus{border-color:var(--teal-dark);background:white;}
+  .fib-input.correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+  .fib-input.wrong{border-color:var(--brown-dark);background:var(--brown-light);color:#5c3a1e;}
+
+  /* ── MATCHING ── */
+  .match-select{width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--teal);
+    background:var(--teal-light);font-family:'Nunito',sans-serif;font-size:14px;
+    color:var(--text);outline:none;cursor:pointer;}
+  .match-select.correct{border-color:var(--teal-dark);background:var(--teal-light);color:#1a5050;}
+  .match-select.wrong{border-color:var(--brown-dark);background:var(--brown-light);color:#5c3a1e;}
+  .match-item{padding:10px 14px;border-radius:12px;border:2px solid var(--fish-light);
+    background:var(--fish-light);font-size:14px;font-weight:600;min-height:44px;
+    display:flex;align-items:center;}
+
+  /* ── FEEDBACK ── */
+  .feedback-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:16px;
+    font-size:14px;font-weight:700;line-height:1.6;}
+  .feedback-banner.pass{background:var(--teal-light);border:2px solid var(--teal-dark);color:#1a5050;}
+  .feedback-banner.fail{background:var(--brown-light);border:2px solid var(--brown-dark);color:#5c3a1e;}
+  .feedback-banner.show{display:block;}
+
+  /* ── RESULT ── */
+  #screen-result{text-align:center;}
+  .result-big-emoji{font-size:80px;display:block;margin-bottom:8px;animation:float 2.5s ease-in-out infinite;}
+  .result-funny-msg{font-family:'Fredoka One',cursive;font-size:24px;margin-bottom:6px;color:var(--teal-dark);}
+  .result-sub-msg{font-size:14px;color:var(--text-soft);margin-bottom:16px;line-height:1.7;padding:0 12px;}
+  #screen-result h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);margin-bottom:4px;}
+  .result-name{color:var(--teal-dark);}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+  .stat-card{background:var(--teal-light);border-radius:16px;padding:16px;border:1.5px solid var(--teal);}
+  .stat-label{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+  .stat-value{font-family:'Fredoka One',cursive;font-size:28px;color:var(--teal-dark);margin-top:4px;}
+  .stat-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+
+  /* ── OTTER DIVIDER ── */
+  .otter-divider{display:flex;align-items:center;gap:8px;margin:20px 0;}
+  .otter-divider::before,.otter-divider::after{content:'';flex:1;height:1px;background:rgba(77,184,184,.25);}
+
+  .hidden{display:none !important;}
+  @media(max-width:500px){.stat-grid{grid-template-columns:1fr 1fr;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <span class="header-icon">⚗️</span>
+    <h1>Science Chapter 3</h1>
+    <p>Metals &amp; Reactivity &nbsp;|&nbsp; Ruby School</p>
+  </div>
+
+  <!-- Welcome -->
+  <div id="screen-welcome" class="card">
+    <span class="welcome-icon">🦦</span>
+    <h2>Hello, young scientist!</h2>
+    <p>The otter is ready to study with you! 🐟<br>Let's tackle Chapter 3 on Metals &amp; Reactivity!</p>
+    <div class="name-input-wrapper">
+      <label>Your name</label>
+      <input type="text" id="student-name" placeholder="e.g. Nguyen Van An" maxlength="50"/>
+    </div>
+    <div class="info-chips">
+      <span class="chip">🦦 5 sections</span>
+      <span class="chip">⚗️ 45 questions</span>
+      <span class="chip">🎯 2 attempts per section</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start revision 🚀</button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="screen-quiz" class="hidden">
+    <div class="section-nav" id="section-nav"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div id="section-content"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" class="card hidden">
+    <span class="result-big-emoji" id="result-big-emoji">🎉</span>
+    <div class="result-funny-msg" id="result-funny-msg"></div>
+    <div class="result-sub-msg" id="result-sub-msg"></div>
+    <h2>Results for <span class="result-name" id="result-name-display"></span></h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Correct answers</div><div class="stat-value" id="res-correct"></div><div class="stat-sub">out of total</div></div>
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="res-percent"></div><div class="stat-sub">first attempt</div></div>
+      <div class="stat-card"><div class="stat-label">Time taken</div><div class="stat-value" id="res-time"></div><div class="stat-sub">minutes</div></div>
+      <div class="stat-card"><div class="stat-label">Grade</div><div class="stat-value" id="res-grade"></div><div class="stat-sub">overall result</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try again 🔄</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════ DATA ═══════════════ */
+const SECTIONS=[
+  {id:'mcq',label:'I. Multiple Choice',icon:'📝',bg:'#e8f7f5'},
+  {id:'tf', label:'II. True / False',  icon:'✅',bg:'#ddeeff'},
+  {id:'fib',label:'III. Fill in Blank', icon:'✏️',bg:'#f5e6d8'},
+  {id:'sa', label:'IV. Short Answer',  icon:'💬',bg:'#e8f7f5'},
+  {id:'mat',label:'V. Matching',       icon:'🔗',bg:'#ddeeff'},
+];
+
+const MCQ=[
+  {q:'What is formed when a metal reacts with oxygen?',
+   opts:['Metal hydroxide','Metal oxide','Salt','Hydrogen gas'],ans:1,
+   ex:'Khi kim loại phản ứng với oxy, tạo ra metal oxide (oxit kim loại). Ví dụ: Magnesium + Oxygen → Magnesium oxide (MgO). Đây là phản ứng oxy hóa (oxidation).'},
+  {q:'Which of these metals reacts most vigorously with water?',
+   opts:['Magnesium','Iron','Sodium','Copper'],ans:2,
+   ex:'Sodium (natri) phản ứng mạnh nhất với nước trong các kim loại kể trên. Sodium thuộc Group 1 - nhóm kim loại kiềm phản ứng mạnh với nước: Na + H₂O → NaOH + H₂↑ (có thể bốc cháy).'},
+  {q:'What gas is produced when a metal reacts with water?',
+   opts:['Oxygen','Hydrogen','Carbon dioxide','Nitrogen'],ans:1,
+   ex:'Khi kim loại phản ứng với nước, tạo ra khí hydrogen (H₂). Metal + Water → Metal hydroxide + Hydrogen. Hydrogen là khí dễ cháy, khi đưa que diêm đang cháy vào → nghe tiếng "pop".'},
+  {q:'Why must Group 1 metals be stored under oil?',
+   opts:['They melt quickly','They evaporate','They react easily with air and water','They turn into gas'],ans:2,
+   ex:'Kim loại nhóm 1 (Group 1) phải bảo quản trong dầu vì chúng phản ứng rất mạnh với không khí (oxygen) và nước. Tiếp xúc không khí → bị oxy hóa ngay; tiếp xúc nước → phản ứng mạnh, có thể bốc cháy.'},
+  {q:'What happens when magnesium is heated in steam?',
+   opts:['It produces salt','It explodes','It produces hydrogen gas and magnesium oxide','Nothing happens'],ans:2,
+   ex:'Khi magnesium được đun nóng trong hơi nước (steam): Mg + H₂O → MgO + H₂. Tạo ra magnesium oxide (rắn trắng) và hydrogen (khí). Phản ứng này xảy ra mạnh hơn trong nước lạnh.'},
+  {q:'What type of reaction occurs when a metal reacts with dilute acid?',
+   opts:['Neutralization','Displacement','Oxidation','Acid-metal reaction'],ans:3,
+   ex:'Khi kim loại phản ứng với acid loãng (dilute acid), đây là phản ứng acid-metal (kim loại-acid). Sản phẩm: muối (salt) + hydrogen (H₂). Ví dụ: Mg + 2HCl → MgCl₂ + H₂↑'},
+  {q:'What is the name of the salt produced when magnesium reacts with hydrochloric acid?',
+   opts:['Magnesium sulfate','Magnesium chloride','Sodium chloride','Calcium chloride'],ans:1,
+   ex:'Mg + 2HCl → MgCl₂ + H₂. Sản phẩm muối là magnesium chloride (MgCl₂). Quy tắc: tên muối = tên kim loại + gốc acid (HCl → chloride, H₂SO₄ → sulfate, HNO₃ → nitrate).'},
+  {q:'Which property of sodium is NOT typical of most metals?',
+   opts:['It is a good conductor','It is hard','It is soft enough to cut','It is shiny'],ans:2,
+   ex:'Sodium có thể cắt bằng dao (soft enough to cut) - đây là tính chất KHÔNG điển hình của kim loại. Hầu hết kim loại cứng và bền. Sodium mềm vì thuộc nhóm kim loại kiềm (Group 1) có liên kết kim loại yếu.'},
+  {q:'Which of the following is a sign of a chemical reaction during metal experiments?',
+   opts:['Melting','Rusting','Bubble formation','Dissolving'],ans:2,
+   ex:'Bubble formation (bọt khí) là dấu hiệu phản ứng hóa học. Bọt khí = H₂ đang được tạo ra. Melting là thay đổi vật lý. Rusting là oxy hóa chậm. Dissolving có thể là thay đổi vật lý.'},
+  {q:'What is the general word equation for a metal reacting with water?',
+   opts:['metal + water → metal oxide + hydrogen','metal + water → salt + oxygen','metal + water → metal hydroxide + hydrogen','metal + water → acid + salt'],ans:2,
+   ex:'Metal + Water → Metal hydroxide + Hydrogen. Ví dụ: 2Na + 2H₂O → 2NaOH + H₂↑. Metal hydroxide là base (kiềm). Chỉ các kim loại hoạt động mạnh mới phản ứng với nước ở nhiệt độ thường.'},
+];
+
+const TF=[
+  {q:'All metals react the same way with oxygen.',ans:false,
+   ex:'SAI. Các kim loại phản ứng với oxy ở mức độ KHÁC NHAU. Potassium phản ứng ngay khi tiếp xúc, magnesium cháy sáng, iron gỉ chậm, copper chỉ tạo lớp patina xanh, gold không phản ứng. Mức độ phụ thuộc vào reactivity series.'},
+  {q:'Potassium reacts more strongly with water than magnesium.',ans:true,
+   ex:'ĐÚNG. Potassium (K) hoạt động mạnh hơn magnesium (Mg) nhiều. K phản ứng ngay với nước lạnh, tạo lửa màu tím. Mg chỉ phản ứng chậm với nước lạnh nhưng mạnh hơn với steam.'},
+  {q:'Hydrogen gas is flammable and can explode when ignited.',ans:true,
+   ex:'ĐÚNG. Hydrogen (H₂) là khí dễ cháy (flammable) và có thể gây nổ khi trộn với không khí + lửa. Phản ứng: 2H₂ + O₂ → 2H₂O. Test H₂: đưa que diêm đang cháy → nghe "squeaky pop".'},
+  {q:'Copper reacts quickly with cold water.',ans:false,
+   ex:'SAI. Copper (đồng) không phản ứng với nước lạnh, thậm chí không phản ứng với nước nóng hay steam. Copper nằm thấp trong reactivity series → hoạt động yếu. Chỉ phản ứng với acid mạnh đặc.'},
+  {q:'Metals can form salts when they react with acids.',ans:true,
+   ex:'ĐÚNG. Phản ứng kim loại + acid → muối + hydrogen. Ví dụ: Fe + H₂SO₄ → FeSO₄ + H₂↑. Tên muối phụ thuộc vào kim loại và acid dùng.'},
+  {q:'Magnesium burns with a bright white flame in air.',ans:true,
+   ex:'ĐÚNG. Magnesium cháy với ngọn lửa trắng sáng rực rỡ khi đốt trong không khí: 2Mg + O₂ → 2MgO. Ánh sáng rất mạnh - không nên nhìn trực tiếp! Tạo ra bột trắng magnesium oxide.'},
+  {q:'Metals at the bottom of Group 1 are more reactive than those at the top.',ans:true,
+   ex:'ĐÚNG. Trong Group 1, reactivity tăng dần từ trên xuống dưới: Li < Na < K < Rb < Cs. Lý do: càng xuống dưới, electron ngoài cùng càng xa hạt nhân → dễ mất hơn → hoạt động mạnh hơn.'},
+  {q:'Iron reacts faster with oxygen than magnesium.',ans:false,
+   ex:'SAI. Magnesium phản ứng với oxy NHANH HƠN iron. Magnesium cháy sáng khi đốt. Iron chỉ gỉ sét chậm (rusting) trong không khí ẩm. Magnesium cao hơn iron trong reactivity series.'},
+  {q:'The reaction between metal and water always produces oxygen gas.',ans:false,
+   ex:'SAI. Phản ứng kim loại + nước tạo ra HYDROGEN (H₂), không phải oxygen. Metal + H₂O → Metal hydroxide + H₂↑. Oxygen không được tạo ra trong phản ứng này.'},
+  {q:'Group 1 metals must be handled with care due to their reactivity.',ans:true,
+   ex:'ĐÚNG. Kim loại nhóm 1 (Li, Na, K...) rất hoạt động, phải xử lý cẩn thận: bảo quản trong dầu, dùng kẹp kim loại, đeo kính bảo hộ. Tiếp xúc nước có thể gây cháy nổ.'},
+];
+
+// Word bank shuffled
+const FIB_WORDS=['bubbles','steam','magnesium','salt','sodium','group','dilute acid','metal oxide','hydrogen','reactivity'];
+const FIB=[
+  {q:'When a metal reacts with oxygen, it forms _____.',ans:'metal oxide',
+   ex:'Metal oxide (oxit kim loại) = sản phẩm của kim loại + oxy. Ví dụ: MgO, Fe₂O₃, CuO. Tên gọi: tên kim loại + "oxide".'},
+  {q:'The gas produced when a metal reacts with water is _____.',ans:'hydrogen',
+   ex:'Hydrogen (H₂) được tạo ra khi kim loại phản ứng với nước. H₂ là khí không màu, nhẹ hơn không khí và dễ cháy. Test: "squeaky pop" với que diêm đang cháy.'},
+  {q:'_____ burns with a bright white flame when heated in air.',ans:'magnesium',
+   ex:'Magnesium (Mg) cháy với ngọn lửa trắng sáng rực, tạo ra MgO (bột trắng). Ánh sáng quá mạnh - không nhìn trực tiếp! Dùng trong pháo hoa và đèn flash cũ.'},
+  {q:'Potassium belongs to the most reactive _____ of metals.',ans:'group',
+   ex:'Group 1 là nhóm kim loại phản ứng mạnh nhất (most reactive group). Gồm: Li, Na, K, Rb, Cs. Reactivity tăng dần từ Li đến Cs theo chiều từ trên xuống.'},
+  {q:'The _____ of a metal tells how strongly it reacts.',ans:'reactivity',
+   ex:'Reactivity (độ hoạt động hóa học) cho biết kim loại phản ứng mạnh hay yếu. Reactivity series xếp kim loại từ hoạt động mạnh nhất (K, Na) đến yếu nhất (Au, Pt).'},
+  {q:'The fizzing seen during reactions is due to _____ of gas.',ans:'bubbles',
+   ex:'Bubbles (bọt khí) = dấu hiệu có khí H₂ đang được tạo ra trong phản ứng. Fizzing mạnh = phản ứng xảy ra nhanh = kim loại hoạt động mạnh hơn.'},
+  {q:'Metals react with _____ to form salts and hydrogen gas.',ans:'dilute acid',
+   ex:'Dilute acid (acid loãng) + kim loại → muối + H₂. Ví dụ: Mg + 2HCl(loãng) → MgCl₂ + H₂↑. Chú ý: dùng acid LOÃNG, acid đặc có thể gây phản ứng nguy hiểm khác.'},
+  {q:'_____ reacts with steam to produce magnesium oxide and hydrogen.',ans:'magnesium',
+   ex:'Mg + H₂O(steam) → MgO + H₂. Magnesium phản ứng với steam (hơi nước) nhưng phản ứng rất chậm với nước lạnh. Cần đun nóng để phản ứng xảy ra.'},
+  {q:'A _____ is formed when metal reacts with an acid.',ans:'salt',
+   ex:'Salt (muối) = sản phẩm của phản ứng kim loại + acid. Tên muối = tên kim loại + gốc acid. Ví dụ: MgCl₂ (magnesium chloride), ZnSO₄ (zinc sulfate).'},
+  {q:'_____ is a soft metal that reacts strongly with water.',ans:'sodium',
+   ex:'Sodium (Na) mềm đến mức cắt được bằng dao và phản ứng mạnh với nước: 2Na + 2H₂O → 2NaOH + H₂↑. Phản ứng tỏa nhiệt, có thể đốt cháy H₂ tạo ra lửa màu vàng-cam.'},
+];
+
+const SA=[
+  {q:'What are the signs that a metal is reacting with water?',
+   acceptedPhrases:['bubbles','fizzing','hydrogen','heat','movement','hissing','temperature','gas produced'],
+   ex:'Đáp án gợi ý: "Bubbles (fizzing) of hydrogen gas are produced; heat is released; the metal may move around on the surface." Dấu hiệu: bọt khí H₂, tỏa nhiệt, kim loại chuyển động trên mặt nước.'},
+  {q:'Why is it important to wear safety goggles during metal-acid experiments?',
+   acceptedPhrases:['acid','splash','eyes','corrosive','harmful','protect','dangerous','liquid'],
+   ex:'Đáp án gợi ý: "Acid can splash and harm your eyes; it is corrosive and can cause serious injury." Acid ăn mòn (corrosive) - giọt acid bắn vào mắt rất nguy hiểm. Kính bảo hộ là thiết bị bắt buộc trong phòng thí nghiệm.'},
+  {q:'Describe what happens when sodium is added to water.',
+   acceptedPhrases:['fizzes','moves','floats','hydrogen','dissolves','hydroxide','heat','melts','burns','vigorous'],
+   ex:'Đáp án gợi ý: "Sodium fizzes vigorously, moves across the surface, melts into a ball, produces hydrogen gas (which may ignite), and dissolves to form sodium hydroxide." 2Na + 2H₂O → 2NaOH + H₂↑'},
+  {q:'What precautions are taken when heating reactive metals?',
+   acceptedPhrases:['goggles','safety','distance','fume','ventilation','tongs','heat proof','care','careful','protect'],
+   ex:'Đáp án gợi ý: "Wear safety goggles, use tongs, ensure ventilation/fume cupboard, keep distance, use heat-proof mat." Reactive metals tạo ra khí độc hoặc ánh sáng mạnh khi đốt → cần biện pháp an toàn.'},
+  {q:'Explain why potassium is more reactive than calcium.',
+   acceptedPhrases:['reactivity series','higher','outer electron','further','easier to lose','group 1','above','more reactive'],
+   ex:'Đáp án gợi ý: "Potassium is higher in the reactivity series; its outer electron is further from the nucleus and easier to lose, making it more reactive." K > Ca > Mg trong reactivity series.'},
+  {q:'What is the difference between the reaction of magnesium with cold water and with steam?',
+   acceptedPhrases:['slow','fast','cold water slow','steam faster','vigorous','rate','speed','reacts slowly','reacts quickly'],
+   ex:'Đáp án gợi ý: "Magnesium reacts very slowly with cold water but reacts more vigorously with steam, producing magnesium oxide and hydrogen." Nước lạnh → chậm; steam → nhanh và mạnh hơn.'},
+  {q:'Why do we clean the metal surface before testing its reaction?',
+   acceptedPhrases:['oxide','layer','coating','accurate','fair test','remove','clean','rust','tarnish'],
+   ex:'Đáp án gợi ý: "To remove the oxide layer/coating so the reaction is accurate and a fair test." Bề mặt kim loại thường có lớp oxide → làm chậm phản ứng → cần làm sạch để kết quả chính xác.'},
+  {q:'What is produced when a metal reacts with hydrochloric acid?',
+   acceptedPhrases:['salt','chloride','hydrogen','metal chloride','hcl'],
+   ex:'Đáp án gợi ý: "A metal chloride (salt) and hydrogen gas are produced." Metal + HCl → Metal chloride + H₂. Ví dụ: Mg + 2HCl → MgCl₂ + H₂↑'},
+  {q:'How can you test for hydrogen gas in a lab?',
+   acceptedPhrases:['burning splint','lighted splint','squeaky pop','pop sound','lit match','flame'],
+   ex:'Đáp án gợi ý: "Hold a burning (lighted) splint near the gas — hydrogen makes a squeaky pop sound." Que diêm đang cháy gần H₂ → nghe tiếng "pop" đặc trưng. Đây là test chuẩn cho H₂.'},
+  {q:"What does the term 'reactivity series' mean?",
+   acceptedPhrases:['order','ranking','list','rank','arranged','how reactive','strongly react','most reactive','least reactive'],
+   ex:'Đáp án gợi ý: "A list that ranks metals in order of how strongly they react — from most reactive to least reactive." Reactivity series giúp dự đoán phản ứng giữa kim loại với acid, nước, oxygen.'},
+];
+
+// Column A: A–J (10 items), Column B: 10 descriptions
+// A=Metal hydroxide→0, B=Magnesium→3, C=Group1metals→1, D=Reactivity series→6, E=Bubbles→5, F=Hydrogen→2, G=Acid→8, H=Salt→9, I=Explosion→7, J=Safety goggles→4
+const MAT_LEFT=['Metal hydroxide','Magnesium','Group 1 metals','Reactivity series','Bubbles','Hydrogen','Acid','Salt','Explosion','Safety goggles'];
+const MAT_RIGHT=[
+  'Forms when metal reacts with water',               // 0 → Metal hydroxide
+  'Soft metals that react strongly with water',        // 1 → Group 1 metals
+  'Gas produced in many metal reactions',              // 2 → Hydrogen
+  'Metal that burns with white flame in air',          // 3 → Magnesium
+  'Protects eyes during experiments',                  // 4 → Safety goggles
+  'Evidence of gas release',                           // 5 → Bubbles
+  'A list ranking metals by how strongly they react',  // 6 → Reactivity series
+  'Reaction result when too much heat or gas is made quickly', // 7 → Explosion
+  'Substance that reacts with metals to form salts',   // 8 → Acid
+  'Solid formed from metal + acid reaction',           // 9 → Salt
+];
+const MAT_ANS=[0,3,1,6,5,2,8,9,7,4];
+
+/* Funny result messages - otter themed */
+const RESULT_MSGS=[
+  {min:95,emoji:'🦦🏆🐟',funny:'OTTER-LY AMAZING!',sub:'You\'re the most reactive student in the class! The otter is shook! ⚗️🎊'},
+  {min:85,emoji:'🌟🦦☕',funny:'HOT STUFF!',sub:'Like sodium in water — you\'re on fire! Great work! 🔥'},
+  {min:75,emoji:'😎🐟',funny:'PRETTY REACTIVE!',sub:'High up in the reactivity series! A bit more revision and you\'ll be unstoppable. 💪'},
+  {min:65,emoji:'🙂☕',funny:'SIMMERING NICELY!',sub:'Like magnesium in steam — needs a bit more heat! Keep going! 📖'},
+  {min:50,emoji:'😅🦦',funny:'HALF-WAY UP THE SERIES!',sub:'You\'re like copper — not the most reactive, but there\'s potential! Read those explanations! 📝'},
+  {min:35,emoji:'😬🐟',funny:'STILL IN COLD WATER...',sub:'Even iron rusts eventually! Keep revising and you\'ll react! 🔄'},
+  {min:0, emoji:'😿☕',funny:'LESS REACTIVE THAN GOLD...',sub:'Gold never reacts... but YOU can! Read the notes and try again! 🧪'},
+];
+
+/* ═══════════════ STATE ═══════════════ */
+let studentName='',startTime=0,currentSection=0;
+let sectionStatus=[0,0,0,0,0],firstAttemptScores={};
+let mcqState={},mcqChecked=false,mcqAttempts=0;
+let tfState={},tfChecked=false,tfAttempts=0;
+let fibChecked=false,fibCorrectMask={},fibAttempts=0;
+let saChecked=false,saCorrectMask={},saAttempts=0;
+let matState={},matChecked=false,matCorrectMask={},matAttempts=0;
+
+function gradeSA(val,phrases){
+  const n=s=>s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  const v=n(val);return phrases.some(p=>v.includes(n(p)));
+}
+function divider(){return`<div class="otter-divider">🦦</div>`;}
+function sHdr(s,note){return`<div class="card"><div class="section-header"><div class="section-icon" style="background:${s.bg}">${s.icon}</div><div><h2>${s.label}</h2><p>${note}</p></div></div>`;}
+
+/* ═══════════════ CORE ═══════════════ */
+function startQuiz(){
+  studentName=document.getElementById('student-name').value.trim();
+  if(!studentName){alert('Please enter your name first! 🦦');return;}
+  startTime=Date.now();
+  document.getElementById('screen-welcome').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  sectionStatus[0]=1;renderNav();renderSection(0);
+}
+function renderNav(){
+  document.getElementById('section-nav').innerHTML=SECTIONS.map((s,i)=>{
+    let cls=sectionStatus[i]===2?'done':sectionStatus[i]===1?'active':'locked';
+    return`<div class="section-pill ${cls}">${sectionStatus[i]===2?'✓ ':''}${s.label}</div>`;
+  }).join('');
+  const done=sectionStatus.filter(s=>s===2).length,active=sectionStatus.filter(s=>s===1).length;
+  document.getElementById('progress-bar').style.width=((done+active*.5)/SECTIONS.length*100)+'%';
+}
+function renderSection(idx){
+  currentSection=idx;const s=SECTIONS[idx],el=document.getElementById('section-content');
+  if(idx===0)renderMCQ(el,s);else if(idx===1)renderTF(el,s);
+  else if(idx===2)renderFIB(el,s);else if(idx===3)renderSA(el,s);else renderMAT(el,s);
+}
+
+/* ═══ MCQ ═══ */
+function renderMCQ(el,s){
+  mcqState={};mcqChecked=false;mcqAttempts=0;
+  el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 10 questions')+
+    MCQ.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="mcq-${i}-${j}" onclick="selMCQ(${i},${j})"><span class="option-badge">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+      <div class="explanation" id="mcq-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="mcq-fb"></div>
+    <button class="btn btn-check" onclick="chkMCQ()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mcq-retry" onclick="retMCQ()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mcq-next" onclick="goNext()">Next section &rarr; 🦦</button></div>`;
+}
+function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
+function chkMCQ(){
+  if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all questions! 😅');return;}
+  mcqChecked=true;mcqAttempts++;let correct=0;
+  MCQ.forEach((q,i)=>{
+    const ok=mcqState[i]===q.ans;if(ok)correct++;
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
+      b.className=j===mcqState[i]&&ok?'option-btn correct':j===mcqState[i]&&!ok?'option-btn wrong':j===q.ans&&!ok?'option-btn reveal-correct':'option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
+  const fb=document.getElementById('mcq-fb');fb.classList.add('show');
+  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${MCQ.length} — Otter-ly brilliant! 🦦`;document.getElementById('mcq-next').style.display='block';}
+  else if(mcqAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MCQ.length} correct after 2 attempts. Read the explanations and move on!`;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🔬 ${correct}/${MCQ.length} correct. Read the explanations and try again! (Attempt ${mcqAttempts}/2)`;document.getElementById('mcq-retry').style.display='block';}
+}
+function retMCQ(){
+  MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=false;b.className='option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.remove('show');});
+  mcqChecked=false;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-fb').classList.remove('show');
+}
+
+/* ═══ TF ═══ */
+function renderTF(el,s){
+  tfState={};tfChecked=false;tfAttempts=0;
+  el.innerHTML=sHdr(s,'Decide if each statement is True or False &mdash; 10 questions')+
+    TF.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="tf-options"><button class="tf-btn" id="tf-${i}-true" onclick="selTF(${i},true)">✓ True</button><button class="tf-btn" id="tf-${i}-false" onclick="selTF(${i},false)">✗ False</button></div>
+      <div class="explanation" id="tf-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="tf-fb"></div>
+    <button class="btn btn-check" onclick="chkTF()">Check answers ✅</button>
+    <button class="btn btn-retry" id="tf-retry" onclick="retTF()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="tf-next" onclick="goNext()">Next section &rarr; 🦦</button></div>`;
+}
+function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
+function chkTF(){
+  if(Object.keys(tfState).length<TF.length){alert('Please answer all questions! 😅');return;}
+  tfChecked=true;tfAttempts++;let correct=0;
+  TF.forEach((q,i)=>{
+    const ok=tfState[i]===q.ans;if(ok)correct++;
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
+      b.className=bval===tfState[i]&&ok?'tf-btn correct':bval===tfState[i]&&!ok?'tf-btn wrong':bval===q.ans&&!ok?'tf-btn reveal-correct':'tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:TF.length};
+  const fb=document.getElementById('tf-fb');fb.classList.add('show');
+  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${TF.length} — The otter is impressed! ☕🦦`;document.getElementById('tf-next').style.display='block';}
+  else if(tfAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${TF.length} correct after 2 attempts. Check the explanations and keep going!`;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🤔 ${correct}/${TF.length} correct. Read explanations and try again! (Attempt ${tfAttempts}/2)`;document.getElementById('tf-retry').style.display='block';}
+}
+function retTF(){
+  TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`);b.disabled=false;b.className='tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.remove('show');});
+  tfChecked=false;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-fb').classList.remove('show');
+}
+
+/* ═══ FIB ═══ */
+function renderFIB(el,s){
+  fibChecked=false;fibCorrectMask={};fibAttempts=0;
+  el.innerHTML=sHdr(s,'Fill in the blank using the word bank &mdash; 10 questions')+
+    `<div class="fib-section-wrap">
+      <div class="fib-questions">
+        ${FIB.map((q,i)=>`<div class="question-block">
+          <div class="question-text"><span class="q-num">${i+1}</span>${q.q.replace('_____','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')}</div>
+          <input class="fib-input" id="fib-in-${i}" placeholder="Type your answer..." oninput="updateWordbank()"/>
+          <div class="explanation" id="fib-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+        </div>${i<FIB.length-1?divider():''}`).join('')}
+        <div class="feedback-banner" id="fib-fb"></div>
+        <button class="btn btn-check" onclick="chkFIB()">Check answers ✅</button>
+        <button class="btn btn-retry" id="fib-retry" onclick="retFIB()">Redo incorrect 🔄</button>
+        <button class="btn btn-next" id="fib-next" onclick="goNext()">Next section &rarr; 🦦</button>
+      </div>
+      <div class="wordbank-sticky" id="wordbank-sticky">
+        <span class="wordbank-label">🦦 Word bank</span>
+        ${FIB_WORDS.map(w=>`<span class="wordbank-item" id="wb-${w.replace(/ /g,'-')}">${w}</span>`).join('')}
+      </div>
+    </div></div>`;
+}
+function updateWordbank(){
+  const used=new Set();
+  FIB.forEach((_,i)=>{const v=document.getElementById(`fib-in-${i}`);if(v&&!v.disabled){const t=v.value.trim().toLowerCase();if(t)used.add(t);}});
+  FIB_WORDS.forEach(w=>{const el=document.getElementById(`wb-${w.replace(/ /g,'-')}`);if(el)el.classList.toggle('used',used.has(w));});
+}
+function chkFIB(){
+  let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please fill in all blanks! ✏️');return;}
+  fibChecked=true;fibAttempts++;let correct=0;
+  FIB.forEach((q,i)=>{
+    const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
+    if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    if(!ok)inp.value+=`  →  Answer: ${q.ans}`;
+    document.getElementById(`fib-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:FIB.length};
+  const fb=document.getElementById('fib-fb');fb.classList.add('show');
+  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎊 Perfect! ${correct}/${FIB.length} — The otter is doing a happy dance! 🦦💃`;document.getElementById('fib-next').style.display='block';}
+  else if(fibAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${FIB.length} correct after 2 attempts. Check explanations and move on!`;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`✏️ ${correct}/${FIB.length} correct. Read explanations and retry the wrong ones! (Attempt ${fibAttempts}/2)`;document.getElementById('fib-retry').style.display='block';}
+}
+function retFIB(){
+  FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
+  fibChecked=false;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-fb').classList.remove('show');updateWordbank();
+}
+
+/* ═══ SA ═══ */
+function renderSA(el,s){
+  saChecked=false;saCorrectMask={};saAttempts=0;
+  el.innerHTML=sHdr(s,'Write a short answer in English &mdash; 10 questions')+
+    SA.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <input class="fib-input" id="sa-in-${i}" placeholder="Write your answer in English..."/>
+      <div class="explanation" id="sa-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="sa-fb"></div>
+    <button class="btn btn-check" onclick="chkSA()">Check answers ✅</button>
+    <button class="btn btn-retry" id="sa-retry" onclick="retSA()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="sa-next" onclick="goNext()">Next section &rarr; 🦦</button></div>`;
+}
+function chkSA(){
+  let all=true;SA.forEach((_,i)=>{if(!document.getElementById(`sa-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please answer all questions! 💬');return;}
+  saChecked=true;saAttempts++;let correct=0;
+  SA.forEach((q,i)=>{
+    const inp=document.getElementById(`sa-in-${i}`);
+    const ok=gradeSA(inp.value,q.acceptedPhrases);
+    if(ok){correct++;saCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    document.getElementById(`sa-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:SA.length};
+  const fb=document.getElementById('sa-fb');fb.classList.add('show');
+  if(correct===SA.length){fb.className='feedback-banner pass show';fb.innerHTML=`🌟 All correct! ${correct}/${SA.length} — The otter salutes you! 🦦🫡`;document.getElementById('sa-next').style.display='block';}
+  else if(saAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${SA.length} correct after 2 attempts. Your answer needs the key phrase. Move on!`;document.getElementById('sa-retry').style.display='none';document.getElementById('sa-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`💬 ${correct}/${SA.length} correct. Make sure your answer contains the key phrase. (Attempt ${saAttempts}/2)`;document.getElementById('sa-retry').style.display='block';}
+}
+function retSA(){
+  SA.forEach((q,i)=>{if(saCorrectMask[i])return;const inp=document.getElementById(`sa-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`sa-ex-${i}`).classList.remove('show');});
+  saChecked=false;document.getElementById('sa-retry').style.display='none';document.getElementById('sa-fb').classList.remove('show');
+}
+
+/* ═══ MATCHING ═══ */
+function renderMAT(el,s){
+  matState={};matChecked=false;matCorrectMask={};matAttempts=0;
+  const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+  el.innerHTML=sHdr(s,'Match Column A with Column B &mdash; 10 pairs')+
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
+      <tr><th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column A</th>
+          <th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column B</th></tr>
+      ${MAT_LEFT.map((l,i)=>`<tr>
+        <td style="padding:4px 8px;width:35%"><div class="match-item" id="mat-l-${i}">${l}</div></td>
+        <td style="padding:4px 8px"><select class="match-select" id="mat-s-${i}" onchange="selMAT(${i},this.value)"><option value="">-- Select --</option>${rOpts}</select></td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="feedback-banner" id="mat-fb"></div>
+    <button class="btn btn-check" onclick="chkMAT()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mat-retry" onclick="retMAT()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mat-next" onclick="showResult()">See my results 🦦</button></div>`;
+}
+function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
+function chkMAT(){
+  if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items! 🔗');return;}
+  matChecked=true;matAttempts++;let correct=0;
+  MAT_LEFT.forEach((_,i)=>{
+    const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
+    const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
+    sel.disabled=true;sel.className=ok?'match-select correct':'match-select wrong';
+    if(!ok)left.innerHTML+=` &rarr; <strong style="color:var(--teal-dark)">${MAT_RIGHT[MAT_ANS[i]]}</strong>`;
+  });
+  if(!firstAttemptScores[4])firstAttemptScores[4]={correct,total:MAT_LEFT.length};
+  const fb=document.getElementById('mat-fb');fb.classList.add('show');
+  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All ${correct}/${MAT_LEFT.length} pairs matched — The otter and fish are proud! 🦦🐟`;document.getElementById('mat-next').style.display='block';}
+  else if(matAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MAT_LEFT.length} correct after 2 attempts. Correct matches shown in teal. Move on!`;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🔗 ${correct}/${MAT_LEFT.length} correct. Correct match shown in teal. Try again! (Attempt ${matAttempts}/2)`;document.getElementById('mat-retry').style.display='block';}
+}
+function retMAT(){
+  MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';document.getElementById(`mat-l-${i}`).innerHTML=MAT_LEFT[i];});
+  matChecked=false;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-fb').classList.remove('show');
+}
+
+/* ═══ NAVIGATION ═══ */
+function goNext(){
+  sectionStatus[currentSection]=2;const next=currentSection+1;
+  if(next<SECTIONS.length){sectionStatus[next]=1;renderNav();renderSection(next);window.scrollTo({top:0,behavior:'smooth'});}
+  else showResult();
+}
+function showResult(){
+  sectionStatus[currentSection]=2;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  const elapsed=Math.round((Date.now()-startTime)/60000*10)/10;
+  let tc=0,tq=0;Object.values(firstAttemptScores).forEach(v=>{tc+=v.correct;tq+=v.total;});
+  const pct=tq>0?Math.round(tc/tq*100):0;
+  document.getElementById('result-name-display').textContent=studentName;
+  document.getElementById('res-correct').textContent=`${tc}/${tq}`;
+  document.getElementById('res-percent').textContent=`${pct}%`;
+  document.getElementById('res-time').textContent=elapsed;
+  const m=RESULT_MSGS.find(r=>pct>=r.min)||RESULT_MSGS[RESULT_MSGS.length-1];
+  document.getElementById('result-big-emoji').textContent=m.emoji;
+  document.getElementById('result-funny-msg').textContent=m.funny;
+  document.getElementById('result-sub-msg').textContent=m.sub;
+  let grade;if(pct>=90)grade='A';else if(pct>=70)grade='B';else if(pct>=50)grade='C';else grade='D';
+  document.getElementById('res-grade').textContent=grade;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartQuiz(){
+  mcqState={};tfState={};fibCorrectMask={};saCorrectMask={};matCorrectMask={};
+  mcqAttempts=0;tfAttempts=0;fibAttempts=0;saAttempts=0;matAttempts=0;
+  firstAttemptScores={};sectionStatus=[0,0,0,0,0];sectionStatus[0]=1;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-welcome').classList.remove('hidden');
+  document.getElementById('screen-quiz').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
