@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Chapter 9 - Revision</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  /* ── CHERRY WALLPAPER PALETTE ──
+     Background ivory : #f7f0e8
+     Cherry red       : #c8192a  /  light #fce8ea
+     Gingham blue     : #7ab8e8  /  light #e8f4fc
+     Stem brown-gold  : #8b6914  /  light #faf0d8
+     Text dark        : #3a1a1e
+  */
+  :root{
+    --ivory:#f7f0e8;
+    --cherry:#c8192a;--cherry-dark:#9e1020;--cherry-light:#fce8ea;
+    --blue:#7ab8e8;--blue-dark:#4a8ec4;--blue-light:#e8f4fc;
+    --gold:#8b6914;--gold-light:#faf0d8;--gold-mid:#d4a832;
+    --text:#3a1a1e;--text-soft:#7a5058;--white:#ffffff;
+    --shadow:rgba(200,25,42,0.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--ivory);
+    min-height:100vh;color:var(--text);overflow-x:hidden;
+  }
+
+  /* ── GINGHAM PATTERN background ── */
+  body::before{
+    content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
+    background-image:
+      repeating-linear-gradient(0deg,  rgba(122,184,232,.07) 0px,rgba(122,184,232,.07) 1px, transparent 1px,transparent 20px),
+      repeating-linear-gradient(90deg, rgba(122,184,232,.07) 0px,rgba(122,184,232,.07) 1px, transparent 1px,transparent 20px);
+  }
+
+  /* ── FLOATING CHERRIES decoration ── */
+  body::after{
+    content:'🍒';position:fixed;bottom:24px;right:24px;font-size:48px;
+    opacity:.18;pointer-events:none;z-index:0;animation:float 4s ease-in-out infinite;
+  }
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-10px) rotate(5deg);}}
+
+  .app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+
+  /* ── HEADER ── */
+  .header{text-align:center;padding:28px 0 16px;}
+  .header-icon{font-size:56px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite;}
+  .header h1{font-family:'Fredoka One',cursive;font-size:28px;color:var(--cherry-dark);letter-spacing:.5px;}
+  .header p{font-size:14px;color:var(--text-soft);margin-top:4px;}
+
+  /* ── CARD ── */
+  .card{background:var(--white);border-radius:24px;padding:28px 24px;
+    box-shadow:0 6px 32px var(--shadow),0 1px 4px rgba(0,0,0,.06);
+    margin-bottom:20px;border:2px solid rgba(200,25,42,.12);}
+
+  /* ── WELCOME ── */
+  #screen-welcome .welcome-icon{font-size:72px;text-align:center;display:block;margin-bottom:10px;}
+  #screen-welcome h2{font-family:'Fredoka One',cursive;font-size:24px;color:var(--cherry-dark);text-align:center;margin-bottom:8px;}
+  #screen-welcome p{text-align:center;color:var(--text-soft);font-size:15px;line-height:1.6;margin-bottom:20px;}
+  .name-input-wrapper{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .name-input-wrapper label{font-weight:700;font-size:15px;color:var(--text);}
+  .name-input-wrapper input{border:2px solid var(--blue);border-radius:14px;padding:12px 16px;
+    font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;
+    transition:border .2s;background:var(--blue-light);}
+  .name-input-wrapper input:focus{border-color:var(--blue-dark);}
+  .info-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+  .chip{background:var(--gold-light);border:1.5px solid var(--gold-mid);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--gold);font-weight:700;}
+
+  /* ── BUTTONS ── */
+  .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;
+    font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;
+    transition:all .18s;text-align:center;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--cherry),var(--cherry-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(200,25,42,.3);}
+  .btn-primary:hover{box-shadow:0 6px 24px rgba(200,25,42,.45);transform:translateY(-1px);}
+  .btn-check{background:linear-gradient(135deg,var(--blue),var(--blue-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(74,142,196,.3);margin-top:16px;}
+  .btn-next{background:linear-gradient(135deg,var(--cherry),var(--cherry-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(200,25,42,.3);margin-top:12px;display:none;}
+  .btn-retry{background:linear-gradient(135deg,#e07a30,#b85a18);
+    color:var(--white);box-shadow:0 4px 12px rgba(184,90,24,.3);margin-top:12px;display:none;}
+
+  /* ── SECTION NAV ── */
+  .section-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .section-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:2px solid;cursor:default;transition:all .2s;}
+  .section-pill.locked{background:#f0e8ec;border-color:#e0ccd2;color:#c0a0a8;}
+  .section-pill.active{background:var(--cherry);border-color:var(--cherry);color:white;}
+  .section-pill.done{background:var(--blue-light);border-color:var(--blue-dark);color:var(--blue-dark);}
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap{background:#f0e0e4;border-radius:10px;height:8px;margin-bottom:20px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:10px;
+    background:linear-gradient(90deg,var(--cherry),var(--blue));transition:width .4s ease;}
+
+  /* ── SECTION HEADER ── */
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;
+    padding-bottom:16px;border-bottom:2px dashed rgba(200,25,42,.2);}
+  .section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;
+    justify-content:center;font-size:24px;flex-shrink:0;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--cherry-dark);}
+  .section-header p{font-size:13px;color:var(--text-soft);margin-top:2px;}
+
+  /* ── QUESTIONS ── */
+  .question-block{margin-bottom:24px;}
+  .question-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5;}
+  .q-num{display:inline-block;background:var(--cherry-light);color:var(--cherry-dark);
+    font-family:'Fredoka One',cursive;width:28px;height:28px;border-radius:50%;
+    text-align:center;line-height:28px;font-size:14px;margin-right:8px;
+    flex-shrink:0;border:1.5px solid var(--cherry);}
+
+  /* ── MCQ ── */
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;
+    border:2px solid var(--blue-light);background:var(--blue-light);cursor:pointer;
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);
+    transition:all .15s;text-align:left;}
+  .option-btn:hover:not(:disabled){border-color:var(--blue-dark);background:white;transform:translateX(3px);}
+  .option-btn.selected{border-color:var(--blue-dark);background:white;}
+  .option-btn.correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+  .option-btn.wrong{border-color:var(--cherry-dark);background:var(--cherry-light);color:#7a0a14;}
+  .option-btn.reveal-correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+  .option-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:800;
+    background:rgba(122,184,232,.2);color:var(--blue-dark);flex-shrink:0;}
+  .option-btn.correct .option-badge{background:var(--blue-dark);color:white;}
+  .option-btn.wrong .option-badge{background:var(--cherry-dark);color:white;}
+  .option-btn.reveal-correct .option-badge{background:var(--blue-dark);color:white;}
+
+  /* ── EXPLANATION ── */
+  .explanation{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;
+    background:var(--gold-light);border:1.5px solid var(--gold-mid);
+    font-size:13px;line-height:1.7;color:#5a3c00;}
+  .explanation.show{display:block;}
+  .ex-tag{display:inline-block;background:var(--gold);color:white;font-size:10px;
+    font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:6px;
+    margin-right:6px;vertical-align:middle;}
+
+  /* ── TF ── */
+  .tf-options{display:flex;gap:10px;}
+  .tf-btn{flex:1;padding:12px;border-radius:14px;border:2px solid var(--blue-light);
+    background:var(--blue-light);cursor:pointer;font-family:'Nunito',sans-serif;
+    font-size:15px;font-weight:700;color:var(--text);transition:all .15s;text-align:center;}
+  .tf-btn:hover:not(:disabled){border-color:var(--blue-dark);background:white;}
+  .tf-btn.selected{border-color:var(--blue-dark);background:white;}
+  .tf-btn.correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+  .tf-btn.wrong{border-color:var(--cherry-dark);background:var(--cherry-light);color:#7a0a14;}
+  .tf-btn.reveal-correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+
+  /* ── FIB STICKY WORDBANK ── */
+  .fib-section-wrap{display:flex;gap:16px;align-items:flex-start;}
+  .fib-questions{flex:1;min-width:0;}
+  .wordbank-sticky{width:150px;flex-shrink:0;position:sticky;top:16px;
+    background:var(--white);border-radius:16px;border:2px dashed var(--cherry);
+    padding:12px;box-shadow:0 4px 16px var(--shadow);}
+  .wordbank-sticky .wordbank-label{font-size:11px;font-weight:800;color:var(--cherry-dark);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
+  .wordbank-sticky .wordbank-item{display:block;padding:5px 10px;background:var(--cherry-light);
+    border-radius:10px;font-size:12px;font-weight:700;color:var(--cherry-dark);
+    border:1.5px solid var(--cherry);margin-bottom:6px;text-align:center;cursor:default;}
+  .wordbank-sticky .wordbank-item.used{opacity:.4;text-decoration:line-through;}
+  @media(max-width:600px){
+    .fib-section-wrap{flex-direction:column;}
+    .wordbank-sticky{width:100%;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;}
+    .wordbank-sticky .wordbank-item{display:inline-block;margin-bottom:0;}
+    .wordbank-sticky .wordbank-label{width:100%;}
+  }
+
+  .fib-input{border:2px solid var(--blue);border-radius:12px;padding:10px 14px;
+    font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;
+    width:100%;margin-top:8px;background:var(--blue-light);transition:all .15s;}
+  .fib-input:focus{border-color:var(--blue-dark);background:white;}
+  .fib-input.correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+  .fib-input.wrong{border-color:var(--cherry-dark);background:var(--cherry-light);color:#7a0a14;}
+
+  /* ── MATCHING ── */
+  .match-select{width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--blue);
+    background:var(--blue-light);font-family:'Nunito',sans-serif;font-size:14px;
+    color:var(--text);outline:none;cursor:pointer;}
+  .match-select.correct{border-color:var(--blue-dark);background:var(--blue-light);color:#1a4a7a;}
+  .match-select.wrong{border-color:var(--cherry-dark);background:var(--cherry-light);color:#7a0a14;}
+  .match-item{padding:10px 14px;border-radius:12px;border:2px solid var(--blue-light);
+    background:var(--blue-light);font-size:14px;font-weight:600;min-height:44px;
+    display:flex;align-items:center;}
+
+  /* ── FEEDBACK ── */
+  .feedback-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:16px;
+    font-size:14px;font-weight:700;line-height:1.6;}
+  .feedback-banner.pass{background:var(--blue-light);border:2px solid var(--blue-dark);color:#1a4a7a;}
+  .feedback-banner.fail{background:var(--cherry-light);border:2px solid var(--cherry-dark);color:#7a0a14;}
+  .feedback-banner.show{display:block;}
+
+  /* ── RESULT SCREEN ── */
+  #screen-result{text-align:center;}
+  .result-big-emoji{font-size:80px;display:block;margin-bottom:8px;animation:float 2.5s ease-in-out infinite;}
+  .result-funny-msg{font-size:22px;font-weight:800;margin-bottom:4px;color:var(--cherry-dark);}
+  .result-sub-msg{font-size:14px;color:var(--text-soft);margin-bottom:16px;line-height:1.6;}
+  #screen-result h2{font-family:'Fredoka One',cursive;font-size:22px;color:var(--text);margin-bottom:4px;}
+  .result-name{color:var(--cherry-dark);}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+  .stat-card{background:var(--blue-light);border-radius:16px;padding:16px;border:1.5px solid var(--blue);}
+  .stat-label{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+  .stat-value{font-family:'Fredoka One',cursive;font-size:28px;color:var(--blue-dark);margin-top:4px;}
+  .stat-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+
+  /* ── CHERRY DIVIDER ── */
+  .cherry-divider{display:flex;align-items:center;gap:8px;margin:20px 0;color:rgba(200,25,42,.25);}
+  .cherry-divider::before,.cherry-divider::after{content:'';flex:1;height:1px;background:rgba(200,25,42,.15);}
+
+  .hidden{display:none !important;}
+  @media(max-width:500px){.stat-grid{grid-template-columns:1fr 1fr;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <span class="header-icon">🍒</span>
+    <h1>Science Chapter 9</h1>
+    <p>Energy Sources &nbsp;|&nbsp; Ruby School</p>
+  </div>
+
+  <!-- Welcome -->
+  <div id="screen-welcome" class="card">
+    <span class="welcome-icon">⚡</span>
+    <h2>Hello, young scientist!</h2>
+    <p>Enter your name below to start the Chapter 9 revision.<br>Good luck — you've got this! 🍒</p>
+    <div class="name-input-wrapper">
+      <label>Your name</label>
+      <input type="text" id="student-name" placeholder="e.g. Nguyen Van An" maxlength="50"/>
+    </div>
+    <div class="info-chips">
+      <span class="chip">🍒 5 sections</span>
+      <span class="chip">⚡ 40 questions</span>
+      <span class="chip">🎯 2 attempts per section</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start revision 🚀</button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="screen-quiz" class="hidden">
+    <div class="section-nav" id="section-nav"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div id="section-content"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" class="card hidden">
+    <span class="result-big-emoji" id="result-big-emoji">🎉</span>
+    <div class="result-funny-msg" id="result-funny-msg"></div>
+    <div class="result-sub-msg" id="result-sub-msg"></div>
+    <h2>Results for <span class="result-name" id="result-name-display"></span></h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Correct answers</div><div class="stat-value" id="res-correct"></div><div class="stat-sub">out of total</div></div>
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="res-percent"></div><div class="stat-sub">first attempt</div></div>
+      <div class="stat-card"><div class="stat-label">Time taken</div><div class="stat-value" id="res-time"></div><div class="stat-sub">minutes</div></div>
+      <div class="stat-card"><div class="stat-label">Grade</div><div class="stat-value" id="res-grade"></div><div class="stat-sub">overall result</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try again 🔄</button>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════ */
+const SECTIONS=[
+  {id:'mcq',label:'I. Multiple Choice',icon:'📝',bg:'#fce8ea'},
+  {id:'tf', label:'II. True / False',  icon:'✅',bg:'#e8f4fc'},
+  {id:'fib',label:'III. Fill in Blank', icon:'✏️',bg:'#faf0d8'},
+  {id:'sa', label:'IV. Short Answer',  icon:'💬',bg:'#fce8ea'},
+  {id:'mat',label:'V. Matching',       icon:'🔗',bg:'#e8f4fc'},
+];
+
+const MCQ=[
+  {q:'What is the main energy source for almost all life on Earth?',
+   opts:['Water','Wind','The Sun','Geothermal heat'],ans:2,
+   ex:'Mặt trời (The Sun) là nguồn năng lượng chính cho hầu hết sự sống trên Trái Đất. Ánh sáng mặt trời cung cấp năng lượng cho quá trình quang hợp, là nền tảng của chuỗi thức ăn.'},
+  {q:'Which of these is a non-renewable energy source?',
+   opts:['Wind','Solar','Coal','Biomass'],ans:2,
+   ex:'Coal (than đá) là nguồn năng lượng không tái tạo (non-renewable) - được hình thành từ xác sinh vật cách đây hàng triệu năm và không thể bổ sung nhanh chóng.'},
+  {q:'What do solar panels collect?',
+   opts:['Water','Wind','Light energy','Sound'],ans:2,
+   ex:'Tấm pin mặt trời (solar panels) thu thập năng lượng ánh sáng (light energy) và chuyển đổi thành điện năng. Đây là ví dụ điển hình của năng lượng tái tạo sạch.'},
+  {q:'Which fuel is formed from the remains of dead plants?',
+   opts:['Oil','Natural gas','Coal','Electricity'],ans:2,
+   ex:'Coal (than đá) được hình thành từ xác thực vật chết bị chôn vùi và nén chặt trong hàng triệu năm. Oil và natural gas chủ yếu từ xác sinh vật biển. Electricity không phải nhiên liệu.'},
+  {q:'What is used in power stations to turn turbines?',
+   opts:['Water','Food','Sunlight','Petrol'],ans:0,
+   ex:'Nước (water) dưới dạng hơi nước áp suất cao được dùng để quay turbine trong nhà máy điện. Nhiên liệu đốt cháy tạo nhiệt → đun nước → hơi nước → quay turbine → tạo điện.'},
+  {q:'Which of these does NOT produce pollution?',
+   opts:['Burning coal','Solar energy','Burning oil','Using petrol'],ans:1,
+   ex:'Solar energy (năng lượng mặt trời) không tạo ra ô nhiễm khi sử dụng. Đây là nguồn năng lượng sạch. Đốt than, dầu và xăng đều thải ra CO₂ và các chất gây ô nhiễm.'},
+  {q:'What is ethanol made from?',
+   opts:['Rocks','Air','Sugarcane','Plastic'],ans:2,
+   ex:'Ethanol được làm từ mía đường (sugarcane) thông qua quá trình lên men. Đây là loại nhiên liệu sinh học (biofuel), một dạng biomass energy. Brazil là nước dẫn đầu sản xuất ethanol từ mía.'},
+  {q:'What is the SI unit of energy?',
+   opts:['Calorie','Watt','Joule','Volt'],ans:2,
+   ex:'Joule (J) là đơn vị đo năng lượng trong hệ SI. Watt là đơn vị công suất (1W = 1J/s). Calorie là đơn vị năng lượng thực phẩm. Volt là đơn vị điện áp.'},
+  {q:'What is biogas made from?',
+   opts:['Sunlight','Rocks','Rotting plants and animals','Rain'],ans:2,
+   ex:'Biogas được tạo ra từ xác thực vật và động vật đang phân hủy (rotting plants and animals) thông qua quá trình phân giải kị khí. Thành phần chính là methane (CH₄), dùng được như khí gas thông thường.'},
+  {q:'What energy is released from inside the Earth?',
+   opts:['Solar','Geothermal','Wind','Water'],ans:1,
+   ex:'Geothermal energy (năng lượng địa nhiệt) đến từ nhiệt bên trong lòng Trái Đất. Nhiệt này từ sự phân rã của các nguyên tố phóng xạ và nhiệt còn lại từ khi Trái Đất hình thành.'},
+];
+
+const TF=[
+  {q:'Coal and oil are examples of renewable energy sources.',ans:false,
+   ex:'SAI. Coal (than) và oil (dầu) là nhiên liệu hóa thạch (fossil fuels) - thuộc loại NON-RENEWABLE (không tái tạo). Chúng được hình thành trong hàng triệu năm và sẽ cạn kiệt.'},
+  {q:'Solar panels can change sunlight into electricity.',ans:true,
+   ex:'ĐÚNG. Tấm pin mặt trời chuyển đổi năng lượng ánh sáng thành điện năng thông qua hiệu ứng quang điện. Đây là ví dụ điển hình của năng lượng tái tạo và sạch.'},
+  {q:'Wind turbines use wind energy to make electricity.',ans:true,
+   ex:'ĐÚNG. Turbine gió chuyển đổi động năng của gió thành điện năng. Cánh quạt quay → trục quay → máy phát điện → điện. Đây là năng lượng tái tạo, không gây ô nhiễm.'},
+  {q:'Food does not give energy to living things.',ans:false,
+   ex:'SAI. Thức ăn (food) là nguồn năng lượng quan trọng cho sinh vật sống. Thức ăn chứa các chất dinh dưỡng (carbohydrate, fat, protein) được cơ thể phân giải để lấy năng lượng.'},
+  {q:'Geothermal energy comes from the Sun.',ans:false,
+   ex:'SAI. Geothermal energy (địa nhiệt) đến từ bên trong lòng Trái Đất, KHÔNG phải từ Mặt Trời. Nguồn gốc là sự phân rã phóng xạ và nhiệt hình thành từ buổi đầu Trái Đất.'},
+  {q:'Energy from running water is a renewable source.',ans:true,
+   ex:'ĐÚNG. Năng lượng từ nước chảy (hydropower) là nguồn tái tạo vì chu trình nước tự nhiên liên tục bổ sung. Đập thủy điện là ví dụ phổ biến.'},
+  {q:'Fossil fuels can be used again and again quickly.',ans:false,
+   ex:'SAI. Nhiên liệu hóa thạch KHÔNG thể tái tạo nhanh chóng. Chúng cần hàng triệu năm để hình thành. Đây là lý do chúng được gọi là non-renewable (không tái tạo).'},
+  {q:'Biomass includes plant waste and animal droppings.',ans:true,
+   ex:'ĐÚNG. Biomass bao gồm nhiều loại vật liệu sinh học: phế thải thực vật (plant waste), phân động vật (animal droppings), gỗ, rơm rạ... Khi đốt hoặc lên men tạo ra năng lượng.'},
+  {q:'The Sun helps plants make their food.',ans:true,
+   ex:'ĐÚNG. Thực vật dùng ánh sáng mặt trời để quang hợp (photosynthesis): CO₂ + H₂O + ánh sáng → glucose + O₂. Đây là cách thực vật tạo ra thức ăn cho chính mình.'},
+  {q:'Energy-saving bulbs use more energy than normal bulbs.',ans:false,
+   ex:'SAI. Bóng đèn tiết kiệm điện dùng ÍT năng lượng hơn bóng thông thường để tạo cùng lượng ánh sáng. Ví dụ: đèn LED 9W sáng bằng bóng sợi đốt 60W.'},
+];
+
+const FIB_WORDS=['joule','turbines','geothermal','biomass','fossil fuels','wind','electricity','food','solar','energy'];
+const FIB=[
+  {q:'_____ is needed by all living things to do work.',ans:'energy',
+   ex:'Energy (năng lượng) là thứ mọi sinh vật cần để hoạt động, di chuyển, sinh trưởng. Năng lượng tồn tại dưới nhiều dạng: nhiệt, ánh sáng, điện, cơ học...'},
+  {q:'_____ energy comes from the Sun.',ans:'solar',
+   ex:'Solar energy (năng lượng mặt trời) đến trực tiếp từ Mặt Trời. Đây là nguồn năng lượng tái tạo, sạch và vô tận trong tầm nhìn con người.'},
+  {q:'We eat _____ to get energy.',ans:'food',
+   ex:'Thức ăn (food) cung cấp năng lượng hóa học cho cơ thể. Khi tiêu hóa, glucose và chất béo được oxy hóa để giải phóng năng lượng (ATP).'},
+  {q:'_____ is the unit used to measure energy.',ans:'joule',
+   ex:'Joule (J) là đơn vị đo năng lượng trong hệ đo lường quốc tế (SI), đặt theo tên nhà vật lý James Prescott Joule. 1 kJ = 1000 J.'},
+  {q:'Energy from _____ comes from inside the Earth.',ans:'geothermal',
+   ex:'Geothermal (địa nhiệt) = "geo" (Trái Đất) + "thermal" (nhiệt). Năng lượng này đến từ nhiệt trong lòng đất, biểu hiện qua suối nước nóng, geyser và núi lửa.'},
+  {q:'_____ are used to make electricity from wind.',ans:'turbines',
+   ex:'Turbines (turbine) là thiết bị chuyển đổi động năng gió thành điện năng. Cánh quạt turbine gió quay nhờ gió → quay máy phát → tạo ra điện.'},
+  {q:'_____ is made from plant and animal waste.',ans:'biomass',
+   ex:'Biomass (sinh khối) là năng lượng từ vật liệu sinh học: gỗ, rơm, phân, phế thải thực phẩm... Có thể đốt trực tiếp hoặc chuyển thành biogas/ethanol.'},
+  {q:'_____ are fuels made from dead plants and animals.',ans:'fossil fuels',
+   ex:'Fossil fuels (nhiên liệu hóa thạch) gồm: coal (than), oil (dầu mỏ) và natural gas (khí tự nhiên). Được hình thành từ xác sinh vật chết cách đây hàng triệu năm.'},
+  {q:'We use _____ to power lights and machines.',ans:'electricity',
+   ex:'Electricity (điện năng) được dùng để thắp sáng, chạy máy móc, thiết bị điện tử. Điện được tạo ra ở nhà máy điện và truyền tải qua hệ thống đường dây.'},
+  {q:'_____ energy turns the blades of a windmill.',ans:'wind',
+   ex:'Wind energy (năng lượng gió) làm quay cánh cối xay gió (windmill). Năng lượng gió là nguồn tái tạo, không gây ô nhiễm và ngày càng phổ biến.'},
+];
+
+const SA=[
+  {q:'What are fossil fuels made from?',
+   acceptedPhrases:['dead plants','dead animals','remains of plants','remains of animals','ancient plants','ancient organisms','decomposed plants','millions of years'],
+   ex:'Đáp án gợi ý: "Fossil fuels are made from the remains of dead plants and animals that lived millions of years ago." Nhiên liệu hóa thạch = than + dầu mỏ + khí tự nhiên, hình thành qua hàng triệu năm.'},
+  {q:'Why do we need to conserve energy?',
+   acceptedPhrases:['non-renewable','limited','run out','finite','save','reduce','fossil fuels will','cannot be replaced','protect environment','pollution'],
+   ex:'Đáp án gợi ý: "Because fossil fuels are non-renewable and will run out; burning them also causes pollution." Cần tiết kiệm vì nguồn tài nguyên hữu hạn và đốt nhiên liệu gây ô nhiễm.'},
+  {q:'How does a solar cell work?',
+   acceptedPhrases:['sunlight into electricity','light into electricity','converts light','changes sunlight','sunlight to electricity','light energy to electrical'],
+   ex:'Đáp án gợi ý: "A solar cell converts sunlight (light energy) into electricity." Pin mặt trời dùng vật liệu bán dẫn (silicon) để chuyển quang năng thành điện năng.'},
+  {q:'What is one example of renewable energy?',
+   acceptedPhrases:['solar','wind','water','hydropower','geothermal','biomass','tidal','wave','hydro'],
+   ex:'Đáp án gợi ý: Bất kỳ ví dụ nào: "solar energy", "wind energy", "hydropower", "geothermal energy", "biomass". Năng lượng tái tạo là loại có thể tự bổ sung trong thời gian ngắn.'},
+  {q:'What is biogas and how is it made?',
+   acceptedPhrases:['rotting','decomposing','organic','plant and animal','waste','methane','fermentation','bacteria'],
+   ex:'Đáp án gợi ý: "Biogas is a gas (mainly methane) made from rotting/decomposing plant and animal waste." Vi khuẩn phân hủy chất hữu cơ trong điều kiện không có oxy → tạo khí biogas.'},
+  {q:'Why is wind energy considered clean?',
+   acceptedPhrases:['no pollution','does not pollute','no emissions','no carbon dioxide','no smoke','no waste','renewable','does not produce pollution'],
+   ex:'Đáp án gợi ý: "Wind energy is clean because it does not produce pollution or greenhouse gases." Không đốt nhiên liệu → không khí thải → năng lượng sạch và tái tạo.'},
+  {q:'How do plants use energy from the Sun?',
+   acceptedPhrases:['photosynthesis','make food','produce food','make glucose','sunlight to make','light to make food','convert sunlight','grow'],
+   ex:'Đáp án gợi ý: "Plants use sunlight for photosynthesis to make their own food (glucose)." Quang hợp: CO₂ + H₂O + ánh sáng → C₆H₁₂O₆ (glucose) + O₂.'},
+  {q:'What is the difference between renewable and non-renewable energy?',
+   acceptedPhrases:['can be replaced','will not run out','run out','cannot be replaced','renewable can','non-renewable cannot','replenished','limited'],
+   ex:'Đáp án gợi ý: "Renewable energy can be replaced naturally and will not run out; non-renewable energy will run out and cannot be replaced quickly." Tái tạo ↔ không tái tạo.'},
+  {q:'How do living things use energy?',
+   acceptedPhrases:['move','grow','breathe','respire','reproduce','stay warm','repair','live','function','body processes'],
+   ex:'Đáp án gợi ý: "Living things use energy to move, grow, breathe, reproduce, and carry out body processes." Năng lượng cần cho mọi hoạt động sống: di chuyển, sinh trưởng, sinh sản...'},
+  {q:'Why is geothermal energy important?',
+   acceptedPhrases:['renewable','always available','reliable','inside the earth','heat from earth','no pollution','clean','constant','24 hours'],
+   ex:'Đáp án gợi ý: "Geothermal energy is important because it is renewable, clean, and always available 24/7." Địa nhiệt không phụ thuộc thời tiết, luôn sẵn có - khác với solar và wind.'},
+];
+
+// Column A: 5 items only
+const MAT_LEFT =['Solar energy','Wind energy','Fossil fuels','Geothermal energy','Biomass'];
+const MAT_RIGHT=['Comes from the heat inside the Earth','Energy from the Sun','Formed from dead plants and animals','Uses plant and animal waste','Uses moving air to produce electricity'];
+// Solar→1(Energy from Sun), Wind→4(Uses moving air), Fossil→2(Formed from dead), Geothermal→0(Heat inside Earth), Biomass→3(Plant and animal waste)
+const MAT_ANS=[1,4,2,0,3];
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let studentName='',startTime=0,currentSection=0;
+let sectionStatus=[0,0,0,0,0],firstAttemptScores={};
+let mcqState={},mcqChecked=false,mcqAttempts=0;
+let tfState={},tfChecked=false,tfAttempts=0;
+let fibChecked=false,fibCorrectMask={},fibAttempts=0;
+let saChecked=false,saCorrectMask={},saAttempts=0;
+let matState={},matChecked=false,matCorrectMask={},matAttempts=0;
+
+/* ── SA grading ── */
+function gradeSA(val,phrases){
+  const n=s=>s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+  const v=n(val);
+  return phrases.some(p=>v.includes(n(p)));
+}
+
+/* ── Funny result messages ── */
+const RESULT_MSGS=[
+  {min:95,emoji:'🏆🎉🍒',funny:'CHERRY ON TOP!',sub:'You absolutely crushed it! 🎊 Your teacher is doing a happy dance right now.'},
+  {min:85,emoji:'🌟😺🍒',funny:'SUPER STAR!',sub:'You\'re basically a walking science textbook. Impressive! 📚✨'},
+  {min:75,emoji:'😎🎯',funny:'PRETTY SOLID!',sub:'Good job! You know your stuff — just a few cherries left to pick. 🍒'},
+  {min:65,emoji:'🙂📖',funny:'GETTING THERE!',sub:'Not bad! A little more revision and you\'ll be unstoppable. Keep going! 💪'},
+  {min:50,emoji:'😅🍃',funny:'HALFWAY HERO!',sub:'You\'re halfway there! The explanations are your best friend right now. 📝'},
+  {min:35,emoji:'😬😹',funny:'OOPS... ALMOST!',sub:'The good news: there\'s nowhere to go but up! Re-read and try again. 🔄'},
+  {min:0, emoji:'😿💔',funny:'THE STRUGGLE IS REAL...',sub:'Hey, even scientists fail experiments. That\'s how learning works! Try again! 🧪'},
+];
+
+/* ══════════════════════════════════════════════
+   CORE
+══════════════════════════════════════════════ */
+function startQuiz(){
+  studentName=document.getElementById('student-name').value.trim();
+  if(!studentName){alert('Please enter your name first! 🍒');return;}
+  startTime=Date.now();
+  document.getElementById('screen-welcome').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  sectionStatus[0]=1;renderNav();renderSection(0);
+}
+
+function renderNav(){
+  document.getElementById('section-nav').innerHTML=SECTIONS.map((s,i)=>{
+    let cls=sectionStatus[i]===2?'done':sectionStatus[i]===1?'active':'locked';
+    return`<div class="section-pill ${cls}">${sectionStatus[i]===2?'✓ ':''}${s.label}</div>`;
+  }).join('');
+  const done=sectionStatus.filter(s=>s===2).length,active=sectionStatus.filter(s=>s===1).length;
+  document.getElementById('progress-bar').style.width=((done+active*.5)/SECTIONS.length*100)+'%';
+}
+
+function renderSection(idx){
+  currentSection=idx;const s=SECTIONS[idx],el=document.getElementById('section-content');
+  if(idx===0)renderMCQ(el,s);else if(idx===1)renderTF(el,s);
+  else if(idx===2)renderFIB(el,s);else if(idx===3)renderSA(el,s);else renderMAT(el,s);
+}
+
+function sHdr(s,note){
+  return`<div class="card"><div class="section-header"><div class="section-icon" style="background:${s.bg}">${s.icon}</div><div><h2>${s.label}</h2><p>${note}</p></div></div>`;
+}
+
+function divider(){return`<div class="cherry-divider">🍒</div>`;}
+
+/* ══ MCQ ══ */
+function renderMCQ(el,s){
+  mcqState={};mcqChecked=false;mcqAttempts=0;
+  el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 10 questions')+
+    MCQ.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="mcq-${i}-${j}" onclick="selMCQ(${i},${j})"><span class="option-badge">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+      <div class="explanation" id="mcq-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="mcq-fb"></div>
+    <button class="btn btn-check" onclick="chkMCQ()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mcq-retry" onclick="retMCQ()">Redo incorrect questions 🔄</button>
+    <button class="btn btn-next" id="mcq-next" onclick="goNext()">Next section &rarr; 🍒</button></div>`;
+}
+function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
+function chkMCQ(){
+  if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all questions! 😅');return;}
+  mcqChecked=true;mcqAttempts++;let correct=0;
+  MCQ.forEach((q,i)=>{
+    const ok=mcqState[i]===q.ans;if(ok)correct++;
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
+      b.className=j===mcqState[i]&&ok?'option-btn correct':j===mcqState[i]&&!ok?'option-btn wrong':j===q.ans&&!ok?'option-btn reveal-correct':'option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
+  const fb=document.getElementById('mcq-fb');fb.classList.add('show');
+  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${MCQ.length} — You're on fire! 🔥`;document.getElementById('mcq-next').style.display='block';}
+  else if(mcqAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MCQ.length} correct after 2 attempts. Read the explanations carefully and move on!`;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`😬 ${correct}/${MCQ.length} correct. Read the explanations and have another go! (Attempt ${mcqAttempts}/2)`;document.getElementById('mcq-retry').style.display='block';}
+}
+function retMCQ(){
+  MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=false;b.className='option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.remove('show');});
+  mcqChecked=false;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-fb').classList.remove('show');
+}
+
+/* ══ TF ══ */
+function renderTF(el,s){
+  tfState={};tfChecked=false;tfAttempts=0;
+  el.innerHTML=sHdr(s,'Decide if each statement is True or False &mdash; 10 questions')+
+    TF.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="tf-options"><button class="tf-btn" id="tf-${i}-true" onclick="selTF(${i},true)">✓ True</button><button class="tf-btn" id="tf-${i}-false" onclick="selTF(${i},false)">✗ False</button></div>
+      <div class="explanation" id="tf-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="tf-fb"></div>
+    <button class="btn btn-check" onclick="chkTF()">Check answers ✅</button>
+    <button class="btn btn-retry" id="tf-retry" onclick="retTF()">Redo incorrect questions 🔄</button>
+    <button class="btn btn-next" id="tf-next" onclick="goNext()">Next section &rarr; 🍒</button></div>`;
+}
+function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
+function chkTF(){
+  if(Object.keys(tfState).length<TF.length){alert('Please answer all questions! 😅');return;}
+  tfChecked=true;tfAttempts++;let correct=0;
+  TF.forEach((q,i)=>{
+    const ok=tfState[i]===q.ans;if(ok)correct++;
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
+      b.className=bval===tfState[i]&&ok?'tf-btn correct':bval===tfState[i]&&!ok?'tf-btn wrong':bval===q.ans&&!ok?'tf-btn reveal-correct':'tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:TF.length};
+  const fb=document.getElementById('tf-fb');fb.classList.add('show');
+  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${TF.length} — Excellent work! 🌟`;document.getElementById('tf-next').style.display='block';}
+  else if(tfAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${TF.length} correct after 2 attempts. Check the explanations and keep going!`;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🤔 ${correct}/${TF.length} correct. Read the explanations and try again! (Attempt ${tfAttempts}/2)`;document.getElementById('tf-retry').style.display='block';}
+}
+function retTF(){
+  TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`);b.disabled=false;b.className='tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.remove('show');});
+  tfChecked=false;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-fb').classList.remove('show');
+}
+
+/* ══ FIB ══ */
+function renderFIB(el,s){
+  fibChecked=false;fibCorrectMask={};fibAttempts=0;
+  el.innerHTML=sHdr(s,'Fill in the blank using the word bank &mdash; 10 questions')+
+    `<div class="fib-section-wrap">
+      <div class="fib-questions">
+        ${FIB.map((q,i)=>`<div class="question-block">
+          <div class="question-text"><span class="q-num">${i+1}</span>${q.q.replace('_____','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')}</div>
+          <input class="fib-input" id="fib-in-${i}" placeholder="Type your answer..." oninput="updateWordbank()"/>
+          <div class="explanation" id="fib-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+        </div>${i<FIB.length-1?divider():''}`).join('')}
+        <div class="feedback-banner" id="fib-fb"></div>
+        <button class="btn btn-check" onclick="chkFIB()">Check answers ✅</button>
+        <button class="btn btn-retry" id="fib-retry" onclick="retFIB()">Redo incorrect 🔄</button>
+        <button class="btn btn-next" id="fib-next" onclick="goNext()">Next section &rarr; 🍒</button>
+      </div>
+      <div class="wordbank-sticky" id="wordbank-sticky">
+        <span class="wordbank-label">🍒 Word bank</span>
+        ${FIB_WORDS.map(w=>`<span class="wordbank-item" id="wb-${w.replace(/ /g,'-')}">${w}</span>`).join('')}
+      </div>
+    </div></div>`;
+}
+function updateWordbank(){
+  const used=new Set();
+  FIB.forEach((_,i)=>{const v=document.getElementById(`fib-in-${i}`);if(v&&!v.disabled){const t=v.value.trim().toLowerCase();if(t)used.add(t);}});
+  FIB_WORDS.forEach(w=>{const el=document.getElementById(`wb-${w.replace(/ /g,'-')}`);if(el)el.classList.toggle('used',used.has(w));});
+}
+function chkFIB(){
+  let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please fill in all blanks! ✏️');return;}
+  fibChecked=true;fibAttempts++;let correct=0;
+  FIB.forEach((q,i)=>{
+    const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
+    if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    if(!ok)inp.value+=`  →  Answer: ${q.ans}`;
+    document.getElementById(`fib-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:FIB.length};
+  const fb=document.getElementById('fib-fb');fb.classList.add('show');
+  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎊 Perfect! ${correct}/${FIB.length} — Word bank? More like word GENIUS! 🧠`;document.getElementById('fib-next').style.display='block';}
+  else if(fibAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${FIB.length} correct after 2 attempts. Check the explanations and move on!`;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`✏️ ${correct}/${FIB.length} correct. Read the explanations and try the wrong ones again! (Attempt ${fibAttempts}/2)`;document.getElementById('fib-retry').style.display='block';}
+}
+function retFIB(){
+  FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
+  fibChecked=false;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-fb').classList.remove('show');updateWordbank();
+}
+
+/* ══ SA ══ */
+function renderSA(el,s){
+  saChecked=false;saCorrectMask={};saAttempts=0;
+  el.innerHTML=sHdr(s,'Write a short answer in English &mdash; 10 questions')+
+    SA.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <input class="fib-input" id="sa-in-${i}" placeholder="Write your answer in English..."/>
+      <div class="explanation" id="sa-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="sa-fb"></div>
+    <button class="btn btn-check" onclick="chkSA()">Check answers ✅</button>
+    <button class="btn btn-retry" id="sa-retry" onclick="retSA()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="sa-next" onclick="goNext()">Next section &rarr; 🍒</button></div>`;
+}
+function chkSA(){
+  let all=true;SA.forEach((_,i)=>{if(!document.getElementById(`sa-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please answer all questions! 💬');return;}
+  saChecked=true;saAttempts++;let correct=0;
+  SA.forEach((q,i)=>{
+    const inp=document.getElementById(`sa-in-${i}`);
+    const ok=gradeSA(inp.value,q.acceptedPhrases);
+    if(ok){correct++;saCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    document.getElementById(`sa-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:SA.length};
+  const fb=document.getElementById('sa-fb');fb.classList.add('show');
+  if(correct===SA.length){fb.className='feedback-banner pass show';fb.innerHTML=`🌟 All correct! ${correct}/${SA.length} — You explain things better than a textbook! 📚`;document.getElementById('sa-next').style.display='block';}
+  else if(saAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${SA.length} correct after 2 attempts. Your answer is accepted if it contains the key phrase. Move on!`;document.getElementById('sa-retry').style.display='none';document.getElementById('sa-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`💬 ${correct}/${SA.length} correct. Make sure your answer contains the key phrase. (Attempt ${saAttempts}/2)`;document.getElementById('sa-retry').style.display='block';}
+}
+function retSA(){
+  SA.forEach((q,i)=>{if(saCorrectMask[i])return;const inp=document.getElementById(`sa-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`sa-ex-${i}`).classList.remove('show');});
+  saChecked=false;document.getElementById('sa-retry').style.display='none';document.getElementById('sa-fb').classList.remove('show');
+}
+
+/* ══ MATCHING ══ */
+function renderMAT(el,s){
+  matState={};matChecked=false;matCorrectMask={};matAttempts=0;
+  const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+  el.innerHTML=sHdr(s,'Match Column A with Column B &mdash; 5 pairs')+
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
+      <tr><th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column A</th>
+          <th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Column B</th></tr>
+      ${MAT_LEFT.map((l,i)=>`<tr>
+        <td style="padding:4px 8px;width:38%"><div class="match-item" id="mat-l-${i}">${l}</div></td>
+        <td style="padding:4px 8px"><select class="match-select" id="mat-s-${i}" onchange="selMAT(${i},this.value)"><option value="">-- Select --</option>${rOpts}</select></td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="feedback-banner" id="mat-fb"></div>
+    <button class="btn btn-check" onclick="chkMAT()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mat-retry" onclick="retMAT()">Redo incorrect pairs 🔄</button>
+    <button class="btn btn-next" id="mat-next" onclick="showResult()">See my results 🍒</button></div>`;
+}
+function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
+function chkMAT(){
+  if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items! 🔗');return;}
+  matChecked=true;matAttempts++;let correct=0;
+  MAT_LEFT.forEach((_,i)=>{
+    const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
+    const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
+    sel.disabled=true;sel.className=ok?'match-select correct':'match-select wrong';
+    if(!ok)left.innerHTML+=` &rarr; <strong style="color:var(--blue-dark)">${MAT_RIGHT[MAT_ANS[i]]}</strong>`;
+  });
+  if(!firstAttemptScores[4])firstAttemptScores[4]={correct,total:MAT_LEFT.length};
+  const fb=document.getElementById('mat-fb');fb.classList.add('show');
+  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All ${correct}/${MAT_LEFT.length} pairs matched — Perfect matchmaker! 💘`;document.getElementById('mat-next').style.display='block';}
+  else if(matAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MAT_LEFT.length} correct after 2 attempts. The correct match is highlighted. Move on!`;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🔗 ${correct}/${MAT_LEFT.length} correct. The correct match is shown in blue. Try again! (Attempt ${matAttempts}/2)`;document.getElementById('mat-retry').style.display='block';}
+}
+function retMAT(){
+  MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';document.getElementById(`mat-l-${i}`).innerHTML=MAT_LEFT[i];});
+  matChecked=false;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-fb').classList.remove('show');
+}
+
+/* ══ NAVIGATION ══ */
+function goNext(){
+  sectionStatus[currentSection]=2;const next=currentSection+1;
+  if(next<SECTIONS.length){sectionStatus[next]=1;renderNav();renderSection(next);window.scrollTo({top:0,behavior:'smooth'});}
+  else showResult();
+}
+
+function showResult(){
+  sectionStatus[currentSection]=2;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  const elapsed=Math.round((Date.now()-startTime)/60000*10)/10;
+  let tc=0,tq=0;Object.values(firstAttemptScores).forEach(v=>{tc+=v.correct;tq+=v.total;});
+  const pct=tq>0?Math.round(tc/tq*100):0;
+  document.getElementById('result-name-display').textContent=studentName;
+  document.getElementById('res-correct').textContent=`${tc}/${tq}`;
+  document.getElementById('res-percent').textContent=`${pct}%`;
+  document.getElementById('res-time').textContent=elapsed;
+
+  // Find matching funny message
+  const m=RESULT_MSGS.find(r=>pct>=r.min)||RESULT_MSGS[RESULT_MSGS.length-1];
+  document.getElementById('result-big-emoji').textContent=m.emoji;
+  document.getElementById('result-funny-msg').textContent=m.funny;
+  document.getElementById('result-sub-msg').textContent=m.sub.replace('${studentName}',studentName);
+
+  let grade;
+  if(pct>=90)grade='A';else if(pct>=70)grade='B';else if(pct>=50)grade='C';else grade='D';
+  document.getElementById('res-grade').textContent=grade;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restartQuiz(){
+  mcqState={};tfState={};fibCorrectMask={};saCorrectMask={};matCorrectMask={};
+  mcqAttempts=0;tfAttempts=0;fibAttempts=0;saAttempts=0;matAttempts=0;
+  firstAttemptScores={};sectionStatus=[0,0,0,0,0];sectionStatus[0]=1;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-welcome').classList.remove('hidden');
+  document.getElementById('screen-quiz').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
