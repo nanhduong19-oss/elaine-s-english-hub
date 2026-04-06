@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Revision - Level 9</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  /* ── BLACK CAT & GOLDEN FIELD PALETTE ──
+     Sky blue bg   : #c8dff0 / deep #4a8ab0
+     Golden field  : #e8c040 / dark #b89000 / light #fdf6d8
+     Cat black     : #1a1a2e
+     Cloud white   : #f0f6fa
+     Text dark     : #1e2d3a
+  */
+  :root{
+    --sky:#c8dff0;--sky-deep:#4a8ab0;--sky-mid:#6aaace;--sky-light:#eaf4fb;
+    --gold:#e8c040;--gold-dark:#b89000;--gold-light:#fdf6d8;--gold-mid:#c9a020;
+    --cat:#1a1a2e;--cloud:#f0f6fa;
+    --text:#1e2d3a;--text-soft:#4a6a80;--white:#ffffff;
+    --shadow:rgba(74,138,176,0.13);
+    --green-ok:#2a8a50;--green-ok-light:#e8f8ee;
+    --red-err:#c04020;--red-err-light:#fdecea;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',sans-serif;
+    background-color:var(--sky);
+    min-height:100vh;color:var(--text);overflow-x:hidden;
+  }
+
+  /* Cloud & field layered background */
+  body::before{
+    content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
+    background:
+      radial-gradient(ellipse 60% 25% at 30% 72%, rgba(232,192,64,.22) 0%, transparent 70%),
+      radial-gradient(ellipse 80% 20% at 70% 68%, rgba(232,192,64,.15) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 30% at 50% 55%, rgba(240,246,250,.35) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 20% at 15% 60%, rgba(240,246,250,.4) 0%, transparent 55%),
+      radial-gradient(ellipse 35% 18% at 85% 58%, rgba(240,246,250,.35) 0%, transparent 55%);
+  }
+
+  /* Tiny cat silhouette deco */
+  body::after{
+    content:'🐱';position:fixed;bottom:20px;right:20px;font-size:40px;
+    opacity:.15;pointer-events:none;z-index:0;animation:sit 5s ease-in-out infinite;
+  }
+  @keyframes sit{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg) translateY(-4px);}}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  @keyframes bounce{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+
+  .app{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:20px 16px 60px;}
+
+  /* ── HEADER ── */
+  .header{text-align:center;padding:28px 0 18px;}
+  .header-icon{font-size:58px;display:block;margin-bottom:6px;animation:bounce 3s ease-in-out infinite;}
+  .header h1{font-family:'Fredoka One',cursive;font-size:30px;color:var(--cat);letter-spacing:.5px;}
+  .header-sub{font-family:'Fredoka One',cursive;font-size:18px;color:var(--gold-dark);margin-top:4px;}
+  .header p{font-size:14px;color:var(--text-soft);margin-top:4px;}
+
+  /* ── CARD ── */
+  .card{background:rgba(255,255,255,.96);border-radius:24px;padding:28px 24px;
+    box-shadow:0 6px 32px var(--shadow),0 1px 4px rgba(0,0,0,.07);
+    margin-bottom:20px;border:2px solid rgba(74,138,176,.15);}
+
+  /* ── WELCOME ── */
+  .welcome-icon{font-size:72px;text-align:center;display:block;margin-bottom:10px;}
+  #screen-welcome h2{font-family:'Fredoka One',cursive;font-size:24px;color:var(--sky-deep);text-align:center;margin-bottom:8px;}
+  #screen-welcome p{text-align:center;color:var(--text-soft);font-size:15px;line-height:1.6;margin-bottom:20px;}
+  .name-input-wrapper{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .name-input-wrapper label{font-weight:700;font-size:15px;color:var(--text);}
+  .name-input-wrapper input{border:2px solid var(--sky-mid);border-radius:14px;padding:12px 16px;
+    font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;
+    transition:border .2s;background:var(--sky-light);}
+  .name-input-wrapper input:focus{border-color:var(--sky-deep);}
+  .info-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+  .chip{background:var(--gold-light);border:1.5px solid var(--gold);border-radius:20px;
+    padding:6px 14px;font-size:13px;color:var(--gold-dark);font-weight:700;}
+
+  /* ── BUTTONS ── */
+  .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;
+    font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;
+    transition:all .18s;text-align:center;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--sky-deep),#2d6a90);
+    color:var(--white);box-shadow:0 4px 16px rgba(74,138,176,.35);}
+  .btn-primary:hover{box-shadow:0 6px 24px rgba(74,138,176,.5);transform:translateY(-1px);}
+  .btn-check{background:linear-gradient(135deg,var(--gold),var(--gold-dark));
+    color:var(--white);box-shadow:0 4px 16px rgba(184,144,0,.35);margin-top:16px;}
+  .btn-next{background:linear-gradient(135deg,var(--sky-deep),#2d6a90);
+    color:var(--white);box-shadow:0 4px 16px rgba(74,138,176,.35);margin-top:12px;display:none;}
+  .btn-retry{background:linear-gradient(135deg,#c06020,#904010);
+    color:var(--white);box-shadow:0 4px 12px rgba(144,64,16,.3);margin-top:12px;display:none;}
+
+  /* ── SECTION NAV ── */
+  .section-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .section-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:2px solid;cursor:default;transition:all .2s;}
+  .section-pill.locked{background:rgba(255,255,255,.45);border-color:rgba(106,170,206,.3);color:rgba(30,45,58,.38);}
+  .section-pill.active{background:var(--sky-deep);border-color:var(--sky-deep);color:white;}
+  .section-pill.done{background:var(--gold-light);border-color:var(--gold);color:var(--gold-dark);}
+
+  /* ── PROGRESS ── */
+  .progress-bar-wrap{background:rgba(255,255,255,.5);border-radius:10px;height:10px;margin-bottom:20px;overflow:hidden;border:1px solid rgba(106,170,206,.25);}
+  .progress-bar-fill{height:100%;border-radius:10px;
+    background:linear-gradient(90deg,var(--sky-deep),var(--gold));transition:width .4s ease;}
+
+  /* ── SECTION HEADER ── */
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;
+    padding-bottom:16px;border-bottom:2px dashed rgba(74,138,176,.2);}
+  .section-icon-box{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--sky-deep);}
+  .section-header p{font-size:13px;color:var(--text-soft);margin-top:2px;}
+
+  /* ── QUESTIONS ── */
+  .question-block{margin-bottom:22px;}
+  .question-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5;}
+  .q-num{display:inline-block;background:var(--gold-light);color:var(--gold-dark);
+    font-family:'Fredoka One',cursive;width:28px;height:28px;border-radius:50%;
+    text-align:center;line-height:28px;font-size:14px;margin-right:8px;
+    flex-shrink:0;border:1.5px solid var(--gold);}
+
+  /* ── MCQ ── */
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option-btn{display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:14px;
+    border:2px solid var(--sky-light);background:var(--sky-light);cursor:pointer;
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);
+    transition:all .15s;text-align:left;}
+  .option-btn:hover:not(:disabled){border-color:var(--sky-deep);background:white;transform:translateX(3px);}
+  .option-btn.selected{border-color:var(--sky-deep);background:white;}
+  .option-btn.correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+  .option-btn.wrong{border-color:var(--red-err);background:var(--red-err-light);color:#7a1a08;}
+  .option-btn.reveal-correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+  .option-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;
+    justify-content:center;font-size:13px;font-weight:800;
+    background:rgba(106,170,206,.2);color:var(--sky-deep);flex-shrink:0;}
+  .option-btn.correct .option-badge{background:var(--green-ok);color:white;}
+  .option-btn.wrong .option-badge{background:var(--red-err);color:white;}
+  .option-btn.reveal-correct .option-badge{background:var(--green-ok);color:white;}
+
+  /* ── EXPLANATION ── */
+  .explanation{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;
+    background:var(--gold-light);border:1.5px solid var(--gold);
+    font-size:13px;line-height:1.7;color:#5a3c00;}
+  .explanation.show{display:block;}
+  .ex-tag{display:inline-block;background:var(--gold-dark);color:white;font-size:10px;
+    font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:6px;
+    margin-right:6px;vertical-align:middle;}
+
+  /* ── TF ── */
+  .tf-options{display:flex;gap:10px;}
+  .tf-btn{flex:1;padding:12px;border-radius:14px;border:2px solid var(--sky-light);
+    background:var(--sky-light);cursor:pointer;font-family:'Nunito',sans-serif;
+    font-size:15px;font-weight:700;color:var(--text);transition:all .15s;text-align:center;}
+  .tf-btn:hover:not(:disabled){border-color:var(--sky-deep);background:white;}
+  .tf-btn.selected{border-color:var(--sky-deep);background:white;}
+  .tf-btn.correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+  .tf-btn.wrong{border-color:var(--red-err);background:var(--red-err-light);color:#7a1a08;}
+  .tf-btn.reveal-correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+
+  /* ── FIB ── */
+  .fib-section-wrap{display:flex;gap:16px;align-items:flex-start;}
+  .fib-questions{flex:1;min-width:0;}
+  .wordbank-sticky{width:148px;flex-shrink:0;position:sticky;top:16px;
+    background:var(--white);border-radius:16px;border:2px dashed var(--gold-mid);
+    padding:12px;box-shadow:0 4px 16px var(--shadow);}
+  .wordbank-sticky .wordbank-label{font-size:11px;font-weight:800;color:var(--gold-dark);
+    text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
+  .wordbank-sticky .wordbank-item{display:block;padding:5px 8px;background:var(--gold-light);
+    border-radius:10px;font-size:12px;font-weight:700;color:var(--gold-dark);
+    border:1.5px solid var(--gold);margin-bottom:6px;text-align:center;cursor:default;}
+  .wordbank-sticky .wordbank-item.extra{opacity:.6;border-style:dashed;}
+  .wordbank-sticky .wordbank-item.used{opacity:.4;text-decoration:line-through;}
+  @media(max-width:600px){
+    .fib-section-wrap{flex-direction:column;}
+    .wordbank-sticky{width:100%;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;}
+    .wordbank-sticky .wordbank-item{display:inline-block;margin-bottom:0;}
+    .wordbank-sticky .wordbank-label{width:100%;}
+  }
+  .fib-input{border:2px solid var(--sky-mid);border-radius:12px;padding:10px 14px;
+    font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;
+    width:100%;margin-top:8px;background:var(--sky-light);transition:all .15s;}
+  .fib-input:focus{border-color:var(--sky-deep);background:white;}
+  .fib-input.correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+  .fib-input.wrong{border-color:var(--red-err);background:var(--red-err-light);color:#7a1a08;}
+
+  /* ── MATCHING ── */
+  .match-select{width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--sky-mid);
+    background:var(--sky-light);font-family:'Nunito',sans-serif;font-size:14px;
+    color:var(--text);outline:none;cursor:pointer;}
+  .match-select.correct{border-color:var(--green-ok);background:var(--green-ok-light);color:#1a5a30;}
+  .match-select.wrong{border-color:var(--red-err);background:var(--red-err-light);color:#7a1a08;}
+  .match-item{padding:10px 14px;border-radius:12px;border:2px solid var(--sky-light);
+    background:var(--sky-light);font-size:14px;font-weight:600;min-height:44px;
+    display:flex;align-items:center;}
+
+  /* ── FEEDBACK ── */
+  .feedback-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:16px;
+    font-size:14px;font-weight:700;line-height:1.6;}
+  .feedback-banner.pass{background:var(--green-ok-light);border:2px solid var(--green-ok);color:#1a5a30;}
+  .feedback-banner.fail{background:var(--red-err-light);border:2px solid var(--red-err);color:#7a1a08;}
+  .feedback-banner.show{display:block;}
+
+  /* ── CAT DIVIDER ── */
+  .cat-divider{display:flex;align-items:center;gap:8px;margin:18px 0;}
+  .cat-divider::before,.cat-divider::after{content:'';flex:1;height:1px;background:rgba(74,138,176,.18);}
+
+  /* ── RESULT ── */
+  #screen-result{text-align:center;}
+  .result-big-emoji{font-size:80px;display:block;margin-bottom:8px;animation:bounce 2.5s ease-in-out infinite;}
+  .result-funny-msg{font-family:'Fredoka One',cursive;font-size:26px;margin-bottom:6px;color:var(--sky-deep);}
+  .result-sub-msg{font-size:14px;color:var(--text-soft);margin-bottom:16px;line-height:1.7;padding:0 12px;}
+  #screen-result h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);margin-bottom:4px;}
+  .result-name{color:var(--sky-deep);}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+  .stat-card{background:var(--sky-light);border-radius:16px;padding:16px;border:1.5px solid var(--sky-mid);}
+  .stat-label{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+  .stat-value{font-family:'Fredoka One',cursive;font-size:28px;color:var(--sky-deep);margin-top:4px;}
+  .stat-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+
+  .hidden{display:none !important;}
+  @media(max-width:500px){.stat-grid{grid-template-columns:1fr 1fr;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <span class="header-icon">🐈‍⬛</span>
+    <h1>Science Revision</h1>
+    <div class="header-sub">Level 9 &nbsp;🌾&nbsp; School Year 2025-2026</div>
+    <p>Ruby School &nbsp;|&nbsp; Genetics · Evolution · Metals &amp; Reactivity</p>
+  </div>
+
+  <!-- Welcome -->
+  <div id="screen-welcome" class="card">
+    <span class="welcome-icon">🌾</span>
+    <h2>Hello, young scientist!</h2>
+    <p>Like the black cat gazing at golden fields —<br>stay curious and let's ace this revision! 🐈‍⬛</p>
+    <div class="name-input-wrapper">
+      <label>Your name</label>
+      <input type="text" id="student-name" placeholder="e.g. Nguyen Van An" maxlength="50"/>
+    </div>
+    <div class="info-chips">
+      <span class="chip">🐈‍⬛ 4 sections</span>
+      <span class="chip">📝 40 questions</span>
+      <span class="chip">🎯 2 attempts each</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start revision 🌾</button>
+  </div>
+
+  <!-- Quiz -->
+  <div id="screen-quiz" class="hidden">
+    <div class="section-nav" id="section-nav"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div id="section-content"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="screen-result" class="card hidden">
+    <span class="result-big-emoji" id="result-big-emoji">🎉</span>
+    <div class="result-funny-msg" id="result-funny-msg"></div>
+    <div class="result-sub-msg" id="result-sub-msg"></div>
+    <h2>Results for <span class="result-name" id="result-name-display"></span></h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Correct answers</div><div class="stat-value" id="res-correct"></div><div class="stat-sub">out of 40</div></div>
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="res-percent"></div><div class="stat-sub">first attempt</div></div>
+      <div class="stat-card"><div class="stat-label">Time taken</div><div class="stat-value" id="res-time"></div><div class="stat-sub">minutes</div></div>
+      <div class="stat-card"><div class="stat-label">Grade</div><div class="stat-value" id="res-grade"></div><div class="stat-sub">overall result</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try again 🔄</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════ DATA ═══════════════ */
+const SECTIONS=[
+  {id:'mcq',label:'I. Multiple Choice (25)',icon:'📝',bg:'#eaf4fb'},
+  {id:'fib',label:'II. Fill in the Blank (5)',icon:'✏️',bg:'#fdf6d8'},
+  {id:'tf', label:'III. True or False (5)',  icon:'✅',bg:'#eaf4fb'},
+  {id:'mat',label:'IV. Matching (5)',        icon:'🔗',bg:'#fdf6d8'},
+];
+
+const MCQ=[
+  {q:'Genes are found on:',
+   opts:['Chromosomes','Cells','Organs','Tissue'],ans:0,
+   ex:'Gene nằm trên nhiễm sắc thể (chromosomes). Nhiễm sắc thể nằm trong nhân tế bào (nucleus). Sơ đồ: Nucleus → Chromosomes → Genes → DNA.'},
+  {q:'Genes control:',
+   opts:['Movement','Characteristics','Temperature','Growth'],ans:1,
+   ex:'Gene kiểm soát các đặc điểm (characteristics) của sinh vật: màu mắt, màu tóc, chiều cao, nhóm máu... Gene mã hóa protein, protein quyết định đặc điểm cơ thể.'},
+  {q:'Inherited characteristics are passed from:',
+   opts:['parents to offspring','teachers to students','plants to air','food to blood'],ans:0,
+   ex:'Di truyền (inheritance) là quá trình truyền đặc điểm từ bố mẹ (parents) sang con cái (offspring) thông qua gene. Đây là cơ chế bảo tồn đặc điểm loài.'},
+  {q:'Chromosomes are in:',
+   opts:['Cytoplasm','Membrane','Wall','Nucleus'],ans:3,
+   ex:'Nhiễm sắc thể (chromosomes) nằm trong nhân tế bào (nucleus). Người có 46 nhiễm sắc thể (23 cặp). Tế bào sinh dục có 23 nhiễm sắc thể (haploid).'},
+  {q:'Variation in a species helps some organisms to:',
+   opts:['survive environmental changes','stop growing','become identical','lose traits'],ans:0,
+   ex:'Biến dị (variation) giúp một số cá thể thích nghi và sống sót khi môi trường thay đổi. Đây là nguyên liệu cho chọn lọc tự nhiên (natural selection).'},
+  {q:'Natural selection is:',
+   opts:['Survival of best adapted','Random','Growth','Mixing'],ans:0,
+   ex:'Chọn lọc tự nhiên (natural selection) là quá trình thiên nhiên "chọn" các cá thể thích nghi tốt nhất sống sót và sinh sản. Được Darwin đề xuất năm 1859.'},
+  {q:'Charles Darwin is best known for his ideas about:',
+   opts:['evolution by natural selection','electricity','acids and alkalis','the water cycle'],ans:0,
+   ex:'Charles Darwin (1809-1882) nổi tiếng với thuyết tiến hóa bằng chọn lọc tự nhiên (evolution by natural selection). Ông quan sát sinh vật ở quần đảo Galapagos.'},
+  {q:'Variation in a species means individuals are:',
+   opts:['exactly the same','slightly different','all weak','all identical'],ans:1,
+   ex:'Biến dị (variation) có nghĩa là các cá thể trong cùng một loài hơi khác nhau (slightly different). Ví dụ: chiều cao, màu da, hình dạng trong cùng một lớp học.'},
+  {q:'Genes are passed from parents to offspring through:',
+   opts:['reproduction','evaporation','digestion','movement'],ans:0,
+   ex:'Gene được truyền qua sinh sản (reproduction). Trong quá trình sinh sản hữu tính, con cái nhận 50% gene từ bố và 50% từ mẹ thông qua tế bào sinh dục (gametes).'},
+  {q:'Environment can:',
+   opts:['Affect traits','Remove genes','Replace DNA','Stop growth'],ans:0,
+   ex:'Môi trường (environment) có thể ảnh hưởng đến biểu hiện đặc điểm (traits). Ví dụ: dinh dưỡng ảnh hưởng chiều cao, nắng ảnh hưởng màu da, tập luyện ảnh hưởng cơ bắp.'},
+  {q:'Metal + oxygen →',
+   opts:['Gas','Liquid','Acid','Metal oxide'],ans:3,
+   ex:'Kim loại + Oxygen → Metal oxide (oxit kim loại). Ví dụ: 2Mg + O₂ → 2MgO. Đây là phản ứng oxy hóa. Magnesium tạo ra ánh sáng trắng sáng rực khi đốt.'},
+  {q:'Group 1 metals:',
+   opts:['Do not react','React slowly','React strongly','Do nothing'],ans:2,
+   ex:'Kim loại nhóm 1 (Group 1: Li, Na, K...) phản ứng rất mạnh (react strongly) với nước và không khí. Càng xuống dưới trong nhóm, phản ứng càng mạnh hơn.'},
+  {q:'The most reactive metals are found at the:',
+   opts:['top of the reactivity series','middle of the reactivity series','bottom of the reactivity series','end of the acid scale'],ans:0,
+   ex:'Kim loại hoạt động mạnh nhất nằm ở đỉnh (top) của reactivity series. Thứ tự: K > Na > Ca > Mg > Al > Zn > Fe > Pb > Cu > Ag > Au (từ mạnh đến yếu).'},
+  {q:'Some metals react with water, while others react only with:',
+   opts:['steam','soil','sugar solution','light'],ans:0,
+   ex:'Một số kim loại chỉ phản ứng với hơi nước (steam) chứ không phản ứng với nước lạnh. Ví dụ: Mg phản ứng chậm với nước lạnh nhưng phản ứng tốt với steam.'},
+  {q:'Metal + acid →',
+   opts:['Oxygen','Water','CO₂','Salt + hydrogen'],ans:3,
+   ex:'Kim loại + Acid → Salt (muối) + Hydrogen (H₂). Ví dụ: Mg + 2HCl → MgCl₂ + H₂↑. H₂ là khí dễ cháy, test bằng que diêm cháy → "squeaky pop".'},
+  {q:'A more reactive metal will:',
+   opts:['react more easily','be darker','weigh less','be softer'],ans:0,
+   ex:'Kim loại hoạt động hơn (more reactive) sẽ phản ứng dễ dàng hơn (react more easily) với acid, nước và oxygen. Reactivity không liên quan đến màu sắc, khối lượng hay độ cứng.'},
+  {q:'Resistant bacteria:',
+   opts:['Die','Survive','Stop','Disappear'],ans:1,
+   ex:'Vi khuẩn kháng thuốc (resistant bacteria) sống sót (survive) khi dùng kháng sinh. Chúng có gene đặc biệt cho phép vô hiệu hóa thuốc. Đây là ví dụ thực tế của chọn lọc tự nhiên.'},
+  {q:'Over time, natural selection can cause species to:',
+   opts:['change gradually','stop reproducing','disappear immediately','become identical'],ans:0,
+   ex:'Qua nhiều thế hệ, chọn lọc tự nhiên khiến loài thay đổi dần dần (change gradually). Đây là quá trình tiến hóa (evolution). Không xảy ra trong một thế hệ mà cần hàng nghìn năm.'},
+  {q:'Peppered moth shows:',
+   opts:['Growth','Water cycle','Light','Natural selection'],ans:3,
+   ex:'Bướm peppered moth là ví dụ kinh điển về chọn lọc tự nhiên (natural selection). Trước công nghiệp hóa: bướm sáng nhiều hơn. Sau công nghiệp: bướm tối nhiều hơn vì ngụy trang tốt hơn trên cây đen bởi khói.'},
+  {q:'Genes come from:',
+   opts:['One parent','Both parents','Environment','Food'],ans:1,
+   ex:'Gene đến từ cả hai bố mẹ (both parents). Con cái nhận 50% gene từ bố và 50% từ mẹ. Đây là lý do con cái có thể giống cả hai bố và mẹ.'},
+  {q:'Species can:',
+   opts:['Stay same','Stop','Not reproduce','Change over time'],ans:3,
+   ex:'Loài có thể thay đổi theo thời gian (change over time) thông qua tiến hóa và chọn lọc tự nhiên. Đây là thuyết tiến hóa của Darwin - loài không cố định mà thay đổi qua nhiều thế hệ.'},
+  {q:'Bacteria that survive antibiotics may become:',
+   opts:['resistant','softer','smaller','harmless'],ans:0,
+   ex:'Vi khuẩn sống sót khi dùng kháng sinh trở thành kháng thuốc (resistant). Chúng sinh sản và truyền gene kháng thuốc → quần thể vi khuẩn kháng thuốc ngày càng nhiều hơn.'},
+  {q:'Which metal is likely to react most strongly with water?',
+   opts:['a Group 1 metal','copper','gold','silver'],ans:0,
+   ex:'Kim loại nhóm 1 (Group 1 metal: Na, K) phản ứng mạnh nhất với nước. Copper, gold, silver đều thấp trong reactivity series → phản ứng yếu hoặc không phản ứng với nước.'},
+  {q:'Genes are made of:',
+   opts:['DNA','water','minerals','oxygen'],ans:0,
+   ex:'Gene được cấu tạo từ DNA (Deoxyribonucleic Acid). DNA có cấu trúc xoắn kép (double helix) đặc trưng, được Watson và Crick mô tả năm 1953.'},
+  {q:'Variation is useful because when the environment changes, some organisms may be better able to:',
+   opts:['survive','disappear','weaken','stop breathing'],ans:0,
+   ex:'Biến dị có ích vì khi môi trường thay đổi, một số cá thể có đặc điểm phù hợp hơn sẽ sống sót (survive) tốt hơn. Đây là cơ sở của chọn lọc tự nhiên và tiến hóa.'},
+];
+
+// FIB: 6 words in bank, 5 used (1 extra = variation)
+const FIB_WORDS_ALL=['genes','nucleus','hydrogen','natural selection','reactivity','variation'];
+const FIB_ANS_WORDS=['genes','nucleus','hydrogen','natural selection','reactivity'];
+const FIB=[
+  {q:'_____ are found on chromosomes.',ans:'genes',
+   ex:'Genes (gene) nằm trên nhiễm sắc thể (chromosomes). Mỗi nhiễm sắc thể chứa hàng nghìn gene, mỗi gene mã hóa một đặc điểm cụ thể.'},
+  {q:'Chromosomes are in the _____.',ans:'nucleus',
+   ex:'Chromosomes nằm trong nhân tế bào (nucleus). Nhân tế bào là "trung tâm điều khiển" của tế bào, chứa toàn bộ thông tin di truyền.'},
+  {q:'Metal + acid produces _____ gas.',ans:'hydrogen',
+   ex:'Metal + Acid → Salt + Hydrogen gas (H₂). H₂ không màu, không mùi, nhẹ hơn không khí và dễ cháy. Test: "squeaky pop" với que diêm đang cháy.'},
+  {q:'_____ explains survival of best adapted organisms.',ans:'natural selection',
+   ex:'Natural selection (chọn lọc tự nhiên) giải thích tại sao các sinh vật thích nghi tốt nhất sống sót và sinh sản. Được Darwin đề xuất sau chuyến đi Galapagos.'},
+  {q:'Metals have different _____ levels.',ans:'reactivity',
+   ex:'Các kim loại có mức độ hoạt động hóa học (reactivity) khác nhau. Reactivity series xếp hạng từ K (mạnh nhất) đến Au (yếu nhất).'},
+];
+
+const TF=[
+  {q:'Genes control characteristics.',ans:true,
+   ex:'ĐÚNG. Gene kiểm soát các đặc điểm (characteristics) của sinh vật bằng cách mã hóa protein. Protein quyết định cấu trúc và chức năng của cơ thể → quyết định đặc điểm.'},
+  {q:'All organisms are identical.',ans:false,
+   ex:'SAI. Các sinh vật KHÔNG giống hệt nhau. Biến dị (variation) tồn tại trong mọi loài. Ngay cả sinh đôi cùng trứng cũng có thể khác nhau do ảnh hưởng của môi trường.'},
+  {q:'Natural selection helps survival.',ans:true,
+   ex:'ĐÚNG. Chọn lọc tự nhiên giúp các cá thể thích nghi tốt nhất sống sót (survival) và sinh sản. Qua nhiều thế hệ, quần thể ngày càng thích nghi hơn với môi trường.'},
+  {q:'All metals react the same.',ans:false,
+   ex:'SAI. Các kim loại phản ứng khác nhau (different reactivity). K phản ứng bùng cháy với nước; Na phản ứng mạnh; Mg phản ứng chậm; Cu, Au hầu như không phản ứng với nước.'},
+  {q:'Metals form oxides with oxygen.',ans:true,
+   ex:'ĐÚNG. Kim loại + Oxygen → Metal oxide. Ví dụ: 4Fe + 3O₂ → 2Fe₂O₃ (gỉ sét); 2Mg + O₂ → 2MgO (magnesium oxide trắng). Tốc độ khác nhau tùy theo reactivity.'},
+];
+
+// Matching: Gene→B, Nucleus→A, Natural selection→C, Metal oxide→E, Reactivity→F
+const MAT_LEFT=['Gene','Nucleus','Natural selection','Metal oxide','Reactivity'];
+const MAT_RIGHT=[
+  'The part of a cell that contains chromosomes',    // 0 → Nucleus (1)
+  'The unit that controls traits',                   // 1 → Gene (0)
+  'Survival of best adapted',                        // 2 → Natural selection (2)
+  'A living thing too small to be seen without a microscope', // 3 → extra (not used)
+  'The product formed when a metal reacts with oxygen', // 4 → Metal oxide (3)
+  'How easily a substance reacts',                   // 5 → Reactivity (4)
+];
+const MAT_ANS=[1,0,2,4,5]; // Gene→1, Nucleus→0, NatSel→2, MetalOxide→4, Reactivity→5
+
+/* Funny result messages - black cat & golden field themed */
+const RESULT_MSGS=[
+  {min:95,emoji:'🐈‍⬛🌟🌾',funny:'THE CAT IS IMPRESSED!',sub:'You sat and stared at the golden field — and came back knowing EVERYTHING! Purrfect! 🎊'},
+  {min:85,emoji:'🌤️🐈‍⬛✨',funny:'GOLDEN FIELD VIBES!',sub:'As bright as those yellow flowers! Great work — the cat approves! 🌾'},
+  {min:75,emoji:'😎🌾',funny:'LOOKING GOOD!',sub:'Like the cat in the sun — pretty comfortable! A little more revision and you\'ll glow! 💪'},
+  {min:65,emoji:'🙂☁️',funny:'PARTLY SUNNY!',sub:'The clouds are clearing! Keep reading those explanations and you\'ll shine. 📖'},
+  {min:50,emoji:'😅🐟',funny:'DISTRACTED BY THE FISH BOWL?',sub:'Like the cat eyeing the fish — focus! Read the explanations carefully. 📝'},
+  {min:35,emoji:'😬🌧️',funny:'THE CAT WENT INSIDE...',sub:'Even curious cats need to study sometimes! Review your notes and try again! 🔄'},
+  {min:0, emoji:'😿🌑',funny:'NIGHT MODE ACTIVATED...',sub:'The black cat blends into darkness... but knowledge will make you shine! Try again! 🌟'},
+];
+
+/* ═══════════════ STATE ═══════════════ */
+let studentName='',startTime=0,currentSection=0;
+let sectionStatus=[0,0,0,0],firstAttemptScores={};
+let mcqState={},mcqChecked=false,mcqAttempts=0;
+let fibChecked=false,fibCorrectMask={},fibAttempts=0;
+let tfState={},tfChecked=false,tfAttempts=0;
+let matState={},matChecked=false,matCorrectMask={},matAttempts=0;
+
+function divider(){return`<div class="cat-divider">🐈‍⬛</div>`;}
+function sHdr(s,note){return`<div class="card"><div class="section-header"><div class="section-icon-box" style="background:${s.bg}">${s.icon}</div><div><h2>${s.label}</h2><p>${note}</p></div></div>`;}
+
+/* ═══════════════ CORE ═══════════════ */
+function startQuiz(){
+  studentName=document.getElementById('student-name').value.trim();
+  if(!studentName){alert('Please enter your name first! 🐈‍⬛');return;}
+  startTime=Date.now();
+  document.getElementById('screen-welcome').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  sectionStatus[0]=1;renderNav();renderSection(0);
+}
+function renderNav(){
+  document.getElementById('section-nav').innerHTML=SECTIONS.map((s,i)=>{
+    let cls=sectionStatus[i]===2?'done':sectionStatus[i]===1?'active':'locked';
+    return`<div class="section-pill ${cls}">${sectionStatus[i]===2?'✓ ':''}${s.label}</div>`;
+  }).join('');
+  const done=sectionStatus.filter(s=>s===2).length,active=sectionStatus.filter(s=>s===1).length;
+  document.getElementById('progress-bar').style.width=((done+active*.5)/SECTIONS.length*100)+'%';
+}
+function renderSection(idx){
+  currentSection=idx;const s=SECTIONS[idx],el=document.getElementById('section-content');
+  if(idx===0)renderMCQ(el,s);else if(idx===1)renderFIB(el,s);
+  else if(idx===2)renderTF(el,s);else renderMAT(el,s);
+}
+
+/* ═══ MCQ ═══ */
+function renderMCQ(el,s){
+  mcqState={};mcqChecked=false;mcqAttempts=0;
+  el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 25 questions')+
+    MCQ.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="mcq-${i}-${j}" onclick="selMCQ(${i},${j})"><span class="option-badge">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+      <div class="explanation" id="mcq-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="mcq-fb"></div>
+    <button class="btn btn-check" onclick="chkMCQ()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mcq-retry" onclick="retMCQ()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mcq-next" onclick="goNext()">Next section &rarr; 🌾</button></div>`;
+}
+function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
+function chkMCQ(){
+  if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all 25 questions! 🐈‍⬛');return;}
+  mcqChecked=true;mcqAttempts++;let correct=0;
+  MCQ.forEach((q,i)=>{
+    const ok=mcqState[i]===q.ans;if(ok)correct++;
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
+      b.className=j===mcqState[i]&&ok?'option-btn correct':j===mcqState[i]&&!ok?'option-btn wrong':j===q.ans&&!ok?'option-btn reveal-correct':'option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
+  const fb=document.getElementById('mcq-fb');fb.classList.add('show');
+  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All ${correct}/${MCQ.length} correct — The cat is very impressed! 🐈‍⬛🌟`;document.getElementById('mcq-next').style.display='block';}
+  else if(mcqAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MCQ.length} correct after 2 attempts. Read the explanations and move on!`;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🌾 ${correct}/${MCQ.length} correct. Read the explanations and try again! (Attempt ${mcqAttempts}/2)`;document.getElementById('mcq-retry').style.display='block';}
+}
+function retMCQ(){
+  MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=false;b.className='option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.remove('show');});
+  mcqChecked=false;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-fb').classList.remove('show');
+}
+
+/* ═══ FIB ═══ */
+function renderFIB(el,s){
+  fibChecked=false;fibCorrectMask={};fibAttempts=0;
+  el.innerHTML=sHdr(s,'Use FIVE words only — there is ONE extra word (Q26-30)')+
+    `<div class="fib-section-wrap">
+      <div class="fib-questions">
+        ${FIB.map((q,i)=>`<div class="question-block">
+          <div class="question-text"><span class="q-num">${i+26}</span>${q.q.replace('_____','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')}</div>
+          <input class="fib-input" id="fib-in-${i}" placeholder="Type your answer..." oninput="updateWordbank()"/>
+          <div class="explanation" id="fib-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+        </div>${i<FIB.length-1?divider():''}`).join('')}
+        <div class="feedback-banner" id="fib-fb"></div>
+        <button class="btn btn-check" onclick="chkFIB()">Check answers ✅</button>
+        <button class="btn btn-retry" id="fib-retry" onclick="retFIB()">Redo incorrect 🔄</button>
+        <button class="btn btn-next" id="fib-next" onclick="goNext()">Next section &rarr; 🌾</button>
+      </div>
+      <div class="wordbank-sticky" id="wordbank-sticky">
+        <span class="wordbank-label">🌾 Word bank</span>
+        ${FIB_WORDS_ALL.map(w=>`<span class="wordbank-item${FIB_ANS_WORDS.includes(w)?'':' extra'}" id="wb-${w.replace(/ /g,'-')}">${w}${FIB_ANS_WORDS.includes(w)?'':' ★'}</span>`).join('')}
+        <div style="font-size:10px;color:#c49500;margin-top:6px;text-align:center;">★ = extra word</div>
+      </div>
+    </div></div>`;
+}
+function updateWordbank(){
+  const used=new Set();
+  FIB.forEach((_,i)=>{const v=document.getElementById(`fib-in-${i}`);if(v&&!v.disabled){const t=v.value.trim().toLowerCase();if(t)used.add(t);}});
+  FIB_WORDS_ALL.forEach(w=>{const el=document.getElementById(`wb-${w.replace(/ /g,'-')}`);if(el)el.classList.toggle('used',used.has(w));});
+}
+function chkFIB(){
+  let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please fill in all blanks! ✏️');return;}
+  fibChecked=true;fibAttempts++;let correct=0;
+  FIB.forEach((q,i)=>{
+    const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
+    if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    if(!ok)inp.value+=`  →  Answer: ${q.ans}`;
+    document.getElementById(`fib-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:FIB.length};
+  const fb=document.getElementById('fib-fb');fb.classList.add('show');
+  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎊 All ${correct}/${FIB.length} correct — Word bank mastered! 🌾🐈‍⬛`;document.getElementById('fib-next').style.display='block';}
+  else if(fibAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${FIB.length} correct after 2 attempts. Check explanations and move on!`;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`✏️ ${correct}/${FIB.length} correct. Try the wrong ones again! (Attempt ${fibAttempts}/2)`;document.getElementById('fib-retry').style.display='block';}
+}
+function retFIB(){
+  FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
+  fibChecked=false;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-fb').classList.remove('show');updateWordbank();
+}
+
+/* ═══ TF ═══ */
+function renderTF(el,s){
+  tfState={};tfChecked=false;tfAttempts=0;
+  el.innerHTML=sHdr(s,'Decide if each statement is True or False &mdash; Q31-35')+
+    TF.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+31}</span>${q.q}</div>
+      <div class="tf-options"><button class="tf-btn" id="tf-${i}-true" onclick="selTF(${i},true)">✓ TRUE</button><button class="tf-btn" id="tf-${i}-false" onclick="selTF(${i},false)">✗ FALSE</button></div>
+      <div class="explanation" id="tf-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="tf-fb"></div>
+    <button class="btn btn-check" onclick="chkTF()">Check answers ✅</button>
+    <button class="btn btn-retry" id="tf-retry" onclick="retTF()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="tf-next" onclick="goNext()">Next section &rarr; 🌾</button></div>`;
+}
+function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
+function chkTF(){
+  if(Object.keys(tfState).length<TF.length){alert('Please answer all questions! 😅');return;}
+  tfChecked=true;tfAttempts++;let correct=0;
+  TF.forEach((q,i)=>{
+    const ok=tfState[i]===q.ans;if(ok)correct++;
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
+      b.className=bval===tfState[i]&&ok?'tf-btn correct':bval===tfState[i]&&!ok?'tf-btn wrong':bval===q.ans&&!ok?'tf-btn reveal-correct':'tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:TF.length};
+  const fb=document.getElementById('tf-fb');fb.classList.add('show');
+  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`🌟 All ${correct}/${TF.length} correct — The golden field is yours! 🌾`;document.getElementById('tf-next').style.display='block';}
+  else if(tfAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${TF.length} correct after 2 attempts. Check explanations and move on!`;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🤔 ${correct}/${TF.length} correct. Read explanations and try again! (Attempt ${tfAttempts}/2)`;document.getElementById('tf-retry').style.display='block';}
+}
+function retTF(){
+  TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`);b.disabled=false;b.className='tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.remove('show');});
+  tfChecked=false;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-fb').classList.remove('show');
+}
+
+/* ═══ MATCHING ═══ */
+function renderMAT(el,s){
+  matState={};matChecked=false;matCorrectMask={};matAttempts=0;
+  const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+  el.innerHTML=sHdr(s,'Match each term with the correct definition &mdash; Q36-40')+
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
+      <tr><th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Terms</th>
+          <th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Definitions</th></tr>
+      ${MAT_LEFT.map((l,i)=>`<tr>
+        <td style="padding:4px 8px;width:30%"><div class="match-item" id="mat-l-${i}"><span class="q-num">${i+36}</span> ${l}</div></td>
+        <td style="padding:4px 8px"><select class="match-select" id="mat-s-${i}" onchange="selMAT(${i},this.value)"><option value="">-- Select --</option>${rOpts}</select></td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="feedback-banner" id="mat-fb"></div>
+    <button class="btn btn-check" onclick="chkMAT()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mat-retry" onclick="retMAT()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mat-next" onclick="showResult()">See my results 🐈‍⬛</button></div>`;
+}
+function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
+function chkMAT(){
+  if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items! 🔗');return;}
+  matChecked=true;matAttempts++;let correct=0;
+  MAT_LEFT.forEach((_,i)=>{
+    const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
+    const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
+    sel.disabled=true;sel.className=ok?'match-select correct':'match-select wrong';
+    if(!ok)left.innerHTML+=` &rarr; <strong style="color:var(--sky-deep)">${MAT_RIGHT[MAT_ANS[i]]}</strong>`;
+  });
+  if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:MAT_LEFT.length};
+  const fb=document.getElementById('mat-fb');fb.classList.add('show');
+  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All ${correct}/${MAT_LEFT.length} matched — The cat salutes you! 🐈‍⬛🌟`;document.getElementById('mat-next').style.display='block';}
+  else if(matAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MAT_LEFT.length} correct after 2 attempts. Correct match shown in blue. Move on!`;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🔗 ${correct}/${MAT_LEFT.length} correct. Correct match shown in blue. Try again! (Attempt ${matAttempts}/2)`;document.getElementById('mat-retry').style.display='block';}
+}
+function retMAT(){
+  MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];
+    const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';
+    document.getElementById(`mat-l-${i}`).innerHTML=`<span class="q-num">${i+36}</span> ${MAT_LEFT[i]}`;});
+  matChecked=false;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-fb').classList.remove('show');
+}
+
+/* ═══ NAVIGATION ═══ */
+function goNext(){
+  sectionStatus[currentSection]=2;const next=currentSection+1;
+  if(next<SECTIONS.length){sectionStatus[next]=1;renderNav();renderSection(next);window.scrollTo({top:0,behavior:'smooth'});}
+  else showResult();
+}
+function showResult(){
+  sectionStatus[currentSection]=2;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  const elapsed=Math.round((Date.now()-startTime)/60000*10)/10;
+  let tc=0,tq=0;Object.values(firstAttemptScores).forEach(v=>{tc+=v.correct;tq+=v.total;});
+  const pct=tq>0?Math.round(tc/tq*100):0;
+  document.getElementById('result-name-display').textContent=studentName;
+  document.getElementById('res-correct').textContent=`${tc}/${tq}`;
+  document.getElementById('res-percent').textContent=`${pct}%`;
+  document.getElementById('res-time').textContent=elapsed;
+  const m=RESULT_MSGS.find(r=>pct>=r.min)||RESULT_MSGS[RESULT_MSGS.length-1];
+  document.getElementById('result-big-emoji').textContent=m.emoji;
+  document.getElementById('result-funny-msg').textContent=m.funny;
+  document.getElementById('result-sub-msg').textContent=m.sub;
+  let grade;if(pct>=90)grade='A';else if(pct>=70)grade='B';else if(pct>=50)grade='C';else grade='D';
+  document.getElementById('res-grade').textContent=grade;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartQuiz(){
+  mcqState={};fibCorrectMask={};tfState={};matCorrectMask={};
+  mcqAttempts=0;fibAttempts=0;tfAttempts=0;matAttempts=0;
+  firstAttemptScores={};sectionStatus=[0,0,0,0];sectionStatus[0]=1;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-welcome').classList.remove('hidden');
+  document.getElementById('screen-quiz').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
