@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Science Revision – Level 7</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky:#c8e8f8;--sky-mid:#5bb8f5;--sky-dark:#2d6fa3;
+    --yellow:#f5c842;--yellow-light:#fef6cc;--yellow-dark:#c49a10;
+    --puddle-light:#ddeeff;
+    --text:#1a3a5c;--text-soft:#4a6e8a;--white:#f9f9f9;--pure:#ffffff;
+    --shadow:rgba(45,111,163,0.13);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito',sans-serif;background-color:var(--sky);min-height:100vh;color:var(--text);overflow-x:hidden;}
+  body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:0;
+    background-image:repeating-linear-gradient(175deg,rgba(255,255,255,.18) 0px,rgba(255,255,255,.18) 1px,transparent 1px,transparent 28px),
+    repeating-linear-gradient(175deg,rgba(255,255,255,.10) 0px,rgba(255,255,255,.10) 1px,transparent 1px,transparent 48px);}
+  body::after{content:'☂️';position:fixed;bottom:20px;right:20px;font-size:44px;opacity:.2;pointer-events:none;z-index:0;animation:sway 4s ease-in-out infinite;}
+  @keyframes sway{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+  @keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  .app{position:relative;z-index:1;max-width:800px;margin:0 auto;padding:20px 16px 60px;}
+  .header{text-align:center;padding:28px 0 16px;}
+  .header-icon{font-size:56px;display:block;margin-bottom:6px;animation:float 3s ease-in-out infinite;}
+  .header h1{font-family:'Fredoka One',cursive;font-size:28px;color:var(--sky-dark);letter-spacing:.5px;}
+  .header p{font-size:14px;color:var(--text-soft);margin-top:4px;}
+  .card{background:rgba(249,249,249,.97);border-radius:24px;padding:28px 24px;box-shadow:0 6px 32px var(--shadow),0 1px 4px rgba(0,0,0,.06);margin-bottom:20px;border:2px solid rgba(91,184,245,.25);}
+  #screen-welcome .welcome-icon{font-size:72px;text-align:center;display:block;margin-bottom:10px;}
+  #screen-welcome h2{font-family:'Fredoka One',cursive;font-size:24px;color:var(--sky-dark);text-align:center;margin-bottom:8px;}
+  #screen-welcome p{text-align:center;color:var(--text-soft);font-size:15px;line-height:1.6;margin-bottom:20px;}
+  .name-input-wrapper{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .name-input-wrapper label{font-weight:700;font-size:15px;color:var(--text);}
+  .name-input-wrapper input{border:2px solid var(--sky-mid);border-radius:14px;padding:12px 16px;font-family:'Nunito',sans-serif;font-size:16px;color:var(--text);outline:none;transition:border .2s;background:#eef7fd;}
+  .name-input-wrapper input:focus{border-color:var(--sky-dark);}
+  .info-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:24px;}
+  .chip{background:var(--yellow-light);border:1.5px solid var(--yellow);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--yellow-dark);font-weight:700;}
+  .btn{display:block;width:100%;padding:14px;border-radius:16px;border:none;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;transition:all .18s;text-align:center;}
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));color:var(--text);box-shadow:0 4px 16px rgba(245,200,66,.4);}
+  .btn-primary:hover{box-shadow:0 6px 24px rgba(245,200,66,.55);transform:translateY(-1px);}
+  .btn-check{background:linear-gradient(135deg,var(--sky-mid),var(--sky-dark));color:var(--white);box-shadow:0 4px 16px rgba(91,184,245,.35);margin-top:16px;}
+  .btn-next{background:linear-gradient(135deg,var(--yellow),var(--yellow-dark));color:var(--text);box-shadow:0 4px 16px rgba(245,200,66,.4);margin-top:12px;display:none;}
+  .btn-retry{background:linear-gradient(135deg,#e07a30,#b85a18);color:var(--white);box-shadow:0 4px 12px rgba(184,90,24,.3);margin-top:12px;display:none;}
+  .section-nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+  .section-pill{padding:8px 16px;border-radius:20px;font-size:13px;font-weight:700;border:2px solid;cursor:default;transition:all .2s;}
+  .section-pill.locked{background:rgba(249,249,249,.6);border-color:rgba(91,184,245,.3);color:#a0b8c8;}
+  .section-pill.active{background:var(--yellow);border-color:var(--yellow-dark);color:var(--text);}
+  .section-pill.done{background:var(--puddle-light);border-color:var(--sky-dark);color:var(--sky-dark);}
+  .progress-bar-wrap{background:rgba(255,255,255,.45);border-radius:10px;height:8px;margin-bottom:20px;overflow:hidden;}
+  .progress-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--yellow),var(--sky-mid));transition:width .4s ease;}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:2px dashed rgba(91,184,245,.3);}
+  .section-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+  .section-header h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--sky-dark);}
+  .section-header p{font-size:13px;color:var(--text-soft);margin-top:2px;}
+  .question-block{margin-bottom:24px;}
+  .question-text{font-size:15px;font-weight:700;color:var(--text);margin-bottom:12px;line-height:1.5;}
+  .q-num{display:inline-block;background:var(--yellow-light);color:var(--yellow-dark);font-family:'Fredoka One',cursive;width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:14px;margin-right:8px;flex-shrink:0;border:1.5px solid var(--yellow);}
+  .options{display:flex;flex-direction:column;gap:8px;}
+  .option-btn{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:14px;border:2px solid var(--puddle-light);background:var(--puddle-light);cursor:pointer;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;color:var(--text);transition:all .15s;text-align:left;}
+  .option-btn:hover:not(:disabled){border-color:var(--sky-dark);background:white;transform:translateX(3px);}
+  .option-btn.selected{border-color:var(--sky-dark);background:white;}
+  .option-btn.correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .option-btn.wrong{border-color:#b03060;background:#fde8ef;color:#7a0a30;}
+  .option-btn.reveal-correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .option-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;background:rgba(91,184,245,.2);color:var(--sky-dark);flex-shrink:0;}
+  .option-btn.correct .option-badge{background:#1a7a3a;color:white;}
+  .option-btn.wrong .option-badge{background:#b03060;color:white;}
+  .option-btn.reveal-correct .option-badge{background:#1a7a3a;color:white;}
+  .explanation{display:none;margin-top:10px;padding:12px 14px;border-radius:12px;background:var(--yellow-light);border:1.5px solid var(--yellow);font-size:13px;line-height:1.7;color:#5a3c00;}
+  .explanation.show{display:block;}
+  .ex-tag{display:inline-block;background:var(--yellow-dark);color:white;font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 7px;border-radius:6px;margin-right:6px;vertical-align:middle;}
+  .tf-options{display:flex;gap:10px;}
+  .tf-btn{flex:1;padding:12px;border-radius:14px;border:2px solid var(--puddle-light);background:var(--puddle-light);cursor:pointer;font-family:'Nunito',sans-serif;font-size:15px;font-weight:700;color:var(--text);transition:all .15s;text-align:center;}
+  .tf-btn:hover:not(:disabled){border-color:var(--sky-dark);background:white;}
+  .tf-btn.selected{border-color:var(--sky-dark);background:white;}
+  .tf-btn.correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .tf-btn.wrong{border-color:#b03060;background:#fde8ef;color:#7a0a30;}
+  .tf-btn.reveal-correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .fib-section-wrap{display:flex;gap:16px;align-items:flex-start;}
+  .fib-questions{flex:1;min-width:0;}
+  .wordbank-sticky{width:148px;flex-shrink:0;position:sticky;top:16px;background:var(--pure);border-radius:16px;border:2px dashed var(--yellow);padding:12px;box-shadow:0 4px 16px var(--shadow);}
+  .wordbank-sticky .wordbank-label{font-size:11px;font-weight:800;color:var(--yellow-dark);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:block;}
+  .wordbank-sticky .wordbank-item{display:block;padding:5px 8px;background:var(--yellow-light);border-radius:10px;font-size:12px;font-weight:700;color:var(--yellow-dark);border:1.5px solid var(--yellow);margin-bottom:6px;text-align:center;cursor:default;}
+  .wordbank-sticky .wordbank-item.used{opacity:.4;text-decoration:line-through;}
+  @media(max-width:600px){.fib-section-wrap{flex-direction:column;}.wordbank-sticky{width:100%;position:static;display:flex;flex-wrap:wrap;gap:6px;padding:10px;}.wordbank-sticky .wordbank-item{display:inline-block;margin-bottom:0;}.wordbank-sticky .wordbank-label{width:100%;}}
+  .fib-input{border:2px solid var(--sky-mid);border-radius:12px;padding:10px 14px;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;width:100%;margin-top:8px;background:#eef7fd;transition:all .15s;}
+  .fib-input:focus{border-color:var(--sky-dark);background:white;}
+  .fib-input.correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .fib-input.wrong{border-color:#b03060;background:#fde8ef;color:#7a0a30;}
+  .match-select{width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--sky-mid);background:#eef7fd;font-family:'Nunito',sans-serif;font-size:14px;color:var(--text);outline:none;cursor:pointer;}
+  .match-select.correct{border-color:#1a7a3a;background:#e6f7ec;color:#1a5030;}
+  .match-select.wrong{border-color:#b03060;background:#fde8ef;color:#7a0a30;}
+  .match-item{padding:10px 14px;border-radius:12px;border:2px solid var(--puddle-light);background:var(--puddle-light);font-size:14px;font-weight:600;min-height:44px;display:flex;align-items:center;}
+  .feedback-banner{display:none;margin-top:16px;padding:14px 18px;border-radius:16px;font-size:14px;font-weight:700;line-height:1.6;}
+  .feedback-banner.pass{background:#e6f7ec;border:2px solid #1a7a3a;color:#1a5030;}
+  .feedback-banner.fail{background:#fde8ef;border:2px solid #b03060;color:#7a0a30;}
+  .feedback-banner.show{display:block;}
+  #screen-result{text-align:center;}
+  .result-big-emoji{font-size:80px;display:block;margin-bottom:8px;animation:float 2.5s ease-in-out infinite;}
+  .result-funny-msg{font-family:'Fredoka One',cursive;font-size:24px;margin-bottom:6px;color:var(--sky-dark);}
+  .result-sub-msg{font-size:14px;color:var(--text-soft);margin-bottom:16px;line-height:1.7;padding:0 12px;}
+  #screen-result h2{font-family:'Fredoka One',cursive;font-size:20px;color:var(--text);margin-bottom:4px;}
+  .result-name{color:var(--sky-dark);}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;}
+  .stat-card{background:#eef7fd;border-radius:16px;padding:16px;border:1.5px solid var(--sky-mid);}
+  .stat-label{font-size:11px;color:var(--text-soft);font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+  .stat-value{font-family:'Fredoka One',cursive;font-size:28px;color:var(--sky-dark);margin-top:4px;}
+  .stat-sub{font-size:11px;color:var(--text-soft);margin-top:2px;}
+  .rain-divider{display:flex;align-items:center;gap:8px;margin:20px 0;}
+  .rain-divider::before,.rain-divider::after{content:'';flex:1;height:1px;background:rgba(91,184,245,.3);}
+  .hidden{display:none !important;}
+  @media(max-width:500px){.stat-grid{grid-template-columns:1fr 1fr;}.card{padding:20px 16px;}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <span class="header-icon">🐰</span>
+    <h1>Science Revision</h1>
+    <p>Level 7 &nbsp;|&nbsp; Ruby School &nbsp;☂️</p>
+  </div>
+
+  <div id="screen-welcome" class="card">
+    <span class="welcome-icon">☂️</span>
+    <h2>Hello, young scientist!</h2>
+    <p>Miffy is ready to revise with you! 🐰<br>Chapters 7, 8 &amp; 9 — all together. Let's splash through it!</p>
+    <div class="name-input-wrapper">
+      <label>Your name</label>
+      <input type="text" id="student-name" placeholder="e.g. Nguyen Van An" maxlength="50"/>
+    </div>
+    <div class="info-chips">
+      <span class="chip">☂️ 4 sections</span>
+      <span class="chip">📝 40 questions</span>
+      <span class="chip">🎯 2 attempts per section</span>
+    </div>
+    <button class="btn btn-primary" onclick="startQuiz()">Start revision 🚀</button>
+  </div>
+
+  <div id="screen-quiz" class="hidden">
+    <div class="section-nav" id="section-nav"></div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div id="section-content"></div>
+  </div>
+
+  <div id="screen-result" class="card hidden">
+    <span class="result-big-emoji" id="result-big-emoji">🎉</span>
+    <div class="result-funny-msg" id="result-funny-msg"></div>
+    <div class="result-sub-msg" id="result-sub-msg"></div>
+    <h2>Results for <span class="result-name" id="result-name-display"></span></h2>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="stat-label">Correct answers</div><div class="stat-value" id="res-correct"></div><div class="stat-sub">out of 40</div></div>
+      <div class="stat-card"><div class="stat-label">Score</div><div class="stat-value" id="res-percent"></div><div class="stat-sub">first attempt</div></div>
+      <div class="stat-card"><div class="stat-label">Time taken</div><div class="stat-value" id="res-time"></div><div class="stat-sub">minutes</div></div>
+      <div class="stat-card"><div class="stat-label">Grade</div><div class="stat-value" id="res-grade"></div><div class="stat-sub">overall result</div></div>
+    </div>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try again 🔄</button>
+  </div>
+</div>
+
+<script>
+const SECTIONS=[
+  {id:'mcq',label:'I. Multiple Choice',icon:'📝',bg:'#ddeeff'},
+  {id:'fib',label:'II. Fill in the Blank',icon:'✏️',bg:'#fef6cc'},
+  {id:'tf', label:'III. True or False',  icon:'✅',bg:'#ddeeff'},
+  {id:'mat',label:'IV. Matching',        icon:'🔗',bg:'#fef6cc'},
+];
+
+const MCQ=[
+  {q:'The smallest particle of an element is a(n) ___.',opts:['molecule','atom','ion','compound'],ans:1,
+   ex:'Atom (nguyên tử) là hạt nhỏ nhất của một nguyên tố. Molecule gồm nhiều atom. Ion là atom mang điện. Compound là hợp chất gồm nhiều loại atom khác nhau.'},
+  {q:'The center of an atom is called the ___.',opts:['shell','electron','nucleus','molecule'],ans:2,
+   ex:'Nucleus (hạt nhân) là trung tâm của nguyên tử, chứa proton (+) và neutron (0). Electron chuyển động quanh hạt nhân theo các lớp vỏ (electron shells).'},
+  {q:'Which particle has a positive charge?',opts:['proton','electron','neutron','atom'],ans:0,
+   ex:'Proton mang điện DƯƠNG (+). Electron mang điện ÂM (-). Neutron không mang điện (trung hòa). Nguyên tử trung hòa: số proton = số electron.'},
+  {q:'Which particle moves around the nucleus?',opts:['proton','neutron','nucleus','electron'],ans:3,
+   ex:'Electron chuyển động quanh hạt nhân theo các lớp vỏ. Proton và neutron nằm bên trong hạt nhân. Electron rất nhẹ so với proton và neutron.'},
+  {q:'In a neutral atom, the number of protons is ___ the number of electrons.',opts:['greater than','equal to','smaller than','different from'],ans:1,
+   ex:'Nguyên tử trung hòa (neutral): số proton = số electron → tổng điện tích = 0. Nếu mất/nhận electron → ion mang điện.'},
+  {q:'Atoms of the same element always have the same number of ___.',opts:['protons','neutrons','electrons','molecules'],ans:0,
+   ex:'Số proton (atomic number) là đặc trưng của mỗi nguyên tố. Mọi atom carbon đều có 6 proton, mọi atom oxygen đều có 8 proton.'},
+  {q:'A molecule is formed when two or more ___ are chemically bonded together.',opts:['ions','electrons','atoms','neutrons'],ans:2,
+   ex:'Molecule = 2+ atom liên kết hóa học. Ví dụ: H₂O (2H + 1O). O₂ (2 atom O). CO₂ (1C + 2O). Liên kết hóa học giữ các atom lại với nhau.'},
+  {q:'Which of the following is a molecule of an element?',opts:['H₂O','CO','NH₃','O₂'],ans:3,
+   ex:'O₂ chỉ gồm 2 atom oxy (cùng loại) → phân tử nguyên tố. H₂O, CO, NH₃ đều gồm nhiều loại atom khác nhau → hợp chất (compound).'},
+  {q:'What is the chemical formula of ammonia?',opts:['NH₃','NH₂','N₂H','H₃N₂'],ans:0,
+   ex:'Ammonia = NH₃: 1 atom N (nitrogen) + 3 atom H (hydrogen). Dùng trong phân bón và chất tẩy rửa. Có mùi khai đặc trưng.'},
+  {q:'What is the chemical formula of carbon monoxide?',opts:['CO₂','CO','C₂O','O₂'],ans:1,
+   ex:'Carbon monoxide = CO: 1C + 1O. CO₂ = carbon DIoxide (1C + 2O). CO là khí độc không màu không mùi, sinh ra khi đốt cháy không hoàn toàn.'},
+  {q:'An ion is formed when an atom gains or loses ___.',opts:['protons','neutrons','electrons','molecules'],ans:2,
+   ex:'Ion hình thành khi nguyên tử MẤT hoặc NHẬN electron. Mất e⁻ → ion dương (+). Nhận e⁻ → ion âm (-). Proton/neutron không bị mất/nhận thường.'},
+  {q:'When a sodium atom loses one electron, it becomes ___.',opts:['Na','Na⁻','Na²⁺','Na⁺'],ans:3,
+   ex:'Na mất 1 electron → dư 1 proton dương → Na⁺. Na⁻ sai (nhận electron). Na²⁺ sai (mất 2e). Na là nguyên tử trung hòa ban đầu.'},
+  {q:'When an atom gains electrons, it becomes a ___ ion.',opts:['negative','neutral','positive','molecular'],ans:0,
+   ex:'Nhận thêm electron (âm) → tổng điện tích âm nhiều hơn → ion ÂM (anion). Mất electron → ion dương (cation). Neutral = trung hòa, không phải ion.'},
+  {q:'Which of the following is a physical change?',opts:['burning paper','melting ice','rusting iron','cooking food'],ans:1,
+   ex:'Melting ice là thay đổi VẬT LÝ: H₂O chỉ đổi trạng thái rắn→lỏng, không tạo chất mới, có thể đảo ngược. Ba ví dụ kia tạo chất mới → hóa học.'},
+  {q:'Which of the following is a chemical change?',opts:['boiling water','cutting paper','burning wood','melting wax'],ans:2,
+   ex:'Burning wood tạo ra CO₂ + tro + không thể đảo ngược → HÓA HỌC. Đun sôi nước, cắt giấy, tan sáp: không tạo chất mới → vật lý.'},
+  {q:'A chemical change usually ___.',opts:['keeps the same substance','is always reversible','does not involve energy','forms a new substance'],ans:3,
+   ex:'Chemical change = tạo ra chất MỚI (new substance). Thường không thể đảo ngược. Thường kèm tỏa/hấp thu năng lượng. Ví dụ: đốt cháy, gỉ sét, nấu ăn.'},
+  {q:'In a chemical reaction, the starting substances are called ___.',opts:['reactants','products','atoms','fuels'],ans:0,
+   ex:'Reactants = chất phản ứng (chất bắt đầu). Products = sản phẩm (chất tạo ra). Sơ đồ: Reactants → Products. Ví dụ: H₂ + O₂ (reactants) → H₂O (product).'},
+  {q:'The new substances formed in a reaction are called ___.',opts:['reactants','products','mixtures','elements'],ans:1,
+   ex:'Products = sản phẩm, chất mới tạo ra sau phản ứng. Reactants = chất ban đầu. Mixture = hỗn hợp (không phải sản phẩm phản ứng hóa học).'},
+  {q:'In a chemical reaction, the total mass of reactants is ___ the total mass of products.',opts:['greater than','less than','equal to','not related to'],ans:2,
+   ex:'Bảo toàn khối lượng: tổng khối lượng reactants = tổng khối lượng products. Atom không bị tạo/phá hủy trong phản ứng, chỉ sắp xếp lại.'},
+  {q:'Which gas is produced when a metal reacts with an acid?',opts:['oxygen','nitrogen','carbon dioxide','hydrogen'],ans:3,
+   ex:'Metal + Acid → Salt + Hydrogen (H₂). Ví dụ: Mg + 2HCl → MgCl₂ + H₂↑. Test H₂: que diêm cháy → "squeaky pop".'},
+  {q:'Carbon dioxide can be identified because it ___.',opts:['turns limewater cloudy','burns with a blue flame','makes a pop sound','has a strong smell'],ans:0,
+   ex:'CO₂ làm nước vôi trong (limewater) đục (cloudy/milky): CO₂ + Ca(OH)₂ → CaCO₃↓ + H₂O. "Pop sound" test cho H₂. CO₂ không cháy, không mùi mạnh.'},
+  {q:'A fuel is a substance that releases ___ when it burns.',opts:['water','energy','oxygen','metal'],ans:1,
+   ex:'Fuel (nhiên liệu) giải phóng ENERGY khi đốt. Oxygen cần để đốt nhưng không được tạo ra. Nước là sản phẩm đốt cháy hydrocarbon. Ví dụ fuel: xăng, gas, than.'},
+  {q:'Which of the following is a fuel?',opts:['sand','glass','charcoal','salt'],ans:2,
+   ex:'Charcoal (than củi) là nhiên liệu - đốt cháy tạo năng lượng. Sand, glass, salt không cháy được.'},
+  {q:'Natural gas mainly contains ___.',opts:['oxygen','carbon dioxide','hydrogen','methane'],ans:3,
+   ex:'Natural gas chủ yếu là methane (CH₄) ~90%. Đốt cháy: CH₄ + 2O₂ → CO₂ + 2H₂O + năng lượng. Dùng nấu ăn, sưởi ấm, phát điện.'},
+  {q:'Fossil fuels were formed from ___ that lived millions of years ago.',opts:['plants and animals','rocks and metals','water and sand','oxygen and nitrogen'],ans:0,
+   ex:'Fossil fuels (than, dầu, khí) từ xác THỰC VẬT VÀ ĐỘNG VẬT chết hàng triệu năm trước, bị chôn vùi + áp lực nhiệt. Là nguồn năng lượng không tái tạo.'},
+];
+
+const FIB_WORDS=['methane','positive','reactants','formula','molecule'];
+const FIB=[
+  {q:'A chemical _____ shows the types and numbers of atoms in a substance.',ans:'formula',
+   ex:'Chemical formula cho biết loại atom và số lượng trong một chất. Ví dụ: H₂O (2H, 1O); CO₂ (1C, 2O); NH₃ (1N, 3H).'},
+  {q:'When an atom loses electrons, it becomes a _____ ion.',ans:'positive',
+   ex:'Mất electron (điện âm) → thừa điện dương → ion DƯƠNG (positive/cation). Ví dụ: Na mất 1e → Na⁺. Ca mất 2e → Ca²⁺.'},
+  {q:'The starting substances in a chemical reaction are called _____.',ans:'reactants',
+   ex:'Reactants = chất phản ứng (chất bắt đầu). Sau phản ứng tạo ra products (sản phẩm). Ví dụ: H₂ + O₂ là reactants → H₂O là product.'},
+  {q:'Natural gas mainly contains _____.',ans:'methane',
+   ex:'Methane (CH₄) là thành phần chính của natural gas (~90%). Là nhiên liệu tương đối sạch hơn than đá vì tạo ít CO₂ hơn.'},
+  {q:'A group of atoms chemically bonded together is called a _____.',ans:'molecule',
+   ex:'Molecule = nhóm atom liên kết hóa học với nhau. Ví dụ: O₂ (2 atom O), H₂O (2H+1O), CO₂ (1C+2O).'},
+];
+
+const TF=[
+  {q:'Most of the volume of an atom is empty space.',ans:true,
+   ex:'ĐÚNG. Nguyên tử chủ yếu là khoảng trống. Hạt nhân rất nhỏ nhưng chứa hầu hết khối lượng. Nếu nguyên tử to bằng sân vận động, hạt nhân chỉ bằng hạt đậu.'},
+  {q:'O₂ is a molecule of a compound.',ans:false,
+   ex:'SAI. O₂ là phân tử của một NGUYÊN TỐ (element). Compound cần ≥2 loại atom khác nhau. O₂ chỉ có oxygen → nguyên tố, không phải hợp chất.'},
+  {q:'Melting is a physical change.',ans:true,
+   ex:'ĐÚNG. Melting = thay đổi VẬT LÝ: chất chỉ đổi trạng thái (rắn→lỏng), không tạo chất mới, đảo ngược được (làm lạnh → đông lại).'},
+  {q:'In a chemical reaction, atoms are destroyed.',ans:false,
+   ex:'SAI. Atom KHÔNG bị tạo ra hay phá hủy trong phản ứng hóa học. Chúng chỉ sắp xếp lại. Đây là cơ sở của bảo toàn khối lượng (conservation of mass).'},
+  {q:'Burning fossil fuels produces carbon dioxide.',ans:true,
+   ex:'ĐÚNG. Đốt cháy fossil fuels (chứa C và H) + O₂ → CO₂ + H₂O + năng lượng. CO₂ là khí nhà kính chính gây biến đổi khí hậu.'},
+];
+
+const MAT_LEFT=['Atom','Ion','Molecule','Product','Fuel'];
+const MAT_RIGHT=[
+  'A substance that releases energy when burned',
+  'A new substance formed in a chemical reaction',
+  'The smallest particle of an element',
+  'A charged particle formed when an atom gains or loses electrons',
+  'Two or more atoms chemically bonded together',
+];
+const MAT_ANS=[2,3,4,1,0];
+
+const RESULT_MSGS=[
+  {min:95,emoji:'🐰🌟☂️',funny:'MIFFY IS AMAZED!',sub:'You danced through the rain of questions! Full marks energy! 🌈💛'},
+  {min:85,emoji:'☂️🏆',funny:'SHINING UNDER THE RAIN!',sub:'Like Miffy\'s yellow umbrella — bright even on a rainy day! Brilliant! ✨'},
+  {min:75,emoji:'😎🌧️',funny:'SPLASHING THROUGH!',sub:'Puddle-jumping through the questions! Nearly perfect — keep it up! 💪'},
+  {min:65,emoji:'🙂☁️',funny:'ALMOST SUNNY!',sub:'The clouds are clearing! A bit more revision and you\'ll shine. 📖'},
+  {min:50,emoji:'😅🌧️',funny:'HALFWAY DRY!',sub:'Half your answers stayed dry! Read the explanations and try again. 📝'},
+  {min:35,emoji:'😬💦',funny:'A LITTLE WET...',sub:'The rain got you this time. Check those explanations carefully! 🔄'},
+  {min:0, emoji:'😿🌊',funny:'COMPLETELY SOAKED!',sub:'Even Miffy gets caught in the rain! Read your notes and come back. 🐰'},
+];
+
+let studentName='',startTime=0,currentSection=0;
+let sectionStatus=[0,0,0,0],firstAttemptScores={};
+let mcqState={},mcqChecked=false,mcqAttempts=0;
+let fibChecked=false,fibCorrectMask={},fibAttempts=0;
+let tfState={},tfChecked=false,tfAttempts=0;
+let matState={},matChecked=false,matCorrectMask={},matAttempts=0;
+
+function divider(){return`<div class="rain-divider">🌧️</div>`;}
+function sHdr(s,note){return`<div class="card"><div class="section-header"><div class="section-icon" style="background:${s.bg}">${s.icon}</div><div><h2>${s.label}</h2><p>${note}</p></div></div>`;}
+
+function startQuiz(){
+  studentName=document.getElementById('student-name').value.trim();
+  if(!studentName){alert('Please enter your name first! 🐰');return;}
+  startTime=Date.now();
+  document.getElementById('screen-welcome').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  sectionStatus[0]=1;renderNav();renderSection(0);
+}
+function renderNav(){
+  document.getElementById('section-nav').innerHTML=SECTIONS.map((s,i)=>{
+    let cls=sectionStatus[i]===2?'done':sectionStatus[i]===1?'active':'locked';
+    return`<div class="section-pill ${cls}">${sectionStatus[i]===2?'✓ ':''}${s.label}</div>`;
+  }).join('');
+  const done=sectionStatus.filter(s=>s===2).length,active=sectionStatus.filter(s=>s===1).length;
+  document.getElementById('progress-bar').style.width=((done+active*.5)/SECTIONS.length*100)+'%';
+}
+function renderSection(idx){
+  currentSection=idx;const s=SECTIONS[idx],el=document.getElementById('section-content');
+  if(idx===0)renderMCQ(el,s);else if(idx===1)renderFIB(el,s);
+  else if(idx===2)renderTF(el,s);else renderMAT(el,s);
+}
+
+function renderMCQ(el,s){
+  mcqState={};mcqChecked=false;mcqAttempts=0;
+  el.innerHTML=sHdr(s,'Choose the correct answer &mdash; 25 questions')+
+    MCQ.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+1}</span>${q.q}</div>
+      <div class="options">${q.opts.map((o,j)=>`<button class="option-btn" id="mcq-${i}-${j}" onclick="selMCQ(${i},${j})"><span class="option-badge">${String.fromCharCode(65+j)}</span>${o}</button>`).join('')}</div>
+      <div class="explanation" id="mcq-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="mcq-fb"></div>
+    <button class="btn btn-check" onclick="chkMCQ()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mcq-retry" onclick="retMCQ()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mcq-next" onclick="goNext()">Next section &rarr; ☂️</button></div>`;
+}
+function selMCQ(qi,oi){if(mcqChecked&&mcqState[qi]!==undefined)return;mcqState[qi]=oi;MCQ[qi].opts.forEach((_,j)=>document.getElementById(`mcq-${qi}-${j}`).classList.toggle('selected',j===oi));}
+function chkMCQ(){
+  if(Object.keys(mcqState).length<MCQ.length){alert('Please answer all 25 questions! 😅');return;}
+  mcqChecked=true;mcqAttempts++;let correct=0;
+  MCQ.forEach((q,i)=>{
+    const ok=mcqState[i]===q.ans;if(ok)correct++;
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=true;
+      b.className=j===mcqState[i]&&ok?'option-btn correct':j===mcqState[i]&&!ok?'option-btn wrong':j===q.ans&&!ok?'option-btn reveal-correct':'option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[0])firstAttemptScores[0]={correct,total:MCQ.length};
+  const fb=document.getElementById('mcq-fb');fb.classList.add('show');
+  if(correct===MCQ.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${MCQ.length} — Miffy is jumping in puddles of joy! 🐰💛`;document.getElementById('mcq-next').style.display='block';}
+  else if(mcqAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MCQ.length} correct after 2 attempts. Read the explanations and move on!`;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🌧️ ${correct}/${MCQ.length} correct. Read the explanations and try again! (Attempt ${mcqAttempts}/2)`;document.getElementById('mcq-retry').style.display='block';}
+}
+function retMCQ(){
+  MCQ.forEach((q,i)=>{if(mcqState[i]===q.ans)return;delete mcqState[i];
+    q.opts.forEach((_,j)=>{const b=document.getElementById(`mcq-${i}-${j}`);b.disabled=false;b.className='option-btn';});
+    document.getElementById(`mcq-ex-${i}`).classList.remove('show');});
+  mcqChecked=false;document.getElementById('mcq-retry').style.display='none';document.getElementById('mcq-fb').classList.remove('show');
+}
+
+function renderFIB(el,s){
+  fibChecked=false;fibCorrectMask={};fibAttempts=0;
+  el.innerHTML=sHdr(s,'Fill in the blank using the word bank &mdash; questions 26–30')+
+    `<div class="fib-section-wrap">
+      <div class="fib-questions">
+        ${FIB.map((q,i)=>`<div class="question-block">
+          <div class="question-text"><span class="q-num">${i+26}</span>${q.q.replace('_____','<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')}</div>
+          <input class="fib-input" id="fib-in-${i}" placeholder="Type your answer..." oninput="updateWB()"/>
+          <div class="explanation" id="fib-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+        </div>${i<FIB.length-1?divider():''}`).join('')}
+        <div class="feedback-banner" id="fib-fb"></div>
+        <button class="btn btn-check" onclick="chkFIB()">Check answers ✅</button>
+        <button class="btn btn-retry" id="fib-retry" onclick="retFIB()">Redo incorrect 🔄</button>
+        <button class="btn btn-next" id="fib-next" onclick="goNext()">Next section &rarr; ☂️</button>
+      </div>
+      <div class="wordbank-sticky">
+        <span class="wordbank-label">☂️ Word bank</span>
+        ${FIB_WORDS.map(w=>`<span class="wordbank-item" id="wb-${w}">${w}</span>`).join('')}
+      </div>
+    </div></div>`;
+}
+function updateWB(){
+  const used=new Set();
+  FIB.forEach((_,i)=>{const v=document.getElementById(`fib-in-${i}`);if(v&&!v.disabled){const t=v.value.trim().toLowerCase();if(t)used.add(t);}});
+  FIB_WORDS.forEach(w=>{const el=document.getElementById(`wb-${w}`);if(el)el.classList.toggle('used',used.has(w));});
+}
+function chkFIB(){
+  let all=true;FIB.forEach((_,i)=>{if(!document.getElementById(`fib-in-${i}`).value.trim())all=false;});
+  if(!all){alert('Please fill in all blanks! ✏️');return;}
+  fibChecked=true;fibAttempts++;let correct=0;
+  FIB.forEach((q,i)=>{
+    const inp=document.getElementById(`fib-in-${i}`),ok=inp.value.trim().toLowerCase()===q.ans.toLowerCase();
+    if(ok){correct++;fibCorrectMask[i]=true;}inp.disabled=true;inp.className=ok?'fib-input correct':'fib-input wrong';
+    if(!ok)inp.value+=`  →  Answer: ${q.ans}`;
+    document.getElementById(`fib-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[1])firstAttemptScores[1]={correct,total:FIB.length};
+  const fb=document.getElementById('fib-fb');fb.classList.add('show');
+  if(correct===FIB.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎊 Perfect! ${correct}/${FIB.length} — Word bank cleared! 🐰`;document.getElementById('fib-next').style.display='block';}
+  else if(fibAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${FIB.length} correct after 2 attempts. Check explanations and move on!`;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`✏️ ${correct}/${FIB.length} correct. Read explanations and retry! (Attempt ${fibAttempts}/2)`;document.getElementById('fib-retry').style.display='block';}
+}
+function retFIB(){
+  FIB.forEach((q,i)=>{if(fibCorrectMask[i])return;const inp=document.getElementById(`fib-in-${i}`);inp.disabled=false;inp.className='fib-input';inp.value='';document.getElementById(`fib-ex-${i}`).classList.remove('show');});
+  fibChecked=false;document.getElementById('fib-retry').style.display='none';document.getElementById('fib-fb').classList.remove('show');updateWB();
+}
+
+function renderTF(el,s){
+  tfState={};tfChecked=false;tfAttempts=0;
+  el.innerHTML=sHdr(s,'Write True or False &mdash; questions 31–35')+
+    TF.map((q,i)=>`<div class="question-block">
+      <div class="question-text"><span class="q-num">${i+31}</span>${q.q}</div>
+      <div class="tf-options"><button class="tf-btn" id="tf-${i}-true" onclick="selTF(${i},true)">✓ True</button><button class="tf-btn" id="tf-${i}-false" onclick="selTF(${i},false)">✗ False</button></div>
+      <div class="explanation" id="tf-ex-${i}"><span class="ex-tag">Giải thích</span>${q.ex}</div>
+    </div>`).join(divider())+
+    `<div class="feedback-banner" id="tf-fb"></div>
+    <button class="btn btn-check" onclick="chkTF()">Check answers ✅</button>
+    <button class="btn btn-retry" id="tf-retry" onclick="retTF()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="tf-next" onclick="goNext()">Next section &rarr; ☂️</button></div>`;
+}
+function selTF(qi,val){if(tfChecked&&tfState[qi]!==undefined)return;tfState[qi]=val;['true','false'].forEach(v=>document.getElementById(`tf-${qi}-${v}`).classList.toggle('selected',String(val)===v));}
+function chkTF(){
+  if(Object.keys(tfState).length<TF.length){alert('Please answer all questions! 😅');return;}
+  tfChecked=true;tfAttempts++;let correct=0;
+  TF.forEach((q,i)=>{
+    const ok=tfState[i]===q.ans;if(ok)correct++;
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`),bval=v==='true';b.disabled=true;
+      b.className=bval===tfState[i]&&ok?'tf-btn correct':bval===tfState[i]&&!ok?'tf-btn wrong':bval===q.ans&&!ok?'tf-btn reveal-correct':'tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.add('show');
+  });
+  if(!firstAttemptScores[2])firstAttemptScores[2]={correct,total:TF.length};
+  const fb=document.getElementById('tf-fb');fb.classList.add('show');
+  if(correct===TF.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All correct! ${correct}/${TF.length} — You're as reliable as Miffy's umbrella! ☂️`;document.getElementById('tf-next').style.display='block';}
+  else if(tfAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${TF.length} correct after 2 attempts. Check explanations and keep going!`;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🤔 ${correct}/${TF.length} correct. Read explanations and try again! (Attempt ${tfAttempts}/2)`;document.getElementById('tf-retry').style.display='block';}
+}
+function retTF(){
+  TF.forEach((q,i)=>{if(tfState[i]===q.ans)return;delete tfState[i];
+    ['true','false'].forEach(v=>{const b=document.getElementById(`tf-${i}-${v}`);b.disabled=false;b.className='tf-btn';});
+    document.getElementById(`tf-ex-${i}`).classList.remove('show');});
+  tfChecked=false;document.getElementById('tf-retry').style.display='none';document.getElementById('tf-fb').classList.remove('show');
+}
+
+function renderMAT(el,s){
+  matState={};matChecked=false;matCorrectMask={};matAttempts=0;
+  const rOpts=MAT_RIGHT.map((r,i)=>`<option value="${i}">${r}</option>`).join('');
+  el.innerHTML=sHdr(s,'Match the terms with their definitions &mdash; questions 36–40')+
+    `<div style="overflow-x:auto"><table style="width:100%;border-collapse:separate;border-spacing:0 8px">
+      <tr><th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Terms</th>
+          <th style="text-align:left;padding:4px 8px;font-size:12px;color:var(--text-soft);font-weight:800;text-transform:uppercase;letter-spacing:.8px">Definitions</th></tr>
+      ${MAT_LEFT.map((l,i)=>`<tr>
+        <td style="padding:4px 8px;width:30%"><div class="match-item" id="mat-l-${i}">${i+36}. ${l}</div></td>
+        <td style="padding:4px 8px"><select class="match-select" id="mat-s-${i}" onchange="selMAT(${i},this.value)"><option value="">-- Select --</option>${rOpts}</select></td>
+      </tr>`).join('')}
+    </table></div>
+    <div class="feedback-banner" id="mat-fb"></div>
+    <button class="btn btn-check" onclick="chkMAT()">Check answers ✅</button>
+    <button class="btn btn-retry" id="mat-retry" onclick="retMAT()">Redo incorrect 🔄</button>
+    <button class="btn btn-next" id="mat-next" onclick="showResult()">See my results 🐰</button></div>`;
+}
+function selMAT(li,val){if(val===''){delete matState[li];return;}matState[li]=parseInt(val);}
+function chkMAT(){
+  if(Object.keys(matState).length<MAT_LEFT.length){alert('Please match all items! 🔗');return;}
+  matChecked=true;matAttempts++;let correct=0;
+  MAT_LEFT.forEach((_,i)=>{
+    const sel=document.getElementById(`mat-s-${i}`),left=document.getElementById(`mat-l-${i}`);
+    const ok=matState[i]===MAT_ANS[i];if(ok){correct++;matCorrectMask[i]=true;}
+    sel.disabled=true;sel.className=ok?'match-select correct':'match-select wrong';
+    if(!ok)left.innerHTML+=` &rarr; <strong style="color:var(--sky-dark)">${MAT_RIGHT[MAT_ANS[i]]}</strong>`;
+  });
+  if(!firstAttemptScores[3])firstAttemptScores[3]={correct,total:MAT_LEFT.length};
+  const fb=document.getElementById('mat-fb');fb.classList.add('show');
+  if(correct===MAT_LEFT.length){fb.className='feedback-banner pass show';fb.innerHTML=`🎉 All ${correct}/${MAT_LEFT.length} matched — Perfect, like Miffy and her umbrella! 🐰☂️`;document.getElementById('mat-next').style.display='block';}
+  else if(matAttempts>=2){fb.className='feedback-banner fail show';fb.innerHTML=`😅 ${correct}/${MAT_LEFT.length} correct after 2 attempts. Correct match shown in blue. Move on!`;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-next').style.display='block';}
+  else{fb.className='feedback-banner fail show';fb.innerHTML=`🔗 ${correct}/${MAT_LEFT.length} correct. Correct match shown in blue. Try again! (Attempt ${matAttempts}/2)`;document.getElementById('mat-retry').style.display='block';}
+}
+function retMAT(){
+  MAT_LEFT.forEach((_,i)=>{if(matCorrectMask[i])return;delete matState[i];const sel=document.getElementById(`mat-s-${i}`);sel.disabled=false;sel.className='match-select';sel.value='';document.getElementById(`mat-l-${i}`).innerHTML=`${i+36}. ${MAT_LEFT[i]}`;});
+  matChecked=false;document.getElementById('mat-retry').style.display='none';document.getElementById('mat-fb').classList.remove('show');
+}
+
+function goNext(){
+  sectionStatus[currentSection]=2;const next=currentSection+1;
+  if(next<SECTIONS.length){sectionStatus[next]=1;renderNav();renderSection(next);window.scrollTo({top:0,behavior:'smooth'});}
+  else showResult();
+}
+function showResult(){
+  sectionStatus[currentSection]=2;
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+  const elapsed=Math.round((Date.now()-startTime)/60000*10)/10;
+  let tc=0,tq=0;Object.values(firstAttemptScores).forEach(v=>{tc+=v.correct;tq+=v.total;});
+  const pct=tq>0?Math.round(tc/tq*100):0;
+  document.getElementById('result-name-display').textContent=studentName;
+  document.getElementById('res-correct').textContent=`${tc}/${tq}`;
+  document.getElementById('res-percent').textContent=`${pct}%`;
+  document.getElementById('res-time').textContent=elapsed;
+  const m=RESULT_MSGS.find(r=>pct>=r.min)||RESULT_MSGS[RESULT_MSGS.length-1];
+  document.getElementById('result-big-emoji').textContent=m.emoji;
+  document.getElementById('result-funny-msg').textContent=m.funny;
+  document.getElementById('result-sub-msg').textContent=m.sub;
+  let grade;if(pct>=90)grade='A';else if(pct>=70)grade='B';else if(pct>=50)grade='C';else grade='D';
+  document.getElementById('res-grade').textContent=grade;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function restartQuiz(){
+  mcqState={};fibCorrectMask={};tfState={};matCorrectMask={};
+  mcqAttempts=0;fibAttempts=0;tfAttempts=0;matAttempts=0;
+  firstAttemptScores={};sectionStatus=[0,0,0,0];sectionStatus[0]=1;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-welcome').classList.remove('hidden');
+  document.getElementById('screen-quiz').classList.add('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
