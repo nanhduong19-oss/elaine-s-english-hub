@@ -1,6 +1,6 @@
 {
   "students": [
-    { "id": "demo", "name": "demo", "class": "7/1" },
+    { "id": "DEMO", "name": "demo", "class": "7/1" },
     { "id": "71030MK", "name": "LÌU MẠNH KHANG", "class": "7/1" },
     { "id": "71029KM", "name": "NGUYỄN KHÁNH MY", "class": "7/1" },
     { "id": "71023NL", "name": "PHAN NGỌC LUÂN", "class": "7/1" },
