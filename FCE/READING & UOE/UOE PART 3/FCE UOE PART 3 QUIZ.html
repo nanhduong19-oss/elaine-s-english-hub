@@ -457,7 +457,7 @@ body {
   </div>
 </div>
 
-<!-- ═══════════ GIF POPUP ═══════════ -->
+<!-- ═══════════ ROUND 1 POPUP ═══════════ -->
 <style>
 #gifPopup {
   display:none; position:fixed; inset:0; z-index:999;
@@ -467,15 +467,11 @@ body {
 }
 #gifPopup.show { display:flex; animation: fadeUp .3s ease; }
 .gif-modal {
-  background:white; border-radius:24px; padding:24px 24px 20px;
+  background:white; border-radius:24px; padding:28px 24px 22px;
   text-align:center; max-width:320px; width:88%;
   box-shadow:0 16px 48px rgba(0,0,0,0.2);
 }
-.gif-frame {
-  width:240px; height:240px; border-radius:16px;
-  overflow:hidden; margin:0 auto 14px; background:#f0f4f6;
-}
-.gif-frame img { width:100%; height:100%; object-fit:cover; }
+.gif-emoji { font-size:64px; line-height:1; margin-bottom:14px; animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55); display:block; }
 .gif-msg { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:800; color:#2D4A52; margin-bottom:4px; }
 .gif-sub { font-size:.85rem; color:#5A7A82; font-weight:600; margin-bottom:16px; line-height:1.4; }
 .gif-btn {
@@ -490,9 +486,7 @@ body {
 
 <div id="gifPopup" onclick="closeGif()">
   <div class="gif-modal" onclick="event.stopPropagation()">
-    <div class="gif-frame">
-      <img id="gifImg" src="" alt="meme">
-    </div>
+    <span class="gif-emoji" id="gifEmoji"></span>
     <div class="gif-msg" id="gifMsg"></div>
     <div class="gif-sub" id="gifSub"></div>
     <button class="gif-btn" onclick="closeGif()">Let's fix them! ✏️</button>
@@ -516,9 +510,8 @@ body {
 <!-- ═══════════ RESULT ═══════════ -->
 <div id="screenResult" class="screen">
   <div class="card result-card">
-    <div style="margin-bottom:14px;">
-      <img id="memeDisplay" src="" alt="" style="width:200px;height:200px;border-radius:16px;object-fit:cover;display:none;">
-      <div id="memeEmoji" style="font-size:72px;line-height:1;animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55);"></div>
+    <div style="margin-bottom:14px;text-align:center;">
+      <div id="memeEmoji" style="font-size:80px;line-height:1;animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55);display:block;"></div>
     </div>
     <div class="result-title" id="resultTitle">Well Done!</div>
     <div class="result-tagline" id="resultTagline">Session complete</div>
@@ -554,6 +547,88 @@ body {
 </div>
 
 </div><!-- .app -->
+
+<!-- ═══════════ TEACHER KEY BUTTON ═══════════ -->
+<style>
+#teacherKeyBtn {
+  position: fixed; bottom: 20px; right: 20px; z-index: 900;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  border: 1.5px solid rgba(106,175,192,0.35);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(78,144,160,0.15);
+  cursor: pointer; font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .25s; opacity: 0.55;
+}
+#teacherKeyBtn:hover { opacity: 1; transform: scale(1.1); box-shadow: 0 4px 16px rgba(78,144,160,0.3); }
+
+#teacherModal {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(45,74,82,0.5); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+#teacherModal.show { display: flex; animation: fadeUp .25s ease; }
+.teacher-modal-box {
+  background: white; border-radius: 20px; padding: 28px 24px 22px;
+  width: 88%; max-width: 300px; text-align: center;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+}
+.teacher-modal-title {
+  font-family: 'Baloo 2', cursive; font-size: 1.1rem; font-weight: 800;
+  color: var(--accent2); margin-bottom: 4px;
+}
+.teacher-modal-sub {
+  font-size: .78rem; color: var(--text-mid); font-weight: 600; margin-bottom: 16px;
+}
+.teacher-pass-input {
+  width: 100%; padding: 10px 14px; margin-bottom: 10px;
+  border: 2px solid rgba(106,175,192,.4); border-radius: 10px;
+  font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700;
+  color: var(--text-dark); outline: none; transition: border .2s;
+  text-align: center; letter-spacing: .05em;
+}
+.teacher-pass-input:focus { border-color: var(--accent); }
+.teacher-pass-error { font-size: .78rem; color: var(--wrong); font-weight: 700; margin-bottom: 10px; display: none; }
+.teacher-modal-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.teacher-btn-confirm {
+  padding: 10px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white; border: none; border-radius: 10px;
+  font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 800; cursor: pointer;
+}
+.teacher-btn-cancel {
+  padding: 10px; background: white; color: var(--accent2);
+  border: 2px solid var(--accent); border-radius: 10px;
+  font-family: 'Nunito', sans-serif; font-size: .88rem; font-weight: 800; cursor: pointer;
+}
+.teacher-mode-banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+  background: linear-gradient(135deg, var(--accent2), #3a7080);
+  color: white; text-align: center;
+  font-family: 'Nunito', sans-serif; font-size: .8rem; font-weight: 800;
+  padding: 6px 12px; letter-spacing: .04em;
+  display: none;
+}
+.teacher-mode-banner.show { display: block; }
+</style>
+
+<button id="teacherKeyBtn" onclick="openTeacherModal()" title="Teacher Mode">🔑</button>
+
+<div id="teacherModal">
+  <div class="teacher-modal-box" onclick="event.stopPropagation()">
+    <div class="teacher-modal-title">🔑 Teacher Mode</div>
+    <div class="teacher-modal-sub">Enter password to bypass student login</div>
+    <input type="password" id="teacherPassInput" class="teacher-pass-input" placeholder="Password…" maxlength="30"
+      onkeydown="if(event.key==='Enter')confirmTeacher()">
+    <div class="teacher-pass-error" id="teacherPassError">Incorrect password. Try again.</div>
+    <div class="teacher-modal-btns">
+      <button class="teacher-btn-confirm" onclick="confirmTeacher()">Enter</button>
+      <button class="teacher-btn-cancel" onclick="closeTeacherModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="teacher-mode-banner" id="teacherBanner">🔑 Teacher Mode — Results will NOT be saved to sheet</div>
 
 <script>
 /* ═══════════════════════════════════════════════
@@ -929,11 +1004,16 @@ function checkAnswers() {
     all.forEach(({ qid }) => {
       if (!S.answers[qid]) S.answers[qid] = { value:'', correct:false, attempts:2 };
     });
-    S.revealAll = true;   // now reveal all answers + explanations
+    S.revealAll = true;
     S.endTime = new Date();
     stopTimer();
-    renderQuiz();         // re-render with full reveal before going to spelling
-    startSpelling();
+    renderQuiz();
+    // Replace Check button with a Next button so student reviews answers first
+    const btn = document.getElementById('checkBtn');
+    btn.textContent = 'Continue to Spelling Practice ✏️';
+    btn.onclick = () => startSpelling();
+    btn.style.background = 'linear-gradient(135deg,var(--meadow),#5a9e57)';
+    window.scrollTo({ top:0, behavior:'smooth' });
     return;
   }
 
@@ -1060,15 +1140,15 @@ function finishSpelling() { showResult(); }
 /* ═══════════════════════════════════════════════
    RESULT SCREEN
 ═══════════════════════════════════════════════ */
-const RESULT_GIFS = [
-  { score: 90, gif: 'https://media1.giphy.com/media/OwAhyA2lsiGL12pL7C/200.gif' },
-  { score: 70, gif: 'https://media0.giphy.com/media/dPTx0nV4LcoeR3KRgZ/200.gif' },
-  { score: 50, gif: 'https://media0.giphy.com/media/qBHsm7ECyCPzc4xjfw/giphy.gif'},
-  { score: 0,  gif: 'https://media2.giphy.com/media/CP52rdjgLyDDOYMXYJ/200.gif' },
+const RESULT_EMOJIS = [
+  { score: 90, emoji: '🏆🌟✨' },
+  { score: 70, emoji: '🎉💪🐻' },
+  { score: 50, emoji: '👏📚🐼' },
+  { score: 0,  emoji: '💪📝🌱' },
 ];
 function getMeme(p) {
-  const r = RESULT_GIFS.find(g => p >= g.score) || RESULT_GIFS[RESULT_GIFS.length-1];
-  return r.gif;
+  const r = RESULT_EMOJIS.find(g => p >= g.score) || RESULT_EMOJIS[RESULT_EMOJIS.length-1];
+  return r.emoji;
 }
 
 function showResult() {
@@ -1079,11 +1159,9 @@ function showResult() {
   const pct     = Math.round(correct/all.length*100);
   const dur     = Math.floor((S.endTime - S.startTime)/1000);
 
-  const memeImg = document.getElementById('memeDisplay');
   const memeEmoji = document.getElementById('memeEmoji');
-  memeImg.src = getMeme(pct);
-  memeImg.style.display = 'block';
-  memeEmoji.style.display = 'none';
+  memeEmoji.textContent = getMeme(pct);
+  memeEmoji.style.display = 'block';
   document.getElementById('resultTitle').textContent  = pct>=90?'Outstanding!':pct>=70?'Well Done!':pct>=50?'Good Try!':'Keep Going!';
   document.getElementById('resultTagline').textContent= pct>=90?'Excellent! You nailed it! 🏆':pct>=70?'Great work! Keep it up!':pct>=50?'Good effort - review the words below.':'Keep practising - you\'ll get there!';
   document.getElementById('statPct').textContent  = pct + '%';
@@ -1136,11 +1214,20 @@ function showResult() {
    SAVE TO SHEET
 ═══════════════════════════════════════════════ */
 async function saveSheet(pct, correct, wrong, wrongList) {
+  if (_teacherMode) { console.log('Teacher mode — sheet save skipped.'); return; }
+  function fmtSheet(d) {
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = String(d.getFullYear()).slice(-2);
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mi = String(d.getMinutes()).padStart(2,'0');
+    return `${dd}-${mm}-${yy} ${hh}:${mi}`;
+  }
   try {
     await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({
       action:'saveSession', studentId:S.studentId, studentName:S.studentName,
       class:S.studentClass, mode:S.mode==='grade10'?'Grade10':'FCE',
-      startTime:S.startTime.toISOString(), endTime:S.endTime.toISOString(),
+      startTime:fmtSheet(S.startTime), endTime:fmtSheet(S.endTime),
       duration:Math.floor((S.endTime-S.startTime)/1000),
       totalQuestions:correct+wrong, correct, wrong, percentage:pct,
     })});
@@ -1176,25 +1263,25 @@ function goReview() { S.reviewMode=true; _reviewOn=true; document.getElementById
 const ROUND1_MEMES = [
   {
     score: 100,
-    gif: 'https://media1.giphy.com/media/GMJNWpteXtGKMF5iZk/giphy.gif',
+    emoji: '🌟🏆🌟',
     msg: 'Perfect Round 1! 🌟',
     sub: 'Every single one correct — absolutely incredible!'
   },
   {
     score: 80,
-    gif: 'https://media1.giphy.com/media/VWSKATzcFuYY2Hu4ay/200.gif',
+    emoji: '💪🐻💪',
     msg: 'Almost there! 💪',
     sub: `Just a few to fix — you've got this in Round 2!`
   },
   {
     score: 50,
-    gif: 'https://media1.giphy.com/media/4е8PIbLjMkMQDjj3T/200.gif',
-    msg: 'Good try! 🕺',
+    emoji: '📚🐼📚',
+    msg: 'Good try! Keep going!',
     sub: 'Review the red ones carefully in Round 2.'
   },
   {
     score: 0,
-    gif: 'https://media1.giphy.com/media/TMPXKbZww72fyzhc1c/200.gif',
+    emoji: '🌱📝🌱',
     msg: 'Keep going! 📝',
     sub: 'Round 2 is your chance to make it right!'
   },
@@ -1205,7 +1292,7 @@ function showMemePopup() {
   const correct = all.filter(({qid}) => S.answers[qid]?.correct).length;
   const pct     = Math.round(correct / all.length * 100);
   const meme    = ROUND1_MEMES.find(m => pct >= m.score) || ROUND1_MEMES[ROUND1_MEMES.length-1];
-  document.getElementById('gifImg').src  = meme.gif;
+  document.getElementById('gifEmoji').textContent = meme.emoji;
   document.getElementById('gifMsg').textContent = meme.msg;
   document.getElementById('gifSub').textContent = `${correct}/${all.length} correct · ${pct}% — ${meme.sub}`;
   document.getElementById('gifPopup').classList.add('show');
@@ -1222,6 +1309,77 @@ function shuffle(a) {
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
   return a;
 }
+/* ═══════════════════════════════════════════════
+   TEACHER MODE
+═══════════════════════════════════════════════ */
+const TEACHER_PASS = 'easygame19';
+let _teacherMode = false;
+
+function openTeacherModal() {
+  document.getElementById('teacherPassInput').value = '';
+  document.getElementById('teacherPassError').style.display = 'none';
+  document.getElementById('teacherModal').classList.add('show');
+  setTimeout(() => document.getElementById('teacherPassInput').focus(), 100);
+}
+
+function closeTeacherModal() {
+  document.getElementById('teacherModal').classList.remove('show');
+}
+
+function confirmTeacher() {
+  const val = document.getElementById('teacherPassInput').value.trim();
+  if (val !== TEACHER_PASS) {
+    document.getElementById('teacherPassError').style.display = 'block';
+    document.getElementById('teacherPassInput').value = '';
+    document.getElementById('teacherPassInput').focus();
+    return;
+  }
+  closeTeacherModal();
+  _teacherMode = true;
+
+  // Show banner
+  document.getElementById('teacherBanner').classList.add('show');
+  document.body.style.paddingTop = '32px';
+
+  // Bypass student lookup: fill in demo data and enable Start
+  S.studentId    = 'TEACHER';
+  S.studentName  = 'Teacher Preview';
+  S.studentClass = 'Demo';
+  document.getElementById('inputStudentId').value = 'TEACHER';
+  document.getElementById('inputName').value      = 'Teacher Preview';
+  document.getElementById('inputClass').value     = 'Demo';
+  document.getElementById('idError').style.display = 'none';
+  document.getElementById('startBtn').disabled = false;
+
+  // Change key button to indicate active mode
+  const btn = document.getElementById('teacherKeyBtn');
+  btn.textContent = '✅';
+  btn.style.background = 'rgba(109,191,126,0.7)';
+  btn.style.opacity = '1';
+  btn.title = 'Teacher Mode active — click to exit';
+  btn.onclick = exitTeacherMode;
+}
+
+function exitTeacherMode() {
+  _teacherMode = false;
+  document.getElementById('teacherBanner').classList.remove('show');
+  document.body.style.paddingTop = '';
+  // Reset welcome form
+  S.studentId = S.studentName = S.studentClass = '';
+  document.getElementById('inputStudentId').value = '';
+  document.getElementById('inputName').value      = '';
+  document.getElementById('inputClass').value     = '';
+  document.getElementById('startBtn').disabled = true;
+  // Restore key button
+  const btn = document.getElementById('teacherKeyBtn');
+  btn.textContent = '🔑';
+  btn.style.background = 'rgba(255,255,255,0.55)';
+  btn.style.opacity = '0.55';
+  btn.title = 'Teacher Mode';
+  btn.onclick = openTeacherModal;
+  goHome();
+}
+
 </script>
 </body>
 </html>
