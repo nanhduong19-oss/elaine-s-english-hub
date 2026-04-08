@@ -576,6 +576,7 @@ const S = {
   session: [],        // questions/passages for this session
   answers: {},        // qid → { value, correct, attempts }
   attempt: 1,         // 1 or 2
+  revealAll: false,   // true only after attempt 2 is checked
   wrongServerIds: [],
   startTime: null, endTime: null, timerInterval: null,
   spellingWords: [],  // [{word, completed, done}]
@@ -705,7 +706,7 @@ async function loadServerWrong(id) {
    START QUIZ
 ═══════════════════════════════════════════════ */
 function startQuiz() {
-  S.answers = {}; S.attempt = 1;
+  S.answers = {}; S.attempt = 1; S.revealAll = false;
 
   if (S.mode === 'grade10') {
     const wrongIds = S.wrongServerIds;
@@ -784,11 +785,14 @@ function renderG10() {
         onkeydown="if(event.key==='Enter')checkAnswers()"
       >`);
 
-    // explanation: show only on attempt 2, or if correct on attempt 1
+    // explanation logic:
+    // - Correct on attempt 1 → show green explanation immediately
+    // - Wrong on attempt 1 → only red highlight, NO explanation, NO answer
+    // - Wrong on attempt 2 after check → show answer + explanation (revealAll)
     let showExplain = false, explainClass = '';
     if (checked) {
       if (ans.correct) { showExplain = true; explainClass = 'ex-correct'; }
-      else if (S.attempt === 2) { showExplain = true; explainClass = 'ex-wrong'; }
+      else if (S.revealAll) { showExplain = true; explainClass = 'ex-wrong'; }
     }
 
     const div = document.createElement('div');
@@ -799,8 +803,8 @@ function renderG10() {
         ${sentenceHTML} <span class="root-hint">(${q.rootWord})</span>
       </div>
       <div class="explain-box ${showExplain ? 'show ' + explainClass : ''}">
-        ${(checked && !ans.correct && S.attempt === 2) ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
-        ${(ans && ans.correct) || S.attempt === 2 ? q.explanation : ''}
+        ${(checked && !ans.correct && S.revealAll) ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
+        ${(ans && ans.correct) || S.revealAll ? q.explanation : ''}
       </div>`;
     c.appendChild(div);
 
@@ -863,13 +867,13 @@ function renderFCE() {
       let showExplain = false, explainClass = '';
       if (checked) {
         if (ans.correct) { showExplain = true; explainClass = 'ex-correct'; }
-        else if (S.attempt === 2) { showExplain = true; explainClass = 'ex-wrong'; }
+        else if (S.revealAll) { showExplain = true; explainClass = 'ex-wrong'; }
       }
       const item = document.createElement('div');
       item.className = `fce-explain-item ${showExplain ? 'show ' + explainClass : ''}`;
       item.id = `exp_${qid}`;
-      const showAns2 = checked && !ans.correct && S.attempt === 2;
-      const showExp2 = (ans && ans.correct) || S.attempt === 2;
+      const showAns2 = checked && !ans.correct && S.revealAll;
+      const showExp2 = (ans && ans.correct) || S.revealAll;
       item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${showAns2 ? ` → <span style="color:#2E6E45;font-weight:800">${q.answer}</span>` : ''}${showExp2 ? ': ' + q.explanation : ''}`;
       expContainer.appendChild(item);
 
@@ -925,14 +929,16 @@ function checkAnswers() {
     all.forEach(({ qid }) => {
       if (!S.answers[qid]) S.answers[qid] = { value:'', correct:false, attempts:2 };
     });
+    S.revealAll = true;   // now reveal all answers + explanations
     S.endTime = new Date();
     stopTimer();
+    renderQuiz();         // re-render with full reveal before going to spelling
     startSpelling();
     return;
   }
 
-  // After attempt 1: show meme then go to round 2
-  S.attempt = 2;
+  // After attempt 1: show meme, then move to round 2
+  // NOTE: S.attempt is still 1 here — it increments inside closeGif()
   showMemePopup();
 }
 
@@ -1055,10 +1061,10 @@ function finishSpelling() { showResult(); }
    RESULT SCREEN
 ═══════════════════════════════════════════════ */
 const RESULT_GIFS = [
-  { score: 90, gif: 'https://media1.giphy.com/media/dZd6NaZ8522fBx6w3d/200.gif' },  // YES! milk bear
-  { score: 70, gif: 'https://media0.giphy.com/media/JoUoAzZEjEy9PrZ98N/200.gif' },  // jump heart
-  { score: 50, gif: 'https://media0.giphy.com/media/kf3EjrAsKp3P9bhYHG/giphy.gif'}, // disco mocha
-  { score: 0,  gif: 'https://media2.giphy.com/media/L3iXjPw1GoEk0nioqY/200.gif' },  // angry sweat
+  { score: 90, gif: 'https://media1.giphy.com/media/OwAhyA2lsiGL12pL7C/200.gif' },  // YES! milk bear
+  { score: 70, gif: 'https://media0.giphy.com/media/dPTx0nV4LcoeR3KRgZ/200.gif' },  // jump heart
+  { score: 50, gif: 'https://media0.giphy.com/media/qBHsm7ECyCPzc4xjfw/giphy.gif'}, // disco mocha
+  { score: 0,  gif: 'https://media2.giphy.com/media/CP52rdjgLyDDOYMXYJ/200.gif' },  // angry sweat
 ];
 function getMeme(p) {
   const r = RESULT_GIFS.find(g => p >= g.score) || RESULT_GIFS[RESULT_GIFS.length-1];
@@ -1199,6 +1205,7 @@ function showMemePopup() {
 
 function closeGif() {
   document.getElementById('gifPopup').classList.remove('show');
+  S.attempt = 2;        // move to round 2 only after student dismisses popup
   renderQuiz();
   window.scrollTo({ top:0, behavior:'smooth' });
 }
