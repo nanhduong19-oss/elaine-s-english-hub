@@ -332,6 +332,20 @@ body {
 .action-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; box-shadow:0 4px 14px rgba(78,144,160,.28); }
 .action-secondary { background:white; color:var(--accent2); border:2px solid var(--accent); }
 
+/* ── QTY BUTTONS ── */
+.qty-btn {
+  width:36px; height:36px; border-radius:50%;
+  border:2px solid var(--accent); background:white;
+  font-size:1.1rem; font-weight:700; cursor:pointer;
+  color:var(--accent2); transition:all .2s;
+  display:flex; align-items:center; justify-content:center;
+}
+.qty-btn:hover { background:var(--accent); color:white; }
+.qty-val {
+  font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:800;
+  color:var(--accent2); min-width:50px; text-align:center;
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
   .app { padding:10px 8px 50px; }
@@ -389,8 +403,27 @@ body {
         <span class="mode-name">FCE Use of English<br>Part 3</span>
       </div>
     </div>
-    <div id="qtyInfo" style="font-size:.85rem;font-weight:700;color:var(--text-mid);padding:6px 0;">
-      10 questions per session
+
+    <!-- Grade 10 qty -->
+    <div id="qtyG10" style="margin-top:12px;">
+      <div class="form-label" style="margin-bottom:6px;">Number of Questions</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="qty-btn" onclick="changeQty('g10',-10)">−</button>
+        <span class="qty-val" id="qtyG10Val">10</span>
+        <button class="qty-btn" onclick="changeQty('g10',10)">+</button>
+        <span style="font-size:.8rem;font-weight:600;color:var(--text-mid);">min 10, in steps of 10</span>
+      </div>
+    </div>
+
+    <!-- FCE qty -->
+    <div id="qtyFCE" style="display:none;margin-top:12px;">
+      <div class="form-label" style="margin-bottom:6px;">Number of Passages</div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="qty-btn" onclick="changeQty('fce',-1)">−</button>
+        <span class="qty-val" id="qtyFCEVal">1</span>
+        <button class="qty-btn" onclick="changeQty('fce',1)">+</button>
+        <span style="font-size:.8rem;font-weight:600;color:var(--text-mid);">8 questions per passage</span>
+      </div>
     </div>
   </div>
 
@@ -529,7 +562,7 @@ const CONFIG = {
   studentsUrl:   'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/students.json',
   grade10Url:    'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/MOET/GRAMMAR%20REVISION/WORD%20FORM/grade10.json',
   fceUrl:        'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/FCE/READING%20%26%20UOE/UOE%20PART%203/fce.json',
-  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzwgsLeFrRlh4Dl3zxTDwcgYUIUzVdyPFXk8qVEjkFkiSlFMysApuDScTcEvXddEA4y7g/exec',
+  appsScriptUrl: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
 };
 
 /* ═══════════════════════════════════════════════
@@ -551,6 +584,8 @@ const S = {
 /* ═══════════════════════════════════════════════
    BOOT
 ═══════════════════════════════════════════════ */
+let _dataReady = false;
+
 async function boot() {
   try {
     const r = await fetch(CONFIG.studentsUrl);
@@ -561,7 +596,11 @@ async function boot() {
   try { S.grade10 = (await (await fetch(CONFIG.grade10Url)).json()).questions || []; } catch(e) { console.warn('grade10.json not loaded'); }
   try { S.fce     = (await (await fetch(CONFIG.fceUrl)).json()).passages  || []; } catch(e) { console.warn('fce.json not loaded'); }
 
+  _dataReady = true;
   console.log(`Students: ${S.students.length} | G10: ${S.grade10.length} | FCE: ${S.fce.length}`);
+  // Retry ID lookup if student already typed something
+  const val = document.getElementById('inputStudentId').value.trim().toUpperCase();
+  if (val.length >= 3) tryLookupId(val);
 }
 boot();
 
@@ -569,6 +608,22 @@ boot();
    WELCOME LOGIC
 ═══════════════════════════════════════════════ */
 let _idTimer = null;
+
+function tryLookupId(v) {
+  if (!_dataReady) return; // wait for data
+  const found = S.students.find(s => s.id.toUpperCase() === v);
+  if (found) {
+    document.getElementById('inputName').value  = found.name;
+    document.getElementById('inputClass').value = found.class;
+    document.getElementById('idError').style.display = 'none';
+    S.studentId = found.id; S.studentName = found.name; S.studentClass = found.class;
+    document.getElementById('startBtn').disabled = false;
+    loadServerWrong(found.id);
+  } else {
+    document.getElementById('idError').style.display = 'block';
+  }
+}
+
 document.getElementById('inputStudentId').addEventListener('input', function() {
   clearTimeout(_idTimer);
   const v = this.value.trim().toUpperCase();
@@ -578,27 +633,30 @@ document.getElementById('inputStudentId').addEventListener('input', function() {
   document.getElementById('idError').style.display = 'none';
   document.getElementById('startBtn').disabled = true;
   S.studentId = S.studentName = S.studentClass = '';
-  if (v.length < 3) return;
-  _idTimer = setTimeout(() => {
-    const found = S.students.find(s => s.id.toUpperCase() === v);
-    if (found) {
-      document.getElementById('inputName').value  = found.name;
-      document.getElementById('inputClass').value = found.class;
-      S.studentId = found.id; S.studentName = found.name; S.studentClass = found.class;
-      document.getElementById('startBtn').disabled = false;
-      loadServerWrong(found.id);
-    } else {
-      document.getElementById('idError').style.display = 'block';
-    }
-  }, 400);
+  if (v.length < 2) return;
+  _idTimer = setTimeout(() => tryLookupId(v), 350);
 });
+
+const _qty = { g10: 10, fce: 1 };
 
 function selectMode(m) {
   S.mode = m;
   document.getElementById('btnG10').classList.toggle('selected', m === 'grade10');
   document.getElementById('btnFCE').classList.toggle('selected', m === 'fce');
-  document.getElementById('qtyInfo').textContent =
-    m === 'grade10' ? '10 questions per session' : '1 passage per session (8 questions)';
+  document.getElementById('qtyG10').style.display = m === 'grade10' ? 'block' : 'none';
+  document.getElementById('qtyFCE').style.display = m === 'fce'     ? 'block' : 'none';
+}
+
+function changeQty(type, delta) {
+  if (type === 'g10') {
+    const max = Math.max(10, Math.ceil((S.grade10.length || 10) / 10) * 10);
+    _qty.g10 = Math.max(10, Math.min(max, _qty.g10 + delta));
+    document.getElementById('qtyG10Val').textContent = _qty.g10;
+  } else {
+    const max = Math.max(1, S.fce.length || 10);
+    _qty.fce = Math.max(1, Math.min(max, _qty.fce + delta));
+    document.getElementById('qtyFCEVal').textContent = _qty.fce;
+  }
 }
 
 let _reviewOn = false;
@@ -622,17 +680,31 @@ function startQuiz() {
   S.answers = {}; S.attempt = 1;
 
   if (S.mode === 'grade10') {
-    let pool = S.reviewMode && S.wrongServerIds.length
-      ? [...S.grade10.filter(q => S.wrongServerIds.includes(q.id)),
-         ...shuffle(S.grade10.filter(q => !S.wrongServerIds.includes(q.id)))]
-      : shuffle([...S.grade10]);
-    S.session = pool.slice(0, 10);
+    const wrongIds = S.wrongServerIds;
+    // Priority: wrong from server first, then unseen (not in wrong list), then rest
+    let priority, rest;
+    if (S.reviewMode && wrongIds.length) {
+      priority = shuffle(S.grade10.filter(q => wrongIds.includes(q.id)));
+      rest     = shuffle(S.grade10.filter(q => !wrongIds.includes(q.id)));
+    } else {
+      // Prioritize unseen: questions never attempted (server has no record)
+      priority = shuffle(S.grade10.filter(q => !wrongIds.includes(q.id)));
+      rest     = shuffle(S.grade10.filter(q => wrongIds.includes(q.id)));
+    }
+    S.session = [...priority, ...rest].slice(0, _qty.g10);
   } else {
-    let pool = S.reviewMode && S.wrongServerIds.length
-      ? [...S.fce.filter(p => p.questions.some(q => S.wrongServerIds.includes(p.id+'_'+q.number))),
-         ...shuffle(S.fce.filter(p => !S.fce.filter(pp => pp === p)))]
-      : shuffle([...S.fce]);
-    S.session = pool.slice(0, 1);
+    const wrongPassageIds = new Set(
+      S.wrongServerIds.map(id => id.split('_')[0])
+    );
+    let priority, rest;
+    if (S.reviewMode && wrongPassageIds.size) {
+      priority = shuffle(S.fce.filter(p => wrongPassageIds.has(p.id)));
+      rest     = shuffle(S.fce.filter(p => !wrongPassageIds.has(p.id)));
+    } else {
+      priority = shuffle(S.fce.filter(p => !wrongPassageIds.has(p.id)));
+      rest     = shuffle(S.fce.filter(p => wrongPassageIds.has(p.id)));
+    }
+    S.session = [...priority, ...rest].slice(0, _qty.fce);
   }
 
   S.startTime = new Date(); S.endTime = null;
