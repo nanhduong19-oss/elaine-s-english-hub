@@ -65,7 +65,7 @@ body {
 }
 
 /* ── WELCOME ── */
-.welcome-header { text-align:center; padding:28px 0 16px; }
+.welcome-header { text-align:center; padding:28px 0 16px; display:flex; flex-direction:column; align-items:center; }
 .bears-emoji { font-size:48px; display:block; margin-bottom:6px; animation: floatB 3s ease-in-out infinite; }
 @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .app-title {
@@ -993,13 +993,13 @@ function renderSpelling() {
     block.innerHTML = `
       <div class="spelling-header">
         <span class="spelling-target">${wObj.word}</span>
-        <span class="spelling-counter" id="sc_${wi}">${wObj.completed}/10</span>
+        <span class="spelling-counter" id="sc_${wi}">${wObj.completed}/5</span>
       </div>
       <div class="spelling-rows" id="srows_${wi}"></div>`;
     c.appendChild(block);
 
     const rows = document.getElementById('srows_' + wi);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       const isDone   = i < wObj.completed;
       const isActive = i === wObj.completed && !wObj.done;
       const row = document.createElement('div');
@@ -1038,8 +1038,8 @@ function attachSpell(inp, wi, row, target) {
       this.classList.add('sp-correct'); this.disabled = true;
       document.getElementById(`st_${wi}_${row}`).textContent = '✅';
       S.spellingWords[wi].completed = row + 1;
-      document.getElementById(`sc_${wi}`).textContent = `${row+1}/10`;
-      if (row + 1 >= 10) {
+      document.getElementById(`sc_${wi}`).textContent = `${row+1}/5`;
+      if (row + 1 >= 5) {
         S.spellingWords[wi].done = true;
       } else {
         const next = document.getElementById(`sp_${wi}_${row+1}`);
@@ -1061,10 +1061,10 @@ function finishSpelling() { showResult(); }
    RESULT SCREEN
 ═══════════════════════════════════════════════ */
 const RESULT_GIFS = [
-  { score: 90, gif: 'https://media1.giphy.com/media/OwAhyA2lsiGL12pL7C/200.gif' },  // YES! milk bear
-  { score: 70, gif: 'https://media0.giphy.com/media/dPTx0nV4LcoeR3KRgZ/200.gif' },  // jump heart
-  { score: 50, gif: 'https://media0.giphy.com/media/qBHsm7ECyCPzc4xjfw/giphy.gif'}, // disco mocha
-  { score: 0,  gif: 'https://media2.giphy.com/media/CP52rdjgLyDDOYMXYJ/200.gif' },  // angry sweat
+  { score: 90, gif: 'https://media1.giphy.com/media/OwAhyA2lsiGL12pL7C/200.gif' },
+  { score: 70, gif: 'https://media0.giphy.com/media/dPTx0nV4LcoeR3KRgZ/200.gif' },
+  { score: 50, gif: 'https://media0.giphy.com/media/qBHsm7ECyCPzc4xjfw/giphy.gif'},
+  { score: 0,  gif: 'https://media2.giphy.com/media/CP52rdjgLyDDOYMXYJ/200.gif' },
 ];
 function getMeme(p) {
   const r = RESULT_GIFS.find(g => p >= g.score) || RESULT_GIFS[RESULT_GIFS.length-1];
@@ -1093,8 +1093,16 @@ function showResult() {
   document.getElementById('resId').textContent    = S.studentId;
   document.getElementById('resClass').textContent = S.studentClass;
   document.getElementById('resMode').textContent  = S.mode==='grade10'?'Grade 10 Entrance Exam':'FCE Use of English Part 3';
-  document.getElementById('resStart').textContent = S.startTime.toLocaleTimeString('en-GB');
-  document.getElementById('resEnd').textContent   = S.endTime.toLocaleTimeString('en-GB');
+  function fmtTime(d) {
+    const dd = String(d.getDate()).padStart(2,'0');
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const yy = String(d.getFullYear()).slice(-2);
+    const hh = String(d.getHours()).padStart(2,'0');
+    const mi = String(d.getMinutes()).padStart(2,'0');
+    return `${dd}-${mm}-${yy} ${hh}:${mi}`;
+  }
+  document.getElementById('resStart').textContent = fmtTime(S.startTime);
+  document.getElementById('resEnd').textContent   = fmtTime(S.endTime);
   document.getElementById('resDuration').textContent = String(Math.floor(dur/60)).padStart(2,'0')+':'+String(dur%60).padStart(2,'0');
 
   // Wrong words
@@ -1174,19 +1182,19 @@ const ROUND1_MEMES = [
   },
   {
     score: 80,
-    gif: 'https://media0.giphy.com/media/JoUoAzZEjEy9PrZ98N/200.gif',
+    gif: 'https://media1.giphy.com/media/GMJNWpteXtGKMF5iZk/200.gif',
     msg: 'Almost there! 💪',
     sub: `Just a few to fix — you've got this in Round 2!`
   },
   {
     score: 50,
-    gif: 'https://media0.giphy.com/media/kf3EjrAsKp3P9bhYHG/giphy.gif',
+    gif: 'https://media1.giphy.com/media/VWSKATzcFuYY2Hu4ay/200.gif',
     msg: 'Good try! 🕺',
     sub: 'Review the red ones carefully in Round 2.'
   },
   {
     score: 0,
-    gif: 'https://media2.giphy.com/media/L3iXjPw1GoEk0nioqY/200.gif',
+    gif: 'https://media1.giphy.com/media/TMPXKbZww72fyzhc1c/200.gif',
     msg: 'Keep going! 📝',
     sub: 'Round 2 is your chance to make it right!'
   },
