@@ -1,0 +1,100 @@
+{
+  "passages": [
+    {
+      "id": "trainers1_test1_wordform",
+      "title": "Remembering people's names",
+      "text": "Most of us have suffered the (0) EMBARRASSMENT of forgetting someone's name.\nOften we fail to pay attention when (17) ___ are made, but later on in the conversation we don't want to appear (18) ___ by asking them what they're called.\n\nFortunately, there are some simple ways you can (19) ___ this problem. One is to improve your powers of (20) ___.\n\nPractise studying faces in public places, making a mental note of physical (21) ___ such as high foreheads or narrow eyebrows. You'll be surprised what a wide (22) ___ of shapes and sizes people's features have.\n\nThen, when you first meet someone, remember them as 'Laura with the small nose', for example. With surnames, make (23) ___ associations.\n\nFinally, ending with the person's name, as in 'See you later, Max.' is a good way of (24) ___ that you don't forget it.",
+      "example": { "number": 0, "rootWord": "EMBARRASS", "answer": "EMBARRASSMENT", "explanation": "Ví dụ: sau 'the' cần danh từ. EMBARRASS (v) -> EMBARRASSMENT (n) = sự ngượng ngùng/bối rối." },
+      "questions": [
+        { "number": 17, "rootWord": "INTRODUCE", "answer": "INTRODUCTIONS", "explanation": "Sau 'when' cần danh từ chỉ sự kiện; thêm -tion và -s để thành danh từ số nhiều vì có thể có nhiều lần giới thiệu. INTRODUCE (v) -> INTRODUCTION (n) -> INTRODUCTIONS (n, plural)." },
+        { "number": 18, "rootWord": "POLITE", "answer": "IMPOLITE", "explanation": "Sau 'appear' cần tính từ; ngữ nghĩa là 'không lịch sự' khi hỏi lại tên, nên dùng phủ định. POLITE (adj) -> IMPOLITE (adj) với tiền tố im-." },
+        { "number": 19, "rootWord": "COME", "answer": "OVERCOME", "explanation": "Cần động từ sau 'can' để diễn tả 'vượt qua' vấn đề; collocation tự nhiên là overcome a problem. COME (v) -> OVERCOME (v) (thêm over-)." },
+        { "number": 20, "rootWord": "OBSERVE", "answer": "OBSERVATION", "explanation": "Sau 'powers of' cần danh từ; OBSERVE (v) -> OBSERVATION (n). Đây là 'khả năng quan sát'." },
+        { "number": 21, "rootWord": "CHARACTER", "answer": "CHARACTERISTICS", "explanation": "Sau 'physical' cần danh từ; có ví dụ 'such as...' nên dùng số nhiều. CHARACTER (n) -> CHARACTERISTIC (n) -> CHARACTERISTICS (n, plural)." },
+        { "number": 22, "rootWord": "VARY", "answer": "VARIETY", "explanation": "Cấu trúc 'a wide variety of' là collocation cố định. VARY (v) -> VARIETY (n) (đổi y -> i + -ety)." },
+        { "number": 23, "rootWord": "VISION", "answer": "VISUAL", "explanation": "Sau 'make' cần tính từ bổ nghĩa cho 'associations' (liên tưởng bằng hình ảnh). VISION (n) -> VISUAL (adj)." },
+        { "number": 24, "rootWord": "SURE", "answer": "ENSURING", "explanation": "Sau giới từ 'of' cần V-ing. ENSURE (v) = đảm bảo, phù hợp nghĩa 'một cách để đảm bảo bạn không quên'. SURE -> ENSURE (thêm en-) -> ENSURING (V-ing)." }
+      ]
+    },
+    {
+      "id": "trainers1_test2_wordform",
+      "title": "Too many emails",
+      "text": "Some years ago, there were (0) PREDICTIONS that email would soon be replaced as the most common means of online communication by social (17) ___ sites.\n\nSince then, however, the number of emails sent has increased (18) ___, to the point that the volume received on a daily basis has become (19) ___ for many people.\n\nFor some users, the situation has become so (20) ___ that they regularly delete all the emails they receive without even bothering to read them, which is rather (21) ___, to say the least.\n\nA less extreme measure is to install software that sorts incoming mail into different categories. By doing this, promotions from (22) ___ organisations go into a separate folder, (23) ___ us to see which emails are more important than others.\n\nNot all of us, though, may be so keen to let software make such (24) ___ for us.",
+      "example": { "number": 0, "rootWord": "PREDICT", "answer": "PREDICTIONS", "explanation": "Ví dụ: sau 'there were' cần danh từ số nhiều. PREDICT (v) -> PREDICTION (n) -> PREDICTIONS (n, plural) = những dự đoán." },
+      "questions": [
+        { "number": 17, "rootWord": "WORK", "answer": "NETWORKING", "explanation": "Cụm chuẩn là 'social networking sites' (hoặc social network sites). Cần danh từ/gerund bổ nghĩa cho 'sites'. WORK -> NETWORK (n/v) -> NETWORKING (n/gerund) là lựa chọn tự nhiên nhất." },
+        { "number": 18, "rootWord": "STEADY", "answer": "STEADILY", "explanation": "Cần trạng từ bổ nghĩa cho 'has increased'. STEADY (adj) -> STEADILY (adv) (đổi y -> i + -ly)." },
+        { "number": 19, "rootWord": "STRESS", "answer": "STRESSFUL", "explanation": "Sau 'has become' cần tính từ; nghĩa là 'gây căng thẳng'. STRESS (n/v) -> STRESSFUL (adj)." },
+        { "number": 20, "rootWord": "BEAR", "answer": "UNBEARABLE", "explanation": "Cấu trúc 'so + adj + that...' cần tính từ; nghĩa là 'không thể chịu nổi' nên dùng phủ định. BEAR (v) -> BEARABLE (adj) -> UNBEARABLE (adj)." },
+        { "number": 21, "rootWord": "RISK", "answer": "RISKY", "explanation": "Sau 'rather' cần tính từ; nghĩa là 'rủi ro'. RISK (n/v) -> RISKY (adj) với hậu tố -y." },
+        { "number": 22, "rootWord": "COMMERCE", "answer": "COMMERCIAL", "explanation": "Cần tính từ bổ nghĩa cho 'organisations'. COMMERCE (n) -> COMMERCIAL (adj) (thường bỏ -e + -ial)." },
+        { "number": 23, "rootWord": "ABLE", "answer": "ENABLING", "explanation": "Sau dấu phẩy diễn tả kết quả, dùng V-ing; nghĩa là 'giúp/cho phép'. ABLE -> ENABLE (v) (thêm en-) -> ENABLING (V-ing)." },
+        { "number": 24, "rootWord": "DECIDE", "answer": "DECISIONS", "explanation": "Sau 'such' cần danh từ; thường là số nhiều vì 'such decisions'. DECIDE (v) -> DECISION (n) -> DECISIONS (n, plural)." }
+      ]
+    },
+    {
+      "id": "trainers1_test3_wordform",
+      "title": "Advertising in schools",
+      "text": "In certain countries, there has been rapid (0) GROWTH in the spending power of teenagers. Realising this, firms are aiming even more of their (17) ___ at young people, and (18) ___ they are doing this by advertising directly in schools.\n\nThese companies see children as the (19) ___ of the future, and hope that when they become adults they will maintain their (20) ___ to brands they first started buying in their youth.\n\nAs a result, many (21) ___ are keen to supply equipment to schools.\n\nOther firms install machines selling snacks and drinks, and these are often highly (22) ___ for both the companies and the schools.\n\nThere is, however, considerable (23) ___ about whether this is a good idea. Some argue that these machines encourage (24) ___ eating habits.",
+      "example": { "number": 0, "rootWord": "GROW", "answer": "GROWTH", "explanation": "Ví dụ: sau 'rapid' cần danh từ. GROW (v) -> GROWTH (n) = sự tăng trưởng." },
+      "questions": [
+        { "number": 17, "rootWord": "PRODUCE", "answer": "PRODUCTS", "explanation": "Sau 'their' cần danh từ; 'aim their products at young people' là collocation. PRODUCE (v) -> PRODUCT (n) -> PRODUCTS (n, plural)." },
+        { "number": 18, "rootWord": "INCREASE", "answer": "INCREASINGLY", "explanation": "Cần trạng từ bổ nghĩa cho cả mệnh đề (mức độ ngày càng). INCREASE (v/n) -> INCREASING (adj/participle) -> INCREASINGLY (adv)." },
+        { "number": 19, "rootWord": "CONSUME", "answer": "CONSUMERS", "explanation": "Sau 'the' cần danh từ chỉ người; nghĩa là 'người tiêu dùng'. CONSUME (v) -> CONSUMER (n) -> CONSUMERS (n, plural)." },
+        { "number": 20, "rootWord": "LOYAL", "answer": "LOYALTY", "explanation": "Sau 'their' cần danh từ; collocation 'loyalty to brands'. LOYAL (adj) -> LOYALTY (n)." },
+        { "number": 21, "rootWord": "MANUFACTURE", "answer": "MANUFACTURERS", "explanation": "Cần danh từ chỉ người/công ty sản xuất; theo ngữ cảnh là nhiều hãng. MANUFACTURE (v) -> MANUFACTURER (n) -> MANUFACTURERS (n, plural)." },
+        { "number": 22, "rootWord": "PROFIT", "answer": "PROFITABLE", "explanation": "Sau 'highly' cần tính từ; collocation 'highly profitable'. PROFIT (n/v) -> PROFITABLE (adj)." },
+        { "number": 23, "rootWord": "AGREE", "answer": "DISAGREEMENT", "explanation": "Sau 'considerable' cần danh từ; nghĩa là 'bất đồng' về việc đó có tốt không. AGREE -> DISAGREE (v) -> DISAGREEMENT (n)." },
+        { "number": 24, "rootWord": "HEALTH", "answer": "UNHEALTHY", "explanation": "Cần tính từ bổ nghĩa 'eating habits'; nghĩa là 'không lành mạnh' vì máy bán snack/đồ uống ngọt. HEALTH (n) -> HEALTHY (adj) -> UNHEALTHY (adj)." }
+      ]
+    },
+    {
+      "id": "trainers1_test4_wordform",
+      "title": "Preparing for an interview",
+      "text": "Before you go to an interview, think about your (0) APPEARANCE.\nWhen you make your (17) ___ of clothes, avoid anything too casual but don't go to the other extreme of wearing items that are so formal you feel (18) ___ in them.\n\nMake sure you know the exact (19) ___ of the building where the interview will take place. There's nothing worse than (20) ___ trying to find the right place as the time for it to begin rapidly approaches.\n\nOnce you reach the firm's offices, remember that the interview starts there. You never know who you might meet in lifts, corridors or waiting rooms, so try to make a good (21) ___ on everyone.\n\nWhen you go into the interview room, show you have (22) ___ in yourself, and strike an appropriate balance between formality and (23) ___.\n\nBear in mind that people tend to make a (24) ___ about someone they have met within a few minutes.",
+      "example": { "number": 0, "rootWord": "APPEAR", "answer": "APPEARANCE", "explanation": "Ví dụ: sau 'your' cần danh từ. APPEAR (v) -> APPEARANCE (n) = ngoại hình/vẻ bề ngoài." },
+      "questions": [
+        { "number": 17, "rootWord": "CHOOSE", "answer": "CHOICE", "explanation": "Cụm cố định 'make your choice'. Sau 'make your' cần danh từ. CHOOSE (v) -> CHOICE (n)." },
+        { "number": 18, "rootWord": "COMFORT", "answer": "UNCOMFORTABLE", "explanation": "Sau 'feel' cần tính từ; nghĩa là 'không thoải mái' nên dùng phủ định. COMFORT (n/v) -> COMFORTABLE (adj) -> UNCOMFORTABLE (adj)." },
+        { "number": 19, "rootWord": "LOCATE", "answer": "LOCATION", "explanation": "Sau 'exact' cần danh từ; LOCATE (v) -> LOCATION (n)." },
+        { "number": 20, "rootWord": "DESPAIR", "answer": "DESPERATELY", "explanation": "Cần trạng từ bổ nghĩa cho 'trying'. DESPAIR (n/v) -> DESPERATE (adj) -> DESPERATELY (adv)." },
+        { "number": 21, "rootWord": "IMPRESS", "answer": "IMPRESSION", "explanation": "Collocation: 'make a good impression'. IMPRESS (v) -> IMPRESSION (n)." },
+        { "number": 22, "rootWord": "CONFIDENT", "answer": "CONFIDENCE", "explanation": "Sau 'have' cần danh từ. CONFIDENT (adj) -> CONFIDENCE (n)." },
+        { "number": 23, "rootWord": "FRIEND", "answer": "FRIENDLINESS", "explanation": "Song song với 'formality' là danh từ; FRIEND (n) -> FRIENDLY (adj) -> FRIENDLINESS (n, -liness)." },
+        { "number": 24, "rootWord": "JUDGE", "answer": "JUDGEMENT", "explanation": "Sau 'make a' cần danh từ. JUDGE (v/n) -> JUDGEMENT/JUDGMENT (n); cả hai cách viết thường được chấp nhận." }
+      ]
+    },
+    {
+      "id": "trainers1_test5_wordform",
+      "title": "Jobs in the future",
+      "text": "In twenty years' time, which jobs will people still be doing, and which is it (0) REASONABLE to assume will have gone forever?\nToday's young people should give that question careful (17) ___ before choosing a career.\n\nClearly there will continue to be a need for staff in (18) ___ professions such as medicine that involve caring for others, and also for people able to persuade, like (19) ___ and lawyers.\n\nThere will of course be no (20) ___ of jobs in science and technology, particularly for individuals able to (21) ___ in newer fields such as biotechnology and microbiology.\n\nOn the other hand, the already rapid (22) ___ of jobs to robots will speed up even further, as they replace workers not only in manufacturing but also in the (23) ___ industry.\n\nAnd as robots learn how to stack shelves, take over at check-outs or send us our online shopping, it won't be long before most supermarket jobs have (24) ___, too.",
+      "example": { "number": 0, "rootWord": "REASON", "answer": "REASONABLE", "explanation": "Ví dụ: sau 'is it' cần tính từ. REASON (n) -> REASONABLE (adj) = hợp lý." },
+      "questions": [
+        { "number": 17, "rootWord": "CONSIDER", "answer": "CONSIDERATION", "explanation": "Cụm 'give careful consideration'. Sau 'give ... careful' cần danh từ. CONSIDER (v) -> CONSIDERATION (n)." },
+        { "number": 18, "rootWord": "EXIST", "answer": "EXISTING", "explanation": "Cần tính từ bổ nghĩa 'professions'. EXIST (v) -> EXISTING (adj) = hiện có." },
+        { "number": 19, "rootWord": "POLITICS", "answer": "POLITICIANS", "explanation": "Cần danh từ chỉ người, số nhiều (nhóm nghề). POLITICS (n) -> POLITICIAN (n) -> POLITICIANS (n, plural)." },
+        { "number": 20, "rootWord": "SHORT", "answer": "SHORTAGE", "explanation": "Collocation: 'no shortage of'. SHORT (adj) -> SHORTAGE (n) = sự thiếu hụt." },
+        { "number": 21, "rootWord": "SPECIAL", "answer": "SPECIALISE", "explanation": "Sau 'able to' cần động từ nguyên mẫu; SPECIAL (adj) -> SPECIALISE/SPECIALIZE (v). Cả hai chính tả Anh-Anh/Anh-Mỹ thường được chấp nhận." },
+        { "number": 22, "rootWord": "LOSE", "answer": "LOSS", "explanation": "Sau 'rapid' cần danh từ. LOSE (v) -> LOSS (n)." },
+        { "number": 23, "rootWord": "CONSTRUCT", "answer": "CONSTRUCTION", "explanation": "Cụm 'the construction industry' cần danh từ. CONSTRUCT (v) -> CONSTRUCTION (n)." },
+        { "number": 24, "rootWord": "APPEAR", "answer": "DISAPPEARED", "explanation": "Sau 'have' cần past participle (hiện tại hoàn thành). APPEAR (v) -> DISAPPEAR (v) -> DISAPPEARED (V3)." }
+      ]
+    },
+    {
+      "id": "trainers1_test6_wordform",
+      "title": "Letting the sea in",
+      "text": "The small (0) COASTAL town of Medmerry has found an unusual way to reduce the risk of flooding: let the sea in.\n\nThe scheme involved the (17) ___ of part of the existing sea wall and the building of seven kilometres of new, higher (18) ___ further inland, closer to local communities.\n\nThis has led to the (19) ___ of a large area of wetland, capable of absorbing the energy of the waves and therefore bringing about a (20) ___ reduction in flooding.\n\nAccording to environmental scientists, this (21) ___ project will also turn the whole area into a (22) ___ nature reserve.\n\nIt is already attracting large numbers of birds and other wildlife and eventually it should provide a safe home for some of the country's most (23) ___ species.\n\nThis is bound to attract more visitors to the area, although it remains (24) ___ whether numbers will have to be limited.",
+      "example": { "number": 0, "rootWord": "COAST", "answer": "COASTAL", "explanation": "Ví dụ: cần tính từ bổ nghĩa 'town'. COAST (n) -> COASTAL (adj) = ven biển." },
+      "questions": [
+        { "number": 17, "rootWord": "DESTROY", "answer": "DESTRUCTION", "explanation": "Sau 'the' cần danh từ. DESTROY (v) -> DESTRUCTION (n)." },
+        { "number": 18, "rootWord": "DEFEND", "answer": "DEFENCES", "explanation": "Cần danh từ số nhiều vì nói về nhiều hạng mục phòng thủ/đê chắn; DEFEND (v) -> DEFENCE/DEFENSE (n) -> DEFENCES/DEFENSES (n, plural), cả hai chính tả có thể chấp nhận." },
+        { "number": 19, "rootWord": "CREATE", "answer": "CREATION", "explanation": "Sau 'led to the' cần danh từ. CREATE (v) -> CREATION (n)." },
+        { "number": 20, "rootWord": "SUBSTANCE", "answer": "SUBSTANTIAL", "explanation": "Cần tính từ bổ nghĩa 'reduction'. SUBSTANCE (n) -> SUBSTANTIAL (adj) = đáng kể." },
+        { "number": 21, "rootWord": "AMBITION", "answer": "AMBITIOUS", "explanation": "Cần tính từ bổ nghĩa 'project'. AMBITION (n) -> AMBITIOUS (adj)." },
+        { "number": 22, "rootWord": "MASS", "answer": "MASSIVE", "explanation": "Cần tính từ bổ nghĩa 'nature reserve'; nghĩa là 'rất lớn'. MASS (n) -> MASSIVE (adj)." },
+        { "number": 23, "rootWord": "DANGER", "answer": "ENDANGERED", "explanation": "Cần tính từ mô tả 'species'; collocation 'endangered species'. DANGER (n) -> ENDANGER (v) -> ENDANGERED (adj)." },
+        { "number": 24, "rootWord": "CLEAR", "answer": "UNCLEAR", "explanation": "Sau 'remains' cần tính từ; nghĩa là 'chưa rõ' nên dùng phủ định. CLEAR (adj) -> UNCLEAR (adj) với tiền tố un-." }
+      ]
+    }
+  ]
+}
