@@ -618,6 +618,89 @@ body::before {
 .action-btn:hover { transform: translateY(-2px); }
 
 /* ============================================================
+   SPELLING SCREEN
+   ============================================================ */
+.spelling-word-block {
+  margin-bottom: 24px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 2px solid rgba(77,217,232,0.3);
+}
+.spelling-word-header {
+  background: linear-gradient(135deg, var(--pool-blue), var(--deep-teal));
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.spelling-target {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 0.12em;
+}
+.spelling-counter {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 50px;
+}
+.spelling-rows {
+  background: white;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.spelling-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.spelling-num {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-mid);
+  min-width: 22px;
+  text-align: right;
+}
+.spelling-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid rgba(77,217,232,0.4);
+  border-radius: 8px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--deep-teal);
+  letter-spacing: 0.08em;
+  outline: none;
+  transition: all 0.2s;
+}
+.spelling-input:focus { border-color: var(--deep-teal); box-shadow: 0 0 0 3px rgba(77,217,232,0.2); }
+.spelling-input.sp-correct { border-color: var(--correct); background: #E8F8EE; color: #2E7D50; }
+.spelling-input.sp-wrong   { border-color: var(--wrong);   background: #FDECEA; animation: shake 0.3s ease; }
+.spelling-input:disabled   { background: #E8F8EE; border-color: var(--correct); color: #2E7D50; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.spelling-tick { font-size: 1rem; min-width: 20px; }
+
+.spelling-progress-text {
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  margin-bottom: 16px;
+}
+
+/* ============================================================
    LOADING STATE
    ============================================================ */
 .loading {
@@ -743,9 +826,24 @@ body::before {
   </div>
 
   <!-- ============================================================
-       RESULT SCREEN
+       SPELLING SCREEN
        ============================================================ -->
-  <div id="screenResult" class="screen">
+  <div id="screenSpelling" class="screen">
+    <div class="welcome-header">
+      <span class="bears-emoji" style="font-size:40px;">✏️🐻📝</span>
+      <h1 class="app-title" style="font-size:1.5rem;">Spelling Practice</h1>
+      <p class="app-subtitle">Write each word correctly 10 times to continue</p>
+    </div>
+    <div class="spelling-progress-text" id="spellingProgressText">0 / 0 words completed</div>
+    <div id="spellingWordsContainer"></div>
+    <button class="start-btn" id="spellingDoneBtn" onclick="finishSpelling()" disabled>
+      All Done - Go Home 🏠
+    </button>
+  </div>
+
+  <!-- ============================================================
+       RESULT SCREEN
+       ============================================================ -->  <div id="screenResult" class="screen">
     <div class="card result-card" id="resultCard">
       <div class="meme-container" id="memeDisplay">🏊</div>
       <div class="result-title" id="resultTitle">Well Done!</div>
@@ -783,8 +881,8 @@ body::before {
       </div>
 
       <div class="action-btn-row">
-        <button class="action-btn action-btn-primary" onclick="goHome()">New Session 🏠</button>
-        <button class="action-btn action-btn-secondary" onclick="reviewWrong()">Review Wrong ❌</button>
+        <button class="action-btn action-btn-primary" onclick="startSpelling('home')">New Session 🏠</button>
+        <button class="action-btn action-btn-secondary" onclick="startSpelling('review')">Review Wrong ❌</button>
       </div>
     </div>
   </div>
@@ -802,7 +900,7 @@ const CONFIG = {
   // Replace with your raw GitHub JSON URLs:
   studentsUrl:  'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/students.json',
   grade10Url:   'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/grade10.json',
-  fceUrl:       'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/fce.json',
+  fceUrl:       'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/FCE/READING%20%26%20UOE/UOE%20PART%203/fce.json',
 
   // Replace with your Apps Script Web App URL:
   appsScriptUrl: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
@@ -1416,6 +1514,184 @@ function goHome() {
 }
 
 function reviewWrong() {
+  state.reviewMode = true;
+  reviewOn = true;
+  document.getElementById('reviewSwitch').classList.add('on');
+  goHome();
+}
+
+/* ============================================================
+   SPELLING SCREEN
+   ============================================================ */
+let spellingDestination = 'home'; // 'home' or 'review'
+let spellingState = [];
+// spellingState = [ { word, completed: 0, done: false }, ... ]
+
+function startSpelling(destination) {
+  spellingDestination = destination;
+
+  // Collect wrong words from this session
+  const allQs = getAllCurrentQuestions();
+  const wrongQs = allQs.filter(({ qid }) => !state.answers[qid]?.correct);
+
+  if (wrongQs.length === 0) {
+    // No wrong answers - skip spelling
+    destination === 'review' ? doReviewWrong() : goHome();
+    return;
+  }
+
+  // Build word list - unique correct answers of wrong questions
+  const wordSet = new Set();
+  wrongQs.forEach(({ qid }) => {
+    if (state.mode === 'grade10') {
+      const q = state.grade10Questions.find(q => q.id === qid);
+      if (q) wordSet.add(q.answer.toUpperCase());
+    } else {
+      // FCE: find passage + question
+      for (const p of state.fcePassages) {
+        const q = p.questions.find(q => `${p.id}_${q.number}` === qid);
+        if (q) { wordSet.add(q.answer.toUpperCase()); break; }
+      }
+    }
+  });
+
+  spellingState = [...wordSet].map(word => ({ word, completed: 0, done: false }));
+
+  renderSpellingScreen();
+  showScreen('screenSpelling');
+}
+
+function renderSpellingScreen() {
+  const container = document.getElementById('spellingWordsContainer');
+  container.innerHTML = '';
+
+  const totalWords = spellingState.length;
+  const doneWords  = spellingState.filter(w => w.done).length;
+  document.getElementById('spellingProgressText').textContent =
+    `${doneWords} / ${totalWords} word${totalWords > 1 ? 's' : ''} completed`;
+  document.getElementById('spellingDoneBtn').disabled = doneWords < totalWords;
+
+  spellingState.forEach((wordObj, wIdx) => {
+    const block = document.createElement('div');
+    block.className = 'card spelling-word-block';
+    block.style.padding = '0';
+    block.style.overflow = 'hidden';
+
+    const header = document.createElement('div');
+    header.className = 'spelling-word-header';
+    header.innerHTML = `
+      <span class="spelling-target">${wordObj.word}</span>
+      <span class="spelling-counter" id="sc_${wIdx}">${wordObj.completed}/10</span>
+    `;
+    block.appendChild(header);
+
+    const rows = document.createElement('div');
+    rows.className = 'spelling-rows';
+
+    for (let i = 0; i < 10; i++) {
+      const row = document.createElement('div');
+      row.className = 'spelling-input-row';
+
+      const isDone = i < wordObj.completed;
+      const isActive = i === wordObj.completed && !wordObj.done;
+
+      row.innerHTML = `
+        <span class="spelling-num">${i + 1}</span>
+        <input
+          type="text"
+          class="spelling-input ${isDone ? 'sp-correct' : ''}"
+          id="sp_${wIdx}_${i}"
+          data-widx="${wIdx}"
+          data-row="${i}"
+          placeholder="${isActive ? 'Type here...' : ''}"
+          value="${isDone ? wordObj.word : ''}"
+          ${isDone || wordObj.done ? 'disabled' : ''}
+          ${!isActive ? 'readonly' : ''}
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+        >
+        <span class="spelling-tick" id="st_${wIdx}_${i}">${isDone ? '✅' : ''}</span>
+      `;
+      rows.appendChild(row);
+    }
+    block.appendChild(rows);
+    container.appendChild(block);
+
+    // Attach event listeners after DOM insert
+    for (let i = 0; i < 10; i++) {
+      const inp = document.getElementById(`sp_${wIdx}_${i}`);
+      if (!inp || inp.disabled || inp.readOnly) continue;
+      attachSpellingListener(inp, wIdx, i, wordObj.word);
+      // Focus first active input
+      if (i === wordObj.completed && !wordObj.done) {
+        setTimeout(() => inp.focus(), 100);
+      }
+      break;
+    }
+  });
+}
+
+function attachSpellingListener(inp, wIdx, rowIdx, targetWord) {
+  // Block paste
+  inp.addEventListener('paste', e => e.preventDefault());
+  inp.addEventListener('copy', e => e.preventDefault());
+  inp.addEventListener('cut',  e => e.preventDefault());
+
+  inp.addEventListener('input', function() {
+    const typed = this.value.trim().toUpperCase();
+    this.value = typed; // force uppercase as they type
+
+    if (typed === targetWord) {
+      // Correct
+      this.classList.remove('sp-wrong');
+      this.classList.add('sp-correct');
+      this.disabled = true;
+      document.getElementById(`st_${wIdx}_${rowIdx}`).textContent = '✅';
+
+      spellingState[wIdx].completed = rowIdx + 1;
+      document.getElementById(`sc_${wIdx}`).textContent = `${rowIdx + 1}/10`;
+
+      if (rowIdx + 1 >= 10) {
+        spellingState[wIdx].done = true;
+      } else {
+        // Unlock next row
+        const nextInp = document.getElementById(`sp_${wIdx}_${rowIdx + 1}`);
+        if (nextInp) {
+          nextInp.removeAttribute('readonly');
+          nextInp.placeholder = 'Type here...';
+          attachSpellingListener(nextInp, wIdx, rowIdx + 1, targetWord);
+          setTimeout(() => nextInp.focus(), 50);
+        }
+      }
+
+      // Update counter and done button
+      const doneWords = spellingState.filter(w => w.done).length;
+      document.getElementById('spellingProgressText').textContent =
+        `${doneWords} / ${spellingState.length} word${spellingState.length > 1 ? 's' : ''} completed`;
+      document.getElementById('spellingDoneBtn').disabled = doneWords < spellingState.length;
+
+    } else if (typed.length >= targetWord.length) {
+      // Wrong - flash red then clear
+      this.classList.add('sp-wrong');
+      setTimeout(() => {
+        this.classList.remove('sp-wrong');
+        this.value = '';
+      }, 500);
+    }
+  });
+}
+
+function finishSpelling() {
+  if (spellingDestination === 'review') {
+    doReviewWrong();
+  } else {
+    goHome();
+  }
+}
+
+function doReviewWrong() {
   state.reviewMode = true;
   reviewOn = true;
   document.getElementById('reviewSwitch').classList.add('on');
