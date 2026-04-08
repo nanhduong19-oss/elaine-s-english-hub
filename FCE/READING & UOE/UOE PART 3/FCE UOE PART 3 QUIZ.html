@@ -7,25 +7,32 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --pool-blue: #4DD9E8;
-  --deep-teal: #1A9BAD;
-  --water-mid: #2BB8CC;
-  --correct: #52C97A;
-  --wrong: #F0635A;
-  --text-dark: #1A3A4A;
-  --text-mid: #3A6070;
-  --card-bg: rgba(255,255,255,0.92);
-  --shadow: 0 6px 24px rgba(26,155,173,0.15);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --gap-w: 200px;
+  --accent:    #6AAFC0;
+  --accent2:   #4E90A0;
+  --daisy:     #F2C94C;
+  --daisy-light:#FBF0C0;
+  --meadow:    #7DB87A;
+  --correct:   #6DBF7E;
+  --correct-bg:#E8F5E9;
+  --wrong:     #E07070;
+  --wrong-bg:  #FDF0EF;
+  --text-dark: #2D4A52;
+  --text-mid:  #5A7A82;
+  --card-bg:   rgba(255,255,255,0.94);
+  --shadow:    0 4px 20px rgba(100,170,190,0.16);
+  --radius:    18px;
+  --radius-sm: 12px;
+  --gap-w:     200px;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(160deg, #87CEEB 0%, #4DD9E8 45%, #1A9BAD 100%);
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 0%, #C6E8F5 0%, transparent 60%),
+    radial-gradient(ellipse 60% 45% at 85% 100%, #BEE0B8 0%, transparent 55%),
+    linear-gradient(170deg, #D8EFF8 0%, #C8E4F0 45%, #BED8C5 100%);
   min-height: 100vh;
   color: var(--text-dark);
   overflow-x: hidden;
@@ -63,22 +70,22 @@ body {
 @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .app-title {
   font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800;
-  color:white; text-shadow:0 3px 12px rgba(26,155,173,.4); line-height:1.1;
+  color:white; text-shadow:0 3px 12px rgba(78,144,160,.4); line-height:1.1;
 }
 .app-subtitle { font-size:.95rem; color:rgba(255,255,255,.85); margin-top:4px; font-weight:600; }
 
 .form-label {
   display:block; font-size:.78rem; font-weight:800;
-  color:var(--deep-teal); text-transform:uppercase; letter-spacing:.08em; margin-bottom:5px;
+  color:var(--accent2); text-transform:uppercase; letter-spacing:.08em; margin-bottom:5px;
 }
 .form-group { margin-bottom:16px; }
 .form-input {
   width:100%; padding:12px 15px;
-  border:2px solid rgba(77,217,232,.4); border-radius:var(--radius-sm);
+  border:2px solid rgba(106,175,192,.4); border-radius:var(--radius-sm);
   font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700;
   color:var(--text-dark); background:white; transition:all .2s; outline:none;
 }
-.form-input:focus { border-color:var(--pool-blue); box-shadow:0 0 0 3px rgba(77,217,232,.2); }
+.form-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(106,175,192,.2); }
 .form-input:disabled { background:#F0F8FF; color:var(--text-mid); }
 .form-input.id-input { text-transform:uppercase; letter-spacing:.1em; }
 .student-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
@@ -88,15 +95,15 @@ body {
 /* mode buttons */
 .mode-buttons { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
 .mode-btn {
-  padding:14px 10px; border:2.5px solid rgba(77,217,232,.35);
+  padding:14px 10px; border:2.5px solid rgba(106,175,192,.35);
   border-radius:var(--radius-sm); background:white; cursor:pointer;
   text-align:center; transition:all .22s; font-family:'Nunito',sans-serif;
 }
-.mode-btn:hover { border-color:var(--pool-blue); transform:translateY(-2px); }
+.mode-btn:hover { border-color:var(--accent); transform:translateY(-2px); }
 .mode-btn.selected {
-  border-color:var(--deep-teal);
-  background:linear-gradient(135deg,#E0F7FA,#B2EBF2);
-  box-shadow:0 4px 14px rgba(26,155,173,.2);
+  border-color:var(--accent2);
+  background:linear-gradient(135deg,#DCF0F8,#C8E4F0);
+  box-shadow:0 4px 14px rgba(78,144,160,.2);
 }
 .mode-icon { font-size:1.5rem; display:block; margin-bottom:4px; }
 .mode-name { font-size:.8rem; font-weight:800; color:var(--text-dark); line-height:1.2; }
@@ -105,14 +112,14 @@ body {
 .review-toggle {
   display:flex; align-items:center; gap:12px;
   padding:12px 16px; background:linear-gradient(135deg,#FFF8E7,#FFF3CD);
-  border-radius:var(--radius-sm); border:2px solid #F5C842;
+  border-radius:var(--radius-sm); border:2px solid #F2C94C;
   cursor:pointer; margin-bottom:14px; transition:all .2s;
 }
 .toggle-switch {
   width:44px; height:24px; background:#ccc; border-radius:12px;
   position:relative; transition:all .3s; flex-shrink:0;
 }
-.toggle-switch.on { background:var(--deep-teal); }
+.toggle-switch.on { background:var(--accent2); }
 .toggle-knob {
   width:18px; height:18px; background:white; border-radius:50%;
   position:absolute; top:3px; left:3px; transition:all .3s;
@@ -123,13 +130,13 @@ body {
 
 .start-btn {
   width:100%; padding:15px;
-  background:linear-gradient(135deg,var(--water-mid),var(--deep-teal));
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:white; border:none; border-radius:var(--radius-sm);
   font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:700;
   cursor:pointer; transition:all .22s;
-  box-shadow:0 6px 18px rgba(26,155,173,.32);
+  box-shadow:0 6px 18px rgba(78,144,160,.32);
 }
-.start-btn:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(26,155,173,.42); }
+.start-btn:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(78,144,160,.42); }
 .start-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
 
 /* ── QUIZ HEADER ── */
@@ -139,7 +146,7 @@ body {
 }
 .quiz-badge {
   background:rgba(255,255,255,.88); border-radius:50px;
-  padding:5px 14px; font-size:.8rem; font-weight:800; color:var(--deep-teal);
+  padding:5px 14px; font-size:.8rem; font-weight:800; color:var(--accent2);
   box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
 .timer {
@@ -153,21 +160,21 @@ body {
 }
 .progress-bar-fill {
   height:100%;
-  background:linear-gradient(90deg,var(--pool-blue),#F5C842);
+  background:linear-gradient(90deg,var(--accent),#F2C94C);
   border-radius:6px; transition:width .5s ease;
 }
 .attempt-badge {
   display:inline-block; font-size:.78rem; font-weight:800;
   padding:4px 12px; border-radius:50px; margin-bottom:12px;
 }
-.attempt-1 { background:#E3F8E7; color:#2E7D50; }
+.attempt-1 { background:#E3F8E7; color:#2E6E45; }
 .attempt-2 { background:#FFF3CD; color:#856B00; }
 
 /* ── GRADE 10 QUESTION CARD ── */
 .question-card {
   background:white; border-radius:var(--radius-sm);
   padding:18px 16px; margin-bottom:12px;
-  border-left:5px solid var(--pool-blue); transition:all .25s;
+  border-left:5px solid var(--accent); transition:all .25s;
 }
 .question-card.state-correct { border-left-color:var(--correct); background:#F2FBF5; }
 .question-card.state-wrong   { border-left-color:var(--wrong);   background:#FEF6F5; }
@@ -180,15 +187,15 @@ body {
   display:inline-block;
   width: var(--gap-w);
   padding:3px 8px;
-  border:none; border-bottom:2.5px solid var(--deep-teal);
+  border:none; border-bottom:2.5px solid var(--accent2);
   font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800;
-  text-transform:uppercase; color:var(--deep-teal);
+  text-transform:uppercase; color:var(--accent2);
   background:transparent; outline:none;
   vertical-align:middle; text-align:center;
   letter-spacing:.06em; transition:all .2s;
 }
-.inline-gap:focus { border-bottom-color:var(--pool-blue); background:rgba(77,217,232,.08); border-radius:4px 4px 0 0; }
-.inline-gap.g-correct { border-bottom-color:var(--correct); color:#2E7D50; background:rgba(82,201,122,.08); border-radius:4px 4px 0 0; }
+.inline-gap:focus { border-bottom-color:var(--accent); background:rgba(106,175,192,.08); border-radius:4px 4px 0 0; }
+.inline-gap.g-correct { border-bottom-color:var(--correct); color:#2E6E45; background:rgba(82,201,122,.08); border-radius:4px 4px 0 0; }
 .inline-gap.g-wrong   { border-bottom-color:var(--wrong);   color:var(--wrong); background:rgba(240,99,90,.08); border-radius:4px 4px 0 0; }
 .inline-gap:disabled  { opacity:.85; cursor:default; }
 
@@ -200,19 +207,19 @@ body {
   line-height:1.55; display:none;
 }
 .explain-box.show { display:block; }
-.explain-box.ex-correct { background:#E8F8EE; border-left:4px solid var(--correct); color:#1A5C36; }
-.explain-box.ex-wrong   { background:#FDECEA; border-left:4px solid var(--wrong);   color:#9B1C1C; }
+.explain-box.ex-correct { background:#E8F5E9; border-left:4px solid var(--correct); color:#1A5C36; }
+.explain-box.ex-wrong   { background:#FDF0EF; border-left:4px solid var(--wrong);   color:#8B2020; }
 
 /* ── FCE PASSAGE ── */
 .passage-card { background:white; border-radius:var(--radius-sm); padding:20px 18px; margin-bottom:12px; }
-.passage-title { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:700; color:var(--deep-teal); margin-bottom:3px; }
+.passage-title { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:700; color:var(--accent2); margin-bottom:3px; }
 .passage-meta  { font-size:.78rem; color:var(--text-mid); font-weight:600; margin-bottom:14px; }
 
 .passage-body {
   font-size:1.15rem; font-weight:600; color:var(--text-dark);
   line-height:2.4; margin-bottom:16px;
   background:#F8FCFE; padding:14px 16px;
-  border-radius:var(--radius-sm); border:1px solid rgba(77,217,232,.25);
+  border-radius:var(--radius-sm); border:1px solid rgba(106,175,192,.25);
 }
 
 /* inline gap inside passage */
@@ -221,15 +228,15 @@ body {
   display:inline-block;
   width: var(--gap-w);
   padding:2px 6px;
-  border:none; border-bottom:2.5px solid var(--deep-teal);
+  border:none; border-bottom:2.5px solid var(--accent2);
   font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800;
-  text-transform:uppercase; color:var(--deep-teal);
+  text-transform:uppercase; color:var(--accent2);
   background:transparent; outline:none;
   vertical-align:middle; text-align:center;
   letter-spacing:.06em; transition:all .2s;
 }
-.fce-gap:focus { border-bottom-color:var(--pool-blue); background:rgba(77,217,232,.08); border-radius:4px 4px 0 0; }
-.fce-gap.g-correct { border-bottom-color:var(--correct); color:#2E7D50; background:rgba(82,201,122,.08); }
+.fce-gap:focus { border-bottom-color:var(--accent); background:rgba(106,175,192,.08); border-radius:4px 4px 0 0; }
+.fce-gap.g-correct { border-bottom-color:var(--correct); color:#2E6E45; background:rgba(82,201,122,.08); }
 .fce-gap.g-wrong   { border-bottom-color:var(--wrong);   color:var(--wrong); background:rgba(240,99,90,.08); }
 .fce-gap:disabled  { opacity:.85; cursor:default; }
 .fce-root { font-weight:900; color:var(--text-dark); font-size:1rem; }
@@ -240,11 +247,11 @@ body {
   font-size:.9rem; font-weight:600; line-height:1.5; display:none;
 }
 .fce-explain-item.show { display:block; }
-.fce-explain-item.ex-correct { background:#E8F8EE; border-left:4px solid var(--correct); color:#1A5C36; }
-.fce-explain-item.ex-wrong   { background:#FDECEA; border-left:4px solid var(--wrong);   color:#9B1C1C; }
+.fce-explain-item.ex-correct { background:#E8F5E9; border-left:4px solid var(--correct); color:#1A5C36; }
+.fce-explain-item.ex-wrong   { background:#FDF0EF; border-left:4px solid var(--wrong);   color:#8B2020; }
 
 .example-tag {
-  display:inline-block; background:#E8F8EE; color:#2E7D50;
+  display:inline-block; background:#E8F5E9; color:#2E6E45;
   font-size:.82rem; font-weight:800; padding:2px 10px;
   border-radius:50px; margin-bottom:10px;
 }
@@ -252,22 +259,22 @@ body {
 /* ── CHECK BUTTON ── */
 .check-btn {
   width:100%; padding:15px;
-  background:linear-gradient(135deg,#F5C842,#E8A800);
-  color:#1A3A4A; border:none; border-radius:var(--radius-sm);
+  background:linear-gradient(135deg,#F2C94C,#D4A820);
+  color:#2D4A52; border:none; border-radius:var(--radius-sm);
   font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:700;
   cursor:pointer; margin-top:6px; transition:all .22s;
-  box-shadow:0 4px 14px rgba(245,200,66,.32);
+  box-shadow:0 4px 14px rgba(242,201,76,.32);
 }
-.check-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(245,200,66,.42); }
+.check-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(242,201,76,.42); }
 
 /* ── SPELLING ── */
 .spelling-word-block {
   background:white; border-radius:var(--radius-sm);
   overflow:hidden; margin-bottom:14px;
-  border:2px solid rgba(77,217,232,.3);
+  border:2px solid rgba(106,175,192,.3);
 }
 .spelling-header {
-  background:linear-gradient(135deg,var(--pool-blue),var(--deep-teal));
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
   padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
 }
 .spelling-target { font-family:'Baloo 2',cursive; font-size:1.3rem; font-weight:800; color:white; letter-spacing:.1em; }
@@ -277,15 +284,15 @@ body {
 .spelling-num { font-size:.78rem; font-weight:800; color:var(--text-mid); min-width:20px; text-align:right; }
 .spelling-input {
   flex:1; padding:7px 12px;
-  border:2px solid rgba(77,217,232,.4); border-radius:8px;
+  border:2px solid rgba(106,175,192,.4); border-radius:8px;
   font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:800;
-  text-transform:uppercase; color:var(--deep-teal);
+  text-transform:uppercase; color:var(--accent2);
   letter-spacing:.07em; outline:none; transition:all .2s;
 }
-.spelling-input:focus { border-color:var(--deep-teal); box-shadow:0 0 0 3px rgba(77,217,232,.2); }
-.spelling-input.sp-correct { border-color:var(--correct); background:#E8F8EE; color:#2E7D50; }
-.spelling-input.sp-wrong   { border-color:var(--wrong);   background:#FDECEA; animation:shake .3s ease; }
-.spelling-input:disabled   { background:#E8F8EE; border-color:var(--correct); color:#2E7D50; }
+.spelling-input:focus { border-color:var(--accent2); box-shadow:0 0 0 3px rgba(106,175,192,.2); }
+.spelling-input.sp-correct { border-color:var(--correct); background:#E8F5E9; color:#2E6E45; }
+.spelling-input.sp-wrong   { border-color:var(--wrong);   background:#FDF0EF; animation:shake .3s ease; }
+.spelling-input:disabled   { background:#E8F5E9; border-color:var(--correct); color:#2E6E45; }
 @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
 .spelling-tick { font-size:1rem; min-width:20px; }
 .spelling-progress-text { text-align:center; font-size:.85rem; font-weight:700; color:var(--text-mid); margin-bottom:14px; }
@@ -294,23 +301,23 @@ body {
 .result-card { text-align:center; padding:28px 20px; }
 .meme-display { font-size:72px; margin-bottom:14px; animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55); }
 @keyframes bounceIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
-.result-title { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--deep-teal); margin-bottom:3px; }
+.result-title { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--accent2); margin-bottom:3px; }
 .result-tagline { font-size:.92rem; color:var(--text-mid); font-weight:600; margin-bottom:22px; }
 
 .stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px; }
-.stat-box { background:linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius:12px; padding:12px 8px; }
-.stat-value { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--deep-teal); display:block; }
+.stat-box { background:linear-gradient(135deg,#DCF0F8,#C8E4F0); border-radius:12px; padding:12px 8px; }
+.stat-value { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--accent2); display:block; }
 .stat-label { font-size:.72rem; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:.06em; }
 
-.result-info { background:white; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:12px; text-align:left; border:1.5px solid rgba(77,217,232,.25); }
-.info-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(77,217,232,.12); font-size:.88rem; }
+.result-info { background:white; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:12px; text-align:left; border:1.5px solid rgba(106,175,192,.25); }
+.info-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(106,175,192,.12); font-size:.88rem; }
 .info-row:last-child { border-bottom:none; }
 .info-key { color:var(--text-mid); font-weight:600; }
 .info-val { font-weight:800; color:var(--text-dark); }
 
 .wrong-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
 .wrong-chip {
-  background:#FDECEA; border:1.5px solid #F0635A; color:#C0392B;
+  background:#FDF0EF; border:1.5px solid #E07070; color:#A33030;
   font-size:.82rem; font-weight:800; padding:3px 12px;
   border-radius:50px; text-transform:uppercase; letter-spacing:.06em;
 }
@@ -322,8 +329,8 @@ body {
   cursor:pointer; transition:all .2s;
 }
 .action-btn:hover { transform:translateY(-2px); }
-.action-primary { background:linear-gradient(135deg,var(--water-mid),var(--deep-teal)); color:white; box-shadow:0 4px 14px rgba(26,155,173,.28); }
-.action-secondary { background:white; color:var(--deep-teal); border:2px solid var(--pool-blue); }
+.action-primary { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:white; box-shadow:0 4px 14px rgba(78,144,160,.28); }
+.action-secondary { background:white; color:var(--accent2); border:2px solid var(--accent); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 600px) {
@@ -416,6 +423,48 @@ body {
   </div>
 </div>
 
+<!-- ═══════════ GIF POPUP ═══════════ -->
+<style>
+#gifPopup {
+  display:none; position:fixed; inset:0; z-index:999;
+  background:rgba(45,74,82,0.5);
+  align-items:center; justify-content:center;
+  backdrop-filter: blur(4px);
+}
+#gifPopup.show { display:flex; animation: fadeUp .3s ease; }
+.gif-modal {
+  background:white; border-radius:24px; padding:24px 24px 20px;
+  text-align:center; max-width:320px; width:88%;
+  box-shadow:0 16px 48px rgba(0,0,0,0.2);
+}
+.gif-frame {
+  width:240px; height:240px; border-radius:16px;
+  overflow:hidden; margin:0 auto 14px; background:#f0f4f6;
+}
+.gif-frame img { width:100%; height:100%; object-fit:cover; }
+.gif-msg { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:800; color:#2D4A52; margin-bottom:4px; }
+.gif-sub { font-size:.85rem; color:#5A7A82; font-weight:600; margin-bottom:16px; line-height:1.4; }
+.gif-btn {
+  background:linear-gradient(135deg,#6AAFC0,#4E90A0);
+  color:white; border:none; border-radius:12px;
+  padding:11px 32px; font-family:'Nunito',sans-serif;
+  font-size:1rem; font-weight:800; cursor:pointer;
+  transition:all .2s; box-shadow:0 4px 14px rgba(78,144,160,.3);
+}
+.gif-btn:hover { transform:translateY(-2px); }
+</style>
+
+<div id="gifPopup" onclick="closeGif()">
+  <div class="gif-modal" onclick="event.stopPropagation()">
+    <div class="gif-frame">
+      <img id="gifImg" src="" alt="meme">
+    </div>
+    <div class="gif-msg" id="gifMsg"></div>
+    <div class="gif-sub" id="gifSub"></div>
+    <button class="gif-btn" onclick="closeGif()">Let's fix them! ✏️</button>
+  </div>
+</div>
+
 <!-- ═══════════ SPELLING ═══════════ -->
 <div id="screenSpelling" class="screen">
   <div class="welcome-header">
@@ -433,7 +482,10 @@ body {
 <!-- ═══════════ RESULT ═══════════ -->
 <div id="screenResult" class="screen">
   <div class="card result-card">
-    <div class="meme-display" id="memeDisplay">🏊</div>
+    <div style="margin-bottom:14px;">
+      <img id="memeDisplay" src="" alt="" style="width:200px;height:200px;border-radius:16px;object-fit:cover;display:none;">
+      <div id="memeEmoji" style="font-size:72px;line-height:1;animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55);"></div>
+    </div>
     <div class="result-title" id="resultTitle">Well Done!</div>
     <div class="result-tagline" id="resultTagline">Session complete</div>
 
@@ -647,8 +699,8 @@ function renderG10() {
         ${sentenceHTML} <span class="root-hint">(${q.rootWord})</span>
       </div>
       <div class="explain-box ${showExplain ? 'show ' + explainClass : ''}">
-        ${checked && !ans.correct ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
-        ${q.explanation}
+        ${(checked && !ans.correct && S.attempt === 2) ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
+        ${(ans && ans.correct) || S.attempt === 2 ? q.explanation : ''}
       </div>`;
     c.appendChild(div);
 
@@ -716,7 +768,9 @@ function renderFCE() {
       const item = document.createElement('div');
       item.className = `fce-explain-item ${showExplain ? 'show ' + explainClass : ''}`;
       item.id = `exp_${qid}`;
-      item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${checked && !ans.correct ? ` → <span style="color:#2E7D50;font-weight:800">${q.answer}</span>` : ''}: ${q.explanation}`;
+      const showAns2 = checked && !ans.correct && S.attempt === 2;
+      const showExp2 = (ans && ans.correct) || S.attempt === 2;
+      item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${showAns2 ? ` → <span style="color:#2E6E45;font-weight:800">${q.answer}</span>` : ''}${showExp2 ? ': ' + q.explanation : ''}`;
       expContainer.appendChild(item);
 
       // attach listener to input
@@ -777,10 +831,9 @@ function checkAnswers() {
     return;
   }
 
-  // After attempt 1: increment and re-render
+  // After attempt 1: show meme then go to round 2
   S.attempt = 2;
-  renderQuiz();
-  window.scrollTo({ top:0, behavior:'smooth' });
+  showMemePopup();
 }
 
 /* ═══════════════════════════════════════════════
@@ -901,13 +954,16 @@ function finishSpelling() { showResult(); }
 /* ═══════════════════════════════════════════════
    RESULT SCREEN
 ═══════════════════════════════════════════════ */
-const MEMES = {
-  perfect: ['🏆🐻‍❄️🥇','🎉🌊🏊','🦦✨🥇'],
-  great:   ['🎊🐻💪','🌊🏄‍♂️🎯','🐟✅🎈'],
-  ok:      ['🐻🤔💭','🌊🏊‍♀️📚','🦆📖💡'],
-  low:     ['🐻😅🔄','🌊💦📝','🐠🔁❓'],
-};
-function getMeme(p){ return shuffle(p>=90?MEMES.perfect:p>=70?MEMES.great:p>=50?MEMES.ok:MEMES.low)[0]; }
+const RESULT_GIFS = [
+  { score: 90, gif: 'https://media1.giphy.com/media/-b2TGLnnacYlHymJlR8/200.gif' },  // YES! milk bear
+  { score: 70, gif: 'https://media0.giphy.com/media/YWEoHbCcFz5mEeb10g/200.gif' },  // jump heart
+  { score: 50, gif: 'https://media0.giphy.com/media/Zr02pqF9RB09MDOOfr/giphy.gif'}, // disco mocha
+  { score: 0,  gif: 'https://media2.giphy.com/media/Sm967xL4TW9a9Mc732/200.gif' },  // angry sweat
+];
+function getMeme(p) {
+  const r = RESULT_GIFS.find(g => p >= g.score) || RESULT_GIFS[RESULT_GIFS.length-1];
+  return r.gif;
+}
 
 function showResult() {
   S.endTime = S.endTime || new Date();
@@ -917,7 +973,11 @@ function showResult() {
   const pct     = Math.round(correct/all.length*100);
   const dur     = Math.floor((S.endTime - S.startTime)/1000);
 
-  document.getElementById('memeDisplay').textContent  = getMeme(pct);
+  const memeImg = document.getElementById('memeDisplay');
+  const memeEmoji = document.getElementById('memeEmoji');
+  memeImg.src = getMeme(pct);
+  memeImg.style.display = 'block';
+  memeEmoji.style.display = 'none';
   document.getElementById('resultTitle').textContent  = pct>=90?'Outstanding!':pct>=70?'Well Done!':pct>=50?'Good Try!':'Keep Going!';
   document.getElementById('resultTagline').textContent= pct>=90?'Excellent! You nailed it! 🏆':pct>=70?'Great work! Keep it up!':pct>=50?'Good effort - review the words below.':'Keep practising - you\'ll get there!';
   document.getElementById('statPct').textContent  = pct + '%';
@@ -949,7 +1009,7 @@ function showResult() {
         const pQs = p.questions.map(q=>({qid:`${p.id}_${q.number}`,q}));
         const ok  = pQs.filter(({qid})=>S.answers[qid]?.correct).length;
         const bad = pQs.filter(({qid})=>!S.answers[qid]?.correct);
-        chips.innerHTML += `<div style="width:100%;margin-bottom:6px;"><strong style="font-size:.85rem;color:var(--deep-teal)">${p.title}</strong> <span style="font-size:.8rem;color:var(--text-mid)">${ok}/${p.questions.length} correct</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">${bad.map(({q})=>`<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`).join('')}</div></div>`;
+        chips.innerHTML += `<div style="width:100%;margin-bottom:6px;"><strong style="font-size:.85rem;color:var(--accent2)">${p.title}</strong> <span style="font-size:.8rem;color:var(--text-mid)">${ok}/${p.questions.length} correct</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">${bad.map(({q})=>`<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`).join('')}</div></div>`;
       });
     }
   }
@@ -994,6 +1054,54 @@ function showScreen(id) {
 }
 function goHome()   { stopTimer(); showScreen('screenWelcome'); }
 function goReview() { S.reviewMode=true; _reviewOn=true; document.getElementById('reviewSwitch').classList.add('on'); goHome(); }
+
+/* ═══════════════════════════════════════════════
+   MEME POPUP after Round 1
+═══════════════════════════════════════════════ */
+// Milk Mocha Bear GIFs from GIPHY (milkmochabear channel)
+const ROUND1_MEMES = [
+  {
+    score: 100,
+    gif: 'https://media1.giphy.com/media/JRsQiAN79bPWUv43Ko/giphy.gif',
+    msg: 'Perfect Round 1! 🌟',
+    sub: 'Every single one correct — absolutely incredible!'
+  },
+  {
+    score: 80,
+    gif: 'https://media0.giphy.com/media/JoUoAzZEjEy9PrZ98N/200.gif',
+    msg: 'Almost there! 💪',
+    sub: 'Just a few to fix — you've got this in Round 2!'
+  },
+  {
+    score: 50,
+    gif: 'https://media0.giphy.com/media/kf3EjrAsKp3P9bhYHG/giphy.gif',
+    msg: 'Good try! 🕺',
+    sub: 'Review the red ones carefully in Round 2.'
+  },
+  {
+    score: 0,
+    gif: 'c',
+    msg: 'Keep going! 📝',
+    sub: 'Round 2 is your chance to make it right!'
+  },
+];
+
+function showMemePopup() {
+  const all     = getAllQids();
+  const correct = all.filter(({qid}) => S.answers[qid]?.correct).length;
+  const pct     = Math.round(correct / all.length * 100);
+  const meme    = ROUND1_MEMES.find(m => pct >= m.score) || ROUND1_MEMES[ROUND1_MEMES.length-1];
+  document.getElementById('gifImg').src  = meme.gif;
+  document.getElementById('gifMsg').textContent = meme.msg;
+  document.getElementById('gifSub').textContent = `${correct}/${all.length} correct · ${pct}% — ${meme.sub}`;
+  document.getElementById('gifPopup').classList.add('show');
+}
+
+function closeGif() {
+  document.getElementById('gifPopup').classList.remove('show');
+  renderQuiz();
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
 
 function shuffle(a) {
   for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
