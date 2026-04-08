@@ -86,7 +86,8 @@ body {
   color:var(--text-dark); background:white; transition:all .2s; outline:none;
 }
 .form-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(106,175,192,.2); }
-.form-input:disabled { background:#F0F8FF; color:var(--text-mid); }
+.form-input.loading { background: repeating-linear-gradient(90deg,#DCF0F8,#C8E4F0 10px,#DCF0F8 20px); background-size:200% 100%; animation: shimmer 1.2s infinite linear; color: var(--text-mid); }
+@keyframes shimmer { from{background-position:200% 0} to{background-position:-200% 0} }
 .form-input.id-input { text-transform:uppercase; letter-spacing:.1em; }
 .student-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
@@ -562,7 +563,7 @@ const CONFIG = {
   studentsUrl:   'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/students.json',
   grade10Url:    'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/MOET/GRAMMAR%20REVISION/WORD%20FORM/grade10.json',
   fceUrl:        'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/FCE/READING%20%26%20UOE/UOE%20PART%203/fce.json',
-  appsScriptUrl: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
+  appsScriptUrl: 'https://script.google.com/macros/s/AKfycbzwgsLeFrRlh4Dl3zxTDwcgYUIUzVdyPFXk8qVEjkFkiSlFMysApuDScTcEvXddEA4y7g/exec',
 };
 
 /* ═══════════════════════════════════════════════
@@ -586,21 +587,48 @@ const S = {
 ═══════════════════════════════════════════════ */
 let _dataReady = false;
 
+function showBootError(msg) {
+  const inp = document.getElementById('inputStudentId');
+  const err = document.getElementById('idError');
+  inp.placeholder = 'Data unavailable…';
+  inp.disabled = true;
+  err.textContent = msg;
+  err.style.display = 'block';
+}
+
 async function boot() {
+  // Show loading hint
+  const idInp = document.getElementById('inputStudentId');
+  idInp.placeholder = 'Loading data…';
+  idInp.classList.add('loading');
+
+  let studentsOk = false;
   try {
     const r = await fetch(CONFIG.studentsUrl);
-    if (!r.ok) throw new Error('students.json not found (' + r.status + ')');
-    S.students = (await r.json()).students || [];
-  } catch(e) { alert('Could not load student data.\n' + e.message); return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const json = await r.json();
+    S.students = json.students || [];
+    studentsOk = true;
+  } catch(e) {
+    console.error('students.json failed:', e);
+    showBootError('⚠️ Cannot load student list. Check GitHub URL or network. (' + e.message + ')');
+    // Still continue so grade10/fce data loads, but _dataReady stays false
+  }
 
-  try { S.grade10 = (await (await fetch(CONFIG.grade10Url)).json()).questions || []; } catch(e) { console.warn('grade10.json not loaded'); }
-  try { S.fce     = (await (await fetch(CONFIG.fceUrl)).json()).passages  || []; } catch(e) { console.warn('fce.json not loaded'); }
+  try { S.grade10 = (await (await fetch(CONFIG.grade10Url)).json()).questions || []; } catch(e) { console.warn('grade10.json not loaded:', e.message); }
+  try { S.fce     = (await (await fetch(CONFIG.fceUrl)).json()).passages  || []; } catch(e) { console.warn('fce.json not loaded:', e.message); }
 
-  _dataReady = true;
-  console.log(`Students: ${S.students.length} | G10: ${S.grade10.length} | FCE: ${S.fce.length}`);
-  // Retry ID lookup if student already typed something
-  const val = document.getElementById('inputStudentId').value.trim().toUpperCase();
-  if (val.length >= 3) tryLookupId(val);
+  if (studentsOk) {
+    _dataReady = true;
+    const inp = document.getElementById('inputStudentId');
+    inp.placeholder = 'Enter your ID…';
+    inp.disabled = false;
+    inp.classList.remove('loading');
+    console.log(`✅ Boot OK — Students: ${S.students.length} | G10: ${S.grade10.length} | FCE: ${S.fce.length}`);
+    // Retry ID lookup if student already typed something while loading
+    const val = document.getElementById('inputStudentId').value.trim().toUpperCase();
+    if (val.length >= 2) tryLookupId(val);
+  }
 }
 boot();
 
@@ -634,7 +662,7 @@ document.getElementById('inputStudentId').addEventListener('input', function() {
   document.getElementById('startBtn').disabled = true;
   S.studentId = S.studentName = S.studentClass = '';
   if (v.length < 2) return;
-  _idTimer = setTimeout(() => tryLookupId(v), 350);
+  _idTimer = setTimeout(() => tryLookupId(v), 400);
 });
 
 const _qty = { g10: 10, fce: 1 };
@@ -1142,7 +1170,7 @@ const ROUND1_MEMES = [
     score: 80,
     gif: 'https://media0.giphy.com/media/JoUoAzZEjEy9PrZ98N/200.gif',
     msg: 'Almost there! 💪',
-    sub: 'Just a few to fix — you've got this in Round 2!'
+    sub: `Just a few to fix — you've got this in Round 2!`
   },
   {
     score: 50,
