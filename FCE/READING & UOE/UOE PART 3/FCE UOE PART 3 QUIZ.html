@@ -955,10 +955,10 @@ function finishSpelling() { showResult(); }
    RESULT SCREEN
 ═══════════════════════════════════════════════ */
 const RESULT_GIFS = [
-  { score: 90, gif: 'https://media1.giphy.com/media/-b2TGLnnacYlHymJlR8/200.gif' },  // YES! milk bear
-  { score: 70, gif: 'https://media0.giphy.com/media/YWEoHbCcFz5mEeb10g/200.gif' },  // jump heart
-  { score: 50, gif: 'https://media0.giphy.com/media/Zr02pqF9RB09MDOOfr/giphy.gif'}, // disco mocha
-  { score: 0,  gif: 'https://media2.giphy.com/media/Sm967xL4TW9a9Mc732/200.gif' },  // angry sweat
+  { score: 90, gif: 'https://media1.giphy.com/media/dZd6NaZ8522fBx6w3d/200.gif' },  // YES! milk bear
+  { score: 70, gif: 'https://media0.giphy.com/media/JoUoAzZEjEy9PrZ98N/200.gif' },  // jump heart
+  { score: 50, gif: 'https://media0.giphy.com/media/kf3EjrAsKp3P9bhYHG/giphy.gif'}, // disco mocha
+  { score: 0,  gif: 'https://media2.giphy.com/media/L3iXjPw1GoEk0nioqY/200.gif' },  // angry sweat
 ];
 function getMeme(p) {
   const r = RESULT_GIFS.find(g => p >= g.score) || RESULT_GIFS[RESULT_GIFS.length-1];
@@ -1080,7 +1080,7 @@ const ROUND1_MEMES = [
   },
   {
     score: 0,
-    gif: 'c',
+    gif: 'https://media2.giphy.com/media/L3iXjPw1GoEk0nioqY/200.gif',
     msg: 'Keep going! 📝',
     sub: 'Round 2 is your chance to make it right!'
   },
