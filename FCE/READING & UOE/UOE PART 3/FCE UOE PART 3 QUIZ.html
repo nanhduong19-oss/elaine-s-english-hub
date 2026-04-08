@@ -6,1707 +6,998 @@
 <title>Word Form Quiz - Ruby School</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ============================================================
-   CONFIGURATION - Edit these 3 lines to set up your app
-   ============================================================ */
-/* See SETUP section below in the script */
-
-/* ============================================================
-   CSS VARIABLES - Pool / Summer Theme
-   ============================================================ */
 :root {
   --pool-blue: #4DD9E8;
   --deep-teal: #1A9BAD;
-  --sky: #87CEEB;
   --water-mid: #2BB8CC;
-  --sand: #FFF8E7;
-  --yellow-ring: #F5C842;
-  --white-bear: #F0F4F8;
-  --brown-bear: #C9956A;
-  --foam: rgba(255,255,255,0.6);
   --correct: #52C97A;
   --wrong: #F0635A;
-  --pending: #F5C842;
   --text-dark: #1A3A4A;
   --text-mid: #3A6070;
-  --card-bg: rgba(255,255,255,0.88);
-  --shadow: 0 8px 32px rgba(26,155,173,0.18);
-  --radius: 20px;
-  --radius-sm: 12px;
+  --card-bg: rgba(255,255,255,0.92);
+  --shadow: 0 6px 24px rgba(26,155,173,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --gap-w: 200px;
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
   font-family: 'Nunito', sans-serif;
-  background: linear-gradient(160deg, #87CEEB 0%, #4DD9E8 40%, #1A9BAD 100%);
+  background: linear-gradient(160deg, #87CEEB 0%, #4DD9E8 45%, #1A9BAD 100%);
   min-height: 100vh;
   color: var(--text-dark);
   overflow-x: hidden;
 }
 
-/* Ripple background effect */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 120px 40px at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 70%),
-    radial-gradient(ellipse 80px 30px at 70% 60%, rgba(255,255,255,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 100px 35px at 50% 80%, rgba(255,255,255,0.1) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  animation: rippleMove 8s ease-in-out infinite;
-}
-@keyframes rippleMove {
-  0%, 100% { opacity: 1; transform: translateX(0); }
-  50% { opacity: 0.7; transform: translateX(20px); }
-}
-
-/* ============================================================
-   LAYOUT
-   ============================================================ */
+/* ── LAYOUT ── */
 .app {
-  position: relative;
-  z-index: 1;
-  max-width: 780px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 20px 16px 60px;
+  padding: 16px 12px 60px;
   min-height: 100vh;
 }
 
-.screen { display: none; }
-.screen.active { display: block; animation: fadeUp 0.4s ease; }
+.screen { display:none; }
+.screen.active { display:block; animation: fadeUp .35s ease; }
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity:0; transform:translateY(14px); }
+  to   { opacity:1; transform:translateY(0); }
 }
 
-/* ============================================================
-   CARD
-   ============================================================ */
+/* ── CARD ── */
 .card {
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius);
-  padding: 28px 24px;
+  padding: 22px 20px;
   box-shadow: var(--shadow);
-  border: 2px solid rgba(255,255,255,0.7);
-  margin-bottom: 16px;
-}
-
-/* ============================================================
-   WELCOME SCREEN
-   ============================================================ */
-.welcome-header {
-  text-align: center;
-  padding: 32px 0 20px;
-}
-
-.bears-emoji {
-  font-size: 52px;
-  display: block;
-  margin-bottom: 8px;
-  animation: floatBears 3s ease-in-out infinite;
-}
-@keyframes floatBears {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.app-title {
-  font-family: 'Baloo 2', cursive;
-  font-size: 2rem;
-  font-weight: 800;
-  color: white;
-  text-shadow: 0 3px 12px rgba(26,155,173,0.4);
-  line-height: 1.1;
-}
-.app-subtitle {
-  font-size: 0.95rem;
-  color: rgba(255,255,255,0.85);
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-.form-group { margin-bottom: 18px; }
-.form-label {
-  display: block;
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
-
-.form-input {
-  width: 100%;
-  padding: 13px 16px;
-  border: 2px solid rgba(77,217,232,0.4);
-  border-radius: var(--radius-sm);
-  font-family: 'Nunito', sans-serif;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-dark);
-  background: white;
-  transition: all 0.25s;
-  outline: none;
-}
-.form-input:focus { border-color: var(--pool-blue); box-shadow: 0 0 0 3px rgba(77,217,232,0.2); }
-.form-input:disabled { background: #F0F8FF; color: var(--text-mid); }
-.form-input.id-input { text-transform: uppercase; letter-spacing: 0.1em; }
-
-.student-info-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
-
-/* Mode buttons */
-.mode-label {
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 10px;
-  display: block;
-}
-.mode-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 18px;
-}
-.mode-btn {
-  padding: 14px 10px;
-  border: 2.5px solid rgba(77,217,232,0.35);
-  border-radius: var(--radius-sm);
-  background: white;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.25s;
-  font-family: 'Nunito', sans-serif;
-}
-.mode-btn:hover { border-color: var(--pool-blue); transform: translateY(-2px); }
-.mode-btn.selected {
-  border-color: var(--deep-teal);
-  background: linear-gradient(135deg, #E0F7FA, #B2EBF2);
-  box-shadow: 0 4px 16px rgba(26,155,173,0.2);
-}
-.mode-icon { font-size: 1.6rem; display: block; margin-bottom: 4px; }
-.mode-name {
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--text-dark);
-  line-height: 1.2;
-}
-
-/* Quantity selector */
-.qty-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.qty-btn {
-  width: 38px; height: 38px;
-  border-radius: 50%;
-  border: 2px solid var(--pool-blue);
-  background: white;
-  font-size: 1.2rem;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--deep-teal);
-  transition: all 0.2s;
-  display: flex; align-items: center; justify-content: center;
-}
-.qty-btn:hover { background: var(--pool-blue); color: white; }
-.qty-display {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  min-width: 60px;
-  text-align: center;
-}
-.qty-hint {
-  font-size: 0.78rem;
-  color: var(--text-mid);
-  font-weight: 600;
-}
-
-/* Review mode toggle */
-.review-toggle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #FFF8E7, #FFF3CD);
-  border-radius: var(--radius-sm);
-  border: 2px solid #F5C842;
-  cursor: pointer;
-  margin-bottom: 18px;
-  transition: all 0.2s;
-}
-.review-toggle:hover { transform: translateY(-1px); }
-.toggle-switch {
-  width: 46px; height: 26px;
-  background: #ccc;
-  border-radius: 13px;
-  position: relative;
-  transition: all 0.3s;
-  flex-shrink: 0;
-}
-.toggle-switch.on { background: var(--deep-teal); }
-.toggle-knob {
-  width: 20px; height: 20px;
-  background: white;
-  border-radius: 50%;
-  position: absolute;
-  top: 3px; left: 3px;
-  transition: all 0.3s;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-.toggle-switch.on .toggle-knob { left: 23px; }
-.toggle-text { font-size: 0.9rem; font-weight: 700; color: var(--text-dark); }
-
-.start-btn {
-  width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--water-mid), var(--deep-teal));
-  color: white;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.15rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.25s;
-  box-shadow: 0 6px 20px rgba(26,155,173,0.35);
-  letter-spacing: 0.02em;
-}
-.start-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(26,155,173,0.45); }
-.start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-.error-msg {
-  color: var(--wrong);
-  font-size: 0.85rem;
-  font-weight: 700;
-  margin-top: 6px;
-  display: none;
-}
-
-/* ============================================================
-   QUIZ SCREEN
-   ============================================================ */
-.quiz-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0 4px;
-  margin-bottom: 12px;
-}
-.quiz-badge {
-  background: rgba(255,255,255,0.85);
-  border-radius: 50px;
-  padding: 6px 14px;
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.timer {
-  background: rgba(255,255,255,0.85);
-  border-radius: 50px;
-  padding: 6px 14px;
-  font-size: 0.9rem;
-  font-weight: 800;
-  color: var(--text-dark);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  font-variant-numeric: tabular-nums;
-}
-
-/* Progress */
-.progress-bar-wrap {
-  background: rgba(255,255,255,0.4);
-  border-radius: 6px;
-  height: 8px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-.progress-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--pool-blue), var(--yellow-ring));
-  border-radius: 6px;
-  transition: width 0.5s ease;
-}
-
-/* Attempt indicator */
-.attempt-badge {
-  display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 50px;
-  margin-bottom: 12px;
-}
-.attempt-1 { background: #E3F8E7; color: #2E7D50; }
-.attempt-2 { background: #FFF3CD; color: #856B00; }
-.attempt-3 { background: #FDECEA; color: #C0392B; }
-
-/* Question card */
-.question-card {
-  background: white;
-  border-radius: var(--radius-sm);
-  padding: 18px 16px;
-  margin-bottom: 12px;
-  border-left: 5px solid var(--pool-blue);
-  transition: all 0.3s;
-  position: relative;
-}
-.question-card.correct { border-left-color: var(--correct); background: #F0FBF4; }
-.question-card.wrong { border-left-color: var(--wrong); background: #FEF6F5; }
-.question-card.skip { opacity: 0.55; pointer-events: none; }
-
-.q-number {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--text-mid);
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.q-sentence {
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  line-height: 1.65;
-  margin-bottom: 10px;
-}
-.root-word-tag {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--pool-blue), var(--deep-teal));
-  color: white;
-  font-size: 0.82rem;
-  font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 50px;
-  letter-spacing: 0.06em;
-  margin-bottom: 10px;
-}
-
-.answer-input {
-  width: 100%;
-  padding: 10px 14px;
-  border: 2.5px solid rgba(77,217,232,0.5);
-  border-radius: 10px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--deep-teal);
-  background: #F0FBFC;
-  letter-spacing: 0.08em;
-  outline: none;
-  transition: all 0.2s;
-}
-.answer-input:focus { border-color: var(--deep-teal); box-shadow: 0 0 0 3px rgba(77,217,232,0.2); }
-.answer-input.input-correct { border-color: var(--correct); background: #E8F8EE; color: #2E7D50; }
-.answer-input.input-wrong { border-color: var(--wrong); background: #FDECEA; color: var(--wrong); }
-.answer-input:disabled { opacity: 0.8; cursor: not-allowed; }
-
-.result-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-top: 10px;
-  display: none;
-}
-.result-row.show { display: flex; }
-.result-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-.result-text { font-size: 0.87rem; font-weight: 600; color: var(--text-mid); line-height: 1.5; }
-.result-text .correct-answer { font-weight: 800; color: var(--correct); }
-.result-text .explain { margin-top: 4px; }
-
-/* FCE passage */
-.passage-title {
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--deep-teal);
-  margin-bottom: 4px;
-}
-.passage-meta {
-  font-size: 0.8rem;
-  color: var(--text-mid);
-  font-weight: 600;
+  border: 1.5px solid rgba(255,255,255,0.75);
   margin-bottom: 14px;
 }
-.passage-text {
-  font-size: 0.95rem;
-  line-height: 1.9;
-  color: var(--text-dark);
-  font-weight: 600;
-  background: #F8FCFE;
-  padding: 14px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(77,217,232,0.25);
-  margin-bottom: 16px;
+
+/* ── WELCOME ── */
+.welcome-header { text-align:center; padding:28px 0 16px; }
+.bears-emoji { font-size:48px; display:block; margin-bottom:6px; animation: floatB 3s ease-in-out infinite; }
+@keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+.app-title {
+  font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800;
+  color:white; text-shadow:0 3px 12px rgba(26,155,173,.4); line-height:1.1;
 }
-.gap-blank {
-  display: inline-block;
-  min-width: 100px;
-  border-bottom: 2.5px solid var(--deep-teal);
-  margin: 0 4px;
-  text-align: center;
-  vertical-align: bottom;
-  font-weight: 800;
-  color: var(--deep-teal);
+.app-subtitle { font-size:.95rem; color:rgba(255,255,255,.85); margin-top:4px; font-weight:600; }
+
+.form-label {
+  display:block; font-size:.78rem; font-weight:800;
+  color:var(--deep-teal); text-transform:uppercase; letter-spacing:.08em; margin-bottom:5px;
 }
-.gap-example {
-  color: var(--correct);
-  font-weight: 800;
-  font-style: italic;
+.form-group { margin-bottom:16px; }
+.form-input {
+  width:100%; padding:12px 15px;
+  border:2px solid rgba(77,217,232,.4); border-radius:var(--radius-sm);
+  font-family:'Nunito',sans-serif; font-size:1rem; font-weight:700;
+  color:var(--text-dark); background:white; transition:all .2s; outline:none;
+}
+.form-input:focus { border-color:var(--pool-blue); box-shadow:0 0 0 3px rgba(77,217,232,.2); }
+.form-input:disabled { background:#F0F8FF; color:var(--text-mid); }
+.form-input.id-input { text-transform:uppercase; letter-spacing:.1em; }
+.student-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+.error-msg { color:var(--wrong); font-size:.82rem; font-weight:700; margin-top:5px; display:none; }
+
+/* mode buttons */
+.mode-buttons { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.mode-btn {
+  padding:14px 10px; border:2.5px solid rgba(77,217,232,.35);
+  border-radius:var(--radius-sm); background:white; cursor:pointer;
+  text-align:center; transition:all .22s; font-family:'Nunito',sans-serif;
+}
+.mode-btn:hover { border-color:var(--pool-blue); transform:translateY(-2px); }
+.mode-btn.selected {
+  border-color:var(--deep-teal);
+  background:linear-gradient(135deg,#E0F7FA,#B2EBF2);
+  box-shadow:0 4px 14px rgba(26,155,173,.2);
+}
+.mode-icon { font-size:1.5rem; display:block; margin-bottom:4px; }
+.mode-name { font-size:.8rem; font-weight:800; color:var(--text-dark); line-height:1.2; }
+
+/* review toggle */
+.review-toggle {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 16px; background:linear-gradient(135deg,#FFF8E7,#FFF3CD);
+  border-radius:var(--radius-sm); border:2px solid #F5C842;
+  cursor:pointer; margin-bottom:14px; transition:all .2s;
+}
+.toggle-switch {
+  width:44px; height:24px; background:#ccc; border-radius:12px;
+  position:relative; transition:all .3s; flex-shrink:0;
+}
+.toggle-switch.on { background:var(--deep-teal); }
+.toggle-knob {
+  width:18px; height:18px; background:white; border-radius:50%;
+  position:absolute; top:3px; left:3px; transition:all .3s;
+  box-shadow:0 2px 4px rgba(0,0,0,.2);
+}
+.toggle-switch.on .toggle-knob { left:23px; }
+.toggle-text { font-size:.88rem; font-weight:700; color:var(--text-dark); }
+
+.start-btn {
+  width:100%; padding:15px;
+  background:linear-gradient(135deg,var(--water-mid),var(--deep-teal));
+  color:white; border:none; border-radius:var(--radius-sm);
+  font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:700;
+  cursor:pointer; transition:all .22s;
+  box-shadow:0 6px 18px rgba(26,155,173,.32);
+}
+.start-btn:hover { transform:translateY(-2px); box-shadow:0 10px 26px rgba(26,155,173,.42); }
+.start-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+
+/* ── QUIZ HEADER ── */
+.quiz-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:10px 0 4px; margin-bottom:10px;
+}
+.quiz-badge {
+  background:rgba(255,255,255,.88); border-radius:50px;
+  padding:5px 14px; font-size:.8rem; font-weight:800; color:var(--deep-teal);
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.timer {
+  background:rgba(255,255,255,.88); border-radius:50px;
+  padding:5px 14px; font-size:.88rem; font-weight:800; color:var(--text-dark);
+  box-shadow:0 2px 8px rgba(0,0,0,.1); font-variant-numeric:tabular-nums;
+}
+.progress-bar-wrap {
+  background:rgba(255,255,255,.4); border-radius:6px; height:7px;
+  margin-bottom:14px; overflow:hidden;
+}
+.progress-bar-fill {
+  height:100%;
+  background:linear-gradient(90deg,var(--pool-blue),#F5C842);
+  border-radius:6px; transition:width .5s ease;
+}
+.attempt-badge {
+  display:inline-block; font-size:.78rem; font-weight:800;
+  padding:4px 12px; border-radius:50px; margin-bottom:12px;
+}
+.attempt-1 { background:#E3F8E7; color:#2E7D50; }
+.attempt-2 { background:#FFF3CD; color:#856B00; }
+
+/* ── GRADE 10 QUESTION CARD ── */
+.question-card {
+  background:white; border-radius:var(--radius-sm);
+  padding:18px 16px; margin-bottom:12px;
+  border-left:5px solid var(--pool-blue); transition:all .25s;
+}
+.question-card.state-correct { border-left-color:var(--correct); background:#F2FBF5; }
+.question-card.state-wrong   { border-left-color:var(--wrong);   background:#FEF6F5; }
+
+.q-number { font-size:.75rem; font-weight:800; color:var(--text-mid); margin-bottom:5px; text-transform:uppercase; letter-spacing:.06em; }
+
+/* INLINE gap input for Grade 10 sentence */
+.sentence-wrap { font-size:1.15rem; font-weight:600; color:var(--text-dark); line-height:2.2; margin-bottom:8px; }
+.inline-gap {
+  display:inline-block;
+  width: var(--gap-w);
+  padding:3px 8px;
+  border:none; border-bottom:2.5px solid var(--deep-teal);
+  font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800;
+  text-transform:uppercase; color:var(--deep-teal);
+  background:transparent; outline:none;
+  vertical-align:middle; text-align:center;
+  letter-spacing:.06em; transition:all .2s;
+}
+.inline-gap:focus { border-bottom-color:var(--pool-blue); background:rgba(77,217,232,.08); border-radius:4px 4px 0 0; }
+.inline-gap.g-correct { border-bottom-color:var(--correct); color:#2E7D50; background:rgba(82,201,122,.08); border-radius:4px 4px 0 0; }
+.inline-gap.g-wrong   { border-bottom-color:var(--wrong);   color:var(--wrong); background:rgba(240,99,90,.08); border-radius:4px 4px 0 0; }
+.inline-gap:disabled  { opacity:.85; cursor:default; }
+
+.root-hint { font-weight:800; color:var(--text-dark); }
+
+.explain-box {
+  margin-top:8px; padding:8px 12px;
+  border-radius:var(--radius-sm); font-size:.9rem; font-weight:600;
+  line-height:1.55; display:none;
+}
+.explain-box.show { display:block; }
+.explain-box.ex-correct { background:#E8F8EE; border-left:4px solid var(--correct); color:#1A5C36; }
+.explain-box.ex-wrong   { background:#FDECEA; border-left:4px solid var(--wrong);   color:#9B1C1C; }
+
+/* ── FCE PASSAGE ── */
+.passage-card { background:white; border-radius:var(--radius-sm); padding:20px 18px; margin-bottom:12px; }
+.passage-title { font-family:'Baloo 2',cursive; font-size:1.25rem; font-weight:700; color:var(--deep-teal); margin-bottom:3px; }
+.passage-meta  { font-size:.78rem; color:var(--text-mid); font-weight:600; margin-bottom:14px; }
+
+.passage-body {
+  font-size:1.15rem; font-weight:600; color:var(--text-dark);
+  line-height:2.4; margin-bottom:16px;
+  background:#F8FCFE; padding:14px 16px;
+  border-radius:var(--radius-sm); border:1px solid rgba(77,217,232,.25);
 }
 
-/* Check button */
+/* inline gap inside passage */
+.fce-gap-wrap { display:inline; white-space:nowrap; }
+.fce-gap {
+  display:inline-block;
+  width: var(--gap-w);
+  padding:2px 6px;
+  border:none; border-bottom:2.5px solid var(--deep-teal);
+  font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800;
+  text-transform:uppercase; color:var(--deep-teal);
+  background:transparent; outline:none;
+  vertical-align:middle; text-align:center;
+  letter-spacing:.06em; transition:all .2s;
+}
+.fce-gap:focus { border-bottom-color:var(--pool-blue); background:rgba(77,217,232,.08); border-radius:4px 4px 0 0; }
+.fce-gap.g-correct { border-bottom-color:var(--correct); color:#2E7D50; background:rgba(82,201,122,.08); }
+.fce-gap.g-wrong   { border-bottom-color:var(--wrong);   color:var(--wrong); background:rgba(240,99,90,.08); }
+.fce-gap:disabled  { opacity:.85; cursor:default; }
+.fce-root { font-weight:900; color:var(--text-dark); font-size:1rem; }
+
+.fce-explain-list { display:flex; flex-direction:column; gap:8px; }
+.fce-explain-item {
+  padding:8px 12px; border-radius:var(--radius-sm);
+  font-size:.9rem; font-weight:600; line-height:1.5; display:none;
+}
+.fce-explain-item.show { display:block; }
+.fce-explain-item.ex-correct { background:#E8F8EE; border-left:4px solid var(--correct); color:#1A5C36; }
+.fce-explain-item.ex-wrong   { background:#FDECEA; border-left:4px solid var(--wrong);   color:#9B1C1C; }
+
+.example-tag {
+  display:inline-block; background:#E8F8EE; color:#2E7D50;
+  font-size:.82rem; font-weight:800; padding:2px 10px;
+  border-radius:50px; margin-bottom:10px;
+}
+
+/* ── CHECK BUTTON ── */
 .check-btn {
-  width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, #F5C842, #E8A800);
-  color: #1A3A4A;
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.25s;
-  box-shadow: 0 4px 16px rgba(245,200,66,0.35);
+  width:100%; padding:15px;
+  background:linear-gradient(135deg,#F5C842,#E8A800);
+  color:#1A3A4A; border:none; border-radius:var(--radius-sm);
+  font-family:'Baloo 2',cursive; font-size:1.1rem; font-weight:700;
+  cursor:pointer; margin-top:6px; transition:all .22s;
+  box-shadow:0 4px 14px rgba(245,200,66,.32);
 }
-.check-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,200,66,0.45); }
+.check-btn:hover { transform:translateY(-2px); box-shadow:0 8px 22px rgba(245,200,66,.42); }
 
-/* ============================================================
-   RESULT SCREEN
-   ============================================================ */
-.result-card {
-  text-align: center;
-  padding: 32px 24px;
-}
-.meme-container {
-  font-size: 80px;
-  margin-bottom: 16px;
-  animation: bounceIn 0.6s cubic-bezier(0.68,-0.55,0.265,1.55);
-}
-@keyframes bounceIn {
-  from { transform: scale(0); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.result-title {
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  margin-bottom: 4px;
-}
-.result-tagline {
-  font-size: 0.95rem;
-  color: var(--text-mid);
-  font-weight: 600;
-  margin-bottom: 24px;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-.stat-box {
-  background: linear-gradient(135deg, #E0F7FA, #B2EBF2);
-  border-radius: 14px;
-  padding: 14px 8px;
-}
-.stat-value {
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  display: block;
-}
-.stat-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-mid);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.result-detail-section {
-  background: white;
-  border-radius: var(--radius-sm);
-  padding: 16px;
-  margin-bottom: 12px;
-  text-align: left;
-  border: 1.5px solid rgba(77,217,232,0.3);
-}
-.detail-heading {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--deep-teal);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 10px;
-}
-
-.wrong-word-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-.wrong-word-chip {
-  background: #FDECEA;
-  border: 1.5px solid #F0635A;
-  color: #C0392B;
-  font-size: 0.85rem;
-  font-weight: 800;
-  padding: 4px 12px;
-  border-radius: 50px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(77,217,232,0.15);
-  font-size: 0.9rem;
-}
-.info-row:last-child { border-bottom: none; }
-.info-key { color: var(--text-mid); font-weight: 600; }
-.info-val { font-weight: 800; color: var(--text-dark); }
-
-.action-btn-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 16px;
-}
-.action-btn {
-  padding: 13px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-.action-btn-primary {
-  background: linear-gradient(135deg, var(--water-mid), var(--deep-teal));
-  color: white;
-  box-shadow: 0 4px 16px rgba(26,155,173,0.3);
-}
-.action-btn-secondary {
-  background: white;
-  color: var(--deep-teal);
-  border: 2px solid var(--pool-blue);
-}
-.action-btn:hover { transform: translateY(-2px); }
-
-/* ============================================================
-   SPELLING SCREEN
-   ============================================================ */
+/* ── SPELLING ── */
 .spelling-word-block {
-  margin-bottom: 24px;
-  border-radius: var(--radius-sm);
-  overflow: hidden;
-  border: 2px solid rgba(77,217,232,0.3);
+  background:white; border-radius:var(--radius-sm);
+  overflow:hidden; margin-bottom:14px;
+  border:2px solid rgba(77,217,232,.3);
 }
-.spelling-word-header {
-  background: linear-gradient(135deg, var(--pool-blue), var(--deep-teal));
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.spelling-header {
+  background:linear-gradient(135deg,var(--pool-blue),var(--deep-teal));
+  padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
 }
-.spelling-target {
-  font-family: 'Baloo 2', cursive;
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: white;
-  letter-spacing: 0.12em;
-}
-.spelling-counter {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: rgba(255,255,255,0.85);
-  background: rgba(255,255,255,0.2);
-  padding: 3px 10px;
-  border-radius: 50px;
-}
-.spelling-rows {
-  background: white;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.spelling-input-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.spelling-num {
-  font-size: 0.8rem;
-  font-weight: 800;
-  color: var(--text-mid);
-  min-width: 22px;
-  text-align: right;
-}
+.spelling-target { font-family:'Baloo 2',cursive; font-size:1.3rem; font-weight:800; color:white; letter-spacing:.1em; }
+.spelling-counter { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.85); background:rgba(255,255,255,.2); padding:3px 10px; border-radius:50px; }
+.spelling-rows { padding:12px 16px; display:flex; flex-direction:column; gap:7px; }
+.spelling-input-row { display:flex; align-items:center; gap:10px; }
+.spelling-num { font-size:.78rem; font-weight:800; color:var(--text-mid); min-width:20px; text-align:right; }
 .spelling-input {
-  flex: 1;
-  padding: 8px 12px;
-  border: 2px solid rgba(77,217,232,0.4);
-  border-radius: 8px;
-  font-family: 'Nunito', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  color: var(--deep-teal);
-  letter-spacing: 0.08em;
-  outline: none;
-  transition: all 0.2s;
+  flex:1; padding:7px 12px;
+  border:2px solid rgba(77,217,232,.4); border-radius:8px;
+  font-family:'Nunito',sans-serif; font-size:.95rem; font-weight:800;
+  text-transform:uppercase; color:var(--deep-teal);
+  letter-spacing:.07em; outline:none; transition:all .2s;
 }
-.spelling-input:focus { border-color: var(--deep-teal); box-shadow: 0 0 0 3px rgba(77,217,232,0.2); }
-.spelling-input.sp-correct { border-color: var(--correct); background: #E8F8EE; color: #2E7D50; }
-.spelling-input.sp-wrong   { border-color: var(--wrong);   background: #FDECEA; animation: shake 0.3s ease; }
-.spelling-input:disabled   { background: #E8F8EE; border-color: var(--correct); color: #2E7D50; }
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-.spelling-tick { font-size: 1rem; min-width: 20px; }
+.spelling-input:focus { border-color:var(--deep-teal); box-shadow:0 0 0 3px rgba(77,217,232,.2); }
+.spelling-input.sp-correct { border-color:var(--correct); background:#E8F8EE; color:#2E7D50; }
+.spelling-input.sp-wrong   { border-color:var(--wrong);   background:#FDECEA; animation:shake .3s ease; }
+.spelling-input:disabled   { background:#E8F8EE; border-color:var(--correct); color:#2E7D50; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.spelling-tick { font-size:1rem; min-width:20px; }
+.spelling-progress-text { text-align:center; font-size:.85rem; font-weight:700; color:var(--text-mid); margin-bottom:14px; }
 
-.spelling-progress-text {
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-mid);
-  margin-bottom: 16px;
-}
+/* ── RESULT ── */
+.result-card { text-align:center; padding:28px 20px; }
+.meme-display { font-size:72px; margin-bottom:14px; animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55); }
+@keyframes bounceIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+.result-title { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--deep-teal); margin-bottom:3px; }
+.result-tagline { font-size:.92rem; color:var(--text-mid); font-weight:600; margin-bottom:22px; }
 
-/* ============================================================
-   LOADING STATE
-   ============================================================ */
-.loading {
-  text-align: center;
-  padding: 60px 20px;
-  color: white;
-}
-.loading-spinner {
-  font-size: 50px;
-  animation: spin 1.5s linear infinite;
-  display: block;
-  margin-bottom: 16px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loading-text {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: rgba(255,255,255,0.9);
+.stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px; }
+.stat-box { background:linear-gradient(135deg,#E0F7FA,#B2EBF2); border-radius:12px; padding:12px 8px; }
+.stat-value { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--deep-teal); display:block; }
+.stat-label { font-size:.72rem; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:.06em; }
+
+.result-info { background:white; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:12px; text-align:left; border:1.5px solid rgba(77,217,232,.25); }
+.info-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(77,217,232,.12); font-size:.88rem; }
+.info-row:last-child { border-bottom:none; }
+.info-key { color:var(--text-mid); font-weight:600; }
+.info-val { font-weight:800; color:var(--text-dark); }
+
+.wrong-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.wrong-chip {
+  background:#FDECEA; border:1.5px solid #F0635A; color:#C0392B;
+  font-size:.82rem; font-weight:800; padding:3px 12px;
+  border-radius:50px; text-transform:uppercase; letter-spacing:.06em;
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width: 480px) {
-  .app { padding: 12px 10px 40px; }
-  .card { padding: 20px 16px; }
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-  .mode-buttons { grid-template-columns: 1fr; }
-  .student-info-row { grid-template-columns: 1fr; }
+.action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+.action-btn {
+  padding:13px; border-radius:var(--radius-sm); border:none;
+  font-family:'Nunito',sans-serif; font-size:.92rem; font-weight:800;
+  cursor:pointer; transition:all .2s;
+}
+.action-btn:hover { transform:translateY(-2px); }
+.action-primary { background:linear-gradient(135deg,var(--water-mid),var(--deep-teal)); color:white; box-shadow:0 4px 14px rgba(26,155,173,.28); }
+.action-secondary { background:white; color:var(--deep-teal); border:2px solid var(--pool-blue); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .app { padding:10px 8px 50px; }
+  .card { padding:16px 14px; }
+  .student-row { grid-template-columns:1fr; }
+  .mode-buttons { grid-template-columns:1fr 1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  :root { --gap-w: 160px; }
+  .sentence-wrap, .passage-body { font-size:1.05rem; }
+  .inline-gap, .fce-gap { font-size:1rem; }
+}
+@media (min-width: 601px) and (max-width: 900px) {
+  :root { --gap-w: 180px; }
 }
 </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- ============================================================
-       WELCOME SCREEN
-       ============================================================ -->
-  <div id="screenWelcome" class="screen active">
-    <div class="welcome-header">
-      <span class="bears-emoji">🐻🐻‍❄️🏊</span>
-      <h1 class="app-title">Word Form Quiz</h1>
-      <p class="app-subtitle">Ruby School - Dive in and practise!</p>
-    </div>
+<!-- ═══════════ WELCOME ═══════════ -->
+<div id="screenWelcome" class="screen active">
+  <div class="welcome-header">
+    <span class="bears-emoji">🐻🐻‍❄️🏊</span>
+    <h1 class="app-title">Word Form Quiz</h1>
+    <p class="app-subtitle">Ruby School · Dive in and practise!</p>
+  </div>
 
-    <div class="card">
+  <div class="card">
+    <div class="form-group">
+      <label class="form-label">Student ID</label>
+      <input type="text" id="inputStudentId" class="form-input id-input" placeholder="Enter your ID…" maxlength="20">
+      <div class="error-msg" id="idError">Student ID not found. Please check and try again.</div>
+    </div>
+    <div class="student-row">
       <div class="form-group">
-        <label class="form-label">Student ID</label>
-        <input type="text" id="inputStudentId" class="form-input id-input" placeholder="Enter your ID (e.g. RS2024001)" maxlength="20">
-        <div class="error-msg" id="idError">Student ID not found. Please check and try again.</div>
+        <label class="form-label">Full Name</label>
+        <input type="text" id="inputName" class="form-input" placeholder="Auto-filled" disabled>
       </div>
-      <div class="student-info-row">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="inputName" class="form-input" placeholder="Auto-filled" disabled>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Class</label>
-          <input type="text" id="inputClass" class="form-input" placeholder="Auto-filled" disabled>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="mode-label">Practice Mode</span>
-      <div class="mode-buttons">
-        <div class="mode-btn selected" id="btnModeG10" onclick="selectMode('grade10')">
-          <span class="mode-icon">📝</span>
-          <span class="mode-name">Grade 10<br>Entrance Exam</span>
-        </div>
-        <div class="mode-btn" id="btnModeFCE" onclick="selectMode('fce')">
-          <span class="mode-icon">🎓</span>
-          <span class="mode-name">FCE Use of English<br>Part 3</span>
-        </div>
-      </div>
-
-      <div id="qtySection">
-        <span class="mode-label" id="qtyLabel">Number of Questions</span>
-        <div class="qty-row">
-          <button class="qty-btn" onclick="changeQty(-1)">−</button>
-          <span class="qty-display" id="qtyDisplay">10</span>
-          <button class="qty-btn" onclick="changeQty(1)">+</button>
-          <span class="qty-hint" id="qtyHint">Minimum 10 questions</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="padding: 16px 20px;">
-      <div class="review-toggle" id="reviewToggle" onclick="toggleReview()">
-        <div class="toggle-switch" id="reviewSwitch"><div class="toggle-knob"></div></div>
-        <span class="toggle-text">Review Wrong Answers from Previous Sessions</span>
-      </div>
-      <p style="font-size:0.82rem;color:var(--text-mid);font-weight:600;">Turn this on to practise questions you got wrong before.</p>
-    </div>
-
-    <button class="start-btn" id="startBtn" onclick="startQuiz()" disabled>
-      Start Practice Session 🏊
-    </button>
-  </div>
-
-  <!-- ============================================================
-       QUIZ SCREEN
-       ============================================================ -->
-  <div id="screenQuiz" class="screen">
-    <div class="quiz-header">
-      <span class="quiz-badge" id="quizBadge">Grade 10</span>
-      <span class="timer" id="timerDisplay">00:00</span>
-    </div>
-
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-    </div>
-
-    <div id="attemptBadge" class="attempt-badge attempt-1">Attempt 1 of 3</div>
-
-    <div id="questionsContainer"></div>
-
-    <div class="card" style="padding:16px;">
-      <button class="check-btn" id="checkBtn" onclick="checkAnswers()">
-        Check Answers ✔
-      </button>
-    </div>
-  </div>
-
-  <!-- ============================================================
-       SPELLING SCREEN
-       ============================================================ -->
-  <div id="screenSpelling" class="screen">
-    <div class="welcome-header">
-      <span class="bears-emoji" style="font-size:40px;">✏️🐻📝</span>
-      <h1 class="app-title" style="font-size:1.5rem;">Spelling Practice</h1>
-      <p class="app-subtitle">Write each word correctly 10 times to continue</p>
-    </div>
-    <div class="spelling-progress-text" id="spellingProgressText">0 / 0 words completed</div>
-    <div id="spellingWordsContainer"></div>
-    <button class="start-btn" id="spellingDoneBtn" onclick="finishSpelling()" disabled>
-      All Done - Go Home 🏠
-    </button>
-  </div>
-
-  <!-- ============================================================
-       RESULT SCREEN
-       ============================================================ -->  <div id="screenResult" class="screen">
-    <div class="card result-card" id="resultCard">
-      <div class="meme-container" id="memeDisplay">🏊</div>
-      <div class="result-title" id="resultTitle">Well Done!</div>
-      <div class="result-tagline" id="resultTagline">Session complete</div>
-
-      <div class="stats-grid">
-        <div class="stat-box">
-          <span class="stat-value" id="statPercent">--%</span>
-          <span class="stat-label">Score</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-value" id="statCorrect">--</span>
-          <span class="stat-label">Correct</span>
-        </div>
-        <div class="stat-box">
-          <span class="stat-value" id="statWrong">--</span>
-          <span class="stat-label">Wrong</span>
-        </div>
-      </div>
-
-      <div class="result-detail-section">
-        <div class="detail-heading">Session Info</div>
-        <div class="info-row"><span class="info-key">Student</span><span class="info-val" id="resName">--</span></div>
-        <div class="info-row"><span class="info-key">ID</span><span class="info-val" id="resId">--</span></div>
-        <div class="info-row"><span class="info-key">Class</span><span class="info-val" id="resClass">--</span></div>
-        <div class="info-row"><span class="info-key">Mode</span><span class="info-val" id="resMode">--</span></div>
-        <div class="info-row"><span class="info-key">Start</span><span class="info-val" id="resStart">--</span></div>
-        <div class="info-row"><span class="info-key">End</span><span class="info-val" id="resEnd">--</span></div>
-        <div class="info-row"><span class="info-key">Duration</span><span class="info-val" id="resDuration">--</span></div>
-      </div>
-
-      <div class="result-detail-section" id="wrongWordsSection" style="display:none">
-        <div class="detail-heading" id="wrongWordsHeading">Words to Review</div>
-        <div class="wrong-word-list" id="wrongWordsList"></div>
-      </div>
-
-      <div class="action-btn-row">
-        <button class="action-btn action-btn-primary" onclick="startSpelling('home')">New Session 🏠</button>
-        <button class="action-btn action-btn-secondary" onclick="startSpelling('review')">Review Wrong ❌</button>
+      <div class="form-group">
+        <label class="form-label">Class</label>
+        <input type="text" id="inputClass" class="form-input" placeholder="Auto-filled" disabled>
       </div>
     </div>
   </div>
 
+  <div class="card">
+    <span class="form-label" style="margin-bottom:10px;display:block;">Practice Mode</span>
+    <div class="mode-buttons">
+      <div class="mode-btn selected" id="btnG10" onclick="selectMode('grade10')">
+        <span class="mode-icon">📝</span>
+        <span class="mode-name">Grade 10<br>Entrance Exam</span>
+      </div>
+      <div class="mode-btn" id="btnFCE" onclick="selectMode('fce')">
+        <span class="mode-icon">🎓</span>
+        <span class="mode-name">FCE Use of English<br>Part 3</span>
+      </div>
+    </div>
+    <div id="qtyInfo" style="font-size:.85rem;font-weight:700;color:var(--text-mid);padding:6px 0;">
+      10 questions per session
+    </div>
+  </div>
+
+  <div class="card" style="padding:14px 18px;">
+    <div class="review-toggle" onclick="toggleReview()">
+      <div class="toggle-switch" id="reviewSwitch"><div class="toggle-knob"></div></div>
+      <span class="toggle-text">Review Wrong Answers from Previous Sessions</span>
+    </div>
+    <p style="font-size:.8rem;color:var(--text-mid);font-weight:600;">Turn on to practise questions you got wrong before.</p>
+  </div>
+
+  <button class="start-btn" id="startBtn" onclick="startQuiz()" disabled>
+    Start Practice Session 🏊
+  </button>
 </div>
 
-<!-- ============================================================
-     JAVASCRIPT
-     ============================================================ -->
-<script>
-/* ============================================================
-   ⚙️  CONFIGURATION - EDIT THESE 3 LINES
-   ============================================================ */
-const CONFIG = {
-  // Replace with your raw GitHub JSON URLs:
-  studentsUrl:  'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/students.json',
-  grade10Url:   'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/MOET/GRAMMAR%20REVISION/WORD%20FORM/grade10.json',
-  fceUrl:       'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/FCE/READING%20%26%20UOE/UOE%20PART%203/fce.json',
+<!-- ═══════════ QUIZ ═══════════ -->
+<div id="screenQuiz" class="screen">
+  <div class="quiz-header">
+    <span class="quiz-badge" id="quizBadge">Grade 10</span>
+    <span class="timer" id="timerDisplay">00:00</span>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+  <div class="attempt-badge attempt-1" id="attemptBadge">Round 1 of 2</div>
 
-  // Replace with your Apps Script Web App URL:
+  <div id="questionsContainer"></div>
+
+  <div class="card" style="padding:14px;">
+    <button class="check-btn" id="checkBtn" onclick="checkAnswers()">Check Answers ✔</button>
+  </div>
+</div>
+
+<!-- ═══════════ SPELLING ═══════════ -->
+<div id="screenSpelling" class="screen">
+  <div class="welcome-header">
+    <span class="bears-emoji" style="font-size:38px;">✏️🐻📝</span>
+    <h1 class="app-title" style="font-size:1.45rem;">Spelling Practice</h1>
+    <p class="app-subtitle">Write each word correctly 10 times to continue</p>
+  </div>
+  <div class="spelling-progress-text" id="spellingProgressText">0 / 0 words completed</div>
+  <div id="spellingContainer"></div>
+  <button class="start-btn" id="spellingDoneBtn" onclick="finishSpelling()" disabled>
+    See My Results 🏆
+  </button>
+</div>
+
+<!-- ═══════════ RESULT ═══════════ -->
+<div id="screenResult" class="screen">
+  <div class="card result-card">
+    <div class="meme-display" id="memeDisplay">🏊</div>
+    <div class="result-title" id="resultTitle">Well Done!</div>
+    <div class="result-tagline" id="resultTagline">Session complete</div>
+
+    <div class="stats-grid">
+      <div class="stat-box"><span class="stat-value" id="statPct">--%</span><span class="stat-label">Score</span></div>
+      <div class="stat-box"><span class="stat-value" id="statOk">--</span><span class="stat-label">Correct</span></div>
+      <div class="stat-box"><span class="stat-value" id="statBad">--</span><span class="stat-label">Wrong</span></div>
+    </div>
+
+    <div class="result-info">
+      <div class="info-row"><span class="info-key">Student</span><span class="info-val" id="resName">--</span></div>
+      <div class="info-row"><span class="info-key">ID</span><span class="info-val" id="resId">--</span></div>
+      <div class="info-row"><span class="info-key">Class</span><span class="info-val" id="resClass">--</span></div>
+      <div class="info-row"><span class="info-key">Mode</span><span class="info-val" id="resMode">--</span></div>
+      <div class="info-row"><span class="info-key">Start</span><span class="info-val" id="resStart">--</span></div>
+      <div class="info-row"><span class="info-key">End</span><span class="info-val" id="resEnd">--</span></div>
+      <div class="info-row"><span class="info-key">Duration</span><span class="info-val" id="resDuration">--</span></div>
+    </div>
+
+    <div id="wrongSection" style="display:none;">
+      <div class="result-info">
+        <div class="form-label" id="wrongHeading" style="margin-bottom:8px;">Words to Review</div>
+        <div class="wrong-chips" id="wrongChips"></div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="action-btn action-primary" onclick="goHome()">New Session 🏠</button>
+      <button class="action-btn action-secondary" onclick="goReview()">Review Wrong ❌</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+/* ═══════════════════════════════════════════════
+   CONFIG — update these URLs
+═══════════════════════════════════════════════ */
+const CONFIG = {
+  studentsUrl:   'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/students.json',
+  grade10Url:    'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/MOET/GRAMMAR%20REVISION/WORD%20FORM/grade10.json',
+  fceUrl:        'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/FCE/READING%20%26%20UOE/UOE%20PART%203/fce.json',
   appsScriptUrl: 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec',
 };
 
-/* ============================================================
+/* ═══════════════════════════════════════════════
    STATE
-   ============================================================ */
-let state = {
-  // Data from GitHub
-  students: [],
-  grade10Questions: [],
-  fcePassages: [],
-
-  // Current student
-  studentId: '',
-  studentName: '',
-  studentClass: '',
-
-  // Session
-  mode: 'grade10',         // 'grade10' | 'fce'
-  reviewMode: false,
-  quantity: 10,            // questions (G10) or passages (FCE)
-
-  // Quiz session
-  sessionQuestions: [],    // flat list of questions being shown
-  currentAttempt: 1,       // 1, 2, or 3
-  answers: {},             // { questionId: { value, correct, attempts } }
-  wrongIdsFromServer: [],  // wrong question IDs from previous sessions
-
-  // Timing
-  startTime: null,
-  endTime: null,
-  timerInterval: null,
+═══════════════════════════════════════════════ */
+const S = {
+  students: [], grade10: [], fce: [],
+  studentId: '', studentName: '', studentClass: '',
+  mode: 'grade10', reviewMode: false,
+  session: [],        // questions/passages for this session
+  answers: {},        // qid → { value, correct, attempts }
+  attempt: 1,         // 1 or 2
+  wrongServerIds: [],
+  startTime: null, endTime: null, timerInterval: null,
+  spellingWords: [],  // [{word, completed, done}]
+  spellingDest: 'home',
 };
 
-/* ============================================================
-   BOOT - load data
-   ============================================================ */
+/* ═══════════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════════ */
 async function boot() {
   try {
-    // Students is required - crash if missing
-    const studRes = await fetch(CONFIG.studentsUrl);
-    if (!studRes.ok) throw new Error(`students.json not found (${studRes.status})`);
-    const studData = await studRes.json();
-    state.students = studData.students || [];
+    const r = await fetch(CONFIG.studentsUrl);
+    if (!r.ok) throw new Error('students.json not found (' + r.status + ')');
+    S.students = (await r.json()).students || [];
+  } catch(e) { alert('Could not load student data.\n' + e.message); return; }
 
-    // grade10 and fce are optional - don't crash if missing yet
-    try {
-      const g10Res = await fetch(CONFIG.grade10Url);
-      if (g10Res.ok) {
-        const g10Data = await g10Res.json();
-        state.grade10Questions = g10Data.questions || [];
-      }
-    } catch(e) { console.warn('grade10.json not found yet'); }
+  try { S.grade10 = (await (await fetch(CONFIG.grade10Url)).json()).questions || []; } catch(e) { console.warn('grade10.json not loaded'); }
+  try { S.fce     = (await (await fetch(CONFIG.fceUrl)).json()).passages  || []; } catch(e) { console.warn('fce.json not loaded'); }
 
-    try {
-      const fceRes = await fetch(CONFIG.fceUrl);
-      if (fceRes.ok) {
-        const fceData = await fceRes.json();
-        state.fcePassages = fceData.passages || [];
-      }
-    } catch(e) { console.warn('fce.json not found yet'); }
-
-    console.log(`Loaded: ${state.students.length} students, ${state.grade10Questions.length} G10 questions, ${state.fcePassages.length} FCE passages`);
-  } catch(e) {
-    console.error('Failed to load data:', e);
-    alert('Could not load student data. Error: ' + e.message);
-  }
+  console.log(`Students: ${S.students.length} | G10: ${S.grade10.length} | FCE: ${S.fce.length}`);
 }
-
 boot();
 
-/* ============================================================
-   WELCOME SCREEN LOGIC
-   ============================================================ */
-let idLookupTimeout = null;
-
+/* ═══════════════════════════════════════════════
+   WELCOME LOGIC
+═══════════════════════════════════════════════ */
+let _idTimer = null;
 document.getElementById('inputStudentId').addEventListener('input', function() {
-  clearTimeout(idLookupTimeout);
-  const val = this.value.trim().toUpperCase();
-  this.value = val;
-  document.getElementById('inputName').value  = '';
+  clearTimeout(_idTimer);
+  const v = this.value.trim().toUpperCase();
+  this.value = v;
+  document.getElementById('inputName').value = '';
   document.getElementById('inputClass').value = '';
   document.getElementById('idError').style.display = 'none';
   document.getElementById('startBtn').disabled = true;
-  state.studentId = '';
-  state.studentName = '';
-  state.studentClass = '';
-
-  if (val.length < 3) return;
-
-  idLookupTimeout = setTimeout(() => {
-    const found = state.students.find(s => s.id.toUpperCase() === val);
+  S.studentId = S.studentName = S.studentClass = '';
+  if (v.length < 3) return;
+  _idTimer = setTimeout(() => {
+    const found = S.students.find(s => s.id.toUpperCase() === v);
     if (found) {
       document.getElementById('inputName').value  = found.name;
       document.getElementById('inputClass').value = found.class;
-      state.studentId    = found.id;
-      state.studentName  = found.name;
-      state.studentClass = found.class;
+      S.studentId = found.id; S.studentName = found.name; S.studentClass = found.class;
       document.getElementById('startBtn').disabled = false;
-      loadWrongIds(found.id);
+      loadServerWrong(found.id);
     } else {
       document.getElementById('idError').style.display = 'block';
     }
   }, 400);
 });
 
-function selectMode(mode) {
-  state.mode = mode;
-  document.getElementById('btnModeG10').classList.toggle('selected', mode === 'grade10');
-  document.getElementById('btnModeFCE').classList.toggle('selected', mode === 'fce');
-
-  if (mode === 'grade10') {
-    state.quantity = 10;
-    document.getElementById('qtyLabel').textContent = 'Number of Questions';
-    document.getElementById('qtyHint').textContent  = 'Minimum 10 questions';
-  } else {
-    state.quantity = 1;
-    document.getElementById('qtyLabel').textContent = 'Number of Passages';
-    document.getElementById('qtyHint').textContent  = '8 questions per passage';
-  }
-  document.getElementById('qtyDisplay').textContent = state.quantity;
+function selectMode(m) {
+  S.mode = m;
+  document.getElementById('btnG10').classList.toggle('selected', m === 'grade10');
+  document.getElementById('btnFCE').classList.toggle('selected', m === 'fce');
+  document.getElementById('qtyInfo').textContent =
+    m === 'grade10' ? '10 questions per session' : '1 passage per session (8 questions)';
 }
 
-function changeQty(delta) {
-  const min = state.mode === 'grade10' ? 10 : 1;
-  const max = state.mode === 'grade10'
-    ? state.grade10Questions.length
-    : state.fcePassages.length;
-  state.quantity = Math.max(min, Math.min(max || 100, state.quantity + delta));
-  document.getElementById('qtyDisplay').textContent = state.quantity;
-}
-
-let reviewOn = false;
+let _reviewOn = false;
 function toggleReview() {
-  reviewOn = !reviewOn;
-  state.reviewMode = reviewOn;
-  document.getElementById('reviewSwitch').classList.toggle('on', reviewOn);
+  _reviewOn = !_reviewOn;
+  S.reviewMode = _reviewOn;
+  document.getElementById('reviewSwitch').classList.toggle('on', _reviewOn);
 }
 
-/* ============================================================
-   LOAD WRONG IDS FROM GOOGLE SHEET (via Apps Script)
-   ============================================================ */
-async function loadWrongIds(studentId) {
+async function loadServerWrong(id) {
   try {
-    const res = await fetch(CONFIG.appsScriptUrl, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'getWrongAnswers', studentId }),
-    });
-    const data = await res.json();
-    state.wrongIdsFromServer = data.wrongQuestionIds || [];
-    console.log(`Wrong IDs from server for ${studentId}:`, state.wrongIdsFromServer);
-  } catch(e) {
-    console.warn('Could not load wrong answers from server:', e);
-    state.wrongIdsFromServer = [];
-  }
+    const r = await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({ action:'getWrongAnswers', studentId:id }) });
+    S.wrongServerIds = (await r.json()).wrongQuestionIds || [];
+  } catch(e) { S.wrongServerIds = []; }
 }
 
-/* ============================================================
+/* ═══════════════════════════════════════════════
    START QUIZ
-   ============================================================ */
+═══════════════════════════════════════════════ */
 function startQuiz() {
-  state.currentAttempt = 1;
-  state.answers = {};
+  S.answers = {}; S.attempt = 1;
 
-  if (state.reviewMode && state.wrongIdsFromServer.length > 0) {
-    buildReviewSession();
+  if (S.mode === 'grade10') {
+    let pool = S.reviewMode && S.wrongServerIds.length
+      ? [...S.grade10.filter(q => S.wrongServerIds.includes(q.id)),
+         ...shuffle(S.grade10.filter(q => !S.wrongServerIds.includes(q.id)))]
+      : shuffle([...S.grade10]);
+    S.session = pool.slice(0, 10);
   } else {
-    buildFreshSession();
+    let pool = S.reviewMode && S.wrongServerIds.length
+      ? [...S.fce.filter(p => p.questions.some(q => S.wrongServerIds.includes(p.id+'_'+q.number))),
+         ...shuffle(S.fce.filter(p => !S.fce.filter(pp => pp === p)))]
+      : shuffle([...S.fce]);
+    S.session = pool.slice(0, 1);
   }
 
-  showScreen('screenQuiz');
+  S.startTime = new Date(); S.endTime = null;
   startTimer();
-  renderQuestions();
+  showScreen('screenQuiz');
+  renderQuiz();
+}
+
+/* ═══════════════════════════════════════════════
+   RENDER QUIZ
+═══════════════════════════════════════════════ */
+function renderQuiz() {
+  const badge = document.getElementById('attemptBadge');
+  badge.className = 'attempt-badge attempt-' + S.attempt;
+  badge.textContent = S.attempt === 1
+    ? 'Round 1 of 2 — Answer all questions'
+    : 'Round 2 of 2 — Correct your mistakes';
+  document.getElementById('checkBtn').textContent =
+    S.attempt === 1 ? 'Check Answers ✔' : 'Submit Final Answers ✔';
+  document.getElementById('quizBadge').textContent =
+    S.mode === 'grade10' ? 'Grade 10 Entrance' : 'FCE Part 3';
+
+  S.mode === 'grade10' ? renderG10() : renderFCE();
   updateProgress();
 }
 
-function buildFreshSession() {
-  if (state.mode === 'grade10') {
-    const shuffled = shuffle([...state.grade10Questions]);
-    state.sessionQuestions = shuffled.slice(0, state.quantity);
-  } else {
-    const shuffled = shuffle([...state.fcePassages]);
-    const passages = shuffled.slice(0, state.quantity);
-    state.sessionQuestions = passages; // FCE = array of passages
-  }
-}
+/* ── Grade 10 render ── */
+function renderG10() {
+  const c = document.getElementById('questionsContainer');
+  c.innerHTML = '';
+  S.session.forEach((q, i) => {
+    const ans  = S.answers[q.id];
+    const checked = !!ans;
+    const stateClass = checked ? (ans.correct ? 'state-correct' : 'state-wrong') : '';
 
-function buildReviewSession() {
-  if (state.mode === 'grade10') {
-    const wrong = state.grade10Questions.filter(q => state.wrongIdsFromServer.includes(q.id));
-    const fill  = state.grade10Questions.filter(q => !state.wrongIdsFromServer.includes(q.id));
-    const pool  = [...wrong, ...shuffle(fill)];
-    state.sessionQuestions = pool.slice(0, Math.max(state.quantity, wrong.length));
-  } else {
-    const wrongPassages = state.fcePassages.filter(p =>
-      p.questions.some(q => state.wrongIdsFromServer.includes(q.id || `${p.id}_${q.number}`))
-    );
-    const fillPassages = state.fcePassages.filter(p => !wrongPassages.includes(p));
-    const pool = [...wrongPassages, ...shuffle(fillPassages)];
-    state.sessionQuestions = pool.slice(0, state.quantity);
-  }
-}
-
-/* ============================================================
-   RENDER QUESTIONS
-   ============================================================ */
-function renderQuestions() {
-  const container = document.getElementById('questionsContainer');
-  container.innerHTML = '';
-
-  // Attempt badge
-  const badge = document.getElementById('attemptBadge');
-  badge.className = `attempt-badge attempt-${state.currentAttempt}`;
-  badge.textContent = `Attempt ${state.currentAttempt} of 3 - Answer all questions below`;
-
-  // Check button label
-  document.getElementById('checkBtn').textContent =
-    state.currentAttempt < 3 ? 'Check Answers ✔' : 'Finish Session ✔';
-
-  if (state.mode === 'grade10') {
-    renderGrade10(container);
-  } else {
-    renderFCE(container);
-  }
-}
-
-function renderGrade10(container) {
-  const toShow = state.sessionQuestions.filter(q => {
-    const ans = state.answers[q.id];
-    if (!ans) return true;                   // not answered
-    if (state.currentAttempt > 3) return false;
-    return !ans.correct;                     // show if still wrong
-  });
-
-  if (toShow.length === 0) {
-    showResult(); return;
-  }
-
-  toShow.forEach((q, idx) => {
-    const ans = state.answers[q.id];
-    const div = document.createElement('div');
-    div.className = 'card question-card';
-    if (ans) div.className += ans.correct ? ' correct' : ' wrong';
-    div.dataset.qid = q.id;
-
-    const prevVal = ans ? ans.value : '';
-    const wasChecked = !!ans;
-
-    div.innerHTML = `
-      <div class="q-number">Question ${idx + 1}</div>
-      <div class="q-sentence">${q.sentence}</div>
-      <span class="root-word-tag">${q.rootWord}</span>
-      <input
+    // Build sentence with inline gap
+    // sentence format: "The ___ of this project… (SUCCESS)"
+    // We render the (ROOT) as bold hint after the gap
+    let sentenceHTML = q.sentence
+      .replace(/\(([^)]+)\)\s*$/, '') // strip trailing (ROOT)
+      .replace('___', `<input
         type="text"
-        class="answer-input ${wasChecked ? (ans.correct ? 'input-correct' : 'input-wrong') : ''}"
-        id="input_${q.id}"
-        placeholder="Type your answer..."
-        value="${prevVal}"
-        ${wasChecked && ans.correct ? 'disabled' : ''}
-        onkeydown="if(event.key==='Enter') checkAnswers()"
-      >
-      <div class="result-row ${wasChecked ? 'show' : ''}" id="result_${q.id}">
-        <span class="result-icon">${wasChecked ? (ans.correct ? '✅' : '❌') : ''}</span>
-        <div class="result-text">
-          ${wasChecked && !ans.correct ? `<span class="correct-answer">Correct: ${q.answer}</span>` : ''}
-          ${wasChecked ? `<div class="explain">${q.explanation}</div>` : ''}
-        </div>
-      </div>
-    `;
-    container.appendChild(div);
-  });
-}
+        class="inline-gap${checked ? (ans.correct ? ' g-correct' : ' g-wrong') : ''}"
+        id="gap_${q.id}"
+        value="${checked ? ans.value : ''}"
+        placeholder="…"
+        ${checked && ans.correct ? 'disabled' : ''}
+        autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+        onkeydown="if(event.key==='Enter')checkAnswers()"
+      >`);
 
-function renderFCE(container) {
-  state.sessionQuestions.forEach((passage, pIdx) => {
-    const passageDiv = document.createElement('div');
-    passageDiv.className = 'card';
-
-    // Build passage text with blanks
-    let displayText = passage.text;
-    passage.questions.forEach(q => {
-      const qid = `${passage.id}_${q.number}`;
-      const ans = state.answers[qid];
-      const val = ans ? ans.value : '';
-      const cls = ans ? (ans.correct ? 'gap-example' : 'input-wrong') : '';
-      displayText = displayText.replace(
-        `(${q.number}) ___`,
-        `<span class="gap-blank ${cls}" id="gap_${qid}">(${q.number}) ${val || '___'}</span>`
-      );
-    });
-    // Mark example
-    displayText = displayText.replace('(0)', `<span class="gap-example">(0)</span>`);
-
-    passageDiv.innerHTML = `
-      <div class="passage-title">${passage.title}</div>
-      <div class="passage-meta">FCE Part 3 - ${passage.questions.length} questions</div>
-      <div class="passage-text">${displayText}</div>
-    `;
-
-    // Example row
-    if (passage.example) {
-      const exDiv = document.createElement('div');
-      exDiv.style.cssText = 'margin-bottom:12px;padding:10px 14px;background:#E8F8EE;border-radius:10px;font-size:0.88rem;font-weight:600;color:#2E7D50;';
-      exDiv.innerHTML = `<strong>(0) Example:</strong> ${passage.example.rootWord} → ${passage.example.answer}`;
-      passageDiv.appendChild(exDiv);
+    // explanation: show only on attempt 2, or if correct on attempt 1
+    let showExplain = false, explainClass = '';
+    if (checked) {
+      if (ans.correct) { showExplain = true; explainClass = 'ex-correct'; }
+      else if (S.attempt === 2) { showExplain = true; explainClass = 'ex-wrong'; }
     }
 
-    // Question inputs
-    passage.questions.forEach(q => {
-      const qid = `${passage.id}_${q.number}`;
-      const ans = state.answers[qid];
-      const wasChecked = !!ans;
+    const div = document.createElement('div');
+    div.className = `card question-card ${stateClass}`;
+    div.innerHTML = `
+      <div class="q-number">Question ${i+1}</div>
+      <div class="sentence-wrap">
+        ${sentenceHTML} <span class="root-hint">(${q.rootWord})</span>
+      </div>
+      <div class="explain-box ${showExplain ? 'show ' + explainClass : ''}">
+        ${checked && !ans.correct ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
+        ${q.explanation}
+      </div>`;
+    c.appendChild(div);
 
-      const qDiv = document.createElement('div');
-      qDiv.style.cssText = 'margin-bottom:12px;';
-      qDiv.innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
-          <span style="font-size:0.8rem;font-weight:800;color:var(--text-mid);min-width:24px;">(${q.number})</span>
-          <span class="root-word-tag">${q.rootWord}</span>
-        </div>
-        <input
-          type="text"
-          class="answer-input ${wasChecked ? (ans.correct ? 'input-correct' : 'input-wrong') : ''}"
-          id="input_${qid}"
-          placeholder="Type your answer..."
-          value="${ans ? ans.value : ''}"
-          ${wasChecked && ans.correct ? 'disabled' : ''}
-          onkeydown="if(event.key==='Enter') checkAnswers()"
-          data-qid="${qid}"
-        >
-        <div class="result-row ${wasChecked ? 'show' : ''}" id="result_${qid}">
-          <span class="result-icon">${wasChecked ? (ans.correct ? '✅' : '❌') : ''}</span>
-          <div class="result-text">
-            ${wasChecked && !ans.correct ? `<span class="correct-answer">Correct: ${q.answer}</span>` : ''}
-            ${wasChecked ? `<div class="explain">${q.explanation}</div>` : ''}
-          </div>
-        </div>
-      `;
-      passageDiv.appendChild(qDiv);
-    });
-
-    container.appendChild(passageDiv);
+    // attach listener
+    const inp = document.getElementById('gap_' + q.id);
+    if (inp && !inp.disabled) {
+      inp.addEventListener('paste', e => e.preventDefault());
+      inp.addEventListener('copy',  e => e.preventDefault());
+      inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase(); });
+    }
   });
 }
 
-/* ============================================================
+/* ── FCE render ── */
+function renderFCE() {
+  const c = document.getElementById('questionsContainer');
+  c.innerHTML = '';
+
+  S.session.forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'card passage-card';
+
+    // Build passage text with inline inputs
+    let txt = p.text;
+    p.questions.forEach(q => {
+      const qid  = `${p.id}_${q.number}`;
+      const ans  = S.answers[qid];
+      const checked = !!ans;
+      const gClass = checked ? (ans.correct ? ' g-correct' : ' g-wrong') : '';
+      const inp = `<input
+        type="text"
+        class="fce-gap${gClass}"
+        id="gap_${qid}"
+        value="${checked ? ans.value : ''}"
+        placeholder="…"
+        ${checked && ans.correct ? 'disabled' : ''}
+        autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+        onkeydown="if(event.key==='Enter')checkAnswers()"
+      > <span class="fce-root">(${q.rootWord})</span>`;
+      txt = txt.replace(`(${q.number}) ___`, inp);
+    });
+
+    // mark example (0)
+    txt = txt.replace('(0)', `<span style="font-weight:900;color:var(--correct)">(0)</span>`);
+
+    div.innerHTML = `
+      <div class="passage-title">${p.title}</div>
+      <div class="passage-meta">FCE Use of English Part 3 · ${p.questions.length} questions</div>
+      ${p.example ? `<div class="example-tag">(0) Example: ${p.example.rootWord} → ${p.example.answer}</div>` : ''}
+      <div class="passage-body">${txt}</div>
+      <div class="fce-explain-list" id="explains_${p.id}"></div>`;
+    c.appendChild(div);
+
+    // render explanations
+    const expContainer = document.getElementById('explains_' + p.id);
+    p.questions.forEach(q => {
+      const qid  = `${p.id}_${q.number}`;
+      const ans  = S.answers[qid];
+      const checked = !!ans;
+      let showExplain = false, explainClass = '';
+      if (checked) {
+        if (ans.correct) { showExplain = true; explainClass = 'ex-correct'; }
+        else if (S.attempt === 2) { showExplain = true; explainClass = 'ex-wrong'; }
+      }
+      const item = document.createElement('div');
+      item.className = `fce-explain-item ${showExplain ? 'show ' + explainClass : ''}`;
+      item.id = `exp_${qid}`;
+      item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${checked && !ans.correct ? ` → <span style="color:#2E7D50;font-weight:800">${q.answer}</span>` : ''}: ${q.explanation}`;
+      expContainer.appendChild(item);
+
+      // attach listener to input
+      const inp = document.getElementById('gap_' + qid);
+      if (inp && !inp.disabled) {
+        inp.addEventListener('paste', e => e.preventDefault());
+        inp.addEventListener('copy',  e => e.preventDefault());
+        inp.addEventListener('input', () => { inp.value = inp.value.toUpperCase(); });
+      }
+    });
+  });
+}
+
+/* ═══════════════════════════════════════════════
    CHECK ANSWERS
-   ============================================================ */
-function normalize(s) {
-  return s.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+═══════════════════════════════════════════════ */
+function norm(s) {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
+}
+
+function getAllQids() {
+  if (S.mode === 'grade10') return S.session.map(q => ({ qid: q.id, ans: q.answer }));
+  const out = [];
+  S.session.forEach(p => p.questions.forEach(q => out.push({ qid:`${p.id}_${q.number}`, ans:q.answer })));
+  return out;
 }
 
 function checkAnswers() {
-  const allQuestions = getAllCurrentQuestions();
+  const all = getAllQids();
   let anyBlank = false;
 
-  allQuestions.forEach(({ qid, correctAnswer }) => {
-    const inp = document.getElementById(`input_${qid}`);
+  all.forEach(({ qid, ans }) => {
+    const inp = document.getElementById('gap_' + qid);
     if (!inp || inp.disabled) return;
-    if (!inp.value.trim()) { anyBlank = true; return; }
-
-    const userVal = inp.value.trim().toUpperCase();
-    const isCorrect = normalize(userVal) === normalize(correctAnswer);
-
-    if (!state.answers[qid]) {
-      state.answers[qid] = { value: userVal, correct: isCorrect, attempts: 1 };
+    const val = inp.value.trim();
+    if (!val) { anyBlank = true; return; }
+    const upper = val.toUpperCase();
+    const correct = norm(upper) === norm(ans);
+    if (!S.answers[qid]) {
+      S.answers[qid] = { value: upper, correct, attempts: 1 };
     } else {
-      state.answers[qid].value   = userVal;
-      state.answers[qid].correct = isCorrect;
-      state.answers[qid].attempts++;
+      S.answers[qid].value   = upper;
+      S.answers[qid].correct = correct;
+      S.answers[qid].attempts++;
     }
   });
 
-  if (anyBlank) {
-    alert('Please answer all questions before checking.');
+  if (anyBlank) { alert('Please fill in all blanks before checking.'); return; }
+
+  if (S.attempt === 2) {
+    // Force-mark any still-empty as wrong
+    all.forEach(({ qid }) => {
+      if (!S.answers[qid]) S.answers[qid] = { value:'', correct:false, attempts:2 };
+    });
+    S.endTime = new Date();
+    stopTimer();
+    startSpelling();
     return;
   }
 
-  const attempt = state.currentAttempt;
-
-  if (attempt >= 3) {
-    // Force all remaining wrong as final
-    allQuestions.forEach(({ qid, correctAnswer }) => {
-      if (!state.answers[qid]) {
-        state.answers[qid] = { value: '', correct: false, attempts: 3 };
-      }
-    });
-    state.endTime = new Date();
-    showResult();
-    return;
-  }
-
-  state.currentAttempt++;
-  renderQuestions();
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // After attempt 1: increment and re-render
+  S.attempt = 2;
+  renderQuiz();
+  window.scrollTo({ top:0, behavior:'smooth' });
 }
 
-function getAllCurrentQuestions() {
-  const list = [];
-  if (state.mode === 'grade10') {
-    state.sessionQuestions.forEach(q => {
-      list.push({ qid: q.id, correctAnswer: q.answer });
-    });
-  } else {
-    state.sessionQuestions.forEach(p => {
-      p.questions.forEach(q => {
-        list.push({ qid: `${p.id}_${q.number}`, correctAnswer: q.answer });
-      });
-    });
-  }
-  return list;
-}
-
-/* ============================================================
+/* ═══════════════════════════════════════════════
    PROGRESS + TIMER
-   ============================================================ */
+═══════════════════════════════════════════════ */
 function updateProgress() {
-  const all  = getAllCurrentQuestions();
-  const done = all.filter(({ qid }) => state.answers[qid]?.correct).length;
-  const pct  = all.length ? (done / all.length) * 100 : 0;
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('quizBadge').textContent =
-    state.mode === 'grade10' ? 'Grade 10 Entrance' : 'FCE Part 3';
+  const all  = getAllQids();
+  const done = all.filter(({ qid }) => S.answers[qid]?.correct).length;
+  document.getElementById('progressFill').style.width = (all.length ? done/all.length*100 : 0) + '%';
 }
 
 function startTimer() {
-  state.startTime = new Date();
-  clearInterval(state.timerInterval);
-  state.timerInterval = setInterval(() => {
-    const elapsed = Math.floor((new Date() - state.startTime) / 1000);
-    const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
-    const s = String(elapsed % 60).padStart(2, '0');
-    document.getElementById('timerDisplay').textContent = `${m}:${s}`;
+  clearInterval(S.timerInterval);
+  S.timerInterval = setInterval(() => {
+    const e = Math.floor((new Date() - S.startTime) / 1000);
+    document.getElementById('timerDisplay').textContent =
+      String(Math.floor(e/60)).padStart(2,'0') + ':' + String(e%60).padStart(2,'0');
   }, 1000);
 }
+function stopTimer() { clearInterval(S.timerInterval); }
 
-function stopTimer() {
-  clearInterval(state.timerInterval);
+/* ═══════════════════════════════════════════════
+   SPELLING SCREEN
+═══════════════════════════════════════════════ */
+function startSpelling() {
+  const all   = getAllQids();
+  const wrong = all.filter(({ qid }) => !S.answers[qid]?.correct);
+
+  if (!wrong.length) { showResult(); return; }
+
+  // Collect unique correct answers
+  const wordSet = new Set();
+  wrong.forEach(({ qid, ans }) => wordSet.add(ans.toUpperCase()));
+  S.spellingWords = [...wordSet].map(w => ({ word:w, completed:0, done:false }));
+
+  renderSpelling();
+  showScreen('screenSpelling');
 }
 
-/* ============================================================
+function renderSpelling() {
+  const c = document.getElementById('spellingContainer');
+  c.innerHTML = '';
+  const total = S.spellingWords.length;
+  const done  = S.spellingWords.filter(w => w.done).length;
+  document.getElementById('spellingProgressText').textContent = `${done} / ${total} word${total>1?'s':''} completed`;
+  document.getElementById('spellingDoneBtn').disabled = done < total;
+
+  S.spellingWords.forEach((wObj, wi) => {
+    const block = document.createElement('div');
+    block.className = 'spelling-word-block';
+    block.innerHTML = `
+      <div class="spelling-header">
+        <span class="spelling-target">${wObj.word}</span>
+        <span class="spelling-counter" id="sc_${wi}">${wObj.completed}/10</span>
+      </div>
+      <div class="spelling-rows" id="srows_${wi}"></div>`;
+    c.appendChild(block);
+
+    const rows = document.getElementById('srows_' + wi);
+    for (let i = 0; i < 10; i++) {
+      const isDone   = i < wObj.completed;
+      const isActive = i === wObj.completed && !wObj.done;
+      const row = document.createElement('div');
+      row.className = 'spelling-input-row';
+      row.innerHTML = `
+        <span class="spelling-num">${i+1}</span>
+        <input type="text"
+          class="spelling-input ${isDone ? 'sp-correct' : ''}"
+          id="sp_${wi}_${i}"
+          value="${isDone ? wObj.word : ''}"
+          placeholder="${isActive ? 'Type here…' : ''}"
+          ${isDone || wObj.done ? 'disabled' : ''}
+          ${!isActive ? 'readonly' : ''}
+          autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false"
+        >
+        <span class="spelling-tick" id="st_${wi}_${i}">${isDone ? '✅' : ''}</span>`;
+      rows.appendChild(row);
+
+      if (isActive) {
+        const inp = document.getElementById(`sp_${wi}_${i}`);
+        attachSpell(inp, wi, i, wObj.word);
+        setTimeout(() => inp.focus(), 80);
+      }
+    }
+  });
+}
+
+function attachSpell(inp, wi, row, target) {
+  inp.addEventListener('paste', e => e.preventDefault());
+  inp.addEventListener('copy',  e => e.preventDefault());
+  inp.addEventListener('cut',   e => e.preventDefault());
+  inp.addEventListener('input', function() {
+    const v = this.value.trim().toUpperCase();
+    this.value = v;
+    if (v === target) {
+      this.classList.add('sp-correct'); this.disabled = true;
+      document.getElementById(`st_${wi}_${row}`).textContent = '✅';
+      S.spellingWords[wi].completed = row + 1;
+      document.getElementById(`sc_${wi}`).textContent = `${row+1}/10`;
+      if (row + 1 >= 10) {
+        S.spellingWords[wi].done = true;
+      } else {
+        const next = document.getElementById(`sp_${wi}_${row+1}`);
+        if (next) { next.removeAttribute('readonly'); next.placeholder = 'Type here…'; attachSpell(next, wi, row+1, target); setTimeout(()=>next.focus(),50); }
+      }
+      const done = S.spellingWords.filter(w=>w.done).length;
+      document.getElementById('spellingProgressText').textContent = `${done} / ${S.spellingWords.length} word${S.spellingWords.length>1?'s':''} completed`;
+      document.getElementById('spellingDoneBtn').disabled = done < S.spellingWords.length;
+    } else if (v.length >= target.length) {
+      this.classList.add('sp-wrong');
+      setTimeout(() => { this.classList.remove('sp-wrong'); this.value=''; }, 500);
+    }
+  });
+}
+
+function finishSpelling() { showResult(); }
+
+/* ═══════════════════════════════════════════════
    RESULT SCREEN
-   ============================================================ */
-const memes = {
-  perfect:  ['🏆🐻‍❄️🥇', '🎉🌊🏊', '🦦🥇✨'],
-  great:    ['🎊🐻💪', '🌊🏄‍♂️🎯', '🐟✅🎈'],
-  ok:       ['🐻🤔💭', '🌊🏊‍♀️📚', '🦆📖💡'],
-  low:      ['🐻😅🔄', '🌊💦📝', '🐠🔁❓'],
+═══════════════════════════════════════════════ */
+const MEMES = {
+  perfect: ['🏆🐻‍❄️🥇','🎉🌊🏊','🦦✨🥇'],
+  great:   ['🎊🐻💪','🌊🏄‍♂️🎯','🐟✅🎈'],
+  ok:      ['🐻🤔💭','🌊🏊‍♀️📚','🦆📖💡'],
+  low:     ['🐻😅🔄','🌊💦📝','🐠🔁❓'],
 };
-
-function getMeme(pct) {
-  if (pct >= 90) return shuffle(memes.perfect)[0];
-  if (pct >= 70) return shuffle(memes.great)[0];
-  if (pct >= 50) return shuffle(memes.ok)[0];
-  return shuffle(memes.low)[0];
-}
-function getTagline(pct) {
-  if (pct >= 90) return 'Excellent! You nailed it! 🏆';
-  if (pct >= 70) return 'Great work! Keep it up!';
-  if (pct >= 50) return 'Good effort - review the words below.';
-  return 'Keep practising - you\'ll get there!';
-}
+function getMeme(p){ return shuffle(p>=90?MEMES.perfect:p>=70?MEMES.great:p>=50?MEMES.ok:MEMES.low)[0]; }
 
 function showResult() {
-  stopTimer();
-  state.endTime = state.endTime || new Date();
-
-  const all = getAllCurrentQuestions();
-  const correct = all.filter(({ qid }) => state.answers[qid]?.correct).length;
+  S.endTime = S.endTime || new Date();
+  const all     = getAllQids();
+  const correct = all.filter(({qid}) => S.answers[qid]?.correct).length;
   const wrong   = all.length - correct;
-  const pct     = Math.round((correct / all.length) * 100);
+  const pct     = Math.round(correct/all.length*100);
+  const dur     = Math.floor((S.endTime - S.startTime)/1000);
 
-  const duration = Math.floor((state.endTime - state.startTime) / 1000);
-  const dm = String(Math.floor(duration / 60)).padStart(2, '0');
-  const ds = String(duration % 60).padStart(2, '0');
+  document.getElementById('memeDisplay').textContent  = getMeme(pct);
+  document.getElementById('resultTitle').textContent  = pct>=90?'Outstanding!':pct>=70?'Well Done!':pct>=50?'Good Try!':'Keep Going!';
+  document.getElementById('resultTagline').textContent= pct>=90?'Excellent! You nailed it! 🏆':pct>=70?'Great work! Keep it up!':pct>=50?'Good effort - review the words below.':'Keep practising - you\'ll get there!';
+  document.getElementById('statPct').textContent  = pct + '%';
+  document.getElementById('statOk').textContent   = correct;
+  document.getElementById('statBad').textContent  = wrong;
+  document.getElementById('resName').textContent  = S.studentName;
+  document.getElementById('resId').textContent    = S.studentId;
+  document.getElementById('resClass').textContent = S.studentClass;
+  document.getElementById('resMode').textContent  = S.mode==='grade10'?'Grade 10 Entrance Exam':'FCE Use of English Part 3';
+  document.getElementById('resStart').textContent = S.startTime.toLocaleTimeString('en-GB');
+  document.getElementById('resEnd').textContent   = S.endTime.toLocaleTimeString('en-GB');
+  document.getElementById('resDuration').textContent = String(Math.floor(dur/60)).padStart(2,'0')+':'+String(dur%60).padStart(2,'0');
 
-  // Fill result screen
-  document.getElementById('memeDisplay').textContent = getMeme(pct);
-  document.getElementById('resultTitle').textContent =
-    pct >= 90 ? 'Outstanding!' : pct >= 70 ? 'Well Done!' : pct >= 50 ? 'Good Try!' : 'Keep Going!';
-  document.getElementById('resultTagline').textContent = getTagline(pct);
-  document.getElementById('statPercent').textContent  = `${pct}%`;
-  document.getElementById('statCorrect').textContent  = correct;
-  document.getElementById('statWrong').textContent    = wrong;
-  document.getElementById('resName').textContent      = state.studentName;
-  document.getElementById('resId').textContent        = state.studentId;
-  document.getElementById('resClass').textContent     = state.studentClass;
-  document.getElementById('resMode').textContent      =
-    state.mode === 'grade10' ? 'Grade 10 Entrance Exam' : 'FCE Use of English Part 3';
-  document.getElementById('resStart').textContent     = state.startTime.toLocaleTimeString('en-GB');
-  document.getElementById('resEnd').textContent       = state.endTime.toLocaleTimeString('en-GB');
-  document.getElementById('resDuration').textContent  = `${dm}:${ds}`;
-
-  // Wrong words list
-  const wrongList = all.filter(({ qid }) => !state.answers[qid]?.correct);
-  if (wrongList.length > 0) {
-    document.getElementById('wrongWordsSection').style.display = 'block';
-    const listEl = document.getElementById('wrongWordsList');
-    listEl.innerHTML = '';
-
-    if (state.mode === 'grade10') {
-      document.getElementById('wrongWordsHeading').textContent = 'Words to Review';
-      wrongList.forEach(({ qid }) => {
-        const q = state.grade10Questions.find(q => q.id === qid);
-        if (!q) return;
-        const chip = document.createElement('span');
-        chip.className = 'wrong-word-chip';
-        chip.textContent = `${q.rootWord} → ${q.answer}`;
-        listEl.appendChild(chip);
+  // Wrong words
+  const wrongList = all.filter(({qid}) => !S.answers[qid]?.correct);
+  if (wrongList.length) {
+    document.getElementById('wrongSection').style.display = 'block';
+    const chips = document.getElementById('wrongChips');
+    chips.innerHTML = '';
+    if (S.mode === 'grade10') {
+      document.getElementById('wrongHeading').textContent = 'Words to Review';
+      wrongList.forEach(({qid}) => {
+        const q = S.grade10.find(q=>q.id===qid); if(!q) return;
+        chips.innerHTML += `<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`;
       });
     } else {
-      document.getElementById('wrongWordsHeading').textContent = 'FCE Passage Summary';
-      state.sessionQuestions.forEach(p => {
-        const pQs = p.questions.map(q => ({ qid: `${p.id}_${q.number}`, q }));
-        const pCorrect = pQs.filter(({ qid }) => state.answers[qid]?.correct).length;
-        const pWrong   = pQs.filter(({ qid }) => !state.answers[qid]?.correct);
-
-        const pRow = document.createElement('div');
-        pRow.style.cssText = 'margin-bottom:10px;width:100%;';
-        pRow.innerHTML = `<strong style="font-size:0.88rem;color:var(--deep-teal);">${p.title}</strong>
-          <span style="font-size:0.82rem;color:var(--text-mid);"> — ${pCorrect}/${p.questions.length} correct</span>
-          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;">
-            ${pWrong.map(({ q }) => `<span class="wrong-word-chip">${q.rootWord} → ${q.answer}</span>`).join('')}
-          </div>`;
-        listEl.appendChild(pRow);
+      document.getElementById('wrongHeading').textContent = 'FCE Summary';
+      S.session.forEach(p => {
+        const pQs = p.questions.map(q=>({qid:`${p.id}_${q.number}`,q}));
+        const ok  = pQs.filter(({qid})=>S.answers[qid]?.correct).length;
+        const bad = pQs.filter(({qid})=>!S.answers[qid]?.correct);
+        chips.innerHTML += `<div style="width:100%;margin-bottom:6px;"><strong style="font-size:.85rem;color:var(--deep-teal)">${p.title}</strong> <span style="font-size:.8rem;color:var(--text-mid)">${ok}/${p.questions.length} correct</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">${bad.map(({q})=>`<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`).join('')}</div></div>`;
       });
     }
   }
 
   showScreen('screenResult');
-  saveToSheet(pct, correct, wrong, wrongList);
+  saveSheet(pct, correct, wrong, wrongList);
 }
 
-/* ============================================================
-   SAVE TO GOOGLE SHEET
-   ============================================================ */
-async function saveToSheet(pct, correct, wrong, wrongList) {
+/* ═══════════════════════════════════════════════
+   SAVE TO SHEET
+═══════════════════════════════════════════════ */
+async function saveSheet(pct, correct, wrong, wrongList) {
   try {
-    // Save session
-    await fetch(CONFIG.appsScriptUrl, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'saveSession',
-        studentId:      state.studentId,
-        studentName:    state.studentName,
-        class:          state.studentClass,
-        mode:           state.mode === 'grade10' ? 'Grade10' : 'FCE',
-        startTime:      state.startTime.toISOString(),
-        endTime:        state.endTime.toISOString(),
-        duration:       Math.floor((state.endTime - state.startTime) / 1000),
-        totalQuestions: correct + wrong,
-        correct,
-        wrong,
-        percentage:     pct,
-      }),
-    });
-
-    // Save wrong answers
-    if (wrongList.length > 0) {
-      const wrongAnswers = wrongList.map(({ qid }) => {
-        let q, rootWord, correctAnswer;
-        if (state.mode === 'grade10') {
-          q = state.grade10Questions.find(q => q.id === qid);
-          rootWord = q?.rootWord; correctAnswer = q?.answer;
-        } else {
-          const [pid, num] = qid.split('_');
-          const p = state.fcePassages.find(p => p.id === pid);
-          q = p?.questions.find(q => q.number === parseInt(num));
-          rootWord = q?.rootWord; correctAnswer = q?.answer;
-        }
-        return {
-          questionId:     qid,
-          questionType:   state.mode,
-          rootWord:       rootWord || qid,
-          studentAnswer:  state.answers[qid]?.value || '',
-          correctAnswer:  correctAnswer || '',
-          attemptCount:   state.answers[qid]?.attempts || 0,
-        };
-      });
-
-      await fetch(CONFIG.appsScriptUrl, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'saveWrongAnswers',
-          studentId: state.studentId,
-          wrongAnswers,
-        }),
-      });
+    await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({
+      action:'saveSession', studentId:S.studentId, studentName:S.studentName,
+      class:S.studentClass, mode:S.mode==='grade10'?'Grade10':'FCE',
+      startTime:S.startTime.toISOString(), endTime:S.endTime.toISOString(),
+      duration:Math.floor((S.endTime-S.startTime)/1000),
+      totalQuestions:correct+wrong, correct, wrong, percentage:pct,
+    })});
+    if (wrongList.length) {
+      await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({
+        action:'saveWrongAnswers', studentId:S.studentId,
+        wrongAnswers: wrongList.map(({qid,ans})=>({
+          questionId:qid, questionType:S.mode,
+          rootWord: S.mode==='grade10' ? (S.grade10.find(q=>q.id===qid)?.rootWord||qid) : qid,
+          studentAnswer: S.answers[qid]?.value||'',
+          correctAnswer: ans, attemptCount: S.answers[qid]?.attempts||0,
+        })),
+      })});
     }
-    console.log('Data saved to Google Sheet successfully.');
-  } catch(e) {
-    console.warn('Could not save to sheet:', e);
-  }
+  } catch(e) { console.warn('Sheet save failed:', e); }
 }
 
-/* ============================================================
-   NAV HELPERS
-   ============================================================ */
+/* ═══════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════ */
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({top:0,behavior:'smooth'});
 }
+function goHome()   { stopTimer(); showScreen('screenWelcome'); }
+function goReview() { S.reviewMode=true; _reviewOn=true; document.getElementById('reviewSwitch').classList.add('on'); goHome(); }
 
-function goHome() {
-  stopTimer();
-  showScreen('screenWelcome');
-}
-
-function reviewWrong() {
-  state.reviewMode = true;
-  reviewOn = true;
-  document.getElementById('reviewSwitch').classList.add('on');
-  goHome();
-}
-
-/* ============================================================
-   SPELLING SCREEN
-   ============================================================ */
-let spellingDestination = 'home'; // 'home' or 'review'
-let spellingState = [];
-// spellingState = [ { word, completed: 0, done: false }, ... ]
-
-function startSpelling(destination) {
-  spellingDestination = destination;
-
-  // Collect wrong words from this session
-  const allQs = getAllCurrentQuestions();
-  const wrongQs = allQs.filter(({ qid }) => !state.answers[qid]?.correct);
-
-  if (wrongQs.length === 0) {
-    // No wrong answers - skip spelling
-    destination === 'review' ? doReviewWrong() : goHome();
-    return;
-  }
-
-  // Build word list - unique correct answers of wrong questions
-  const wordSet = new Set();
-  wrongQs.forEach(({ qid }) => {
-    if (state.mode === 'grade10') {
-      const q = state.grade10Questions.find(q => q.id === qid);
-      if (q) wordSet.add(q.answer.toUpperCase());
-    } else {
-      // FCE: find passage + question
-      for (const p of state.fcePassages) {
-        const q = p.questions.find(q => `${p.id}_${q.number}` === qid);
-        if (q) { wordSet.add(q.answer.toUpperCase()); break; }
-      }
-    }
-  });
-
-  spellingState = [...wordSet].map(word => ({ word, completed: 0, done: false }));
-
-  renderSpellingScreen();
-  showScreen('screenSpelling');
-}
-
-function renderSpellingScreen() {
-  const container = document.getElementById('spellingWordsContainer');
-  container.innerHTML = '';
-
-  const totalWords = spellingState.length;
-  const doneWords  = spellingState.filter(w => w.done).length;
-  document.getElementById('spellingProgressText').textContent =
-    `${doneWords} / ${totalWords} word${totalWords > 1 ? 's' : ''} completed`;
-  document.getElementById('spellingDoneBtn').disabled = doneWords < totalWords;
-
-  spellingState.forEach((wordObj, wIdx) => {
-    const block = document.createElement('div');
-    block.className = 'card spelling-word-block';
-    block.style.padding = '0';
-    block.style.overflow = 'hidden';
-
-    const header = document.createElement('div');
-    header.className = 'spelling-word-header';
-    header.innerHTML = `
-      <span class="spelling-target">${wordObj.word}</span>
-      <span class="spelling-counter" id="sc_${wIdx}">${wordObj.completed}/10</span>
-    `;
-    block.appendChild(header);
-
-    const rows = document.createElement('div');
-    rows.className = 'spelling-rows';
-
-    for (let i = 0; i < 10; i++) {
-      const row = document.createElement('div');
-      row.className = 'spelling-input-row';
-
-      const isDone = i < wordObj.completed;
-      const isActive = i === wordObj.completed && !wordObj.done;
-
-      row.innerHTML = `
-        <span class="spelling-num">${i + 1}</span>
-        <input
-          type="text"
-          class="spelling-input ${isDone ? 'sp-correct' : ''}"
-          id="sp_${wIdx}_${i}"
-          data-widx="${wIdx}"
-          data-row="${i}"
-          placeholder="${isActive ? 'Type here...' : ''}"
-          value="${isDone ? wordObj.word : ''}"
-          ${isDone || wordObj.done ? 'disabled' : ''}
-          ${!isActive ? 'readonly' : ''}
-          autocomplete="off"
-          autocorrect="off"
-          autocapitalize="characters"
-          spellcheck="false"
-        >
-        <span class="spelling-tick" id="st_${wIdx}_${i}">${isDone ? '✅' : ''}</span>
-      `;
-      rows.appendChild(row);
-    }
-    block.appendChild(rows);
-    container.appendChild(block);
-
-    // Attach event listeners after DOM insert
-    for (let i = 0; i < 10; i++) {
-      const inp = document.getElementById(`sp_${wIdx}_${i}`);
-      if (!inp || inp.disabled || inp.readOnly) continue;
-      attachSpellingListener(inp, wIdx, i, wordObj.word);
-      // Focus first active input
-      if (i === wordObj.completed && !wordObj.done) {
-        setTimeout(() => inp.focus(), 100);
-      }
-      break;
-    }
-  });
-}
-
-function attachSpellingListener(inp, wIdx, rowIdx, targetWord) {
-  // Block paste
-  inp.addEventListener('paste', e => e.preventDefault());
-  inp.addEventListener('copy', e => e.preventDefault());
-  inp.addEventListener('cut',  e => e.preventDefault());
-
-  inp.addEventListener('input', function() {
-    const typed = this.value.trim().toUpperCase();
-    this.value = typed; // force uppercase as they type
-
-    if (typed === targetWord) {
-      // Correct
-      this.classList.remove('sp-wrong');
-      this.classList.add('sp-correct');
-      this.disabled = true;
-      document.getElementById(`st_${wIdx}_${rowIdx}`).textContent = '✅';
-
-      spellingState[wIdx].completed = rowIdx + 1;
-      document.getElementById(`sc_${wIdx}`).textContent = `${rowIdx + 1}/10`;
-
-      if (rowIdx + 1 >= 10) {
-        spellingState[wIdx].done = true;
-      } else {
-        // Unlock next row
-        const nextInp = document.getElementById(`sp_${wIdx}_${rowIdx + 1}`);
-        if (nextInp) {
-          nextInp.removeAttribute('readonly');
-          nextInp.placeholder = 'Type here...';
-          attachSpellingListener(nextInp, wIdx, rowIdx + 1, targetWord);
-          setTimeout(() => nextInp.focus(), 50);
-        }
-      }
-
-      // Update counter and done button
-      const doneWords = spellingState.filter(w => w.done).length;
-      document.getElementById('spellingProgressText').textContent =
-        `${doneWords} / ${spellingState.length} word${spellingState.length > 1 ? 's' : ''} completed`;
-      document.getElementById('spellingDoneBtn').disabled = doneWords < spellingState.length;
-
-    } else if (typed.length >= targetWord.length) {
-      // Wrong - flash red then clear
-      this.classList.add('sp-wrong');
-      setTimeout(() => {
-        this.classList.remove('sp-wrong');
-        this.value = '';
-      }, 500);
-    }
-  });
-}
-
-function finishSpelling() {
-  if (spellingDestination === 'review') {
-    doReviewWrong();
-  } else {
-    goHome();
-  }
-}
-
-function doReviewWrong() {
-  state.reviewMode = true;
-  reviewOn = true;
-  document.getElementById('reviewSwitch').classList.add('on');
-  goHome();
-}
-
-/* ============================================================
-   UTILS
-   ============================================================ */
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+function shuffle(a) {
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
 }
 </script>
 </body>
