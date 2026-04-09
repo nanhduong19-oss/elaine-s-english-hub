@@ -1067,9 +1067,13 @@ function startSpelling() {
   if (!wrong.length) { showResult(); return; }
 
   // Collect unique correct answers
+  // For answers like "DEFENCES / DEFENSES", store all variants but display/target as first one
   const wordSet = new Set();
   wrong.forEach(({ qid, ans }) => wordSet.add(ans.toUpperCase()));
-  S.spellingWords = [...wordSet].map(w => ({ word:w, completed:0, done:false }));
+  S.spellingWords = [...wordSet].map(w => {
+    const variants = w.split('/').map(v => v.trim()).filter(Boolean);
+    return { word: variants[0], variants, completed: 0, done: false };
+  });
 
   renderSpelling();
   showScreen('screenSpelling');
@@ -1086,9 +1090,12 @@ function renderSpelling() {
   S.spellingWords.forEach((wObj, wi) => {
     const block = document.createElement('div');
     block.className = 'spelling-word-block';
+    const displayWord = wObj.variants.length > 1
+      ? `${wObj.word} <span style="font-size:.75rem;font-weight:600;opacity:.8;">(or: ${wObj.variants.slice(1).join(' / ')})</span>`
+      : wObj.word;
     block.innerHTML = `
       <div class="spelling-header">
-        <span class="spelling-target">${wObj.word}</span>
+        <span class="spelling-target">${displayWord}</span>
         <span class="spelling-counter" id="sc_${wi}">${wObj.completed}/5</span>
       </div>
       <div class="spelling-rows" id="srows_${wi}"></div>`;
@@ -1124,13 +1131,20 @@ function renderSpelling() {
 }
 
 function attachSpell(inp, wi, row, target) {
+  // target = primary word (first variant); get all variants from spellingWords
+  const variants = S.spellingWords[wi].variants || [target];
+  const maxLen   = Math.max(...variants.map(v => v.length));
+
   inp.addEventListener('paste', e => e.preventDefault());
   inp.addEventListener('copy',  e => e.preventDefault());
   inp.addEventListener('cut',   e => e.preventDefault());
   inp.addEventListener('input', function() {
     const v = this.value.trim().toUpperCase();
     this.value = v;
-    if (v === target) {
+    const isMatch = variants.includes(v);
+    if (isMatch) {
+      // Show the primary (first) variant as the confirmed value
+      this.value = target;
       this.classList.add('sp-correct'); this.disabled = true;
       document.getElementById(`st_${wi}_${row}`).textContent = '✅';
       S.spellingWords[wi].completed = row + 1;
@@ -1144,7 +1158,7 @@ function attachSpell(inp, wi, row, target) {
       const done = S.spellingWords.filter(w=>w.done).length;
       document.getElementById('spellingProgressText').textContent = `${done} / ${S.spellingWords.length} word${S.spellingWords.length>1?'s':''} completed`;
       document.getElementById('spellingDoneBtn').disabled = done < S.spellingWords.length;
-    } else if (v.length >= target.length) {
+    } else if (v.length >= maxLen && !variants.some(vt => vt.startsWith(v.slice(0, vt.length)))) {
       this.classList.add('sp-wrong');
       setTimeout(() => { this.classList.remove('sp-wrong'); this.value=''; }, 500);
     }
