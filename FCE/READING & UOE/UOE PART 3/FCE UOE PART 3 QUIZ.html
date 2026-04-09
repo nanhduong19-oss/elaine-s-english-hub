@@ -65,14 +65,21 @@ body {
 }
 
 /* ── WELCOME ── */
-.welcome-header { text-align:center; padding:28px 0 16px; display:flex; flex-direction:column; align-items:center; }
-.bears-emoji { font-size:48px; display:block; margin-bottom:6px; animation: floatB 3s ease-in-out infinite; }
+.welcome-header { text-align:center; padding:32px 0 18px; display:flex; flex-direction:column; align-items:center; }
+.bears-emoji { font-size:48px; display:block; margin-bottom:10px; animation: floatB 3s ease-in-out infinite; }
 @keyframes floatB { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
 .app-title {
-  font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800;
-  color:white; text-shadow:0 3px 12px rgba(78,144,160,.4); line-height:1.1;
+  font-family:'Baloo 2',cursive; font-size:2.6rem; font-weight:800;
+  color:white; text-shadow:0 3px 14px rgba(78,144,160,.45); line-height:1.1;
+  letter-spacing:.01em;
 }
-.app-subtitle { font-size:.95rem; color:rgba(255,255,255,.85); margin-top:4px; font-weight:600; }
+.app-subtitle { font-size:1rem; color:rgba(255,255,255,.88); margin-top:6px; font-weight:600; font-style:italic; }
+
+.app-footer {
+  text-align:center; padding:28px 0 10px;
+  font-size:.78rem; color:rgba(255,255,255,.65); font-weight:600; line-height:1.7;
+}
+.app-footer strong { color:rgba(255,255,255,.85); font-weight:800; display:block; }
 
 .form-label {
   display:block; font-size:.78rem; font-weight:800;
@@ -302,13 +309,17 @@ body {
 .result-card { text-align:center; padding:28px 20px; }
 .meme-display { font-size:72px; margin-bottom:14px; animation:bounceIn .5s cubic-bezier(.68,-.55,.265,1.55); }
 @keyframes bounceIn { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
-.result-title { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--accent2); margin-bottom:3px; }
-.result-tagline { font-size:.92rem; color:var(--text-mid); font-weight:600; margin-bottom:22px; }
+.result-title { font-family:'Baloo 2',cursive; font-size:2rem; font-weight:800; color:var(--accent2); margin-bottom:4px; }
+.result-tagline { font-size:1rem; color:var(--text-mid); font-weight:600; margin-bottom:24px; }
 
-.stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:18px; }
-.stat-box { background:linear-gradient(135deg,#DCF0F8,#C8E4F0); border-radius:12px; padding:12px 8px; }
-.stat-value { font-family:'Baloo 2',cursive; font-size:1.55rem; font-weight:800; color:var(--accent2); display:block; }
-.stat-label { font-size:.72rem; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:.06em; }
+.stats-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+.stat-box {
+  background:linear-gradient(135deg,#DCF0F8,#C8E4F0);
+  border-radius:16px; padding:20px 8px;
+  box-shadow: 0 4px 14px rgba(78,144,160,.15);
+}
+.stat-value { font-family:'Baloo 2',cursive; font-size:2.4rem; font-weight:800; color:var(--accent2); display:block; line-height:1; }
+.stat-label { font-size:.75rem; font-weight:800; color:var(--text-mid); text-transform:uppercase; letter-spacing:.08em; margin-top:4px; display:block; }
 
 .result-info { background:white; border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:12px; text-align:left; border:1.5px solid rgba(106,175,192,.25); }
 .info-row { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(106,175,192,.12); font-size:.88rem; }
@@ -369,9 +380,9 @@ body {
 <!-- ═══════════ WELCOME ═══════════ -->
 <div id="screenWelcome" class="screen active">
   <div class="welcome-header">
-    <span class="bears-emoji">🐻🐻‍❄️🏊</span>
-    <h1 class="app-title">Word Form Quiz</h1>
-    <p class="app-subtitle">Ruby School · Dive in and practise!</p>
+    <span class="bears-emoji">🐻🐻‍❄️</span>
+    <h1 class="app-title">Word Formation Practice</h1>
+    <p class="app-subtitle">Every word you learn is a step closer to your goal.</p>
   </div>
 
   <div class="card">
@@ -439,6 +450,11 @@ body {
   <button class="start-btn" id="startBtn" onclick="startQuiz()" disabled>
     Start Practice Session 🏊
   </button>
+
+  <div class="app-footer">
+    <strong>Compiled and Digitized by Elaine Nguyễn</strong>
+    Empowering students through knowledge and technology
+  </div>
 </div>
 
 <!-- ═══════════ QUIZ ═══════════ -->
@@ -1223,17 +1239,24 @@ async function saveSheet(pct, correct, wrong, wrongList) {
     const mi = String(d.getMinutes()).padStart(2,'0');
     return `${dd}-${mm}-${yy} ${hh}:${mi}`;
   }
+  function fmtDuration(sec) {
+    const h = Math.floor(sec / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }
+  const durSec = Math.floor((S.endTime - S.startTime) / 1000);
   try {
     await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({
       action:'saveSession', studentId:S.studentId, studentName:S.studentName,
       class:S.studentClass, mode:S.mode==='grade10'?'Grade10':'FCE',
       startTime:fmtSheet(S.startTime), endTime:fmtSheet(S.endTime),
-      duration:Math.floor((S.endTime-S.startTime)/1000),
+      duration:fmtDuration(durSec),
       totalQuestions:correct+wrong, correct, wrong, percentage:pct,
     })});
     if (wrongList.length) {
       await fetch(CONFIG.appsScriptUrl, { method:'POST', body: JSON.stringify({
-        action:'saveWrongAnswers', studentId:S.studentId,
+        action:'saveWrongAnswers', studentId:S.studentId, studentName:S.studentName,
         wrongAnswers: wrongList.map(({qid,ans})=>({
           questionId:qid, questionType:S.mode,
           rootWord: S.mode==='grade10' ? (S.grade10.find(q=>q.id===qid)?.rootWord||qid) : qid,
