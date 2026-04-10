@@ -22,7 +22,7 @@
       "text": "Some years ago, there were (0) PREDICTIONS that email would soon be replaced as the most common means of online communication by social (17) ___ sites.\n\nSince then, however, the number of emails sent has increased (18) ___, to the point that the volume received on a daily basis has become (19) ___ for many people.\n\nFor some users, the situation has become so (20) ___ that they regularly delete all the emails they receive without even bothering to read them, which is rather (21) ___, to say the least.\n\nA less extreme measure is to install software that sorts incoming mail into different categories. By doing this, promotions from (22) ___ organisations go into a separate folder, (23) ___ us to see which emails are more important than others.\n\nNot all of us, though, may be so keen to let software make such (24) ___ for us.",
       "example": { "number": 0, "rootWord": "PREDICT", "answer": "PREDICTIONS", "explanation": "Ví dụ: sau 'there were' cần danh từ số nhiều. PREDICT (v) -> PREDICTION (n) -> PREDICTIONS (n, plural) = những dự đoán." },
       "questions": [
-        { "number": 17, "rootWord": "WORK", "answer": "NETWORK / NETWORKING", "accepted": ["NETWORK", "NETWORKING"], "commonWrong": ["NETWORKS", "NETWORKED", "NETWORKER"], "explanation": "Cụm đúng: social NETWORK sites / social NETWORKING sites (đều đúng). Sai thường gặp: NETWORKS/NETWORKED/NETWORKER vì sai loại từ hoặc không hợp cấu trúc 'social ___ sites'." }, 
+        { "number": 17, "rootWord": "WORK", "answer": ["NETWORK", "NETWORKING"], "accepted": ["NETWORK", "NETWORKING"], "commonWrong": ["NETWORKS", "NETWORKED", "NETWORKER"], "explanation": "Cụm đúng: social NETWORK sites / social NETWORKING sites (đều đúng). Sai thường gặp: NETWORKS/NETWORKED/NETWORKER vì sai loại từ hoặc không hợp cấu trúc 'social ___ sites'." }, 
         { "number": 18, "rootWord": "STEADY", "answer": "STEADILY", "explanation": "Cần trạng từ bổ nghĩa cho 'has increased'. STEADY (adj) -> STEADILY (adv) (đổi y -> i + -ly)." },
         { "number": 19, "rootWord": "STRESS", "answer": "STRESSFUL", "explanation": "Sau 'has become' cần tính từ; nghĩa là 'gây căng thẳng'. STRESS (n/v) -> STRESSFUL (adj)." },
         { "number": 20, "rootWord": "BEAR", "answer": "UNBEARABLE", "explanation": "Cấu trúc 'so + adj + that...' cần tính từ; nghĩa là 'không thể chịu nổi' nên dùng phủ định. BEAR (v) -> BEARABLE (adj) -> UNBEARABLE (adj)." },
@@ -61,7 +61,7 @@
         { "number": 21, "rootWord": "IMPRESS", "answer": "IMPRESSION", "explanation": "Collocation: 'make a good impression'. IMPRESS (v) -> IMPRESSION (n)." },
         { "number": 22, "rootWord": "CONFIDENT", "answer": "CONFIDENCE", "explanation": "Sau 'have' cần danh từ. CONFIDENT (adj) -> CONFIDENCE (n)." },
         { "number": 23, "rootWord": "FRIEND", "answer": "FRIENDLINESS", "explanation": "Song song với 'formality' là danh từ; FRIEND (n) -> FRIENDLY (adj) -> FRIENDLINESS (n, -liness)." },
-        { "number": 24, "rootWord": "JUDGE", "answer": "JUDGEMENT / JUDGMENT", "accepted": ["JUDGEMENT", "JUDGMENT"], "commonWrong": ["JUDGE", "JUDGING", "JUDGES"], "explanation": "Sau 'make a' cần danh từ: make a JUDGEMENT/JUDGMENT (cả 2 chính tả đều chuẩn). Sai thường gặp: JUDGE/JUDGING/JUDGES vì không phải danh từ phù hợp trong cụm cố định." }
+        { "number": 24, "rootWord": "JUDGE", "answer": ["JUDGEMENT", "JUDGMENT"], "accepted": ["JUDGEMENT", "JUDGMENT"], "commonWrong": ["JUDGE", "JUDGING", "JUDGES"], "explanation": "Sau 'make a' cần danh từ: make a JUDGEMENT/JUDGMENT (cả 2 chính tả đều chuẩn). Sai thường gặp: JUDGE/JUDGING/JUDGES vì không phải danh từ phù hợp trong cụm cố định." }
       ]
     },
     {
@@ -74,7 +74,7 @@
         { "number": 18, "rootWord": "EXIST", "answer": "EXISTING", "explanation": "Cần tính từ bổ nghĩa 'professions'. EXIST (v) -> EXISTING (adj) = hiện có." },
         { "number": 19, "rootWord": "POLITICS", "answer": "POLITICIANS", "explanation": "Cần danh từ chỉ người, số nhiều (nhóm nghề). POLITICS (n) -> POLITICIAN (n) -> POLITICIANS (n, plural)." },
         { "number": 20, "rootWord": "SHORT", "answer": "SHORTAGE", "explanation": "Collocation: 'no shortage of'. SHORT (adj) -> SHORTAGE (n) = sự thiếu hụt." },
-        { "number": 21, "rootWord": "SPECIAL", "answer": "SPECIALISE / SPECIALIZE", "accepted": ["SPECIALISE", "SPECIALIZE"], "commonWrong": ["SPECIALIST", "SPECIALIZATION", "SPECIALITY"], "explanation": "Sau 'able to' cần động từ nguyên mẫu: (to) SPECIALISE/SPECIALIZE (chấp nhận UK/US spelling). Sai thường gặp: SPECIALIST/SPECIALIZATION/SPECIALITY vì chuyển sang danh từ hoặc sai dạng." },
+        { "number": 21, "rootWord": "SPECIAL", "answer": ["SPECIALISE", "SPECIALIZE"], "accepted": ["SPECIALISE", "SPECIALIZE"], "commonWrong": ["SPECIALIST", "SPECIALIZATION", "SPECIALITY"], "explanation": "Sau 'able to' cần động từ nguyên mẫu: (to) SPECIALISE/SPECIALIZE (chấp nhận UK/US spelling). Sai thường gặp: SPECIALIST/SPECIALIZATION/SPECIALITY vì chuyển sang danh từ hoặc sai dạng." },
         { "number": 22, "rootWord": "LOSE", "answer": "LOSS", "explanation": "Sau 'rapid' cần danh từ. LOSE (v) -> LOSS (n)." },
         { "number": 23, "rootWord": "CONSTRUCT", "answer": "CONSTRUCTION", "explanation": "Cụm 'the construction industry' cần danh từ. CONSTRUCT (v) -> CONSTRUCTION (n)." },
         { "number": 24, "rootWord": "APPEAR", "answer": "DISAPPEARED", "explanation": "Sau 'have' cần past participle (hiện tại hoàn thành). APPEAR (v) -> DISAPPEAR (v) -> DISAPPEARED (V3)." }
@@ -87,7 +87,7 @@
       "example": { "number": 0, "rootWord": "COAST", "answer": "COASTAL", "explanation": "Ví dụ: cần tính từ bổ nghĩa 'town'. COAST (n) -> COASTAL (adj) = ven biển." },
       "questions": [
         { "number": 17, "rootWord": "DESTROY", "answer": "DESTRUCTION", "explanation": "Sau 'the' cần danh từ. DESTROY (v) -> DESTRUCTION (n)." },
-        { "number": 18, "rootWord": "DEFEND", "answer": "DEFENCES / DEFENSES", "accepted": ["DEFENCES", "DEFENSES"], "commonWrong": ["DEFENCE", "DEFENSE", "DEFENDING"], "explanation": "Cấu trúc: the building of ... higher DEFENCES/DEFENSES (số nhiều vì có 'seven kilometres of new, higher ...'). Sai thường gặp: DEFENCE/DEFENSE (số ít) hoặc DEFENDING (V-ing sai loại từ)." },
+        { "number": 18, "rootWord": "DEFEND", "answer": ["DEFENCES", "DEFENSES"], "accepted": ["DEFENCES", "DEFENSES"], "commonWrong": ["DEFENCE", "DEFENSE", "DEFENDING"], "explanation": "Cấu trúc: the building of ... higher DEFENCES/DEFENSES (số nhiều vì có 'seven kilometres of new, higher ...'). Sai thường gặp: DEFENCE/DEFENSE (số ít) hoặc DEFENDING (V-ing sai loại từ)." },
         { "number": 19, "rootWord": "CREATE", "answer": "CREATION", "explanation": "Sau 'led to the' cần danh từ. CREATE (v) -> CREATION (n)." },
         { "number": 20, "rootWord": "SUBSTANCE", "answer": "SUBSTANTIAL", "explanation": "Cần tính từ bổ nghĩa 'reduction'. SUBSTANCE (n) -> SUBSTANTIAL (adj) = đáng kể." },
         { "number": 21, "rootWord": "AMBITION", "answer": "AMBITIOUS", "explanation": "Cần tính từ bổ nghĩa 'project'. AMBITION (n) -> AMBITIOUS (adj)." },
