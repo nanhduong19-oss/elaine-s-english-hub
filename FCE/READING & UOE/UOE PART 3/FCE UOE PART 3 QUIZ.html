@@ -842,8 +842,13 @@ function renderQuiz() {
   badge.textContent = S.attempt === 1
     ? 'Round 1 of 2 — Answer all questions'
     : 'Round 2 of 2 — Correct your mistakes';
-  document.getElementById('checkBtn').textContent =
-    S.attempt === 1 ? 'Check Answers ✔' : 'Submit Final Answers ✔';
+
+  // Always reset check button to default state
+  const btn = document.getElementById('checkBtn');
+  btn.textContent = S.attempt === 1 ? 'Check Answers ✔' : 'Submit Final Answers ✔';
+  btn.onclick = checkAnswers;
+  btn.style.background = '';
+
   document.getElementById('quizBadge').textContent =
     S.mode === 'grade10' ? 'Grade 10 Entrance' : 'FCE Part 3';
 
@@ -894,7 +899,7 @@ function renderG10() {
         ${sentenceHTML} <span class="root-hint">(${q.rootWord})</span>
       </div>
       <div class="explain-box ${showExplain ? 'show ' + explainClass : ''}">
-        ${(checked && !ans.correct && S.revealAll) ? `<strong>✔ Correct answer: ${q.answer}</strong><br>` : ''}
+        ${(checked && !ans.correct && S.revealAll) ? `<strong>✔ Correct answer: ${displayAnswer(q.answer)}</strong><br>` : ''}
         ${(ans && ans.correct) || S.revealAll ? q.explanation : ''}
       </div>`;
     c.appendChild(div);
@@ -965,7 +970,7 @@ function renderFCE() {
       item.id = `exp_${qid}`;
       const showAns2 = checked && !ans.correct && S.revealAll;
       const showExp2 = (ans && ans.correct) || S.revealAll;
-      item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${showAns2 ? ` → <span style="color:#2E6E45;font-weight:800">${q.answer}</span>` : ''}${showExp2 ? ': ' + q.explanation : ''}`;
+      item.innerHTML = `<strong>(${q.number}) ${q.rootWord}</strong>${showAns2 ? ` → <span style="color:#2E6E45;font-weight:800">${displayAnswer(q.answer)}</span>` : ''}${showExp2 ? ': ' + q.explanation : ''}`;
       expContainer.appendChild(item);
 
       // attach listener to input
@@ -986,6 +991,24 @@ function norm(s) {
   return s.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();
 }
 
+// Parse answer field: supports string "WORD" or array ["WORD1","WORD2"]
+// Always returns an array of normalized accepted answers
+function getAnswers(ans) {
+  if (Array.isArray(ans)) return ans.map(a => norm(a.toUpperCase()));
+  return [norm(ans.toUpperCase())];
+}
+
+// Check if student input matches any accepted answer
+function isCorrect(input, ans) {
+  return getAnswers(ans).includes(norm(input.toUpperCase()));
+}
+
+// Display string: join multiple answers with " / "
+function displayAnswer(ans) {
+  if (Array.isArray(ans)) return ans.join(' / ');
+  return ans;
+}
+
 function getAllQids() {
   if (S.mode === 'grade10') return S.session.map(q => ({ qid: q.id, ans: q.answer }));
   const out = [];
@@ -1003,7 +1026,7 @@ function checkAnswers() {
     const val = inp.value.trim();
     if (!val) { anyBlank = true; return; }
     const upper = val.toUpperCase();
-    const correct = norm(upper) === norm(ans);
+    const correct = isCorrect(upper, ans);
     if (!S.answers[qid]) {
       S.answers[qid] = { value: upper, correct, attempts: 1 };
     } else {
@@ -1223,7 +1246,7 @@ function showResult() {
       document.getElementById('wrongHeading').textContent = 'Words to Review';
       wrongList.forEach(({qid}) => {
         const q = S.grade10.find(q=>q.id===qid); if(!q) return;
-        chips.innerHTML += `<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`;
+        chips.innerHTML += `<span class="wrong-chip">${q.rootWord} → ${displayAnswer(q.answer)}</span>`;
       });
     } else {
       document.getElementById('wrongHeading').textContent = 'FCE Summary';
@@ -1231,7 +1254,7 @@ function showResult() {
         const pQs = p.questions.map(q=>({qid:`${p.id}_${q.number}`,q}));
         const ok  = pQs.filter(({qid})=>S.answers[qid]?.correct).length;
         const bad = pQs.filter(({qid})=>!S.answers[qid]?.correct);
-        chips.innerHTML += `<div style="width:100%;margin-bottom:6px;"><strong style="font-size:.85rem;color:var(--accent2)">${p.title}</strong> <span style="font-size:.8rem;color:var(--text-mid)">${ok}/${p.questions.length} correct</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">${bad.map(({q})=>`<span class="wrong-chip">${q.rootWord} → ${q.answer}</span>`).join('')}</div></div>`;
+        chips.innerHTML += `<div style="width:100%;margin-bottom:6px;"><strong style="font-size:.85rem;color:var(--accent2)">${p.title}</strong> <span style="font-size:.8rem;color:var(--text-mid)">${ok}/${p.questions.length} correct</span><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;">${bad.map(({q})=>`<span class="wrong-chip">${q.rootWord} → ${displayAnswer(q.answer)}</span>`).join('')}</div></div>`;
       });
     }
   }
@@ -1390,7 +1413,7 @@ function confirmTeacher() {
 
   // Change key button to indicate active mode
   const btn = document.getElementById('teacherKeyBtn');
-  btn.textContent = '👩🏻‍🏫';
+  btn.textContent = '✅';
   btn.style.background = 'rgba(109,191,126,0.7)';
   btn.style.opacity = '1';
   btn.title = 'Teacher Mode active — click to exit';
