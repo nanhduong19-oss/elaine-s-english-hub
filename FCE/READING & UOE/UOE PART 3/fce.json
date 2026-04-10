@@ -191,6 +191,102 @@
         { "number": 23, "rootWord": "MAINTAIN", "answer": "MAINTENANCE", "explanation": "Cần danh từ (sự duy trì). MAINTAIN -> MAINTENANCE." },
         { "number": 24, "rootWord": "EXPLAIN", "answer": "EXPLANATION", "explanation": "Cần danh từ sau mạo từ 'an'. EXPLAIN -> EXPLANATION (lời giải thích)." }
       ]
+    },
+    {
+      "id": "fce_trainer_3_test_1",
+      "title": "Study skills",
+      "text": "If you want to improve your academic (0) PERFORMANCE, you'll probably need to improve your study skills. Although a (17) ___ of people may be able to manage without them, most of us find them (18) ___. Becoming more (19) ___ isn't always straightforward and many of us find that we lack (20) ___ precisely when we need it the most. There are so many things to distract us, and when we feel we aren't making progress rapidly enough, it's easy to become (21) ___. Study skills can help with this, because (22) ___, they're simply ideas to help us study more efficiently. There are plenty of websites with great advice for students, but because everyone's different, it's worth trying a few different approaches, until you find something that works for you. If you're (23) ___ to work hard and learn a few techniques to make you better at focusing, then you'll be more likely to be able to (24) ___ what you're truly capable of.",
+      "example": { "number": 0, "rootWord": "PERFORM", "answer": "PERFORMANCE", "explanation": "Cần danh từ sau tính từ 'academic' (kết quả học tập)." },
+      "questions": [
+        { "number": 17, "rootWord": "HAND", "answer": "HANDFUL", "explanation": "Cần danh từ. Cụm 'a handful of people' nghĩa là một số lượng rất ít người. HAND -> HANDFUL." },
+        { "number": 18, "rootWord": "BENEFIT", "answer": "BENEFICIAL", "explanation": "Cần tính từ sau cấu trúc 'find + sth/sb + adj' (thấy chúng rất có ích). BENEFIT -> BENEFICIAL." },
+        { "number": 19, "rootWord": "PRODUCE", "answer": "PRODUCTIVE", "explanation": "Cần tính từ sau 'become more'. PRODUCE -> PRODUCTIVE (trở nên năng suất/hiệu quả hơn)." },
+        { "number": 20, "rootWord": "CONCENTRATE", "answer": "CONCENTRATION", "explanation": "Cần danh từ sau động từ 'lack' (thiếu). CONCENTRATE -> CONCENTRATION (sự tập trung)." },
+        { "number": 21, "rootWord": "PATIENT", "answer": "IMPATIENT", "explanation": "Cần tính từ mang nghĩa tiêu cực sau 'become'. PATIENT -> IMPATIENT (mất kiên nhẫn)." },
+        { "number": 22, "rootWord": "BASE", "answer": "BASICALLY", "explanation": "Cần trạng từ đứng đầu mệnh đề để bổ nghĩa cho cả câu. BASE -> BASIC -> BASICALLY (về cơ bản)." },
+        { "number": 23, "rootWord": "WILL", "answer": "WILLING", "explanation": "Cần tính từ. Cấu trúc 'be willing to do sth' (sẵn lòng làm gì). WILL -> WILLING." },
+        { "number": 24, "rootWord": "PROOF", "answer": "PROVE", "explanation": "Cần động từ nguyên mẫu sau 'to'. PROOF (danh từ) -> PROVE (động từ: chứng minh)." }
+      ]
+    },
+    {
+      "id": "fce_trainer_3_test_2",
+      "title": "Social media deinfluencers",
+      "text": "First, there were social media 'influencers', (0) ENTHUSIASTICALLY encouraging people to buy things online. Then more and more influencers started to become 'deinfluencers' instead, pointing out to all their (17) ___ that many of these products aren't things they (18) ___ need. After all, most people don't have an (19) ___ supply of money to spend. One deinfluencer said that although her income depended on people buying the products she promoted and on her (20) ___ - measured in the number of views and 'likes' her online videos received - she didn't want to (21) ___ anyone. Some things are worth having, but others really aren't worth the expense, she said. No one should feel under (22) ___ to buy things that they can't actually afford, simply because they're (23) ___. Another deinfluencer said that although she (24) ___ loved the things she advertised online, she wanted to remind her audience that it isn't normal to have all these things; they're luxuries rather than the kinds of things people buy every day.",
+      "example": { "number": 0, "rootWord": "ENTHUSIASM", "answer": "ENTHUSIASTICALLY", "explanation": "Cần trạng từ bổ nghĩa cho động từ 'encouraging'." },
+      "questions": [
+        { "number": 17, "rootWord": "FOLLOW", "answer": "FOLLOWERS", "explanation": "Cần danh từ chỉ người số nhiều (vì có 'their'). FOLLOW -> FOLLOWERS (những người theo dõi)." },
+        { "number": 18, "rootWord": "NECESSARY", "answer": "NECESSARILY", "explanation": "Cần trạng từ để bổ nghĩa cho động từ 'need'. NECESSARY -> NECESSARILY (nhất thiết)." },
+        { "number": 19, "rootWord": "LIMIT", "answer": "UNLIMITED", "explanation": "Cần tính từ mang nghĩa phủ định (nguồn tiền không giới hạn). LIMIT -> UNLIMITED." },
+        { "number": 20, "rootWord": "POPULAR", "answer": "POPULARITY", "explanation": "Cần danh từ sau tính từ sở hữu 'her'. POPULAR -> POPULARITY (sự nổi tiếng)." },
+        { "number": 21, "rootWord": "LEAD", "answer": "MISLEAD", "explanation": "Cần động từ mang nghĩa lừa gạt/gây hiểu lầm. LEAD -> MISLEAD." },
+        { "number": 22, "rootWord": "PRESS", "answer": "PRESSURE", "explanation": "Cần danh từ. Cụm cố định 'under pressure' (chịu áp lực). PRESS -> PRESSURE." },
+        { "number": 23, "rootWord": "FASHION", "answer": "FASHIONABLE", "explanation": "Cần tính từ sau 'they\\'re'. FASHION -> FASHIONABLE (hợp thời trang/đang mốt)." },
+        { "number": 24, "rootWord": "PERSON", "answer": "PERSONALLY", "explanation": "Cần trạng từ mang nghĩa 'bản thân cô ấy'. PERSON -> PERSONALLY." }
+      ]
+    },
+    {
+      "id": "fce_trainer_3_test_3",
+      "title": "A record-breaking swim",
+      "text": "When swimming teacher Jasmine Harrison was 23 years old, she became the first woman ever to swim along the coast of Britain from the southwest to the northeast, a (0) DISTANCE of nearly 1,500 km. That's approximately 58,000 (17) ___ of a 25-metre pool. Jasmine's (18) ___ achievements as a sportswoman already included a world record for being the youngest woman to row solo across the Atlantic. She swam between four and 12 hours a day, eating and sleeping in a support boat. In (19) ___ to her normal diet, she ate a lot of chocolate bars! She (20) ___ swam very close to whales, dolphins and seals. And that wasn't her only (21) ___ with ocean creatures: she was once followed by a shark! Despite passing some spectacular (22) ___ along the way, there were also many challenges. For example, the water was (23) ___ and constantly getting saltwater in her mouth was (24) ___ too. Nevertheless, after completing her swim, she said it had been an incredible experience.",
+      "example": { "number": 0, "rootWord": "DISTANT", "answer": "DISTANCE", "explanation": "Cần danh từ (khoảng cách)." },
+      "questions": [
+        { "number": 17, "rootWord": "LONG", "answer": "LENGTHS", "explanation": "Cần danh từ số nhiều (chiều dài của hồ bơi). LONG -> LENGTHS." },
+        { "number": 18, "rootWord": "IMPRESS", "answer": "IMPRESSIVE", "explanation": "Cần tính từ bổ nghĩa cho danh từ 'achievements'. IMPRESS -> IMPRESSIVE (ấn tượng)." },
+        { "number": 19, "rootWord": "ADD", "answer": "ADDITION", "explanation": "Cụm từ cố định 'In addition to' (Thêm vào đó / Ngoài ra). ADD -> ADDITION." },
+        { "number": 20, "rootWord": "OCCASION", "answer": "OCCASIONALLY", "explanation": "Cần trạng từ bổ nghĩa cho động từ 'swam'. OCCASION -> OCCASIONALLY (thỉnh thoảng)." },
+        { "number": 21, "rootWord": "ACT", "answer": "INTERACTION", "explanation": "Cần danh từ đi với giới từ 'with' (sự tương tác). ACT -> INTERACTION." },
+        { "number": 22, "rootWord": "SEE", "answer": "SIGHTS", "explanation": "Cần danh từ số nhiều (những cảnh tượng). SEE -> SIGHTS." },
+        { "number": 23, "rootWord": "FREEZE", "answer": "FREEZING", "explanation": "Cần tính từ (rất lạnh/đóng băng). FREEZE -> FREEZING." },
+        { "number": 24, "rootWord": "PAIN", "answer": "PAINFUL", "explanation": "Cần tính từ chỉ sự đau đớn. PAIN -> PAINFUL." }
+      ]
+    },
+    {
+      "id": "fce_trainer_3_test_4",
+      "title": "Look, Mum, this is interesting!",
+      "text": "Chimpanzees sometimes show each other objects (0) SIMPLY because they think they're interesting, researchers have found. They filmed a female chimpanzee, whom they'd called Fiona, looking at a leaf and stroking it. That (17) ___ was completely normal, but then Fiona did something (18) ___: she held the leaf out to her mother, Sutherland. When Sutherland only (19) ___ her eyes, Fiona pushed the leaf further towards her - perhaps because Fiona hadn't seen her mother's (20) ___. To explore possible alternative (21) ___ for what they'd seen, the researchers examined 84 other video clips of chimpanzees stroking leaves near at least one other individual. Their (22) ___ is that Fiona was neither offering food nor hoping to start another activity. Instead, she probably just wanted to show her mother the leaf. The discovery is (23) ___ because it's evidence that chimpanzees may have the capacity to understand that other individuals gather information in the same way as they (24) ___ do. Previously, it was thought this only applied to humans.",
+      "example": { "number": 0, "rootWord": "SIMPLE", "answer": "SIMPLY", "explanation": "Cần trạng từ." },
+      "questions": [
+        { "number": 17, "rootWord": "BEHAVE", "answer": "BEHAVIOUR", "explanation": "Cần danh từ làm chủ ngữ. BEHAVE -> BEHAVIOUR (hành vi/cách cư xử)." },
+        { "number": 18, "rootWord": "EXPECT", "answer": "UNEXPECTED", "explanation": "Cần tính từ bổ nghĩa cho đại từ 'something', mang nghĩa bất ngờ. EXPECT -> UNEXPECTED." },
+        { "number": 19, "rootWord": "LOW", "answer": "LOWERED", "explanation": "Cần động từ chia thì quá khứ đơn theo ngữ cảnh câu. LOW -> LOWERED (hạ thấp mắt xuống)." },
+        { "number": 20, "rootWord": "RESPOND", "answer": "RESPONSE", "explanation": "Cần danh từ sau sở hữu cách 'mother\\'s'. RESPOND -> RESPONSE (sự phản hồi)." },
+        { "number": 21, "rootWord": "EXPLAIN", "answer": "EXPLANATIONS", "explanation": "Cần danh từ số nhiều (những lời giải thích khác) vì có 'alternative'. EXPLAIN -> EXPLANATIONS." },
+        { "number": 22, "rootWord": "CONCLUDE", "answer": "CONCLUSION", "explanation": "Cần danh từ làm chủ ngữ (kết luận). CONCLUDE -> CONCLUSION." },
+        { "number": 23, "rootWord": "REMARK", "answer": "REMARKABLE", "explanation": "Cần tính từ (đáng chú ý/xuất chúng). REMARK -> REMARKABLE." },
+        { "number": 24, "rootWord": "SELF", "answer": "THEMSELVES", "explanation": "Đại từ phản thân nhấn mạnh chủ ngữ 'they'. SELF -> THEMSELVES." }
+      ]
+    },
+    {
+      "id": "fce_trainer_3_test_5",
+      "title": "Photographing the moon",
+      "text": "When the moon is full, many people take out their mobile phones and attempt to take a (0) WONDERFUL photograph. (17) ___, obtaining a good picture of the moon may prove extremely challenging, (18) ___ on the quality of your camera. There are two reasons for this: it is very far away and (19) ___, unless you have a telephoto lens (which makes the moon appear closer than it is), it will always appear as a tiny bright dot in the frame. Secondly, night photography is very difficult unless you have a (20) ___ camera. If you use a smartphone, I would suggest (21) ___ an app and shooting the moon through that instead of using the camera on your phone. (22) ___, capturing the moon as it goes past a beautiful bridge or a large tree, for example, will give (23) ___ a better idea of the actual size of the moon. It can also create a truly (24) ___ image.",
+      "example": { "number": 0, "rootWord": "WONDER", "answer": "WONDERFUL", "explanation": "Cần tính từ." },
+      "questions": [
+        { "number": 17, "rootWord": "FORTUNATE", "answer": "UNFORTUNATELY", "explanation": "Cần trạng từ đứng đầu câu mang nghĩa tiêu cực (Thật không may). FORTUNATE -> UNFORTUNATELY." },
+        { "number": 18, "rootWord": "DEPEND", "answer": "DEPENDING", "explanation": "Cấu trúc phân từ hiện tại (depending on = tuỳ thuộc vào). DEPEND -> DEPENDING." },
+        { "number": 19, "rootWord": "CONSEQUENCE", "answer": "CONSEQUENTLY", "explanation": "Cần trạng từ chỉ hệ quả (hậu quả là/do đó). CONSEQUENCE -> CONSEQUENTLY." },
+        { "number": 20, "rootWord": "PROFESSION", "answer": "PROFESSIONAL", "explanation": "Cần tính từ đứng trước danh từ 'camera' (máy ảnh chuyên nghiệp). PROFESSION -> PROFESSIONAL." },
+        { "number": 21, "rootWord": "LOAD", "answer": "DOWNLOADING", "explanation": "Cần V-ing sau động từ 'suggest'. LOAD -> DOWNLOADING (tải xuống)." },
+        { "number": 22, "rootWord": "OVER", "answer": "MOREOVER", "explanation": "Trạng từ liên kết đứng đầu câu mang nghĩa 'Hơn thế nữa'. OVER -> MOREOVER." },
+        { "number": 23, "rootWord": "VIEW", "answer": "VIEWERS", "explanation": "Cần danh từ chỉ người số nhiều (mang lại cho người xem). VIEW -> VIEWERS." },
+        { "number": 24, "rootWord": "MEMORY", "answer": "MEMORABLE", "explanation": "Cần tính từ (đáng nhớ). MEMORY -> MEMORABLE." }
+      ]
+    },
+    {
+      "id": "fce_trainer_3_test_6",
+      "title": "Vanilla",
+      "text": "Vanilla is a spice which gives food a pleasant taste and is (0) ESPECIALLY popular as an ice-cream flavour. (17) ___ artificial vanilla, which comes from wood used in the (18) ___ of paper and is quite cheap, natural vanilla is very expensive. That's because the vanilla plant is extremely difficult to grow. Many chefs consider Mexican vanilla to be (19) ___ to all other types. Indian Ocean islands make Bourbon vanilla, the best-known kind that most people are (20) ___ with. A rare vanilla from Tahiti has an absolutely (21) ___ taste, according to experts, because it's so fruity. Natural vanilla is so wonderful because it contains over 200 individual substances, and their unique (22) ___ gives it its particular smell and taste. In artificial vanilla, however, the flavour comes from just one: vanillin. In some countries, 90% of all 'vanilla' that (23) ___ get to taste is made in laboratories. Nevertheless, its popularity is (24) ___ of the fact that even artificial vanilla is pretty good!",
+      "example": { "number": 0, "rootWord": "SPECIAL", "answer": "ESPECIALLY", "explanation": "Cần trạng từ." },
+      "questions": [
+        { "number": 17, "rootWord": "LIKE", "answer": "UNLIKE", "explanation": "Cần giới từ mang nghĩa trái ngược (Không giống như). LIKE -> UNLIKE." },
+        { "number": 18, "rootWord": "PRODUCE", "answer": "PRODUCTION", "explanation": "Cần danh từ (sự sản xuất). PRODUCE -> PRODUCTION." },
+        { "number": 19, "rootWord": "PREFER", "answer": "PREFERABLE", "explanation": "Cần tính từ (đáng thích hơn/được ưa chuộng hơn). Cụm 'preferable to'. PREFER -> PREFERABLE." },
+        { "number": 20, "rootWord": "FAMILY", "answer": "FAMILIAR", "explanation": "Cụm tính từ 'be familiar with' (quen thuộc với). FAMILY -> FAMILIAR." },
+        { "number": 21, "rootWord": "STAND", "answer": "OUTSTANDING", "explanation": "Cần tính từ mang nghĩa xuất sắc/nổi bật. STAND -> OUTSTANDING." },
+        { "number": 22, "rootWord": "COMBINE", "answer": "COMBINATION", "explanation": "Cần danh từ sau 'their unique'. COMBINE -> COMBINATION (sự kết hợp)." },
+        { "number": 23, "rootWord": "CONSUME", "answer": "CONSUMERS", "explanation": "Cần danh từ chỉ người số nhiều (người tiêu dùng) làm chủ ngữ cho động từ 'get'. CONSUME -> CONSUMERS." },
+        { "number": 24, "rootWord": "EVIDENT", "answer": "EVIDENCE", "explanation": "Cần danh từ làm vị ngữ sau 'is'. EVIDENT -> EVIDENCE (bằng chứng)." }
+      ]
     }
   ]
 }
