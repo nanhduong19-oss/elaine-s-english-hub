@@ -256,7 +256,7 @@
                                     <p class="px-14">Dear English class,</p>
                                     
                                     <div class="relative min-h-[1rem]">
-                                        <div class="absolute left-0 top-0 text-red-600 dark:text-red-400 font-bold text-[0.8em] italic text-right w-14 leading-tight">Awesome! &rarr;</div>
+                                        <div class="absolute left-0 top-0 text-red-600 dark:text-red-400 font-bold text-[0.8em] italic text-right w-16 leading-tight">Awesome! &rarr;</div>
                                         <p class="px-14">Next month, we'll have our final English lesson of the term, so I'd like to organise a party for that day. What do you think of this idea?</p>
                                     </div>
                                     
@@ -299,7 +299,7 @@
                             </div>
                             <div class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-600 pointer-events-none shadow-sm">
                                 <h4 class="bg-gray-800 dark:bg-gray-600 text-white font-bold py-1 px-4 inline-block mb-3">Articles wanted!</h4>
-                                <p class="mb-2 dark:text-gray-300 font-bold text-center">Many people have friends who don't go to the same school as they do.</p>
+                                <p class="mb-2 dark:text-gray-300 text-center font-bold">Many people have friends who don't go to the same school as they do.</p>
                                 <ul class="list-disc pl-5 mb-3 space-y-1 dark:text-gray-300">
                                     <li>What are the advantages of having friends who go to a different school?</li>
                                     <li>Is it difficult to keep in touch with friends if you don't see them at school?</li>
@@ -504,25 +504,6 @@
             return safeText;
         }
 
-        // --- DOM TITLE SYNC & INIT ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const testTitleStr = document.title;
-            // Sync up titles automatically so they always match the <title> tag
-            document.getElementById('welcome-test-title').innerText = testTitleStr;
-            document.getElementById('header-test-title').innerText = testTitleStr;
-            document.getElementById('result-test-title').innerText = testTitleStr;
-
-            // Block copy/paste/cut in textareas
-            const textareas = [document.getElementById('answer-part1'), document.getElementById('answer-part2')];
-            textareas.forEach(ta => {
-                ta.addEventListener('paste', e => { e.preventDefault(); showToast("Paste is disabled!", "error"); });
-                ta.addEventListener('copy', e => { e.preventDefault(); showToast("Copy is disabled!", "error"); });
-                ta.addEventListener('cut', e => { e.preventDefault(); showToast("Cut is disabled!", "error"); });
-            });
-            
-            // Check previous dark mode preference if needed (optional)
-        });
-
         // --- CONSTANTS & CONFIG ---
         // NEW LINKS ADDED HERE
         const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbzsV4qx-CHr_VzerXsIEKFAgCtqqmx7EXQpc-mE7qyWaIzd_bisq_UsgqwMUmwiwUDJ/exec";
@@ -555,27 +536,63 @@
         };
 
         // --- DOM ELEMENTS ---
-        const screens = {
-            welcome: document.getElementById('screen-welcome'),
-            exam: document.getElementById('screen-exam'),
-            result: document.getElementById('screen-result')
-        };
-        const elements = {
-            loginForm: document.getElementById('login-form'),
-            timer: document.getElementById('timer'),
-            wordCount: document.getElementById('word-count'),
-            ansP1: document.getElementById('answer-part1'),
-            ansP2: document.getElementById('answer-part2'),
-            blocker: document.getElementById('blocker-overlay'),
-            blockerCount: document.getElementById('blocker-count'),
-            loading: document.getElementById('loading-screen')
-        };
+        let screens = {};
+        let elements = {};
+
+        // --- DOM TITLE SYNC & INIT ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const testTitleStr = document.title;
+            // Sync up titles automatically so they always match the <title> tag
+            document.getElementById('welcome-test-title').innerText = testTitleStr;
+            document.getElementById('header-test-title').innerText = testTitleStr;
+            document.getElementById('result-test-title').innerText = testTitleStr;
+
+            screens = {
+                welcome: document.getElementById('screen-welcome'),
+                exam: document.getElementById('screen-exam'),
+                result: document.getElementById('screen-result')
+            };
+
+            elements = {
+                loginForm: document.getElementById('login-form'),
+                timer: document.getElementById('timer'),
+                wordCount: document.getElementById('word-count'),
+                ansP1: document.getElementById('answer-part1'),
+                ansP2: document.getElementById('answer-part2'),
+                blocker: document.getElementById('blocker-overlay'),
+                blockerCount: document.getElementById('blocker-count'),
+                loading: document.getElementById('loading-screen')
+            };
+
+            elements.loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                state.student.name = document.getElementById('studentName').value.trim();
+                state.student.id = document.getElementById('studentId').value.trim();
+                state.student.class = document.getElementById('studentClass').value.trim();
+                
+                document.getElementById('display-name').innerText = state.student.name;
+                document.getElementById('display-id').innerText = state.student.id;
+                
+                startExam();
+            });
+
+            // Block copy/paste/cut in textareas
+            const textareas = [document.getElementById('answer-part1'), document.getElementById('answer-part2')];
+            textareas.forEach(ta => {
+                if (ta) {
+                    ta.addEventListener('paste', e => { e.preventDefault(); showToast("Paste is disabled!", "error"); });
+                    ta.addEventListener('copy', e => { e.preventDefault(); showToast("Copy is disabled!", "error"); });
+                    ta.addEventListener('cut', e => { e.preventDefault(); showToast("Cut is disabled!", "error"); });
+                }
+            });
+        });
 
         // --- UI TOGGLES (Settings / Dark Mode / Text Size) ---
         function openSettingsModal() {
             document.getElementById('settings-modal').classList.remove('hidden');
             document.getElementById('settings-modal').classList.add('flex');
         }
+
         function closeSettingsModal() {
             document.getElementById('settings-modal').classList.add('hidden');
             document.getElementById('settings-modal').classList.remove('flex');
@@ -594,7 +611,6 @@
             const p1 = document.getElementById('answer-part1');
             const p2 = document.getElementById('answer-part2');
             
-            // Remove all specific sizing classes we control
             prompt.classList.remove('text-sm', 'text-lg', 'text-xl');
             p1.classList.remove('text-base', 'text-xl', 'text-2xl');
             p2.classList.remove('text-base', 'text-xl', 'text-2xl');
@@ -620,19 +636,6 @@
                 document.getElementById('check-size-xl').classList.remove('hidden');
             }
         }
-
-        // --- INITIALIZATION ---
-        elements.loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            state.student.name = document.getElementById('studentName').value.trim();
-            state.student.id = document.getElementById('studentId').value.trim();
-            state.student.class = document.getElementById('studentClass').value.trim();
-            
-            document.getElementById('display-name').innerText = state.student.name;
-            document.getElementById('display-id').innerText = state.student.id;
-            
-            startExam();
-        });
 
         // --- EXAM LOGIC ---
         async function startExam() {
@@ -683,7 +686,6 @@
         function switchPart(partNumber) {
             state.currentPart = partNumber;
             
-            // Cập nhật tiêu đề Part 1 / Part 2
             document.getElementById('prompt-title-text').innerHTML = `<i class="fas fa-file-alt mr-2 text-pet"></i>Part ${partNumber}`;
 
             document.getElementById('nav-part1').className = partNumber === 1 
@@ -719,22 +721,17 @@
         }
 
         function togglePart2(choice) {
-            // Nếu click lại vào ô đang chọn -> Bỏ chọn
             if (state.part2Choice === choice) {
                 state.part2Choice = null;
                 document.getElementById('choose_q2').checked = false;
                 document.getElementById('choose_q3').checked = false;
                 
-                // Trả về trạng thái mờ ban đầu cho cả 2
                 document.getElementById('q2-box').className = 'mb-6 p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition cursor-pointer hover:bg-rose-50 dark:hover:bg-gray-700 unselected-prompt';
                 document.getElementById('q3-box').className = 'p-4 rounded-xl border border-gray-200 dark:border-gray-600 transition cursor-pointer hover:bg-rose-50 dark:hover:bg-gray-700 unselected-prompt';
 
-                // Bật lại màn hình khóa
                 document.getElementById('p2-overlay').classList.remove('hidden');
                 document.getElementById('p2-overlay').classList.add('flex');
-            } 
-            // Nếu click chọn ô mới
-            else {
+            } else {
                 state.part2Choice = choice;
                 document.getElementById('choose_q2').checked = (choice === 'article');
                 document.getElementById('choose_q3').checked = (choice === 'story');
@@ -746,7 +743,6 @@
                     ? 'p-4 rounded-xl selected-prompt cursor-pointer shadow-md' 
                     : 'p-4 rounded-xl unselected-prompt cursor-pointer hover:bg-rose-50 dark:hover:bg-gray-700';
 
-                // Tắt màn hình khóa
                 document.getElementById('p2-overlay').classList.add('hidden');
                 document.getElementById('p2-overlay').classList.remove('flex');
                 elements.ansP2.focus();
@@ -797,7 +793,6 @@
             state.violations++;
             document.getElementById('display-violations').innerText = state.violations;
             
-            // If violation reaches MAX_VIOLATIONS (2), submit immediately.
             if (state.violations >= MAX_VIOLATIONS) {
                 autoSubmit("Exceeded violation limit. Auto-submitting exam.");
                 return;
@@ -919,79 +914,89 @@
             const systemPrompt = `# ROLE AND TASK
 You are an expert Cambridge B1 Preliminary (PET) Writing Examiner. 
 Your task is to grade two writing tasks from a student:
-- Part 1: An Email (replying to the provided prompt notes).
+- Part 1: An Email (replying to the provided prompt notes: e.g., agreeing, suggesting, explaining, asking).
 - Part 2: EITHER an Article OR a Story.
 
 # INTERACTION TONE & RULES
 1. Tone and Register: Dùng giọng điệu thân thiện, khuyến khích, và dễ hiểu đối với học sinh Việt Nam. KHÔNG dùng đại từ nhân xưng ngôi thứ nhất (I, me) mà hãy dùng danh xưng khách quan hoặc gọi là "bạn", "người viết". 
-2. No Emojis or Symbols: KHÔNG sử dụng emoji.
-3. Language Rules: BẮT BUỘC viết toàn bộ phần 'general_feedback', 'commentary' (nhận xét), và giải thích 'improvements_made' bằng TIẾNG VIỆT. Tuy nhiên, bài mẫu 'sample' và các trích dẫn bài làm gốc của học sinh PHẢI giữ bằng TIẾNG ANH. Mọi từ in đậm hoặc cần nổi bật trong Tiếng Việt hãy dùng cú pháp Markdown \`**nội dung**\` hoặc \`\` \`nội dung\` \`\`.
+2. No Emojis or Symbols: KHÔNG sử dụng emoji, biểu tượng cảm xúc.
+3. Language Rules: BẮT BUỘC viết toàn bộ phần 'general_feedback', 'commentary' (nhận xét), và giải thích 'mistakes' bằng TIẾNG VIỆT hoàn toàn để học sinh Việt Nam dễ đọc hiểu và rút kinh nghiệm. Tuy nhiên, bài mẫu 'sample answer' và các trích dẫn bài làm gốc của học sinh PHẢI giữ bằng TIẾNG ANH.
 
 # CAMBRIDGE B1 ASSESSMENT SCALES (0-5 POINTS)
 Đánh giá học sinh dựa trên khung điểm Cambridge B1 Rubric:
-- Content (0-5)
-- Communicative Achievement (0-5)
-- Organisation (0-5)
-- Language (0-5)
+
+## I. CONTENT (Nội dung)
+5: All content is relevant to the task. The target reader is fully informed (e.g., all 4 notes in an email are addressed effectively; all article questions are answered).
+4: Minor irrelevances and/or omissions may be present. The target reader is on the whole informed.
+3: Irrelevances and misinterpretation of task may be present. The target reader is on the whole informed.
+2: There are omissions and/or irrelevances. The target reader is only minimally informed.
+1: The task is misinterpreted or incomplete. The target reader is not informed.
+0: Content is totally irrelevant.
+
+## II. COMMUNICATIVE ACHIEVEMENT (Hoàn thành nhiệm vụ giao tiếp)
+5: Uses the conventions of the communicative task to hold the target reader's attention and communicate straightforward ideas.
+4: Produces text that communicates simple ideas in generally appropriate ways.
+3: Uses the conventions of the communicative task in generally appropriate ways to communicate simple ideas.
+2: Produces text that communicates simple ideas in limited ways.
+1: Fails to use conventions to communicate ideas.
+0: Performance below Band 1.
+
+## III. ORGANISATION (Tổ chức bài)
+5: Text is connected and coherent, using a variety of linking words and cohesive devices.
+4: Text is generally well-organised and coherent.
+3: Text is connected and coherent, using basic linking words and a limited number of cohesive devices.
+2: Text is connected using only basic, high-frequency linking words.
+1: Text lacks logical structure and is difficult to follow.
+0: Performance below Band 1.
+
+## IV. LANGUAGE (Ngôn ngữ)
+5: Uses a range of everyday vocabulary appropriately, with occasional less common lexis. Uses a range of simple and some complex grammatical forms with a good degree of control. Errors do not impede communication.
+4: Uses everyday vocabulary generally appropriately. Uses simple grammatical forms with a good degree of control. Errors do not impede communication.
+3: Uses basic vocabulary reasonably appropriately. Uses simple grammatical forms with some degree of control. Errors may be noticeable but meaning can still be determined.
+2: Uses basic vocabulary. Uses simple grammatical forms with limited control. Errors are frequent and at times impede meaning.
+1: Vocabulary is extremely limited. Frequent errors severely impede meaning.
+0: Performance below Band 1.
 
 # CRITICAL INSTRUCTIONS FOR SCORING & COMMENTARY:
-1. CHẤM ĐIỂM CHÍNH XÁC: BẠN PHẢI TÍNH TOÁN ĐIỂM CHO TỪNG SUB-SKILL DỰA TRÊN BÀI VIẾT THỰC TẾ CỦA HỌC SINH. Không bao giờ cho điểm 0 trừ khi học sinh bỏ giấy trắng.
-2. Word Count Approach: Giới hạn 100 từ chỉ là tham khảo. Đừng trừ điểm nếu chỉ hơi thiếu hoặc hơi thừa từ.
-3. Structure of Commentary: Bạn phải tuân thủ luồng đánh giá sau CHO MỖI TIÊU CHÍ (viết bằng Tiếng Việt):
+1. Word Count Approach: Giới hạn 100 từ chỉ là tham khảo. Đừng trừ điểm nếu chỉ hơi thiếu hoặc hơi thừa từ. Chỉ trừ điểm trong "Content" nếu thiếu ý dẫn đến bài quá ngắn, hoặc trừ "Communicative Achievement" nếu viết lan man, không liên quan.
+2. Structure of Commentary: Bạn phải tuân thủ luồng đánh giá sau CHO MỖI TIÊU CHÍ (viết bằng Tiếng Việt):
    - Khen ngợi (những gì học sinh làm tốt).
    - Trích dẫn ví dụ từ bài làm (tiếng Anh) để chứng minh điểm số.
    - Nếu điểm dưới 5, giải thích rõ lỗi sai hoặc phần bị thiếu.
-   - Cuối cùng, BẮT BUỘC phải chèn chính xác chuỗi html này: \`<br><br><b>Key Takeaway:</b><br>\` sau đó kèm theo bài học rút ra.
-4. BẮT BUỘC CÓ BÀI MẪU (Sample Answer): Bạn phải luôn luôn cung cấp một phiên bản bài mẫu được nâng cấp mượt mà (100-120 từ bằng tiếng Anh) dựa trên ý tưởng của học sinh.
+   - Cuối cùng, BẮT BUỘC phải chèn chính xác chuỗi html này: \`<br><br><b>Key Takeaway:</b><br>\` sau đó kèm theo bài học rút ra để học sinh khắc phục.
+3. Sample Answer: Bài mẫu bắt buộc là phiên bản được nâng cấp, trau chuốt, tự nhiên hơn DỰA TRÊN Ý TƯỞNG GỐC CỦA HỌC SINH. Độ dài bài mẫu phải nằm trong khoảng 105-130 từ và phải được viết bằng TIẾNG ANH.
 
 # REQUIRED OUTPUT FORMAT
-Bạn PHẢI trả về ĐÚNG định dạng JSON sau. THAY THẾ các giá trị <placeholder> bằng dữ liệu thực tế do bạn sinh ra. KHÔNG THÊM BẤT KỲ VĂN BẢN NÀO NGOÀI JSON.
-
+Bạn PHẢI trả về ĐÚNG định dạng JSON sau để hệ thống parse (không có text nào nằm ngoài JSON):
 {
   "part1": {
-    "general_feedback": "Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ (Tiếng Việt).",
-    "scores": {
-      "content": <số nguyên từ 0-5>,
-      "communicative": <số nguyên từ 0-5>,
-      "organisation": <số nguyên từ 0-5>,
-      "language": <số nguyên từ 0-5>
-    },
+    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
+    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
     "commentary": {
-      "content": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "communicative": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "organisation": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "language": "Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai. <br><br><b>Key Takeaway:</b><br> Bài học."
+      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
     },
-    "sample": "Bản viết mẫu nâng cấp mượt mà dựa trên ý của học sinh (Tiếng Anh, 100-120 words). PHẦN NÀY LÀ BẮT BUỘC.",
-    "sample_word_count": "<số lượng từ của bài mẫu>",
-    "improvements_made": [
-      "Giải thích nâng cấp cấu trúc (Tiếng Việt)",
-      "Giải thích nâng cấp từ vựng (Tiếng Việt)"
-    ]
+    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
+    "sample_word_count": "exact word count",
+    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
   },
   "part2": {
-    "general_feedback": "Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ (Tiếng Việt).",
-    "scores": {
-      "content": <số nguyên từ 0-5>,
-      "communicative": <số nguyên từ 0-5>,
-      "organisation": <số nguyên từ 0-5>,
-      "language": <số nguyên từ 0-5>
-    },
+    "general_feedback": "[Tiếng Việt] Nhận xét tổng quan thân thiện về bài làm, bao gồm độ dài số từ.",
+    "scores": {"content": 0, "communicative": 0, "organisation": 0, "language": 0},
     "commentary": {
-      "content": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "communicative": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "organisation": "Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> Bài học.",
-      "language": "Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai. <br><br><b>Key Takeaway:</b><br> Bài học."
+      "content": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "communicative": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "organisation": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Chỉ ra lỗi. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt].",
+      "language": "[Tiếng Việt] Khen ngợi. Trích dẫn tiếng Anh. Giải thích lỗi sai và cách sửa. <br><br><b>Key Takeaway:</b><br> [Bài học tiếng Việt]."
     },
-    "sample": "Bản viết mẫu nâng cấp mượt mà dựa trên ý của học sinh (Tiếng Anh, 100-120 words). PHẦN NÀY LÀ BẮT BUỘC.",
-    "sample_word_count": "<số lượng từ của bài mẫu>",
-    "improvements_made": [
-      "Giải thích nâng cấp cấu trúc (Tiếng Việt)",
-      "Giải thích nâng cấp từ vựng (Tiếng Việt)"
-    ]
+    "sample": "[Tiếng Anh] Bản viết lại mượt mà dựa trên ý của học sinh (100-120 words).",
+    "sample_word_count": "exact word count",
+    "improvements_made": ["[Tiếng Việt] Giải thích nâng cấp cấu trúc", "[Tiếng Việt] Giải thích nâng cấp từ vựng"]
   }
 }
-`;
+If "No answer provided", give 0s and explain in Vietnamese.`;
 
             // Xây dựng Prompts chi tiết gửi cho AI để đối chiếu Content
             const p1PromptText = `Read this email from your English teacher Mr Smith and the notes you have made.
@@ -1052,23 +1057,24 @@ ${ans2}
                     if(data.error) throw new Error(data.error);
 
                     // Xử lý linh hoạt định dạng trả về từ Vercel
-                    // Trường hợp 1: API đã parse sẵn JSON
                     if (data.part1 && data.part2) {
                         return data;
                     } 
-                    // Trường hợp 2: API trả về structure tương tự như Gemini Native
                     else if (data.candidates && data.candidates[0].content) {
                         const textResult = data.candidates[0].content.parts[0].text;
                         const cleanText = textResult.replace(/```json/gi, '').replace(/```/gi, '').trim();
-                        return JSON.parse(cleanText);
+                        const parsedData = JSON.parse(cleanText);
+                        if (!parsedData.part1 || !parsedData.part2) throw new Error("AI returned incomplete JSON structure.");
+                        return parsedData;
                     } 
-                    // Trường hợp 3: Trả về một trường text thô
                     else if (data.text) {
                         const cleanText = data.text.replace(/```json/gi, '').replace(/```/gi, '').trim();
-                        return JSON.parse(cleanText);
+                        const parsedData = JSON.parse(cleanText);
+                        if (!parsedData.part1 || !parsedData.part2) throw new Error("AI returned incomplete JSON structure.");
+                        return parsedData;
                     }
                     else {
-                        return data;
+                        throw new Error("Invalid response structure from AI.");
                     }
 
                 } catch (error) {
