@@ -1216,99 +1216,452 @@ ${ans2}
         }
 
         function downloadPDF() {
-            const element = document.getElementById('screen-result');
-            const innerContainer = element.querySelector('.max-w-6xl');
-
-            // Format Date: DDMMYY (theo yêu cầu tên file)
+            // --- FORMAT TÊN FILE: [Tên bài]_[ID]_[Tên học sinh]_[ddmmyy] ---
             const today = new Date();
             const dd = today.getDate().toString().padStart(2, '0');
             const mm = (today.getMonth() + 1).toString().padStart(2, '0');
             const yy = today.getFullYear().toString().slice(-2);
             const dateStr = `${dd}${mm}${yy}`;
 
-            // Format Filename: [Tên bài]_[Tên học sinh]_[ddmmyy]
-            const testName = document.title.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
-            const studentName = state.student.name.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
-            const fileName = `${testName}_${studentName}_${dateStr}.pdf`.replace(/\s+/g, '_');
+            const testName = document.title.trim();
+            const studentId = state.student.id.trim();
+            const studentName = state.student.name.trim();
+            // Tên file: [Tên bài]_[ID]_[Tên học sinh]_[ddmmyy].pdf
+            // Thay khoảng trắng thành _ và xóa ký tự đặc biệt không hợp lệ trong tên file
+            const safeTestName = testName.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, '_');
+            const safeId       = studentId.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, '_');
+            const safeName     = studentName.replace(/[\/\\:*?"<>|]/g, '').replace(/\s+/g, '_');
+            const fileName = `${safeTestName}_${safeId}_${safeName}_${dateStr}`;
 
-            // Vô hiệu hóa nút và hiện trạng thái Loading
-            const btn = document.querySelector('button[onclick="downloadPDF()"]');
-            const originalText = btn ? btn.innerHTML : '';
-            if (btn) {
-                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving PDF...';
-                btn.disabled = true;
-                btn.classList.add('opacity-70', 'cursor-not-allowed');
+            // --- ĐỌC DỮ LIỆU KẾT QUẢ TỪ DOM ---
+            const get = id => (document.getElementById(id) || {}).innerText || '';
+            const getHTML = id => (document.getElementById(id) || {}).innerHTML || '';
+
+            // Rubric helper: đọc lại html của rubric container
+            const p1RubricHTML = getHTML('p1-rubric');
+            const p2RubricHTML = getHTML('p2-rubric');
+            const p1ImpHTML    = getHTML('p1-improvements');
+            const p2ImpHTML    = getHTML('p2-improvements');
+
+            // Đọc grade color
+            const gradeEl = document.getElementById('res-grade');
+            const gradeColor = gradeEl && gradeEl.innerText === 'Fail' ? '#ef4444' : '#22c55e';
+
+            // Tạo HTML cho cửa sổ print - tự chứa toàn bộ CSS, không cần CDN
+            const printHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${fileName}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #fdf2f8;
+    color: #1f2937;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .page { max-width: 1100px; margin: 0 auto; padding: 28px 32px; }
+
+  /* HEADER */
+  .header-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 24px;
+    border-top: 8px solid #e11d48;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  }
+  .header-card h1 { font-size: 22px; font-weight: 900; color: #1f2937; }
+  .header-card .subtitle { color: #6b7280; font-size: 12px; margin-top: 3px; }
+  .header-right { text-align: right; }
+  .header-right .student-name { font-size: 16px; font-weight: 700; }
+  .header-right .student-meta { color: #6b7280; font-size: 11px; margin-top: 3px; }
+
+  /* SCORE CARDS */
+  .score-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .score-card {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #f3f4f6;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .score-card .label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #9ca3af;
+    margin-bottom: 6px;
+  }
+  .score-card .value { font-size: 30px; font-weight: 900; }
+  .score-card .value.total   { color: #e11d48; }
+  .score-card .value.cambridge { color: #2563eb; }
+  .score-card .value.grade   { color: ${gradeColor}; }
+
+  /* SECTION CARDS */
+  .section-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2937;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .section-title .part-score { color: #e11d48; }
+
+  /* ORIGINAL ANSWER BOX */
+  .answer-box {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .answer-box .box-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .answer-box .answer-text {
+    font-family: Georgia, serif;
+    white-space: pre-wrap;
+    color: #1f2937;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* TWO COLUMN LAYOUT */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* RUBRIC */
+  .rubric-section .col-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .rubric-item { margin-bottom: 14px; }
+  .rubric-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+  }
+  .rubric-name { font-weight: 700; color: #374151; font-size: 12px; }
+  .rubric-bars { display: flex; gap: 3px; }
+  .bar { width: 28px; height: 7px; border-radius: 3px; }
+  .bar.filled { background: #e11d48; }
+  .bar.empty  { background: #e5e7eb; }
+  .rubric-score { font-weight: 700; font-size: 12px; color: #1f2937; min-width: 28px; text-align: right; }
+  .rubric-comment {
+    font-size: 11px;
+    color: #4b5563;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* FEEDBACK */
+  .feedback-section .col-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #6b7280;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+  .feedback-text {
+    font-size: 12px;
+    color: #4b5563;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 14px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* SAMPLE ANSWER */
+  .sample-box {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .sample-box .sample-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #e11d48;
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+  .sample-text {
+    font-family: Georgia, serif;
+    white-space: pre-wrap;
+    background: white;
+    border: 1px solid #fecdd3;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #1f2937;
+  }
+  .sample-wc {
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+  .sample-wc span { color: #e11d48; font-weight: 600; }
+  .improvements-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    margin-bottom: 6px;
+  }
+  .improvement-item {
+    font-size: 11px;
+    color: #4b5563;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+  }
+  .improvement-item::before {
+    content: '✓';
+    color: #22c55e;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  /* Highlight spans from formatMarkdownHighlights */
+  .hl {
+    color: #dc2626;
+    font-weight: 700;
+    background: #fef2f2;
+    padding: 0 2px;
+    border-radius: 3px;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    color: #9ca3af;
+    font-size: 10px;
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { padding: 16px 20px; }
+    .section-card { page-break-inside: avoid; }
+    .two-col { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header-card">
+    <div>
+      <h1>WRITING EXAM RESULTS</h1>
+      <p class="subtitle">${escapeHTML(testName)}</p>
+    </div>
+    <div class="header-right">
+      <div class="student-name">${escapeHTML(get('res-name'))}</div>
+      <div class="student-meta">ID: ${escapeHTML(get('res-id'))} | Class: ${escapeHTML(get('res-class'))}</div>
+      <div class="student-meta">Time: ${escapeHTML(get('res-time'))} | Violations: ${escapeHTML(get('res-vio'))}</div>
+    </div>
+  </div>
+
+  <!-- SCORE CARDS -->
+  <div class="score-row">
+    <div class="score-card">
+      <div class="label">Total Score</div>
+      <div class="value total">${escapeHTML(get('res-total'))}<span style="font-size:16px;color:#9ca3af;">/40</span></div>
+    </div>
+    <div class="score-card">
+      <div class="label">Cambridge Score</div>
+      <div class="value cambridge">${escapeHTML(get('res-cambridge'))}</div>
+    </div>
+    <div class="score-card">
+      <div class="label">Grade</div>
+      <div class="value grade">${escapeHTML(get('res-grade'))}</div>
+    </div>
+  </div>
+
+  <!-- PART 1 -->
+  <div class="section-card">
+    <div class="section-title">
+      <span>Part 1: Email</span>
+      <span class="part-score">${escapeHTML(get('score-p1'))}</span>
+    </div>
+    <div class="answer-box">
+      <div class="box-label">Your Original Answer</div>
+      <div class="answer-text">${escapeHTML(get('p1-original-answer'))}</div>
+    </div>
+    <div class="two-col">
+      <div class="rubric-section">
+        <div class="col-label">Detailed Rubric Evaluation</div>
+        ${buildRubricHTML(p1RubricHTML)}
+      </div>
+      <div class="feedback-section">
+        <div class="col-label">General Feedback</div>
+        <div class="feedback-text">${convertHighlights(getHTML('p1-feedback'))}</div>
+        <div class="sample-box">
+          <div class="sample-label">Improved Sample Answer</div>
+          <div class="sample-text">${escapeHTML(get('p1-sample'))}</div>
+          <div class="sample-wc">Word Count: <span>${escapeHTML(get('p1-sample-wc'))}</span></div>
+          <div class="improvements-label">Improvements Made:</div>
+          ${buildImprovementsHTML(p1ImpHTML)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 2 -->
+  <div class="section-card">
+    <div class="section-title">
+      <span>Part 2: ${escapeHTML(get('p2-type-title'))}</span>
+      <span class="part-score">${escapeHTML(get('score-p2'))}</span>
+    </div>
+    <div class="answer-box">
+      <div class="box-label">Your Original Answer</div>
+      <div class="answer-text">${escapeHTML(get('p2-original-answer'))}</div>
+    </div>
+    <div class="two-col">
+      <div class="rubric-section">
+        <div class="col-label">Detailed Rubric Evaluation</div>
+        ${buildRubricHTML(p2RubricHTML)}
+      </div>
+      <div class="feedback-section">
+        <div class="col-label">General Feedback</div>
+        <div class="feedback-text">${convertHighlights(getHTML('p2-feedback'))}</div>
+        <div class="sample-box">
+          <div class="sample-label">Improved Sample Answer</div>
+          <div class="sample-text">${escapeHTML(get('p2-sample'))}</div>
+          <div class="sample-wc">Word Count: <span>${escapeHTML(get('p2-sample-wc'))}</span></div>
+          <div class="improvements-label">Improvements Made:</div>
+          ${buildImprovementsHTML(p2ImpHTML)}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">Generated by Ruby School PET Writing System &mdash; ${new Date().toLocaleDateString('en-GB')}</div>
+</div>
+
+<script>
+  // Đặt tiêu đề cửa sổ = tên file để khi Print -> Save as PDF tên file đúng
+  document.title = '${fileName.replace(/'/g, "\\'")}';
+  // Tự động mở dialog Print sau khi trang load xong
+  window.onload = function() {
+    setTimeout(function() { window.print(); }, 600);
+  };
+<\/script>
+</body>
+</html>`;
+
+            // --- MỞ CỬA SỔ PRINT ---
+            const printWin = window.open('', '_blank', 'width=1200,height=850');
+            if (!printWin) {
+                showToast("Pop-up bị chặn! Vui lòng cho phép pop-up cho trang này.", "error");
+                return;
             }
+            printWin.document.write(printHTML);
+            printWin.document.close();
+            showToast("Cửa sổ PDF đã mở - chọn Save as PDF để lưu.", "success");
+        }
 
-            // --- LỖI GỐC: element đang có class "hidden" (display:none) ---
-            // html2canvas không thể chụp element bị ẩn -> ra trang trắng
-            // Fix: tạm thời đưa element ra ngoài luồng hiển thị (off-screen)
-            // thay vì để nó bị display:none
+        // --- HELPER: Chuyển rubric HTML từ DOM sang HTML tự chứa cho print ---
+        function buildRubricHTML(rubricHTML) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = rubricHTML;
+            const items = tmp.querySelectorAll('.mb-4');
+            if (!items.length) return '<p style="color:#9ca3af;font-size:12px;">No rubric data.</p>';
 
-            // Lưu lại trạng thái class và style gốc để khôi phục sau
-            const wasHidden = element.classList.contains('hidden');
-            const originalCssText = element.style.cssText;
-            const originalInnerClassName = innerContainer ? innerContainer.className : '';
+            let out = '';
+            items.forEach(item => {
+                const nameEl  = item.querySelector('.text-gray-700, .w-1\\/2');
+                const scoreEl = item.querySelector('.w-8, .text-right');
+                const commentEl = item.querySelector('p');
+                const bars    = item.querySelectorAll('.h-2');
 
-            // Bước 1: Bỏ hidden, đưa element ra ngoài màn hình (off-screen) để html2canvas chụp được
-            if (wasHidden) {
-                element.classList.remove('hidden');
-            }
+                const name  = nameEl  ? nameEl.innerText.trim()  : '';
+                const score = scoreEl ? scoreEl.innerText.trim() : '';
+                const comment = commentEl ? commentEl.innerText.trim() : '';
 
-            // Bước 2: Gỡ class căn giữa để tránh html2canvas bị lệch tọa độ X
-            if (innerContainer) {
-                innerContainer.classList.remove('mx-auto');
-                innerContainer.classList.remove('max-w-6xl');
-            }
+                let barsHTML = '';
+                bars.forEach(b => {
+                    const filled = b.classList.contains('bg-pet') || b.style.background === 'rgb(225, 29, 72)';
+                    barsHTML += `<div class="bar ${filled ? 'filled' : 'empty'}"></div>`;
+                });
 
-            // Bước 3: Ép kích thước cố định, đẩy ra ngoài viewport (không hiện trên màn hình người dùng)
-            const isDark = document.documentElement.classList.contains('dark');
-            element.style.cssText = `
-                width: 1200px !important;
-                margin: 0 !important;
-                padding: 30px !important;
-                position: fixed !important;
-                top: -9999px !important;
-                left: 0 !important;
-                z-index: -1 !important;
-                background-color: ${isDark ? '#111827' : '#fdf2f8'} !important;
-                display: block !important;
-            `;
-
-            const opt = {
-                margin:      10,
-                filename:    fileName,
-                image:       { type: 'jpeg', quality: 0.98 },
-                html2canvas: {
-                    scale: 2,
-                    useCORS: true,
-                    windowWidth: 1200,
-                    scrollX: 0,
-                    scrollY: 0
-                },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-            };
-
-            // Hàm khôi phục giao diện sau khi xong
-            function restore() {
-                element.style.cssText = originalCssText;
-                if (innerContainer) innerContainer.className = originalInnerClassName;
-                if (wasHidden) element.classList.add('hidden');
-                if (btn) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
-                }
-            }
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                restore();
-                showToast("PDF Saved Successfully!", "success");
-            }).catch(err => {
-                console.error("PDF generation error:", err);
-                restore();
-                showToast("Failed to save PDF.", "error");
+                out += `<div class="rubric-item">
+  <div class="rubric-row">
+    <span class="rubric-name">${escapeHTML(name)}</span>
+    <div class="rubric-bars">${barsHTML}</div>
+    <span class="rubric-score">${escapeHTML(score)}</span>
+  </div>
+  ${comment ? `<div class="rubric-comment">${escapeHTML(comment)}</div>` : ''}
+</div>`;
             });
+            return out;
+        }
+
+        // --- HELPER: Chuyển improvements HTML ---
+        function buildImprovementsHTML(impHTML) {
+            const tmp = document.createElement('div');
+            tmp.innerHTML = impHTML;
+            const items = tmp.querySelectorAll('li');
+            if (!items.length) return '<p style="color:#9ca3af;font-size:11px;">None.</p>';
+            let out = '';
+            items.forEach(li => {
+                out += `<div class="improvement-item">${escapeHTML(li.innerText.trim())}</div>`;
+            });
+            return out;
+        }
+
+        // --- HELPER: Chuyển Tailwind highlight spans sang class .hl đơn giản ---
+        function convertHighlights(html) {
+            // Xóa các thẻ span Tailwind phức tạp, giữ lại text bên trong với class .hl
+            return html.replace(/<span class="[^"]*text-red[^"]*"[^>]*>(.*?)<\/span>/gs,
+                '<span class="hl">$1</span>');
         }
     </script>
 </body>
