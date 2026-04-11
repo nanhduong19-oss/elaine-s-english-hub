@@ -1215,64 +1215,21 @@ ${ans2}
             });
         }
 
-        // --- BẮT ĐẦU FIX LỖI BỊ ÉP LỀ TRÁI MẤT CHỮ ---
         function downloadPDF() {
             const element = document.getElementById('screen-result');
             const innerContainer = element.querySelector('.max-w-6xl');
-            
-            // Format Date: DD-MM-YYYY
+
+            // Format Date: DDMMYY (theo yêu cầu tên file)
             const today = new Date();
-            const dateStr = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth()+1).toString().padStart(2, '0')}-${today.getFullYear()}`;
-            
-            // Format Filename: [Test Name]-[Student Name]-[ID]-[Date]
+            const dd = today.getDate().toString().padStart(2, '0');
+            const mm = (today.getMonth() + 1).toString().padStart(2, '0');
+            const yy = today.getFullYear().toString().slice(-2);
+            const dateStr = `${dd}${mm}${yy}`;
+
+            // Format Filename: [Tên bài]_[Tên học sinh]_[ddmmyy]
             const testName = document.title.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
             const studentName = state.student.name.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
-            const studentId = state.student.id.replace(/[^a-zA-Z0-9 \-]/g, '').trim();
-            
-            // Thay thế khoảng trắng bằng dấu gạch dưới để tên file đẹp hơn
-            const fileName = `${testName}-${studentName}-${studentId}-${dateStr}.pdf`.replace(/\s+/g, '_');
-
-            // Lưu lại style hiện tại để khôi phục sau
-            const originalCssText = element.style.cssText;
-            const originalInnerClassName = innerContainer ? innerContainer.className : '';
-            
-            // Gỡ bỏ hoàn toàn class căn giữa (mx-auto) để tránh html2canvas chụp bị lệch toạ độ X
-            if (innerContainer) {
-                innerContainer.classList.remove('mx-auto');
-                innerContainer.classList.remove('max-w-6xl');
-            }
-
-            // Ép phần tử này thành 1200px cố định, đẩy sát lề trái trên cùng bằng absolute
-            element.style.width = '1200px';
-            element.style.margin = '0';
-            element.style.padding = '30px';
-            element.style.position = 'absolute';
-            element.style.top = '0';
-            element.style.left = '0';
-            element.style.zIndex = '9999';
-            
-            // Đặt background cứng để PDF không bị trong suốt
-            const isDark = document.documentElement.classList.contains('dark');
-            element.style.backgroundColor = isDark ? '#111827' : '#fdf2f8';
-
-            // Cuộn lên top cùng để tránh lỗi offset (lệch khung) của html2canvas
-            window.scrollTo(0, 0);
-
-            const opt = {
-                margin:       10, // 10mm
-                filename:     fileName,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    windowWidth: 1200,
-                    x: 0,
-                    y: 0,
-                    scrollX: 0,
-                    scrollY: 0
-                },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'landscape' } // Lưu định dạng A4 khổ ngang
-            };
+            const fileName = `${testName}_${studentName}_${dateStr}.pdf`.replace(/\s+/g, '_');
 
             // Vô hiệu hóa nút và hiện trạng thái Loading
             const btn = document.querySelector('button[onclick="downloadPDF()"]');
@@ -1283,31 +1240,74 @@ ${ans2}
                 btn.classList.add('opacity-70', 'cursor-not-allowed');
             }
 
-            // Khởi tạo và lưu PDF
-            html2pdf().set(opt).from(element).save().then(() => {
-                // Khôi phục lại giao diện
+            // --- LỖI GỐC: element đang có class "hidden" (display:none) ---
+            // html2canvas không thể chụp element bị ẩn -> ra trang trắng
+            // Fix: tạm thời đưa element ra ngoài luồng hiển thị (off-screen)
+            // thay vì để nó bị display:none
+
+            // Lưu lại trạng thái class và style gốc để khôi phục sau
+            const wasHidden = element.classList.contains('hidden');
+            const originalCssText = element.style.cssText;
+            const originalInnerClassName = innerContainer ? innerContainer.className : '';
+
+            // Bước 1: Bỏ hidden, đưa element ra ngoài màn hình (off-screen) để html2canvas chụp được
+            if (wasHidden) {
+                element.classList.remove('hidden');
+            }
+
+            // Bước 2: Gỡ class căn giữa để tránh html2canvas bị lệch tọa độ X
+            if (innerContainer) {
+                innerContainer.classList.remove('mx-auto');
+                innerContainer.classList.remove('max-w-6xl');
+            }
+
+            // Bước 3: Ép kích thước cố định, đẩy ra ngoài viewport (không hiện trên màn hình người dùng)
+            const isDark = document.documentElement.classList.contains('dark');
+            element.style.cssText = `
+                width: 1200px !important;
+                margin: 0 !important;
+                padding: 30px !important;
+                position: fixed !important;
+                top: -9999px !important;
+                left: 0 !important;
+                z-index: -1 !important;
+                background-color: ${isDark ? '#111827' : '#fdf2f8'} !important;
+                display: block !important;
+            `;
+
+            const opt = {
+                margin:      10,
+                filename:    fileName,
+                image:       { type: 'jpeg', quality: 0.98 },
+                html2canvas: {
+                    scale: 2,
+                    useCORS: true,
+                    windowWidth: 1200,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+            };
+
+            // Hàm khôi phục giao diện sau khi xong
+            function restore() {
                 element.style.cssText = originalCssText;
                 if (innerContainer) innerContainer.className = originalInnerClassName;
-                
+                if (wasHidden) element.classList.add('hidden');
                 if (btn) {
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                     btn.classList.remove('opacity-70', 'cursor-not-allowed');
                 }
+            }
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                restore();
                 showToast("PDF Saved Successfully!", "success");
             }).catch(err => {
                 console.error("PDF generation error:", err);
-                
-                // Khôi phục lại giao diện nếu lỗi
-                element.style.cssText = originalCssText;
-                if (innerContainer) innerContainer.className = originalInnerClassName;
-
+                restore();
                 showToast("Failed to save PDF.", "error");
-                if (btn) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    btn.classList.remove('opacity-70', 'cursor-not-allowed');
-                }
             });
         }
     </script>
