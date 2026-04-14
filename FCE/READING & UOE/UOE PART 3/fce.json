@@ -287,6 +287,250 @@
         { "number": 23, "rootWord": "CONSUME", "answer": "CONSUMERS", "explanation": "Cần danh từ chỉ người số nhiều (người tiêu dùng) làm chủ ngữ cho động từ 'get'. CONSUME -> CONSUMERS." },
         { "number": 24, "rootWord": "EVIDENT", "answer": "EVIDENCE", "explanation": "Cần danh từ làm vị ngữ sau 'is'. EVIDENT -> EVIDENCE (bằng chứng)." }
       ]
-    }
+    },
+  {
+    "id": "Book 1 test 1",
+    "title": "Tea",
+    "text": "Tea is an (0) EXTREMELY popular drink with many people. It is estimated that the consumption of tea in England alone exceeds 165 million cups daily. Despite this, the drink was virtually (17) ___ in England until about 400 years ago. The first (18) ___ to tea in England comes in a diary written in 1660. However, its (19) ___ really took off after the (20) ___ of King Charles II to Catherine of Braganza. It was her great love of tea that made it (21) ___. It was believed that tea was good for people as it seemed to be capable of reviving the spirits and curing certain minor (22) ___. It has even been suggested by some historians that it played a significant part in the Industrial Revolution. Tea, they say, increased the number of hours that (23) ___ could work in factories as the caffeine in tea made them more (24) ___ and consequently able to work longer hours.",
+    "example": {
+      "number": 0,
+      "rootWord": "EXTREME",
+      "answer": "EXTREMELY",
+      "explanation": "Cần trạng từ bổ nghĩa cho tính từ 'popular'. EXTREME -> EXTREMELY."
+    },
+    "questions": [
+      {
+        "number": 17,
+        "rootWord": "KNOW",
+        "answer": "UNKNOWN",
+        "explanation": "Cần tính từ sau 'was virtually'. Cụm đúng là 'was virtually unknown' = hầu như chưa được biết đến. KNOW -> UNKNOWN."
+      },
+      {
+        "number": 18,
+        "rootWord": "REFER",
+        "answer": "REFERENCE",
+        "explanation": "Sau 'The first' cần danh từ số ít. Cụm đúng là 'the first reference to'. REFER -> REFERENCE."
+      },
+      {
+        "number": 19,
+        "rootWord": "POPULAR",
+        "answer": "POPULARITY",
+        "explanation": "Sau tính từ sở hữu 'its' cần danh từ. 'its popularity really took off' = mức độ phổ biến của nó thực sự bùng nổ. POPULAR -> POPULARITY."
+      },
+      {
+        "number": 20,
+        "rootWord": "MARRY",
+        "answer": "MARRIAGE",
+        "explanation": "Sau mạo từ 'the' và trước 'of' cần danh từ. Cụm đúng là 'the marriage of King Charles II...'. MARRY -> MARRIAGE."
+      },
+      {
+        "number": 21,
+        "rootWord": "FASHION",
+        "answer": "FASHIONABLE",
+        "explanation": "Sau cấu trúc 'made it' cần tính từ. 'made it fashionable' = khiến nó trở thành mốt/thịnh hành. FASHION -> FASHIONABLE."
+      },
+      {
+        "number": 22,
+        "rootWord": "ILL",
+        "answer": "ILLNESSES",
+        "explanation": "Sau 'certain minor' cần danh từ số nhiều. Nghĩa là 'những bệnh nhẹ'. ILL -> ILLNESSES."
+      },
+      {
+        "number": 23,
+        "rootWord": "LABOUR",
+        "answer": "LABOURERS",
+        "explanation": "Cần danh từ chỉ người số nhiều làm chủ ngữ cho 'could work'. LABOUR -> LABOURERS."
+      },
+      {
+        "number": 24,
+        "rootWord": "ENERGY",
+        "answer": "ENERGETIC",
+        "explanation": "Sau 'made them more' cần tính từ. 'more energetic' = năng động/tràn đầy năng lượng hơn. ENERGY -> ENERGETIC."
+      }
+    ]
+  },
+  {
+    "id": "Book 1 test 2",
+    "title": "Running speed",
+    "text": "Elite (0) COMPETITORS like the Jamaican Usain Bolt have regularly been clocked running at nearly 45 kilometres per hour. Such speed would have seemed (17) ___ not so long ago. Scientists now suggest that humans can move (18) ___ faster than even that, perhaps as fast as 65 kilometres per hour. For years, it was assumed that simple muscle power determined human speed, but recent research suggests otherwise. The most important (19) ___ factor appears to be how quickly the muscles can contract and thus (20) ___ the time a runner's foot is in contact with the ground. Is our athletic ability inherited? Researcher Alun Williams has (21) ___ twenty-three inherited factors that influence sporting performance, such as the (22) ___ use of oxygen, and strength. As world population rises, predicts Williams, the (23) ___ of there being someone with the right genes for these twenty-three (24) ___ will increase noticeably and thus faster runners are likely to emerge in future.",
+    "example": {
+      "number": 0,
+      "rootWord": "COMPETE",
+      "answer": "COMPETITORS",
+      "explanation": "Cần danh từ chỉ người số nhiều sau 'Elite'. COMPETE -> COMPETITORS."
+    },
+    "questions": [
+      {
+        "number": 17,
+        "rootWord": "BELIEVE",
+        "answer": "UNBELIEVABLE",
+        "explanation": "Sau 'seemed' cần tính từ. Nghĩa phù hợp là 'khó tin'. BELIEVE -> UNBELIEVABLE."
+      },
+      {
+        "number": 18,
+        "rootWord": "CONSIDER",
+        "answer": "CONSIDERABLY",
+        "explanation": "Cần trạng từ bổ nghĩa cho 'faster'. 'considerably faster' = nhanh hơn đáng kể. CONSIDER -> CONSIDERABLY."
+      },
+      {
+        "number": 19,
+        "rootWord": "LIMIT",
+        "answer": "LIMITING",
+        "explanation": "Cần tính từ đứng trước 'factor'. Collocation đúng là 'limiting factor'. LIMIT -> LIMITING."
+      },
+      {
+        "number": 20,
+        "rootWord": "MINIMUM",
+        "answer": "MINIMISE",
+        "explanation": "Sau 'thus' cần động từ nguyên mẫu song song với 'contract'. MINIMUM -> MINIMISE. Dạng MINIMIZE cũng được chấp nhận."
+      },
+      {
+        "number": 21,
+        "rootWord": "IDENTITY",
+        "answer": "IDENTIFIED",
+        "explanation": "Sau 'has' cần quá khứ phân từ để tạo hiện tại hoàn thành. 'has identified' = đã xác định. IDENTITY -> IDENTIFIED."
+      },
+      {
+        "number": 22,
+        "rootWord": "EFFICIENCY",
+        "answer": "EFFICIENT",
+        "explanation": "Cần tính từ bổ nghĩa cho 'use'. Cụm đúng là 'the efficient use of oxygen'. EFFICIENCY -> EFFICIENT."
+      },
+      {
+        "number": 23,
+        "rootWord": "POSSIBLE",
+        "answer": "POSSIBILITY",
+        "explanation": "Sau 'the' cần danh từ. 'the possibility of...' = khả năng về việc... POSSIBLE -> POSSIBILITY."
+      },
+      {
+        "number": 24,
+        "rootWord": "CHARACTER",
+        "answer": "CHARACTERISTICS",
+        "explanation": "Sau 'these twenty-three' cần danh từ số nhiều. CHARACTER -> CHARACTERISTICS."
+      }
+    ]
+  },
+  {
+    "id": "Book 1 test 3",
+    "title": "Cycling",
+    "text": "I have been a keen (0) CYCLIST for about nine years. When I began cycling, I found the flat roads easy but the hills almost (17) ___. Surprisingly, now it's the opposite. A long flat ride can be both dull and (18) ___ as you never experience that fantastic feeling of freedom when speeding downhill. Years ago, going uphill left me (19) ___. Now I have learned to take hills slowly and steadily. When I set off, I'm full of energy and the first hundred metres are (20) ___, the next couple of kilometres a bit tiring, but on the whole the experience is very (21) ___. Cycling is (22) ___ any other forms of exercise I have tried; it is never a chore but always a (23) ___. The physical benefits are obvious but the mental benefits are (24) ___ important; when you are travelling calmly at a sensible speed, you breathe fresh air, have time to think and can relax.",
+    "example": {
+      "number": 0,
+      "rootWord": "CYCLE",
+      "answer": "CYCLIST",
+      "explanation": "Cần danh từ chỉ người sau 'a keen'. CYCLE -> CYCLIST."
+    },
+    "questions": [
+      {
+        "number": 17,
+        "rootWord": "POSSIBLE",
+        "answer": "IMPOSSIBLE",
+        "explanation": "Sau 'found' cần tính từ. Nghĩa phù hợp là 'gần như không thể'. POSSIBLE -> IMPOSSIBLE."
+      },
+      {
+        "number": 18,
+        "rootWord": "EXHAUST",
+        "answer": "EXHAUSTING",
+        "explanation": "Sau 'both dull and' cần tính từ song song với 'dull'. EXHAUST -> EXHAUSTING."
+      },
+      {
+        "number": 19,
+        "rootWord": "BREATH",
+        "answer": "BREATHLESS",
+        "explanation": "Sau 'left me' cần tính từ chỉ trạng thái. 'breathless' = hụt hơi. BREATH -> BREATHLESS."
+      },
+      {
+        "number": 20,
+        "rootWord": "MARVEL",
+        "answer": "MARVELLOUS",
+        "explanation": "Sau 'are' cần tính từ. MARVEL -> MARVELLOUS."
+      },
+      {
+        "number": 21,
+        "rootWord": "ENJOY",
+        "answer": "ENJOYABLE",
+        "explanation": "Sau 'is very' cần tính từ. ENJOY -> ENJOYABLE."
+      },
+      {
+        "number": 22,
+        "rootWord": "LIKE",
+        "answer": "UNLIKE",
+        "explanation": "Cần từ mang nghĩa đối lập trong cấu trúc so sánh. 'unlike any other...' = không giống bất kỳ ... nào khác. LIKE -> UNLIKE."
+      },
+      {
+        "number": 23,
+        "rootWord": "PLEASE",
+        "answer": "PLEASURE",
+        "explanation": "Sau mạo từ 'a' cần danh từ. Cụm đúng là 'a pleasure'. PLEASE -> PLEASURE."
+      },
+      {
+        "number": 24,
+        "rootWord": "EQUAL",
+        "answer": "EQUALLY",
+        "explanation": "Cần trạng từ bổ nghĩa cho 'important'. 'equally important' = quan trọng ngang nhau. EQUAL -> EQUALLY."
+      }
+    ]
+  },
+  {
+    "id": "Book 1 test 4",
+    "title": "Job interviews",
+    "text": "Most people feel rather (0) NERVOUS when they go for an interview for a new job. This is not surprising as getting a job one wants is important. People being interviewed expect the interviewers to be (17) ___, matching an applicant against a job (18) ___. However, what often happens in reality is that the interviewers make (19) ___ that are little more than reactions to the (20) ___ of the applicant. Even skilled interviewers may, without realising it, (21) ___ favour people who make them feel at (22) ___. With this in mind, if you go for an interview you should try to make a good impression from the start by presenting the interviewers with the very best version of yourself, emphasising the (23) ___ of skills you have. You must appear very positive and as (24) ___ as possible. It is for you to convince the interviewers that you are definitely the most suitable person for the job.",
+    "example": {
+      "number": 0,
+      "rootWord": "NERVE",
+      "answer": "NERVOUS",
+      "explanation": "Sau 'feel' cần tính từ chỉ cảm xúc. NERVE -> NERVOUS."
+    },
+    "questions": [
+      {
+        "number": 17,
+        "rootWord": "OBJECT",
+        "answer": "OBJECTIVE",
+        "explanation": "Sau 'be' cần tính từ. 'objective' = khách quan. OBJECT -> OBJECTIVE."
+      },
+      {
+        "number": 18,
+        "rootWord": "DESCRIBE",
+        "answer": "DESCRIPTION",
+        "explanation": "Sau 'a job' cần danh từ. Cụm đúng là 'a job description'. DESCRIBE -> DESCRIPTION."
+      },
+      {
+        "number": 19,
+        "rootWord": "DECIDE",
+        "answer": "DECISIONS",
+        "explanation": "Sau 'make' cần danh từ số nhiều. Cụm quen thuộc là 'make decisions'. DECIDE -> DECISIONS."
+      },
+      {
+        "number": 20,
+        "rootWord": "PERSON",
+        "answer": "PERSONALITY",
+        "explanation": "Sau 'the' cần danh từ. 'the personality of the applicant' = tính cách của ứng viên. PERSON -> PERSONALITY."
+      },
+      {
+        "number": 21,
+        "rootWord": "CONSCIOUS",
+        "answer": "UNCONSCIOUSLY",
+        "explanation": "Cần trạng từ bổ nghĩa cho động từ 'favour'. CONSCIOUS -> UNCONSCIOUSLY."
+      },
+      {
+        "number": 22,
+        "rootWord": "EASY",
+        "answer": "EASE",
+        "explanation": "Trong cụm cố định 'feel at ease' cần danh từ. EASY -> EASE."
+      },
+      {
+        "number": 23,
+        "rootWord": "VARY",
+        "answer": "VARIETY",
+        "explanation": "Sau 'the' cần danh từ. Cụm đúng là 'the variety of skills'. VARY -> VARIETY."
+      },
+      {
+        "number": 24,
+        "rootWord": "ENTHUSIASM",
+        "answer": "ENTHUSIASTIC",
+        "explanation": "Sau 'as ... as possible' cần tính từ. ENTHUSIASM -> ENTHUSIASTIC."
+      }
+    ]
+  }
   ]
 }
