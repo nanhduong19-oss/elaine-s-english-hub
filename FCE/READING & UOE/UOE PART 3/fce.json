@@ -371,6 +371,70 @@
       { "number": 23, "rootWord": "VARY", "answer": "VARIETY", "explanation": "Sau 'the' cần danh từ. Cụm đúng là 'the variety of skills'. VARY -> VARIETY." },
       {"number": 24, "rootWord": "ENTHUSIASM", "answer": "ENTHUSIASTIC", "explanation": "Sau 'as ... as possible' cần tính từ. ENTHUSIASM -> ENTHUSIASTIC." }
     ]
+  },
+  {
+    "id": "Book 2 test 1",
+    "title": "The oldest house in Britain",
+    "text": "It was warm, round, had a (0) FANTASTIC view of a lake and appears to have been occupied for several hundred years. Welcome to the oldest house in the UK, which was found with other fascinating relics (17) ___ at a site in North Yorkshire. These remains are transforming our (18) ___ of how Britain's earliest inhabitants lived.\n\nThe structure was 3.5 metres in (19) ___ and was supported by a circle of wooden posts. Dark, decayed matter at the centre of the ruin suggests the possibility of a roof entirely made of grasses. (20) ___ of the remains by scientists revealed that the building stood in 8,500 BC. It was (21) ___ thought that people living in Britain at this time were nomadic with no fixed homes. But the (22) ___ of the oldest known house provides clear (23) ___ that some of these people built large permanent structures. Researchers of the site, however, are (24) ___ about how long the house will remain the 'oldest' in the UK, because new finds are being made all the time.",
+    "example": { "number": 0, "rootWord": "FANTASY", "answer": "FANTASTIC", "explanation": "Cần tính từ đứng trước danh từ 'view'. FANTASY -> FANTASTIC." },
+    "questions": [
+      { "number": 17, "rootWord": "NEAR", "answer": "NEARBY", "explanation": "Cần trạng từ/chỉ vị trí bổ nghĩa cho 'found ... at a site'. NEAR -> NEARBY, nghĩa là 'gần đó'." },
+      { "number": 18, "rootWord": "KNOW", "answer": "KNOWLEDGE", "explanation": "Sau tính từ sở hữu 'our' cần danh từ. KNOW -> KNOWLEDGE, nghĩa là 'kiến thức/sự hiểu biết'." },
+      { "number": 19, "rootWord": "WIDE", "answer": "WIDTH", "explanation": "Sau '3.5 metres in ...' cần danh từ chỉ kích thước. WIDE -> WIDTH, nghĩa là 'chiều rộng'. " },
+      { "number": 20, "rootWord": "INVESTIGATE", "answer": "INVESTIGATION / INVESTIGATIONS", "explanation": "Cần danh từ làm chủ ngữ của động từ 'revealed'. INVESTIGATE -> INVESTIGATION. Dạng số nhiều INVESTIGATIONS cũng có thể chấp nhận, nên ghi cả hai đáp án." },
+      { "number": 21, "rootWord": "ORIGIN", "answer": "ORIGINALLY", "explanation": "Cần trạng từ bổ nghĩa cho 'thought'. ORIGIN -> ORIGINALLY, nghĩa là 'ban đầu'." },
+      { "number": 22, "rootWord": "DISCOVER", "answer": "DISCOVERY", "explanation": "Sau 'the' cần danh từ. DISCOVER -> DISCOVERY, nghĩa là 'phát hiện'." },
+      { "number": 23, "rootWord": "EVIDENT", "answer": "EVIDENCE", "explanation": "Cụm cố định 'provide clear evidence that ...'. EVIDENT -> EVIDENCE." },
+      { "number": 24, "rootWord": "SURE", "answer": "UNSURE", "explanation": "Sau động từ nối 'are' cần tính từ; ngữ nghĩa là 'không chắc chắn'. SURE -> UNSURE." }
+    ]
+  },
+  {
+    "id": "Book 2 test 2",
+    "title": "Enjoying travel",
+    "text": "I always enjoy travelling, (0) PARTICULARLY when it means visiting other countries. One of the clearest memories from my childhood is of going to Disneyworld. Some people disapprove of the place but I loved it as a child and found it just as (17) ___ when I returned years later as an adult.\n\nI am (18) ___ that my work involves a lot of travel. The two places I visit most often are Barcelona and New York. I like both, but there is a tremendous (19) ___ between them. Barcelona is relaxed and overflowing with culture. New York, though, is bustling and full of (20) ___. When I'm there I'm constantly looking upwards, overwhelmed by the (21) ___ of the buildings. It is quite (22) ___ anywhere else I've ever been.\n\nI went to Tokyo last year and found it absolutely fascinating. However, my top (23) ___ for a city break has to be Toronto; it is visually (24) ___ and I've had some of the best meals I've ever eaten there.",
+    "example": { "number": 0, "rootWord": "PARTICULAR", "answer": "PARTICULARLY", "explanation": "Cần trạng từ bổ nghĩa cho mệnh đề phía sau. PARTICULAR -> PARTICULARLY." },
+    "questions": [
+      { "number": 17, "rootWord": "ENJOY", "answer": "ENJOYABLE", "explanation": "Sau 'as' cần tính từ. ENJOY -> ENJOYABLE, nghĩa là 'thú vị/dễ chịu'." },
+      { "number": 18, "rootWord": "FORTUNE", "answer": "FORTUNATE", "explanation": "Sau 'am' cần tính từ. FORTUNE -> FORTUNATE, nghĩa là 'may mắn'." },
+      { "number": 19, "rootWord": "DIFFERENT", "answer": "DIFFERENCE", "explanation": "Sau mạo từ 'a' và tính từ 'tremendous' cần danh từ. DIFFERENT -> DIFFERENCE." },
+      { "number": 20, "rootWord": "EXCITE", "answer": "EXCITEMENT", "explanation": "Sau 'full of' cần danh từ. EXCITE -> EXCITEMENT, nghĩa là 'sự hào hứng/sôi động'." },
+      { "number": 21, "rootWord": "HIGH", "answer": "HEIGHT", "explanation": "Sau 'the' cần danh từ. HIGH -> HEIGHT, nghĩa là 'chiều cao'." },
+      { "number": 22, "rootWord": "LIKE", "answer": "UNLIKE", "explanation": "Cần giới từ/tính từ mang nghĩa đối lập trong cụm 'quite unlike anywhere else'. LIKE -> UNLIKE." },
+      { "number": 23, "rootWord": "CHOOSE", "answer": "CHOICE", "explanation": "Sau tính từ sở hữu 'my top' cần danh từ. CHOOSE -> CHOICE." },
+      { "number": 24, "rootWord": "SPECTACLE", "answer": "SPECTACULAR", "explanation": "Sau động từ nối 'is' cần tính từ. SPECTACLE -> SPECTACULAR, nghĩa là 'ngoạn mục'." }
+    ]
+  },
+  {
+    "id": "Book 2 test 3",
+    "title": "The price of meals",
+    "text": "When a meal is (0) EXPENSIVE, do people say they enjoy it simply because it costs a lot of money? There is some (17) ___ from an experiment in a New York restaurant which suggests that this might be so.\n\nThe restaurant served diners a meal but charged some (18) ___ as much as others, even though the meals were identical and taken in the same (19) ___ with the same level of service. After the meal everyone was asked what they thought of the meal. One might think that the people who had paid least would be the most impressed with the meal. (20) ___ though, it was those who had paid most who gave it the highest (21) ___.\n\nAccording to a well-known (22) ___ the reason for this finding is that a high price for a meal is very (23) ___ in convincing people that a meal is good. One wonders if this might (24) ___ restaurant owners to keep their prices high.",
+    "example": { "number": 0, "rootWord": "EXPENSE", "answer": "EXPENSIVE", "explanation": "Sau 'is' cần tính từ. EXPENSE -> EXPENSIVE." },
+    "questions": [
+      { "number": 17, "rootWord": "EVIDENT", "answer": "EVIDENCE", "explanation": "Cụm cố định 'there is some evidence from ...'. EVIDENT -> EVIDENCE." },
+      { "number": 18, "rootWord": "TWO", "answer": "TWICE", "explanation": "Cụm 'twice as much as' là cấu trúc cố định. TWO -> TWICE." },
+      { "number": 19, "rootWord": "SURROUND", "answer": "SURROUNDINGS", "explanation": "Cần danh từ chỉ môi trường/khung cảnh xung quanh. SURROUND -> SURROUNDINGS." },
+      { "number": 20, "rootWord": "SURPRISE", "answer": "SURPRISINGLY", "explanation": "Đứng đầu câu, ngăn cách bằng dấu phẩy nên cần trạng từ bình luận. SURPRISE -> SURPRISINGLY." },
+      { "number": 21, "rootWord": "RATE", "answer": "RATING / RATINGS", "explanation": "Sau 'the highest' cần danh từ. RATE -> RATING. Dạng RATINGS cũng có thể được chấp nhận trong một số cách diễn đạt, nên ghi cả hai đáp án." },
+      { "number": 22, "rootWord": "PSYCHOLOGY", "answer": "PSYCHOLOGIST", "explanation": "Sau mạo từ 'a' cần danh từ chỉ người. PSYCHOLOGY -> PSYCHOLOGIST." },
+      { "number": 23, "rootWord": "SIGNIFY", "answer": "SIGNIFICANT", "explanation": "Sau 'is very' cần tính từ. SIGNIFY -> SIGNIFICANT, nghĩa là 'quan trọng/đáng kể'." },
+      { "number": 24, "rootWord": "COURAGE", "answer": "ENCOURAGE", "explanation": "Sau động từ khuyết thiếu 'might' cần động từ nguyên mẫu. COURAGE -> ENCOURAGE, nghĩa là 'khuyến khích'." }
+    ]
+  },
+  {
+    "id": "Book 2 test 4",
+    "title": "A man happy in his work",
+    "text": "Flying has always had a (0) FASCINATION for me. During my childhood I was often taken to air shows, where I could see planes close up and even go inside them. However, it was not until I was twenty that I made the (17) ___ to apply for an eighteen-month training course to become a pilot. There was no funding available for students on this course so (18) ___ I had to wait six months for a suitable job (19) ___, but then the (20) ___ I had shown was rewarded when I got a job with a large airline.\n\nI've been a pilot for three years now, and I remain just as (21) ___ about flying. I love the modern jet aircraft with all their sophisticated equipment as well as the (22) ___ of challenges that occur on a (23) ___ basis. And, of course, it's wonderful to visit places all over the world, not to mention the (24) ___ views I get when I'm flying.",
+    "example": { "number": 0, "rootWord": "FASCINATE", "answer": "FASCINATION", "explanation": "Sau mạo từ 'a' cần danh từ. FASCINATE -> FASCINATION." },
+    "questions": [
+      { "number": 17, "rootWord": "DECIDE", "answer": "DECISION", "explanation": "Cụm cố định 'make the decision to do something'. DECIDE -> DECISION." },
+      { "number": 18, "rootWord": "FORTUNATE", "answer": "UNFORTUNATELY", "explanation": "Cần trạng từ bổ nghĩa cho cả mệnh đề và mang nghĩa tiêu cực. FORTUNATE -> UNFORTUNATELY." },
+      { "number": 19, "rootWord": "VACANT", "answer": "VACANCY", "explanation": "Sau 'job' cần danh từ đi cùng về nghĩa: 'job vacancy' là vị trí tuyển dụng. VACANT -> VACANCY." },
+      { "number": 20, "rootWord": "COMMIT", "answer": "COMMITMENT", "explanation": "Sau mạo từ 'the' cần danh từ. COMMIT -> COMMITMENT, nghĩa là 'sự tận tâm/cam kết'." },
+      { "number": 21, "rootWord": "ENTHUSIASM", "answer": "ENTHUSIASTIC", "explanation": "Sau 'remain' cần tính từ. ENTHUSIASM -> ENTHUSIASTIC." },
+      { "number": 22, "rootWord": "VARY", "answer": "VARIETY", "explanation": "Cụm cố định 'a variety of + danh từ số nhiều'. VARY -> VARIETY." },
+      { "number": 23, "rootWord": "DAY", "answer": "DAILY", "explanation": "Cụm cố định 'on a daily basis'. DAY -> DAILY." },
+      { "number": 24, "rootWord": "SPECTACLE", "answer": "SPECTACULAR", "explanation": "Sau mạo từ 'the' và trước danh từ 'views' cần tính từ. SPECTACLE -> SPECTACULAR." }
+    ]
   }
   ]
 }
