@@ -299,54 +299,14 @@
       "explanation": "Cần trạng từ bổ nghĩa cho tính từ 'popular'. EXTREME -> EXTREMELY."
     },
     "questions": [
-      {
-        "number": 17,
-        "rootWord": "KNOW",
-        "answer": "UNKNOWN",
-        "explanation": "Cần tính từ sau 'was virtually'. Cụm đúng là 'was virtually unknown' = hầu như chưa được biết đến. KNOW -> UNKNOWN."
-      },
-      {
-        "number": 18,
-        "rootWord": "REFER",
-        "answer": "REFERENCE",
-        "explanation": "Sau 'The first' cần danh từ số ít. Cụm đúng là 'the first reference to'. REFER -> REFERENCE."
-      },
-      {
-        "number": 19,
-        "rootWord": "POPULAR",
-        "answer": "POPULARITY",
-        "explanation": "Sau tính từ sở hữu 'its' cần danh từ. 'its popularity really took off' = mức độ phổ biến của nó thực sự bùng nổ. POPULAR -> POPULARITY."
-      },
-      {
-        "number": 20,
-        "rootWord": "MARRY",
-        "answer": "MARRIAGE",
-        "explanation": "Sau mạo từ 'the' và trước 'of' cần danh từ. Cụm đúng là 'the marriage of King Charles II...'. MARRY -> MARRIAGE."
-      },
-      {
-        "number": 21,
-        "rootWord": "FASHION",
-        "answer": "FASHIONABLE",
-        "explanation": "Sau cấu trúc 'made it' cần tính từ. 'made it fashionable' = khiến nó trở thành mốt/thịnh hành. FASHION -> FASHIONABLE."
-      },
-      {
-        "number": 22,
-        "rootWord": "ILL",
-        "answer": "ILLNESSES",
-        "explanation": "Sau 'certain minor' cần danh từ số nhiều. Nghĩa là 'những bệnh nhẹ'. ILL -> ILLNESSES."
-      },
-      {
-        "number": 23,
-        "rootWord": "LABOUR",
-        "answer": "LABOURERS",
-        "explanation": "Cần danh từ chỉ người số nhiều làm chủ ngữ cho 'could work'. LABOUR -> LABOURERS."
-      },
-      {
-        "number": 24,
-        "rootWord": "ENERGY",
-        "answer": "ENERGETIC",
-        "explanation": "Sau 'made them more' cần tính từ. 'more energetic' = năng động/tràn đầy năng lượng hơn. ENERGY -> ENERGETIC."
-      }
+      { "number": 17, "rootWord": "KNOW", "answer": "UNKNOWN", "explanation": "Cần tính từ sau 'was virtually'. Cụm đúng là 'was virtually unknown' = hầu như chưa được biết đến. KNOW -> UNKNOWN." },
+      { "number": 18, "rootWord": "REFER", "answer": "REFERENCE", "explanation": "Sau 'The first' cần danh từ số ít. Cụm đúng là 'the first reference to'. REFER -> REFERENCE." },
+      { "number": 19, "rootWord": "POPULAR", "answer": "POPULARITY", "explanation": "Sau tính từ sở hữu 'its' cần danh từ. 'its popularity really took off' = mức độ phổ biến của nó thực sự bùng nổ. POPULAR -> POPULARITY." },
+      { "number": 20, "rootWord": "MARRY", "answer": "MARRIAGE", "explanation": "Sau mạo từ 'the' và trước 'of' cần danh từ. Cụm đúng là 'the marriage of King Charles II...'. MARRY -> MARRIAGE." },
+      { "number": 21, "rootWord": "FASHION", "answer": "FASHIONABLE", "explanation": "Sau cấu trúc 'made it' cần tính từ. 'made it fashionable' = khiến nó trở thành mốt/thịnh hành. FASHION -> FASHIONABLE." },
+      { "number": 22, "rootWord": "ILL", "answer": "ILLNESSES", "explanation": "Sau 'certain minor' cần danh từ số nhiều. Nghĩa là 'những bệnh nhẹ'. ILL -> ILLNESSES." },
+      { "number": 23, "rootWord": "LABOUR", "answer": "LABOURERS", "explanation": "Cần danh từ chỉ người số nhiều làm chủ ngữ cho 'could work'. LABOUR -> LABOURERS." },
+      { "number": 24, "rootWord": "ENERGY", "answer": "ENERGETIC", "explanation": "Sau 'made them more' cần tính từ. 'more energetic' = năng động/tràn đầy năng lượng hơn. ENERGY -> ENERGETIC." }
     ]
   },
   {
@@ -360,54 +320,14 @@
       "explanation": "Cần danh từ chỉ người số nhiều sau 'Elite'. COMPETE -> COMPETITORS."
     },
     "questions": [
-      {
-        "number": 17,
-        "rootWord": "BELIEVE",
-        "answer": "UNBELIEVABLE",
-        "explanation": "Sau 'seemed' cần tính từ. Nghĩa phù hợp là 'khó tin'. BELIEVE -> UNBELIEVABLE."
-      },
-      {
-        "number": 18,
-        "rootWord": "CONSIDER",
-        "answer": "CONSIDERABLY",
-        "explanation": "Cần trạng từ bổ nghĩa cho 'faster'. 'considerably faster' = nhanh hơn đáng kể. CONSIDER -> CONSIDERABLY."
-      },
-      {
-        "number": 19,
-        "rootWord": "LIMIT",
-        "answer": "LIMITING",
-        "explanation": "Cần tính từ đứng trước 'factor'. Collocation đúng là 'limiting factor'. LIMIT -> LIMITING."
-      },
-      {
-        "number": 20,
-        "rootWord": "MINIMUM",
-        "answer": "MINIMISE",
-        "explanation": "Sau 'thus' cần động từ nguyên mẫu song song với 'contract'. MINIMUM -> MINIMISE. Dạng MINIMIZE cũng được chấp nhận."
-      },
-      {
-        "number": 21,
-        "rootWord": "IDENTITY",
-        "answer": "IDENTIFIED",
-        "explanation": "Sau 'has' cần quá khứ phân từ để tạo hiện tại hoàn thành. 'has identified' = đã xác định. IDENTITY -> IDENTIFIED."
-      },
-      {
-        "number": 22,
-        "rootWord": "EFFICIENCY",
-        "answer": "EFFICIENT",
-        "explanation": "Cần tính từ bổ nghĩa cho 'use'. Cụm đúng là 'the efficient use of oxygen'. EFFICIENCY -> EFFICIENT."
-      },
-      {
-        "number": 23,
-        "rootWord": "POSSIBLE",
-        "answer": "POSSIBILITY",
-        "explanation": "Sau 'the' cần danh từ. 'the possibility of...' = khả năng về việc... POSSIBLE -> POSSIBILITY."
-      },
-      {
-        "number": 24,
-        "rootWord": "CHARACTER",
-        "answer": "CHARACTERISTICS",
-        "explanation": "Sau 'these twenty-three' cần danh từ số nhiều. CHARACTER -> CHARACTERISTICS."
-      }
+      { "number": 17, "rootWord": "BELIEVE", "answer": "UNBELIEVABLE", "explanation": "Sau 'seemed' cần tính từ. Nghĩa phù hợp là 'khó tin'. BELIEVE -> UNBELIEVABLE." },
+      { "number": 18, "rootWord": "CONSIDER", "answer": "CONSIDERABLY", "explanation": "Cần trạng từ bổ nghĩa cho 'faster'. 'considerably faster' = nhanh hơn đáng kể. CONSIDER -> CONSIDERABLY." },
+      { "number": 19, "rootWord": "LIMIT", "answer": "LIMITING", "explanation": "Cần tính từ đứng trước 'factor'. Collocation đúng là 'limiting factor'. LIMIT -> LIMITING." },
+      { "number": 20, "rootWord": "MINIMUM", "answer": "MINIMISE", "explanation": "Sau 'thus' cần động từ nguyên mẫu song song với 'contract'. MINIMUM -> MINIMISE. Dạng MINIMIZE cũng được chấp nhận." },
+      { "number": 21, "rootWord": "IDENTITY", "answer": "IDENTIFIED", "explanation": "Sau 'has' cần quá khứ phân từ để tạo hiện tại hoàn thành. 'has identified' = đã xác định. IDENTITY -> IDENTIFIED." },
+      { "number": 22, "rootWord": "EFFICIENCY", "answer": "EFFICIENT", "explanation": "Cần tính từ bổ nghĩa cho 'use'. Cụm đúng là 'the efficient use of oxygen'. EFFICIENCY -> EFFICIENT." },
+      { "number": 23, "rootWord": "POSSIBLE", "answer": "POSSIBILITY", "explanation": "Sau 'the' cần danh từ. 'the possibility of...' = khả năng về việc... POSSIBLE -> POSSIBILITY." },
+      { "number": 24, "rootWord": "CHARACTER", "answer": "CHARACTERISTICS", "explanation": "Sau 'these twenty-three' cần danh từ số nhiều. CHARACTER -> CHARACTERISTICS." }
     ]
   },
   {
@@ -421,54 +341,14 @@
       "explanation": "Cần danh từ chỉ người sau 'a keen'. CYCLE -> CYCLIST."
     },
     "questions": [
-      {
-        "number": 17,
-        "rootWord": "POSSIBLE",
-        "answer": "IMPOSSIBLE",
-        "explanation": "Sau 'found' cần tính từ. Nghĩa phù hợp là 'gần như không thể'. POSSIBLE -> IMPOSSIBLE."
-      },
-      {
-        "number": 18,
-        "rootWord": "EXHAUST",
-        "answer": "EXHAUSTING",
-        "explanation": "Sau 'both dull and' cần tính từ song song với 'dull'. EXHAUST -> EXHAUSTING."
-      },
-      {
-        "number": 19,
-        "rootWord": "BREATH",
-        "answer": "BREATHLESS",
-        "explanation": "Sau 'left me' cần tính từ chỉ trạng thái. 'breathless' = hụt hơi. BREATH -> BREATHLESS."
-      },
-      {
-        "number": 20,
-        "rootWord": "MARVEL",
-        "answer": "MARVELLOUS",
-        "explanation": "Sau 'are' cần tính từ. MARVEL -> MARVELLOUS."
-      },
-      {
-        "number": 21,
-        "rootWord": "ENJOY",
-        "answer": "ENJOYABLE",
-        "explanation": "Sau 'is very' cần tính từ. ENJOY -> ENJOYABLE."
-      },
-      {
-        "number": 22,
-        "rootWord": "LIKE",
-        "answer": "UNLIKE",
-        "explanation": "Cần từ mang nghĩa đối lập trong cấu trúc so sánh. 'unlike any other...' = không giống bất kỳ ... nào khác. LIKE -> UNLIKE."
-      },
-      {
-        "number": 23,
-        "rootWord": "PLEASE",
-        "answer": "PLEASURE",
-        "explanation": "Sau mạo từ 'a' cần danh từ. Cụm đúng là 'a pleasure'. PLEASE -> PLEASURE."
-      },
-      {
-        "number": 24,
-        "rootWord": "EQUAL",
-        "answer": "EQUALLY",
-        "explanation": "Cần trạng từ bổ nghĩa cho 'important'. 'equally important' = quan trọng ngang nhau. EQUAL -> EQUALLY."
-      }
+      { "number": 17, "rootWord": "POSSIBLE", "answer": "IMPOSSIBLE", "explanation": "Sau 'found' cần tính từ. Nghĩa phù hợp là 'gần như không thể'. POSSIBLE -> IMPOSSIBLE." },
+      { "number": 18, "rootWord": "EXHAUST", "answer": "EXHAUSTING", "explanation": "Sau 'both dull and' cần tính từ song song với 'dull'. EXHAUST -> EXHAUSTING." },
+      { "number": 19, "rootWord": "BREATH", "answer": "BREATHLESS", "explanation": "Sau 'left me' cần tính từ chỉ trạng thái. 'breathless' = hụt hơi. BREATH -> BREATHLESS." },
+      { "number": 20, "rootWord": "MARVEL",  "answer": "MARVELLOUS", "explanation": "Sau 'are' cần tính từ. MARVEL -> MARVELLOUS." },
+      { "number": 21, "rootWord": "ENJOY", "answer": "ENJOYABLE", "explanation": "Sau 'is very' cần tính từ. ENJOY -> ENJOYABLE." },
+      { "number": 22, "rootWord": "LIKE", "answer": "UNLIKE", "explanation": "Cần từ mang nghĩa đối lập trong cấu trúc so sánh. 'unlike any other...' = không giống bất kỳ ... nào khác. LIKE -> UNLIKE." },
+      { "number": 23, "rootWord": "PLEASE", "answer": "PLEASURE", "explanation": "Sau mạo từ 'a' cần danh từ. Cụm đúng là 'a pleasure'. PLEASE -> PLEASURE." },
+      { "number": 24, "rootWord": "EQUAL", "answer": "EQUALLY", "explanation": "Cần trạng từ bổ nghĩa cho 'important'. 'equally important' = quan trọng ngang nhau. EQUAL -> EQUALLY."}
     ]
   },
   {
@@ -482,54 +362,14 @@
       "explanation": "Sau 'feel' cần tính từ chỉ cảm xúc. NERVE -> NERVOUS."
     },
     "questions": [
-      {
-        "number": 17,
-        "rootWord": "OBJECT",
-        "answer": "OBJECTIVE",
-        "explanation": "Sau 'be' cần tính từ. 'objective' = khách quan. OBJECT -> OBJECTIVE."
-      },
-      {
-        "number": 18,
-        "rootWord": "DESCRIBE",
-        "answer": "DESCRIPTION",
-        "explanation": "Sau 'a job' cần danh từ. Cụm đúng là 'a job description'. DESCRIBE -> DESCRIPTION."
-      },
-      {
-        "number": 19,
-        "rootWord": "DECIDE",
-        "answer": "DECISIONS",
-        "explanation": "Sau 'make' cần danh từ số nhiều. Cụm quen thuộc là 'make decisions'. DECIDE -> DECISIONS."
-      },
-      {
-        "number": 20,
-        "rootWord": "PERSON",
-        "answer": "PERSONALITY",
-        "explanation": "Sau 'the' cần danh từ. 'the personality of the applicant' = tính cách của ứng viên. PERSON -> PERSONALITY."
-      },
-      {
-        "number": 21,
-        "rootWord": "CONSCIOUS",
-        "answer": "UNCONSCIOUSLY",
-        "explanation": "Cần trạng từ bổ nghĩa cho động từ 'favour'. CONSCIOUS -> UNCONSCIOUSLY."
-      },
-      {
-        "number": 22,
-        "rootWord": "EASY",
-        "answer": "EASE",
-        "explanation": "Trong cụm cố định 'feel at ease' cần danh từ. EASY -> EASE."
-      },
-      {
-        "number": 23,
-        "rootWord": "VARY",
-        "answer": "VARIETY",
-        "explanation": "Sau 'the' cần danh từ. Cụm đúng là 'the variety of skills'. VARY -> VARIETY."
-      },
-      {
-        "number": 24,
-        "rootWord": "ENTHUSIASM",
-        "answer": "ENTHUSIASTIC",
-        "explanation": "Sau 'as ... as possible' cần tính từ. ENTHUSIASM -> ENTHUSIASTIC."
-      }
+      { "number": 17, "rootWord": "OBJECT", "answer": "OBJECTIVE", "explanation": "Sau 'be' cần tính từ. 'objective' = khách quan. OBJECT -> OBJECTIVE." },
+      { "number": 18, "rootWord": "DESCRIBE", "answer": "DESCRIPTION", "explanation": "Sau 'a job' cần danh từ. Cụm đúng là 'a job description'. DESCRIBE -> DESCRIPTION." },
+      { "number": 19, "rootWord": "DECIDE", "answer": "DECISIONS", "explanation": "Sau 'make' cần danh từ số nhiều. Cụm quen thuộc là 'make decisions'. DECIDE -> DECISIONS." },
+      { "number": 20, "rootWord": "PERSON", "answer": "PERSONALITY", "explanation": "Sau 'the' cần danh từ. 'the personality of the applicant' = tính cách của ứng viên. PERSON -> PERSONALITY." },
+      { "number": 21, "rootWord": "CONSCIOUS", "answer": "UNCONSCIOUSLY", "explanation": "Cần trạng từ bổ nghĩa cho động từ 'favour'. CONSCIOUS -> UNCONSCIOUSLY." },
+      { "number": 22, "rootWord": "EASY", "answer": "EASE", "explanation": "Trong cụm cố định 'feel at ease' cần danh từ. EASY -> EASE." },
+      { "number": 23, "rootWord": "VARY", "answer": "VARIETY", "explanation": "Sau 'the' cần danh từ. Cụm đúng là 'the variety of skills'. VARY -> VARIETY." },
+      {"number": 24, "rootWord": "ENTHUSIASM", "answer": "ENTHUSIASTIC", "explanation": "Sau 'as ... as possible' cần tính từ. ENTHUSIASM -> ENTHUSIASTIC." }
     ]
   }
   ]
