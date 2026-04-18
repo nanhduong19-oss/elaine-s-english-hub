@@ -11,9 +11,8 @@
         .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #dc2626; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        /* Custom radio bubble styling */
         .bubble-label input:checked + div {
-            background-color: #1f2937; /* Dark Gray */
+            background-color: #1f2937;
             border-color: #1f2937;
             color: white;
         }
@@ -23,7 +22,6 @@
 
     <div class="max-w-4xl w-full bg-white rounded-xl shadow-lg overflow-hidden">
         
-        <!-- Header -->
         <div class="bg-red-600 text-white p-6 flex flex-col md:flex-row items-center md:items-end justify-between gap-4">
             <div class="flex items-center gap-4">
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrKh1FPsEML9CMKsln1FwcIlF1BcnOioHT6Q&s" alt="Logo" class="h-14 w-14 bg-white rounded-full p-1 object-contain">
@@ -36,7 +34,6 @@
 
         <form id="examForm" class="p-6 md:p-8 space-y-8">
             
-            <!-- Khu vực 1: Nhận diện học sinh -->
             <div class="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-sm">
                 <h2 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">1. Student Information</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -62,40 +59,34 @@
                 </div>
             </div>
 
-            <!-- Khu vực 2: Chọn đề -->
             <div>
                 <h2 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">2. Test Selection</h2>
-                <select id="testSelection" required class="w-full md:w-1/2 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 outline-none bg-white">
+                <select id="testSelection" required class="w-full md:w-1/2 px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-red-500 outline-none bg-white font-medium text-gray-700">
                     <option value="">-- Please select a test --</option>
-                    <option value="PET_READING_TEST_1">PET Reading - Test 31</option>
-                    <option value="PET_READING_TEST_2">PET Reading - Test 32</option>
-                    <option value="PET_READING_TEST_3">PET Reading - Test 33</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 34</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 35</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 36</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 37</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 38</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 39</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 40</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 41</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 42</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 43</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 44</option>
-                    <option value="PET_READING_TEST_4">PET Reading - Test 45</option>
+                    <option value="TEST_31">PET Reading - Test 31</option>
+                    <option value="TEST_32">PET Reading - Test 32</option>
+                    <option value="TEST_33">PET Reading - Test 33</option>
+                    <option value="TEST_34">PET Reading - Test 34</option>
+                    <option value="TEST_35">PET Reading - Test 35</option>
+                    <option value="TEST_36">PET Reading - Test 36</option>
+                    <option value="TEST_37">PET Reading - Test 37</option>
+                    <option value="TEST_38">PET Reading - Test 38</option>
+                    <option value="TEST_39">PET Reading - Test 39</option>
+                    <option value="TEST_40">PET Reading - Test 40</option>
+                    <option value="TEST_41">PET Reading - Test 41</option>
+                    <option value="TEST_42">PET Reading - Test 42</option>
+                    <option value="TEST_43">PET Reading - Test 43</option>
+                    <option value="TEST_44">PET Reading - Test 44</option>
+                    <option value="TEST_45">PET Reading - Test 45</option>
                 </select>
             </div>
 
-            <!-- Khu vực 3: Bảng đáp án -->
             <div>
                 <h2 class="text-lg font-bold text-gray-800 border-b pb-2 mb-4">3. Answer Area (32 Questions)</h2>
-                
-                <!-- Vùng chứa câu hỏi (sẽ được Render bằng Javascript để code gọn gàng) -->
                 <div id="questionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- HTML sẽ tự sinh ra ở đây -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Nút Submit -->
             <div class="pt-4 border-t border-gray-200">
                 <button type="submit" id="btnSubmit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold text-lg py-4 rounded-lg shadow-lg transition flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed">
                     <span id="submitText">SUBMIT ALL 32 ANSWERS</span>
@@ -106,21 +97,19 @@
         </form>
     </div>
 
-    <!-- Script xử lý Logic & Tự động tạo câu hỏi -->
     <script>
-        // === CẤU TRÚC 32 CÂU HỎI PET READING ===
+        // CẤU TRÚC 32 CÂU HỎI
         const partsConfig = [
             { title: "Part 1", start: 1, end: 5, type: 'mcq', options: ['A','B','C'] },
             { title: "Part 2", start: 6, end: 10, type: 'mcq', options: ['A','B','C','D','E','F','G','H'] },
             { title: "Part 3", start: 11, end: 15, type: 'mcq', options: ['A','B','C','D'] },
             { title: "Part 4", start: 16, end: 20, type: 'mcq', options: ['A','B','C','D','E','F','G','H'] },
             { title: "Part 5", start: 21, end: 26, type: 'mcq', options: ['A','B','C','D'] },
-            { title: "Part 6", start: 27, end: 32, type: 'text' } // Viết tay chữ IN HOA
+            { title: "Part 6", start: 27, end: 32, type: 'text' }
         ];
 
         const container = document.getElementById('questionsContainer');
 
-        // Sinh HTML giao diện bài làm tự động
         partsConfig.forEach(part => {
             let partHTML = `<div class="border border-gray-300 rounded-lg overflow-hidden bg-white shadow-sm">
                                 <div class="bg-gray-200 font-bold text-gray-800 px-4 py-2 border-b border-gray-300">${part.title}</div>
@@ -133,7 +122,6 @@
                 if (part.type === 'mcq') {
                     partHTML += `<div class="flex flex-wrap gap-2">`;
                     part.options.forEach(opt => {
-                        // Radio button ảo (Click vào chữ để chọn)
                         partHTML += `
                             <label class="bubble-label cursor-pointer relative">
                                 <input type="radio" name="q${i}" value="${opt}" class="sr-only peer">
@@ -145,7 +133,6 @@
                     });
                     partHTML += `</div>`;
                 } else if (part.type === 'text') {
-                    // Ô Textbox cho Part 6
                     partHTML += `<input type="text" id="q${i}" class="flex-grow uppercase border border-gray-400 rounded px-3 py-1.5 focus:ring-2 focus:ring-red-500 outline-none font-bold" placeholder="Write answer...">`;
                 }
                 
@@ -155,12 +142,9 @@
             container.innerHTML += partHTML;
         });
 
+        // LINK APPS SCRIPT ĐÃ CẬP NHẬT
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlqvPYoS7JLhGavCLJggangSzGldoUZjgF502U2dE-Alo3w3e9Ag0Kb7gtvKOjYwPWbQ/exec";
 
-        // === LIÊN KẾT GOOGLE APPS SCRIPT ===
-        // !!! THAY ĐƯỜNG LINK CỦA CÔ VÀO DƯỚI ĐÂY !!!
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzAy5UOUfPqtsLJccBOIp6HXWr5C2srvz-25KEWzlUs-Tqn1XBn-4JSO8YjuHsm5FFnzg/exec";
-
-        // Logic Auto-fill tên học sinh
         document.getElementById('btnCheckId').addEventListener('click', async () => {
             const idInput = document.getElementById('studentId').value.trim();
             const msgEl = document.getElementById('idMessage');
@@ -195,7 +179,6 @@
             }
         });
 
-        // Logic Gửi bài làm
         document.getElementById('examForm').addEventListener('submit', async (e) => {
             e.preventDefault(); 
             
@@ -204,28 +187,23 @@
                 return;
             }
 
-            // GOM TOÀN BỘ 32 ĐÁP ÁN
             const answersData = {};
             for (let i = 1; i <= 32; i++) {
                 if (i >= 27 && i <= 32) {
-                    // Part 6: Lấy giá trị Textbox
                     answersData['q' + i] = document.getElementById('q' + i).value.trim().toUpperCase();
                 } else {
-                    // Part 1-5: Lấy giá trị Radio button đã check
                     const selected = document.querySelector(`input[name="q${i}"]:checked`);
                     answersData['q' + i] = selected ? selected.value : "";
                 }
             }
 
-            // Gói dữ liệu
             const payload = {
                 studentId: document.getElementById('studentId').value,
                 studentName: document.getElementById('studentName').value,
                 testSelection: document.getElementById('testSelection').value,
-                answers: answersData // Truyền object 32 câu vào đây
+                answers: answersData
             };
 
-            // Loading state
             const btnSubmit = document.getElementById('btnSubmit');
             document.getElementById('submitText').textContent = "UPLOADING...";
             document.getElementById('submitSpinner').style.display = 'block';
@@ -239,8 +217,9 @@
                 
                 const result = await response.json();
                 if(result.status === "success") {
-                    alert("Bài làm của bạn đã được nộp thành công! Cảm ơn em.");
-                    document.getElementById('examForm').reset(); // Xóa sạch form
+                    alert(result.message);
+                    document.getElementById('examForm').reset();
+                    document.querySelectorAll('input[type="radio"]').forEach(radio => radio.checked = false);
                 } else {
                     alert("Có lỗi xảy ra: " + result.message);
                 }
