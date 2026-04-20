@@ -1089,14 +1089,18 @@ function startSpelling() {
 
   if (!wrong.length) { showResult(); return; }
 
-  // Collect unique correct answers
-  // For answers like "DEFENCES / DEFENSES", store all variants but display/target as first one
-  const wordSet = new Set();
-  wrong.forEach(({ qid, ans }) => wordSet.add(ans.toUpperCase()));
-  S.spellingWords = [...wordSet].map(w => {
-    const variants = w.split('/').map(v => v.trim()).filter(Boolean);
-    return { word: variants[0], variants, completed: 0, done: false };
+  // Collect unique correct answers - ans can be string or array
+  const wordMap = new Map(); // key = display string, value = variants array
+  wrong.forEach(({ qid, ans }) => {
+    const variants = Array.isArray(ans)
+      ? ans.map(a => a.toUpperCase().trim())
+      : ans.toUpperCase().split('/').map(v => v.trim()).filter(Boolean);
+    const key = variants[0]; // use first variant as key to deduplicate
+    if (!wordMap.has(key)) wordMap.set(key, variants);
   });
+  S.spellingWords = [...wordMap.entries()].map(([word, variants]) => ({
+    word, variants, completed: 0, done: false
+  }));
 
   renderSpelling();
   showScreen('screenSpelling');
@@ -1298,7 +1302,7 @@ async function saveSheet(pct, correct, wrong, wrongList) {
           questionId:qid, questionType:S.mode,
           rootWord: S.mode==='grade10' ? (S.grade10.find(q=>q.id===qid)?.rootWord||qid) : qid,
           studentAnswer: S.answers[qid]?.value||'',
-          correctAnswer: ans, attemptCount: S.answers[qid]?.attempts||0,
+          correctAnswer: displayAnswer(ans), attemptCount: S.answers[qid]?.attempts||0,
         })),
       })});
     }
