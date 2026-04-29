@@ -81,6 +81,25 @@
     <!-- TOAST NOTIFICATIONS -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
 
+    <!-- TEACHER MODE BUTTON -->
+    <button onclick="openTeacherModal()" class="fixed bottom-4 right-4 z-50 bg-gray-200/50 dark:bg-gray-700/50 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 w-12 h-12 rounded-full flex items-center justify-center transition-all backdrop-blur-sm shadow-md">
+        <i class="fas fa-key text-lg"></i>
+    </button>
+
+    <!-- TEACHER AUTH MODAL -->
+    <div id="teacher-modal" class="hidden fixed inset-0 z-[120] bg-black/40 flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-sm overflow-hidden relative border border-gray-200 dark:border-gray-700">
+            <div class="p-6">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4"><i class="fas fa-lock text-pet mr-2"></i>Teacher Override</h3>
+                <input type="password" id="teacher-password" placeholder="Enter password to unlock" class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 px-4 py-3 rounded-lg text-gray-700 dark:text-white mb-4 focus:ring-2 focus:ring-pet outline-none transition" onkeypress="if(event.key === 'Enter') unlockTeacherMode()">
+                <div class="flex justify-end gap-3">
+                    <button onclick="closeTeacherModal()" class="px-4 py-2 text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition">Cancel</button>
+                    <button onclick="unlockTeacherMode()" class="px-4 py-2 bg-pet text-white font-bold rounded-lg hover:bg-pet-dark transition shadow-md">Unlock</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- SETTINGS MODAL (Text Size & Dark Mode) -->
     <div id="settings-modal" class="hidden fixed inset-0 z-[110] bg-black/40 flex-col items-center justify-center p-4 backdrop-blur-sm transition-opacity">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-xl overflow-hidden relative border border-gray-200 dark:border-gray-700">
@@ -322,7 +341,7 @@
             <!-- RIGHT: WRITING AREA (65%) -->
             <div class="w-full md:w-[65%] bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col h-full md:h-auto">
                 <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-600 flex justify-between items-center shrink-0">
-                    <span class="font-bold text-gray-700 dark:text-gray-200 text-sm"><i class="fas fa-keyboard mr-2 text-pet"></i>Writing Area <span class="text-xs text-red-600 dark:text-red-400 ml-2 font-bold hidden sm:inline">(Exam Mode: Copy/Paste Disabled)</span></span>
+                    <span class="font-bold text-gray-700 dark:text-gray-200 text-sm"><i class="fas fa-keyboard mr-2 text-pet"></i>Writing Area <span id="copy-paste-status" class="text-xs text-red-600 dark:text-red-400 ml-2 font-bold hidden sm:inline">(Exam Mode: Copy/Paste Disabled)</span></span>
                     <div class="bg-white dark:bg-gray-800 px-3 py-1 rounded-md border border-gray-300 dark:border-gray-600 text-sm font-mono text-gray-600 dark:text-gray-300">
                         Words: <span id="word-count" class="font-bold text-pet">0</span>
                     </div>
@@ -570,16 +589,53 @@
                 startExam();
             });
 
-            // Block copy/paste/cut in textareas
+            // Block copy/paste/cut in textareas (checks for Teacher Mode lock)
             const textareas = [document.getElementById('answer-part1'), document.getElementById('answer-part2')];
             textareas.forEach(ta => {
                 if (ta) {
-                    ta.addEventListener('paste', e => { e.preventDefault(); showToast("Paste is disabled!", "error"); });
-                    ta.addEventListener('copy', e => { e.preventDefault(); showToast("Copy is disabled!", "error"); });
-                    ta.addEventListener('cut', e => { e.preventDefault(); showToast("Cut is disabled!", "error"); });
+                    ta.addEventListener('paste', e => { if (!window.copyPasteUnlocked) { e.preventDefault(); showToast("Paste is disabled!", "error"); } });
+                    ta.addEventListener('copy', e => { if (!window.copyPasteUnlocked) { e.preventDefault(); showToast("Copy is disabled!", "error"); } });
+                    ta.addEventListener('cut', e => { if (!window.copyPasteUnlocked) { e.preventDefault(); showToast("Cut is disabled!", "error"); } });
                 }
             });
         });
+
+        // --- TEACHER MODE LOGIC ---
+        window.copyPasteUnlocked = false;
+
+        function openTeacherModal() {
+            document.getElementById('teacher-modal').classList.remove('hidden');
+            document.getElementById('teacher-modal').classList.add('flex');
+            document.getElementById('teacher-password').value = '';
+            document.getElementById('teacher-password').focus();
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacher-modal').classList.add('hidden');
+            document.getElementById('teacher-modal').classList.remove('flex');
+        }
+
+        function unlockTeacherMode() {
+            const pass = document.getElementById('teacher-password').value;
+            if (pass === 'msthuong@aigrading') {
+                window.copyPasteUnlocked = true;
+                closeTeacherModal();
+                showToast("Teacher Mode Unlocked! Copy/Paste is enabled.", "success");
+                
+                // Update UI status text
+                const statusEl = document.getElementById('copy-paste-status');
+                if(statusEl) {
+                    statusEl.className = "text-xs text-green-600 dark:text-green-400 ml-2 font-bold hidden sm:inline";
+                    statusEl.innerText = "(Teacher Mode: Copy/Paste Enabled)";
+                }
+                
+                // Hide the key button
+                const keyBtn = document.querySelector('button[onclick="openTeacherModal()"]');
+                if(keyBtn) keyBtn.style.display = 'none';
+            } else {
+                showToast("Incorrect password!", "error");
+            }
+        }
 
         // --- UI TOGGLES (Settings / Dark Mode / Text Size) ---
         function openSettingsModal() {
