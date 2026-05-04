@@ -1,6 +1,6 @@
 {
-  "testId": "petbook2-test-01",
-  "title": "PET Listening Test 01 BOOK 2",
+  "testId": "pet-l-test-01",
+  "title": "PET Listening Test 01",
   "level": "B1",
   "totalQuestions": 25,
   "parts": [
@@ -44,45 +44,45 @@
           "number": 3,
           "questionText": "How did the woman book tickets for the show?",
           "answer": "A",
-          "script": "Man: Did you get tickets for the show?\nWoman: Yes, finally! It's really popular so there were long queues of people waiting to buy tickets outside the theatre.",
-          "paraphrase": "The woman queued outside the theatre to buy the tickets in person.",
-          "explanation": "Người phụ nữ nói có hàng dài người xếp hàng bên ngoài rạp hát để mua vé - tức là cô ấy mua trực tiếp tại quầy. Đáp án nhiễu: điện thoại hoặc laptop (đặt online) không được đề cập. Từ khoá: 'long queues', 'waiting to buy tickets outside the theatre'."
+          "script": "Man: Did you get tickets for the show?\nWoman: Yes, finally! It's really popular so there were long queues of people waiting to buy tickets outside the theatre.\nMan: So how long did you have to wait to get them?\nWoman: Well, I stood there for a while and then gave up and went home. I had to call the theatre as their website wasn't working when I tried on my laptop – too many people trying to use it, I suppose. Luckily, I managed to get tickets anyway, and quite good seats.",
+          "paraphrase": "The woman eventually booked the tickets by phone after giving up queuing and finding the website was not working.",
+          "explanation": "Đây là câu bẫy kinh điển - ba phương thức được nhắc: xếp hàng ngoài rạp (bỏ cuộc), website laptop (không hoạt động), gọi điện thoại (thành công). Đáp án A là gọi điện. Từ khoá: 'I had to call the theatre' = đặt vé qua điện thoại. Lưu ý: nghe thấy 'queues' và 'laptop' trước nhưng đó đều là phương án thất bại."
         },
         {
           "id": "p1q4",
           "number": 4,
           "questionText": "Why is the train to Histon delayed?",
           "answer": "B",
-          "script": "PASTE AUDIO SCRIPT FOR QUESTION 4 HERE.",
-          "paraphrase": "The train to Histon is delayed due to a fallen tree on the line.",
-          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 4 HERE."
+          "script": "Woman: There will be a delay to the eighteen-forty service to Histon due to bad weather in the surrounding area. Last night's heavy rain has cleared, but the strong winds we're experiencing at the moment mean trains are moving along the railway line at reduced speeds. Expect the service to be approximately one hour late. The forecast is calmer for the rest of the evening, though there is a possibility of snow on higher ground. Fortunately, this is unlikely to affect services to Histon.",
+          "paraphrase": "The train to Histon is running late because strong winds are currently forcing trains to slow down on the line.",
+          "explanation": "Ba loại thời tiết được nhắc: mưa to đêm qua (đã tạnh - loại), gió mạnh hiện tại (nguyên nhân chính), khả năng tuyết (không ảnh hưởng tuyến Histon - loại). Đáp án B là gió mạnh. Từ khoá: 'strong winds we're experiencing at the moment mean trains are moving at reduced speeds' = tàu bị chậm vì gió."
         },
         {
           "id": "p1q5",
           "number": 5,
           "questionText": "Where are the tourists most likely to see a tiger?",
           "answer": "B",
-          "script": "PASTE AUDIO SCRIPT FOR QUESTION 5 HERE.",
-          "paraphrase": "Tourists are most likely to spot a tiger in the open grassland area.",
-          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 5 HERE."
+          "script": "Man: Welcome to today's tiger tour. This is one of the best places to see wild tigers, so hopefully we'll manage to see some. A good time of year to see them is when temperatures start to rise, because they spend more time drinking at water holes such as lakes. It's too early in the season for this yet, so our best chance is in the open spaces where they hunt. It's much more of a challenge to see them in the forest – their stripes help them hide among the trees.",
+          "paraphrase": "Since it is too early in the season for tigers to be at the lakes, the best chance of spotting one is in the open hunting grounds.",
+          "explanation": "Ba địa điểm được nhắc: hồ nước (mùa nóng - nhưng chưa đến mùa đó), không gian mở (best chance hiện tại - B), rừng (khó thấy vì hổ ngụy trang). Từ khoá: 'It's too early... so our best chance is in the open spaces where they hunt' = đồng trống là nơi tốt nhất lúc này."
         },
         {
           "id": "p1q6",
           "number": 6,
           "questionText": "Which film will they go and see?",
           "answer": "A",
-          "script": "PASTE AUDIO SCRIPT FOR QUESTION 6 HERE.",
-          "paraphrase": "They chose to watch the detective film set in a rainy city.",
-          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 6 HERE."
+          "script": "Woman: How about going to the cinema tonight? Jack Leon's new movie's on.\nMan: Oh, the one about that detective solving a murder?\nWoman: Yeah, and he's pretty good too! There's that or a science-fiction movie, but you know how I feel about those.\nMan: I know … they're hardly your thing. Well, how about this nineteenth-century drama? Look.\nWoman: Yeah, we could see that, but it looks a bit serious. I think my first suggestion looks more interesting, to be honest.\nMan: OK. Let's do that then. Let's see the seven o'clock show.\nWoman: Sure.",
+          "paraphrase": "They decided to watch the detective film that the woman originally suggested, as she found it more interesting than the drama.",
+          "explanation": "Ba phim được cân nhắc: phim trinh thám thám tử (gợi ý đầu tiên của người phụ nữ - A), phim khoa học viễn tưởng (người phụ nữ không thích), phim kịch tính thế kỷ 19 (người phụ nữ thấy quá nghiêm túc). Cuối cùng chọn phim đầu tiên. Từ khoá: 'I think my first suggestion looks more interesting' + 'Let's do that then' = chọn phim trinh thám."
         },
         {
           "id": "p1q7",
           "number": 7,
           "questionText": "How did the man travel to work?",
           "answer": "C",
-          "script": "PASTE AUDIO SCRIPT FOR QUESTION 7 HERE.",
-          "paraphrase": "The man walked to work under an umbrella because of the rain.",
-          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 7 HERE."
+          "script": "Woman: Hi Chris, it's pouring down! You look really wet. Did you cycle to work today?\nMan: Well, I wanted to, but my brakes need fixing and I haven't had time to deal with them yet.\nWoman: Couldn't you come by bus?\nMan: They aren't always reliable from where I live. I think I'll get one home, though, if it's still raining later. It took me forty minutes on foot – hopefully I'll be back on my bike again soon.\nWoman: Well, according to the forecast, it's going to rain all day today.",
+          "paraphrase": "The man walked to work for forty minutes because his bike needed repairs and the bus service from his area is unreliable.",
+          "explanation": "Ba phương tiện được nhắc: xe đạp (muốn đi nhưng phanh hỏng - loại), xe buýt (không đáng tin từ nhà anh - loại), đi bộ (thực tế đã đi - C). Từ khoá: 'It took me forty minutes on foot' = đi bộ đến nơi làm. Lưu ý bẫy: người phụ nữ hỏi về xe đạp ngay đầu nên dễ nhầm."
         }
       ]
     },
