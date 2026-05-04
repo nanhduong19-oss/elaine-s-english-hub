@@ -1,0 +1,361 @@
+{
+  "testId": "petbook2-test-04",
+  "title": "PET Listening Test 04 BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "instructions": "Questions 1–7. For each question, choose the correct answer.",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/92e7ucunc74ivwcxbj1so/book2-test-4-part-1-1-3.png?rlkey=q0mznxretg62a9yy5fkfe0xjd&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/c43zizkuohttg1n0ijqmu/book2-test-4-part-1-4-7.png?rlkey=nz2efhqumb6gblkgq19o3a9he&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "audioUrl": "https://www.dropbox.com/scl/fi/rdz6zrp3oeimac74gj88p/Preliminary2_test4_audio1.mp3?rlkey=cvqyhdniof092hvleohdgrixf&raw=1",
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What has the man lost?",
+          "answer": "C",
+          "script": "Man: Excuse me, could you help me? I left something on the train yesterday.\nWoman: Certainly, I'll take some details. Let me guess – you lost your gloves, didn't you? Oh, we find some almost every day left on the seats.\nMan: [laughs] Yes, I've done that before, and never got them back! This time, though, it's my glasses, I'm afraid.\nWoman: Oh dear.\nMan: I took them off when I was using my headphones on the train, and didn't notice that I'd left them on the seat when I got off.",
+          "paraphrase": "The man left his glasses on the train seat after taking them off to use his headphones.",
+          "explanation": "Găng tay (gloves) - nhân viên đoán vậy nhưng sai; người đàn ông xác nhận đã từng để quên găng tay trước đây nhưng lần này không phải. Tai nghe (headphones) - được dùng nhưng không phải thứ bị mất. Kính (glasses) - 'This time, though, it's my glasses' = đáp án C. Từ khoá: 'This time, though' báo hiệu thông tin đúng sau khi đã nhiễu."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What is the woman going to do tomorrow?",
+          "answer": "B",
+          "script": "Man: Are you ready for your trip to the coast in Scotland then?\nWoman: I am. I was going to drive up there tomorrow, but I've decided to go this evening instead. It takes several hours to get there.\nMan: It's a long drive, isn't it?\nWoman: Yes, but at least I'll be able to have some time on the beach tomorrow, instead of wasting the first day of my holiday driving.\nMan: And when are you seeing your cousin and his family?\nWoman: The day after tomorrow – I'm going for a meal at their house.",
+          "paraphrase": "Since the woman decided to travel tonight instead of tomorrow, she will spend tomorrow relaxing on the beach.",
+          "explanation": "Lái xe đến Scotland - đổi kế hoạch, sẽ đi TỐI NAY thay vì ngày mai (loại A). Ăn tối với họ hàng - ngày kia (loại C). Đi biển - vì đi tối nay nên ngày mai sẽ ở bãi biển (B). Từ khoá: 'I'll be able to have some time on the beach tomorrow' = hoạt động ngày mai."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Which items cost less than usual at the moment?",
+          "answer": "C",
+          "script": "Man: Welcome to Brown's Department Store. If you were lucky enough to get a bargain in last week's phone sale in our electronics department, you'll know just how much money you can save in our store. If you're a fitness fan, it's your turn to save money this week as everything's reduced in our sports department on the second floor. There's also a special offer in the ladies' clothes department today – get twenty per cent off any coat when you buy a handbag.",
+          "paraphrase": "This week the sports department has reduced prices on everything, and there is also a deal on coats when bought with a handbag.",
+          "explanation": "Điện thoại - giảm giá TUẦN TRƯỚC, không phải hiện tại (loại A). Đồ thể thao - giảm giá tuần này (một phần đúng). Áo khoác + túi xách - ưu đãi đặc biệt hôm nay (C). Câu hỏi hỏi về đồ đang giảm giá - cả đồ thể thao và áo khoác đều đang giảm, nhưng đáp án C là combo áo khoác+túi xách vì đây là ưu đãi duy nhất chỉ có hôm nay. Kiểm tra lại đáp án với hình ảnh của đề."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Which place will the people visit first on the tour?",
+          "answer": "A",
+          "script": "Woman: Good morning, and welcome to this walking tour of the city. We'll see many interesting places in the city this morning. As it's a beautiful day, the aim is to stop at an outdoor café by the river for a snack about eleven thirty. Before that, though, we'll spend an hour or so at the castle, which we'll start walking towards in a minute or two. The walk will end at the museum and we'll look round an interesting exhibition that's on there at the moment.",
+          "paraphrase": "The tour begins at the castle, followed by a café stop by the river, and ends at the museum.",
+          "explanation": "Quán cà phê bên sông - đến lúc 11 giờ 30, không phải đầu tiên (loại B). Bảo tàng - điểm KẾT THÚC của tour (loại C). Lâu đài (castle) - 'we'll start walking towards in a minute or two' = địa điểm đầu tiên (A). Từ khoá: 'Before that, though, we'll spend an hour or so at the castle' + 'start walking towards in a minute'."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Which tickets did the man buy?",
+          "answer": "B",
+          "script": "Man: Andy – great news! I got the tickets for the concert. Um, the ones we wanted – the 20 euro ones – weren't available, I'm afraid, so I had to pay a bit more. Not too much though – 30 euros each isn't too bad, is it? At least we didn't end up having to get the top-priced ones – I mean, 50 euros! They're a great band and I'm sure they're worth it – but that's still a lot to pay.",
+          "paraphrase": "The man bought the 30-euro tickets after the 20-euro ones sold out, avoiding the most expensive 50-euro option.",
+          "explanation": "Ba mức giá: 20 euro (hết vé - loại A), 30 euro (mua được - B), 50 euro (đắt nhất, không mua - loại C). Từ khoá: '30 euros each isn't too bad, is it?' = mức giá đã mua. Đây là bẫy số điển hình - ba con số được nhắc, chỉ một là đáp án đúng."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What does the man want to buy?",
+          "answer": "C",
+          "script": "Woman: Good afternoon, sir. I see you're looking at our electric guitars. Beautiful, aren't they? Would you like to have a go on one – see how it sounds?\nMan: Thank you. Yes, they look great, and I'm sure they sound great, too. It's your drums I'm interested in, though. Particularly that set there, near the window.\nWoman: Good choice. Do you play?\nMan: Actually, I only play one instrument. I've played the piano since I was a child, and I think it's time to learn something new.",
+          "paraphrase": "Despite being near the guitars, the man is there to buy a drum kit, as he already plays piano and wants to learn something new.",
+          "explanation": "Đàn guitar điện - người bán hàng nghĩ anh quan tâm đến guitar nhưng không phải (loại A). Đàn piano - anh đã biết chơi từ nhỏ, không cần mua (loại B). Trống (drums) - 'It's your drums I'm interested in, though' (C). Từ khoá: 'though' báo hiệu sự tương phản với điều vừa nói."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "Which type of exercise does the doctor recommend?",
+          "answer": "A",
+          "script": "Man: So, doctor. As my shoulder's getting better, can I start exercising it?\nWoman: Well, what type of exercise did you do before the operation?\nMan: I used to go to the gym, to lift weights. And I went running, too.\nWoman: Mm, lifting weights is something you'll have to give up. You need exercise that makes you move your shoulder, but in a gentle way. Such as swimming. Going running isn't as bad as lifting weights, but it might be painful at the moment.\nMan: OK, doctor. Thanks for the advice.",
+          "paraphrase": "The doctor recommends swimming as the most suitable exercise since it gently moves the shoulder without causing strain.",
+          "explanation": "Tập tạ - phải bỏ hoàn toàn (loại C). Chạy bộ - không tệ như tập tạ nhưng 'might be painful at the moment' (loại B). Bơi lội - 'Such as swimming' = ví dụ bác sĩ đưa ra cho loại tập nhẹ nhàng phù hợp (A). Từ khoá: 'exercise that makes you move your shoulder, but in a gentle way. Such as swimming'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "instructions": "Questions 8–13. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/ne7lkh61847shh22aoau1/Preliminary2_test4_audio2.mp3?rlkey=ul19h1mxkkpx8r2os88vv9ygy&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "context": "You will hear two friends talking about a hotel.",
+          "questionText": "They agree that",
+          "options": {
+            "A": "the staff are very friendly.",
+            "B": "the rooms have good views.",
+            "C": "the food there is excellent."
+          },
+          "answer": "A",
+          "script": "Man: How was your stay at the Grand Hotel?\nWoman: Great – I could see the mountains from my bedroom window – they looked so beautiful!\nMan: You definitely got a better room than I did when I stayed there last year – all I could see was a brick wall! The hotel restaurant could be better too.\nWoman: It could, but I found a wonderful place to eat nearby so it didn't matter.\nMan: The people who work there are very cheerful, though.\nWoman: They certainly made me feel welcome and room service were really helpful too. Not like some hotels, where the employees hardly smile at all.",
+          "paraphrase": "Both friends agreed that the hotel staff were exceptionally friendly and welcoming.",
+          "explanation": "View phòng - người phụ nữ có view núi đẹp nhưng người đàn ông chỉ thấy tường gạch - không đồng ý (loại B). Đồ ăn - cả hai đều thấy nhà hàng cần cải thiện (loại C). Nhân viên - người đàn ông 'very cheerful', người phụ nữ 'made me feel welcome' và khen room service (A). Từ khoá: 'The people who work there are very cheerful' + 'They certainly made me feel welcome'."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "context": "You will hear two friends talking about an art exhibition.",
+          "questionText": "Why was the woman disappointed with it?",
+          "options": {
+            "A": "There weren't many paintings.",
+            "B": "It was very expensive.",
+            "C": "The gallery was too dark."
+          },
+          "answer": "C",
+          "script": "Man: I enjoyed that exhibition – I think that style of painting's very original.\nWoman: I agree, although I prefer exhibitions with fewer works of art to see so you can spend more time looking at each one. I felt like I was hurrying from one painting to the next in order to see them all. It's a shame there weren't a few more windows in there – I actually found it quite hard to see some of the paintings.\nMan: Yes, me too, but we certainly got value for money!\nWoman: That's true. I'm surprised they weren't charging more, actually.",
+          "paraphrase": "The woman was disappointed mainly because the gallery did not have enough natural light, making it difficult to see the paintings properly.",
+          "explanation": "Ít tranh - ngược lại, có quá NHIỀU tranh đến mức phải vội vã (loại A). Đắt tiền - cả hai đồng ý rất đáng tiền, thậm chí ngạc nhiên vì không đắt hơn (loại B). Tối - 'a shame there weren't a few more windows... hard to see some of the paintings' (C). Từ khoá: 'hard to see some of the paintings' = gallery quá tối."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "context": "You will hear two friends talking about a book they've read.",
+          "questionText": "They both think it would be better if it had",
+          "options": {
+            "A": "a more original ending.",
+            "B": "more interesting characters.",
+            "C": "more action in the story."
+          },
+          "answer": "C",
+          "script": "Man: I've finished that book you lent me.\nWoman: Did you enjoy it?\nMan: Not as much as I thought I would, actually. I'm into books where you learn a bit about the main characters, but there's also plenty going on. I wasn't so keen on reading whole chapters about their thoughts, however interesting the people are!\nWoman: Yes, those sections were pretty long, I guess, and not much happened in them, which is a bit of a shame. I must admit that the ending came as a complete surprise, though.\nMan: It was the only part of the book that I really enjoyed reading.",
+          "paraphrase": "Both readers felt the book spent too many pages on characters' thoughts and not enough on actual events.",
+          "explanation": "Kết thúc - người phụ nữ thấy bất ngờ (không phải ý kiến tiêu cực), người đàn ông thích phần kết nhất (loại A - kết thúc tốt). Nhân vật - người đàn ông thấy nhân vật thú vị ('however interesting the people are') (loại B). Hành động - cả hai đồng ý có quá nhiều đoạn nội tâm và 'not much happened' (C). Từ khoá: 'plenty going on' (người đàn ông muốn) + 'not much happened in them' (người phụ nữ đồng ý)."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "context": "You will hear a woman telling a friend about a visit to the hairdresser's.",
+          "questionText": "What does she say about it?",
+          "options": {
+            "A": "The haircut wasn't good value.",
+            "B": "The place wasn't very tidy.",
+            "C": "The hairdresser wasn't very friendly."
+          },
+          "answer": "A",
+          "script": "Man: You don't look happy – what's up?\nWoman: I've just been to the hairdresser's – I'm really disappointed.\nMan: Oh? Your hair doesn't look that different actually!\nWoman: Exactly! I explained clearly what I wanted, but the guy who did it just smiled and started cutting! He only worked on it for a few minutes. It's usually good in there – very organised, you know, not lots of hair left all over the floor like in some places.\nMan: Why didn't you complain?\nWoman: I know. Now I'll have to get it done again soon. So it was hardly worth what I had to pay!",
+          "paraphrase": "The woman felt the haircut was poor value because very little was done despite paying full price, and she will need it redone.",
+          "explanation": "Không gọn gàng - 'very organised, not lots of hair left all over the floor' (ngược lại với B). Thợ cắt không thân thiện - anh ta 'just smiled' và làm việc, không phải thô lỗ (loại C). Không đáng tiền - 'it was hardly worth what I had to pay' + sẽ phải làm lại (A). Từ khoá: 'hardly worth what I had to pay' = 'wasn't good value'."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "context": "You will hear a woman telling a friend about her singing class.",
+          "questionText": "What is she surprised about?",
+          "options": {
+            "A": "the size of the group",
+            "B": "how confident she feels about singing",
+            "C": "the attention she gets from the teacher"
+          },
+          "answer": "B",
+          "script": "Man: Hi Ellie, how are your singing classes going?\nWoman: Great, thanks! We're doing a concert next month – I hope we'll be ready! I couldn't sing at all before I started, and I never thought I'd be able to perform in public!\nWoman: It helps that the group isn't very big – that's actually why I chose the class, because the teacher can spend so much time with each person. It's amazing that I've improved so much – and I don't worry at all anymore about singing with people who are much better than me.",
+          "paraphrase": "Ellie is amazed at how much her confidence has grown since she never expected to be able to sing in front of an audience.",
+          "explanation": "Quy mô lớp - cô biết trước khi chọn lớp vì đó là lý do chọn (loại A - không phải bất ngờ). Thầy chú ý nhiều - cô biết vì lớp nhỏ, không bất ngờ (loại C). Tự tin khi hát - 'I never thought I'd be able to perform in public' + 'It's amazing that I've improved so much' (B). Từ khoá: 'never thought I'd be able to' + 'It's amazing' = điều bất ngờ."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "context": "You will hear two friends talking about a new sports centre.",
+          "questionText": "What do they agree would improve it?",
+          "options": {
+            "A": "reducing the entry price",
+            "B": "offering classes at different times",
+            "C": "changing the temperature in the pool"
+          },
+          "answer": "C",
+          "script": "Man: Hi! What did you think of the new sports centre?\nWoman: Well, you were right about the price – I swam for an hour and it cost less than a session in the old place! But they should do something about how cold it is in the pool. I needed a hot shower afterwards!\nMan: I felt the same. Pity – they've spent so much on the building and the new classes. I'm going to try some of them – there's lots going on.\nWoman: I'd love to do one of their classes in the evening. It depends how much they cost.\nMan: Me too.",
+          "paraphrase": "Both friends agreed the pool was too cold and that this was the main thing that needed to be improved.",
+          "explanation": "Giảm giá vào cửa - đã rẻ hơn chỗ cũ rồi, cả hai hài lòng (loại A). Lịch lớp học - người phụ nữ muốn lớp buổi tối nhưng người đàn ông không rõ đồng ý hay không (loại B - không đủ đồng thuận). Nhiệt độ hồ bơi - người phụ nữ 'they should do something about how cold it is', người đàn ông 'I felt the same' (C). Từ khoá: 'I felt the same' = xác nhận cả hai đồng ý."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "instructions": "Questions 14–19. For each question, write the correct answer in the gap. Write one or two words or a number or a date or a time.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/n119u3rgv2on4bnvxtkdn/Preliminary2_test4_audio3.mp3?rlkey=tknz1uwnaxx7225eqr04wxi2n&raw=1",
+      "noteTitle": "Classic car race",
+      "context": "You will hear an announcement at a classic car race event.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "Before the race - see the cars, next to the",
+          "afterGap": ".",
+          "answer": "LAKE",
+          "acceptedAnswers": ["LAKE"],
+          "script": "These classic cars are old and very beautiful, so we're giving you the chance to have a look at them before the race begins. Come down to the lake – they're parked beside it. If you're not sure where that is, go to the fountain and follow the signs.",
+          "paraphrase": "Visitors can view the classic cars before the race as they are parked beside the lake.",
+          "explanation": "Đài phun nước (fountain) được nhắc như điểm định hướng để tìm đường đến hồ - đây là bẫy nhiễu. Xe đỗ bên cạnh hồ (lake). Từ khoá: 'Come down to the lake – they're parked beside it'."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Enter a competition to win a",
+          "afterGap": ".",
+          "answer": "HOLIDAY",
+          "acceptedAnswers": ["HOLIDAY"],
+          "script": "And why not enter our competition? Just answer the questions on the form you received when you entered the park, and put it in the box. You never know, you might be the lucky person who gets the holiday!",
+          "paraphrase": "There is a competition where visitors can win a holiday by answering questions on a form and submitting it.",
+          "explanation": "Phần thưởng cuộc thi là kỳ nghỉ (holiday). Cách tham gia: điền form nhận khi vào cổng và bỏ vào hộp. Từ khoá: 'you might be the lucky person who gets the holiday'."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "Buy",
+          "afterGap": "at a lower price than usual at the café.",
+          "answer": "BURGERS",
+          "acceptedAnswers": ["BURGERS", "A BURGER", "BURGER"],
+          "script": "If you're hungry before the race, there's a café which serves sandwiches, ice-creams, and some hot food. There's a special discount on burgers today! All food is freshly prepared.",
+          "paraphrase": "The café is offering a special discount on burgers today alongside its usual menu of sandwiches and ice creams.",
+          "explanation": "Nhiều món được nhắc: bánh mì sandwich, kem, đồ nóng - nhưng chỉ burger có giảm giá đặc biệt hôm nay. Từ khoá: 'special discount on burgers today' = mua được với giá thấp hơn bình thường."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The race starts at",
+          "afterGap": "p.m.",
+          "answer": "2.30",
+          "acceptedAnswers": ["2.30", "2:30", "TWO THIRTY", "HALF PAST TWO"],
+          "script": "It's one o'clock now, which means there's still another hour and a half until the cars set off – that's at half past two.",
+          "paraphrase": "The race is scheduled to start at 2:30 p.m., which is one and a half hours after the announcement at 1 p.m.",
+          "explanation": "Hai con số được nhắc: 1 giờ (thời điểm thông báo) và 2 giờ 30 (giờ xuất phát). Đây là bẫy tính toán - nghe '1 giờ' + 'thêm 1 tiếng rưỡi' = 2:30. Từ khoá: 'half past two' = 2.30 p.m."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "After the race - use the",
+          "afterGap": "exit to get to the station.",
+          "answer": "NORTH",
+          "acceptedAnswers": ["NORTH"],
+          "script": "After the race has finished, if you need the train station, please avoid the south exit, as that's the one nearest to the car park, and we don't want too many people using each exit. Those travelling by train need the north exit.",
+          "paraphrase": "Passengers taking the train should leave via the north exit, not the south exit which is for car park users.",
+          "explanation": "Bẫy phương hướng: cửa nam (south) được nhắc TRƯỚC nhưng là cửa cần TRÁNH. Cửa bắc (north) là cửa dành cho người đi tàu. Từ khoá: 'avoid the south exit... Those travelling by train need the north exit'."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "Upload your photos to www.",
+          "afterGap": ".org",
+          "answer": "CHEPPSAT",
+          "acceptedAnswers": ["CHEPPSAT"],
+          "script": "So please upload them to our website. The website has the name of the village near to this park: www.cheppsat.org. I'll spell Cheppsat for you. It's C-H-E double P-S-A-T.",
+          "paraphrase": "Visitors are encouraged to upload their photos to the website cheppsat.org, named after the nearby village, with the spelling provided letter by letter.",
+          "explanation": "Người đọc đánh vần rõ ràng C-H-E-double P-S-A-T - đây là tín hiệu quan trọng cần ghi chính xác. Câu bài thi đã cho 'www.' và '.org', chỉ cần điền 'cheppsat'. Lưu ý 'double P' = PP."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "instructions": "Questions 20–25. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/vn9i81fy8n0b94pcfhtgh/Preliminary2_test4_audio4.mp3?rlkey=p7kum32xw9be1kzmsooxpqupt&raw=1",
+      "context": "You will hear an interview with a young writer called Jenny Taylor, who has just had her first novel published.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "What does Jenny say about school?",
+          "options": {
+            "A": "She read a lot of poems there.",
+            "B": "She was proud of what she wrote there.",
+            "C": "She admired someone there."
+          },
+          "answer": "C",
+          "script": "When I was at school, I always loved reading, though I preferred stories to poems. Then we got a new English Literature teacher who wrote things herself and encouraged us to do the same. I really wanted to write like her. That made me work hard even though I never felt what I did was much good.",
+          "paraphrase": "Jenny admired her new English teacher who was a writer herself and inspired Jenny to work hard at writing.",
+          "explanation": "Thơ - cô thích truyện hơn thơ (loại A). Tự hào về bài viết - 'I never felt what I did was much good' (loại B - ngược lại). Ngưỡng mộ ai đó - 'I really wanted to write like her' = ngưỡng mộ giáo viên (C). Từ khoá: 'I really wanted to write like her' = admired someone."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "How did Jenny get the idea for her first novel?",
+          "options": {
+            "A": "talking to friends and family",
+            "B": "watching strangers",
+            "C": "looking on the internet"
+          },
+          "answer": "B",
+          "script": "Well, I always notice how people behave. I often go out with friends and family and they'd all go online using their phones, and I'd just sit back and think about the other people around me. I'd start imagining what their lives were like, and it all grew from that.",
+          "paraphrase": "Jenny got her ideas by observing and imagining the lives of strangers around her while her friends and family were on their phones.",
+          "explanation": "Nói chuyện với bạn bè và gia đình - họ mải dùng điện thoại trong khi Jenny quan sát người lạ (loại A). Internet - đó là việc bạn bè làm, không phải Jenny (loại C). Quan sát người lạ - 'think about the other people around me... imagining what their lives were like' (B). Từ khoá: 'the other people around me' = strangers."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "What's Jenny's novel about?",
+          "options": {
+            "A": "a famous historical event",
+            "B": "a long journey",
+            "C": "a family's problems"
+          },
+          "answer": "C",
+          "script": "Yes, it's about a girl and her parents. It starts when they spend a day somewhere their relatives lived in the past. It includes some interesting facts about the place, but the story focuses on the different challenges they have to deal with as they learn more about what happened long ago.",
+          "paraphrase": "The novel centres on a girl and her parents facing various challenges as they discover their family's past.",
+          "explanation": "Sự kiện lịch sử nổi tiếng - có thông tin lịch sử nhưng đó không phải trọng tâm (loại A). Hành trình dài - họ chỉ dành một ngày ở một nơi (loại B). Vấn đề của gia đình - 'about a girl and her parents... the different challenges they have to deal with' (C). Từ khoá: 'challenges they have to deal with' = family's problems."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "How does Jenny feel about her novel?",
+          "options": {
+            "A": "satisfied that it has a good story",
+            "B": "pleased that people are buying it",
+            "C": "surprised that it was published"
+          },
+          "answer": "A",
+          "script": "Well, it took quite a while to write. I showed it to a friend when I thought it was ready to be published, and he agreed. He also helped me find a company to do that. I'm sure people will want to keep turning the pages to find out how it ends. Anyway, I really hope it'll sell well.",
+          "paraphrase": "Jenny is confident the story will keep readers engaged and turning pages, showing satisfaction with the narrative.",
+          "explanation": "Hài lòng vì doanh số - 'I really HOPE it'll sell well' (chưa biết, chỉ hy vọng - loại B). Ngạc nhiên vì được xuất bản - cô chủ động tìm nhà xuất bản (không bất ngờ - loại C). Hài lòng với cốt truyện - 'I'm sure people will want to keep turning the pages' = tự tin vào câu chuyện (A). Từ khoá: 'keep turning the pages to find out how it ends' = good story."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "What does Jenny say about her writing routine?",
+          "options": {
+            "A": "She does her best writing in the morning.",
+            "B": "She wears pyjamas when she writes.",
+            "C": "She likes to write a similar amount every day."
+          },
+          "answer": "B",
+          "script": "Well, I get up early in the morning and start writing for a couple of hours without changing out of my pyjamas. I'll even have lunch in them, and then write for a couple more hours. When things are going well, I can write for up to sixteen hours.",
+          "paraphrase": "Jenny typically writes in her pyjamas all day, sometimes working from early morning right through to lunch and beyond.",
+          "explanation": "Viết tốt nhất vào buổi sáng - cô cũng viết buổi chiều và đôi khi đến 16 tiếng (loại A - không phải chỉ buổi sáng). Viết lượng tương đương mỗi ngày - 'up to sixteen hours' khi suôn sẻ (loại C - không đều). Mặc pyjamas khi viết - 'without changing out of my pyjamas... even have lunch in them' (B). Từ khoá: 'without changing out of my pyjamas'."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "What does Jenny usually read for pleasure?",
+          "options": {
+            "A": "funny stories",
+            "B": "exciting stories",
+            "C": "true stories"
+          },
+          "answer": "A",
+          "script": "I read a variety of things as research for my writing – books about science, biographies, that sort of thing. But what I choose when I relax is things that are amusing, rather than anything too serious. It's like an escape from real life.",
+          "paraphrase": "When reading for enjoyment rather than research, Jenny prefers light and amusing stories as a way to relax.",
+          "explanation": "Sách nghiên cứu - khoa học, tiểu sử (nonfiction/true stories) nhưng đó là ĐỌC CHO CÔNG VIỆC, không phải giải trí (loại C). Truyện hồi hộp - không được nhắc (loại B). Truyện hài hước - 'things that are amusing, rather than anything too serious' = funny stories (A). Từ khoá: 'amusing' = funny; 'when I relax' = for pleasure."
+        }
+      ]
+    }
+
+  ]
+}
