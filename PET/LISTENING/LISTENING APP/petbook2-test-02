@@ -1,0 +1,361 @@
+{
+  "testId": "petbook2-test-02",
+  "title": "PET Listening Test 02 BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "instructions": "Questions 1–7. For each question, choose the correct answer.",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/zm7z9eds9sm02dwr0bk89/book2-test-2-part-1-1-3.png?rlkey=x9oh65rnbfhesb1vbgnl5yrxt&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/qad2llbr1anshyeft3go9/book2-test-2-part-1-4-7.png?rlkey=05ajz2yizxk8zl98g4k0ekjtg&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "audioUrl": "https://www.dropbox.com/scl/fi/tnzozzpo8yfpex63unu3p/Preliminary2_test2_audio1.mp3?rlkey=ucqii66zrhkkp1os010vq4g8b&raw=1",
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What does the man decide to buy?",
+          "answer": "B",
+          "script": "Man: Can you help me decide what to buy? I'm having problems.\nWoman: Sure, so what were you thinking of getting?\nMan: Well, I really love this belt – it's such good quality leather.\nWoman: But it's so expensive. I thought you said before you wanted to get something in the sale.\nMan: I suppose you're right.\nWoman: What about this tie? It's very smart.\nMan: Mmm, I think it'd look good with most of my shirts. I'll go for that. I love this hat though!\nWoman: It's nice – but the colour's a bit strange.\nMan: Yeah, maybe you're right.",
+          "paraphrase": "The man chose to buy the tie because it would go well with his shirts and was on sale.",
+          "explanation": "Người đàn ông ban đầu thích cái thắt lưng (belt) nhưng bị thuyết phục vì quá đắt. Sau đó anh quyết định mua cà vạt (tie) vì hợp với áo sơ mi. Chiếc mũ (hat) bị loại vì màu lạ. Từ khoá: 'I'll go for that' = quyết định mua cà vạt."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What kind of job has the woman applied for?",
+          "answer": "A",
+          "script": "Woman: I've just sent in an application for another job.\nMan: Oh, yes?\nWoman: Yeah, I've worked at the library for a while now and I love what I do but so much of the work involves being on a computer, rather than dealing with books. I've done an online training course in handling old, historical documents and the town museum's looking for an assistant who's able to do that sort of thing. I saw the ad on their website, so I thought I'd try for it.\nMan: Sounds interesting! Good luck!",
+          "paraphrase": "The woman applied for a job at the local museum that involves working with old historical documents.",
+          "explanation": "Người phụ nữ đang làm ở thư viện (library) nhưng xin việc tại bảo tàng (museum) để làm việc với tài liệu lịch sử cổ. Đáp án nhiễu: thư viện - đó là nơi cô đang làm, không phải xin việc. Từ khoá: 'the town museum's looking for an assistant' + 'handling old, historical documents'."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "How will the man travel to work today?",
+          "answer": "B",
+          "script": "Man: Hi, it's Simon. I'm sorry but I'm going to be late for work today. My car's broken down, and I've no idea what's wrong with it. It just wouldn't start this morning … so annoying! I called for a taxi, but there's nothing available for at least an hour. They're all busy because of the heavy rain. Anyway, I don't fancy cycling in this weather so my neighbour's going to give me a lift to the station. The trains are every half hour – it'll be quicker than having to wait for a taxi.",
+          "paraphrase": "Since his car broke down and no taxi was available, the man got a lift to the station and took the train.",
+          "explanation": "Ba phương tiện bị loại: ô tô (hỏng), taxi (không có), xe đạp (không muốn đi trời mưa). Hàng xóm chở đến ga, anh đi tàu. Từ khoá: 'give me a lift to the station. The trains are every half hour – it'll be quicker' = đi tàu."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Where does the man think he lost his wallet?",
+          "answer": "A",
+          "script": "Woman: Are you all right?\nMan: No, I've just realised as I was coming up in the elevator that I've lost my wallet!\nWoman: Oh no.\nMan: I obviously had it in the grocery store.\nWoman: Yes … because you bought all that stuff. Did you go anywhere after that?\nMan: Yeah, the bookstore. I guess it fell out of my pocket when I took my jacket off – it was so warm in there. I seem to remember hearing a noise but I didn't check!\nWoman: Oh, well, you'd better go back again.",
+          "paraphrase": "The man thinks he dropped his wallet in the bookstore when he took off his jacket because it was warm.",
+          "explanation": "Anh ấy có ví ở cửa hàng tạp hóa (grocery store) vì đã mua đồ. Sau đó vào hiệu sách (bookstore) và cảm thấy ví rơi ra khi cởi áo khoác vì trời nóng. Đáp án nhiễu: grocery store - anh còn ví lúc đó; thang máy - chỉ là nơi anh phát hiện ra mất ví. Từ khoá: 'I guess it fell out of my pocket when I took my jacket off' ở bookstore."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "What will the man make for dinner tonight?",
+          "answer": "A",
+          "script": "Man: Hi, I'm just phoning to let you know that I'm going to make the dinner this evening. I know we usually have a pizza delivered on Thursdays, but as we had one when we were out the other day, I'd rather have something else. Anyway, I thought you wouldn't say 'no' to a lovely steak – we could eat in the garden. I know you were talking about having fish and salad one day this week, but I feel like something more than that. Let me know what time you'll be home. Bye!",
+          "paraphrase": "The man decided to cook steak for dinner instead of ordering pizza or making fish and salad.",
+          "explanation": "Ba món được nhắc: pizza (thường đặt thứ 5 nhưng vừa ăn rồi), cá và salad (nghe nhắc đến nhưng người đàn ông không muốn), bít tết (steak - quyết định cuối). Từ khoá: 'I thought you wouldn't say no to a lovely steak' = anh chọn nấu steak."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "Who was the woman's favourite character in the film?",
+          "answer": "B",
+          "script": "Man: That was a good film! I got a bit confused about who was who – there were so many different characters.\nWoman: I agree. That female police detective was my favourite.\nMan: Which one? There were quite a few. Do you mean the one with long dark curly hair?\nWoman: She had similar hair – curly, but not long. She was the one who had a male colleague with short dark hair and glasses. And his hair was straight.\nMan: Oh, I know the one you mean now. Yes, she was great.",
+          "paraphrase": "The woman's favourite character was the female detective with short curly hair whose colleague wore glasses.",
+          "explanation": "Người phụ nữ mô tả: tóc xoăn nhưng KHÔNG dài (loại đáp án tóc dài xoăn). Đồng nghiệp nam của cô có tóc thẳng ngắn và đeo kính - đây là chi tiết nhận dạng. Câu hỏi kiểm tra khả năng nghe mô tả ngoại hình chi tiết. Từ khoá: 'curly, but not long' + 'male colleague with short dark hair and glasses'."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "What does the girl want her father to deliver?",
+          "answer": "C",
+          "script": "Girl: Hi Dad. Can you do me a favour? I've got to go and collect my new glasses from the shop in town and go to the library, so I won't be home before you go out. But I've left my keys behind, so I won't be able to get back in. If you're driving past the library, would you mind bringing them for me if I wait outside? You'll find them on the table: do you remember – I was sitting there writing some notes for my essay last night? Thanks. Bye!",
+          "paraphrase": "The girl left her house keys on the table and asked her father to bring them to the library.",
+          "explanation": "Cô bé nhắc đến kính (glasses - đi lấy từ cửa hàng) và thư viện (library - nơi đến), nhưng thứ cô nhờ bố mang đến là chìa khóa (keys) để cô vào nhà được. Từ khoá: 'I've left my keys behind... would you mind bringing them for me'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "instructions": "Questions 8–13. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/w6jprsz5okkn8cfepgmzj/Preliminary2_test2_audio2.mp3?rlkey=88tyshckrdfnh90r2kv6li6xz&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "context": "You will hear two friends talking about some work the man has to do.",
+          "questionText": "The woman tells the man not to worry about",
+          "options": {
+            "A": "how quickly he does the work.",
+            "B": "the order in which he does the work.",
+            "C": "having to ask for support from others."
+          },
+          "answer": "B",
+          "script": "Man: I've got so much to do at work this week, I don't know how I'm going to finish it all in time.\nWoman: If there's no-one available to help you, then do what I do. Write everything on a list and work out the time you need to do each thing. Pick any job from the list based on the time you've got available. It doesn't matter if you do the first thing or the last thing on the list, as long as you do something. You'll soon find you're making progress.\nMan: Thanks. I'll give that a try.",
+          "paraphrase": "The woman advised the man to just pick any task from his list and not worry about which order he does them in.",
+          "explanation": "Người phụ nữ nói 'It doesn't matter if you do the first thing or the last thing on the list' - tức là không cần lo về thứ tự làm việc. Đáp án nhiễu: A - cô không nói về tốc độ; C - cô nói 'if there's no-one available to help' nhưng không khuyên anh đừng lo về điều đó. Từ khoá: 'It doesn't matter... first thing or the last thing' = không cần lo về thứ tự."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "context": "You will hear two students talking about a history website.",
+          "questionText": "They agree that",
+          "options": {
+            "A": "it looks good.",
+            "B": "it's easy to use.",
+            "C": "it's useful for studying."
+          },
+          "answer": "C",
+          "script": "Man: Have you been on that history website yet?\nWoman: Once or twice. I like the appearance of it, but I thought there'd be more links to articles about different topics we're doing on our course. What I have found, though, has been helpful for the essay I'm writing.\nMan: There are plenty of articles on there, you know. I've found loads connected to stuff on our course. Maybe you haven't tried the advanced search option. That's the best way to find what you want.\nWoman: Oh, right – can you show me how to do that?\nMan: Sure. No problem.",
+          "paraphrase": "Both students found the website helpful for their coursework, even though the woman had trouble finding articles at first.",
+          "explanation": "Người phụ nữ thấy giao diện đẹp (A) nhưng người đàn ông không nhắc đến - không thể là đáp án cả hai đồng ý. Cả hai đều thấy website hữu ích cho học tập (cô: 'helpful for the essay'; anh: 'loads connected to stuff on our course'). B bị loại vì người phụ nữ gặp khó khăn khi dùng. Từ khoá: cả hai đều confirm nó hữu ích cho việc học."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "context": "You will hear two friends talking about the woman's holiday.",
+          "questionText": "How did she feel about it?",
+          "options": {
+            "A": "satisfied with the food that she tried",
+            "B": "impressed with the hotel she stayed in",
+            "C": "pleased with the prices she paid for things"
+          },
+          "answer": "C",
+          "script": "Man: How was your summer holiday on the south coast?\nWoman: We had a brilliant time!\nMan: So was your hotel good?\nWoman: I've stayed in better, to be honest, but that's OK. What I especially loved was the fact that I didn't need to spend all the money I took with me. Seriously!\nMan: Wow! You don't often hear someone say that after a holiday. Did you eat out a lot while you were there?\nWoman: Every day, actually. It cost so much less than it does here in the city, although there wasn't much variety of dishes to choose from.\nMan: Right.",
+          "paraphrase": "The woman was most happy about how inexpensive everything was during her holiday compared to the city.",
+          "explanation": "Khách sạn - cô nói 'I've stayed in better' (loại B). Đồ ăn - ít món lựa chọn (loại A). Giá cả - 'I didn't need to spend all the money I took with me' + 'cost so much less' = hài lòng về giá (C). Từ khoá: 'What I especially loved was the fact that I didn't need to spend all the money' = pleased with prices."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "context": "You will hear two friends talking about a shopping centre.",
+          "questionText": "They agree that it needs to have",
+          "options": {
+            "A": "extra space for parking.",
+            "B": "more places to eat.",
+            "C": "a wider range of shops."
+          },
+          "answer": "A",
+          "script": "Woman: I went to the new shopping centre yesterday.\nMan: Oh, I wasn't impressed by it myself but I only went to a department store and some shoe shops.\nWoman: I found everything I needed, but then when I went for something to eat there, could I find a suitable restaurant? Not a chance … just stalls selling coffee.\nMan: Oh, there's a nice place on the top floor. But as for the car park, I can't believe they thought that one would be enough for a place that size.\nWoman: They really need to do something about that. Anyway, I'm not planning on shopping there again for a while.",
+          "paraphrase": "Both friends agreed that the shopping centre's single car park is completely inadequate for its size.",
+          "explanation": "Chỗ ăn uống - chỉ người phụ nữ phàn nàn, người đàn ông nói có nhà hàng trên tầng trên (loại B). Cửa hàng - không ai đề cập cần thêm loại cửa hàng (loại C). Bãi đỗ xe - người đàn ông nêu vấn đề, người phụ nữ đồng ý 'They really need to do something about that' (A). Từ khoá: 'I can't believe they thought that one would be enough' + 'They really need to do something about that'."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "context": "You will hear two friends talking about playing golf.",
+          "questionText": "What does the woman say about it?",
+          "options": {
+            "A": "She hopes she'll be able to play it more often.",
+            "B": "She thinks the rules are too complicated.",
+            "C": "She believes she has a talent for it."
+          },
+          "answer": "C",
+          "script": "Man: I've heard you've started playing golf. How are you getting on with it?\nWoman: That's right. I took it up a couple of months ago. But actually, if you saw me out there on the golf course, I think you'd be impressed by my ability! Honestly! It's not like chess or cricket, where so many people get confused about the rules. As far as I'm concerned, it couldn't be simpler. I wouldn't want to play any more than I do now though, as a game takes so long.\nMan: Personally, I've never liked it … I prefer other sports!",
+          "paraphrase": "The woman thinks she is naturally good at golf and finds the rules straightforward, though she does not want to play more often.",
+          "explanation": "Người phụ nữ nói 'you'd be impressed by my ability' - cô tự tin vào khả năng của mình (C). Đáp án nhiễu: A - cô nói 'I wouldn't want to play any more than I do now' (ngược lại); B - cô nói luật rất đơn giản, không phức tạp. Từ khoá: 'impressed by my ability' = 'believes she has a talent for it'."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "context": "You will hear two friends talking about a novel.",
+          "questionText": "What does the man say about it?",
+          "options": {
+            "A": "The characters aren't very interesting.",
+            "B": "The chapters are too long.",
+            "C": "The story isn't very realistic."
+          },
+          "answer": "A",
+          "script": "Woman: Have you finished reading that novel I lent you?\nMan: Yeah. I thought it was OK … not great. I mean, the situation the family find themselves in is something that most people are familiar with … but it was kind of hard to get excited about the people in the story. I just didn't feel curious about them. Also, I don't understand why, in a novel that length, the author decided to have so many chapters. It interrupted things and the story didn't flow well.\nWoman: Oh, OK. Well, I quite enjoyed the story actually.",
+          "paraphrase": "The man found the characters uninteresting and felt no curiosity about them, though he found the story situation familiar.",
+          "explanation": "Cốt truyện - 'something that most people are familiar with' (bình thường, không phi thực tế - loại C). Số chương - nhiều chương nhưng không nói chương dài, chỉ nói nhiều chương làm gián đoạn (loại B). Nhân vật - 'hard to get excited about the people... I just didn't feel curious about them' (A). Từ khoá: 'hard to get excited about the people in the story' = 'characters aren't very interesting'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "instructions": "Questions 14–19. For each question, write the correct answer in the gap. Write one or two words or a number or a date or a time.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/k4jrd81od8q36kjrfxr5h/Preliminary2_test2_audio3.mp3?rlkey=ghi6otjnfury6wp1wzni731bq&raw=1",
+      "noteTitle": "Japanese Taiko drumming class",
+      "context": "You will hear some information about a one-day drumming class.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "Students will need to have a lot of",
+          "afterGap": "for the class.",
+          "answer": "ENERGY",
+          "acceptedAnswers": ["ENERGY"],
+          "script": "All that's required is plenty of energy. Your ability doesn't matter at all.",
+          "paraphrase": "The only requirement for the class is having lots of energy - skill level does not matter.",
+          "explanation": "Người nói nhấn mạnh 'All that's required is plenty of energy' - đây là yêu cầu duy nhất. Đáp án nhiễu: ability/skill - được nhắc nhưng nói 'doesn't matter'. Từ khoá: 'All that's required' = 'will need to have a lot of'."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Students will start the class by seeing a",
+          "afterGap": "before listening to a talk.",
+          "answer": "SHORT PERFORMANCE",
+          "acceptedAnswers": ["SHORT PERFORMANCE", "PERFORMANCE"],
+          "script": "The first thing you'll do is watch a short performance. Then, you'll listen to a Taiko expert from Japan who will tell you about the history of Japanese drumming.",
+          "paraphrase": "The class begins with students watching a short performance, followed by a talk from a Japanese Taiko expert.",
+          "explanation": "Trình tự: xem biểu diễn ngắn (short performance) → nghe chuyên gia nói về lịch sử. Câu bài thi dùng 'seeing' thay vì 'watching' - đây là paraphrase. Từ khoá: 'The first thing you'll do is watch a short performance'."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "In the morning, students will learn to",
+          "afterGap": "correctly.",
+          "answer": "STAND",
+          "acceptedAnswers": ["STAND"],
+          "script": "In the morning, we'll also go through the basics. It's important to get the way you stand right. This will help you with your movements.",
+          "paraphrase": "During the morning session, students focus on learning the correct standing position as a foundation for their movements.",
+          "explanation": "Câu bài thi hỏi học sinh học làm gì đúng cách - đó là đứng đúng tư thế (stand). 'Get the way you stand right' = 'learn to stand correctly'. Đây là kỹ năng cơ bản buổi sáng."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The afternoon session will focus on what are known as",
+          "afterGap": ".",
+          "answer": "STICK SKILLS",
+          "acceptedAnswers": ["STICK SKILLS"],
+          "script": "After lunch, we'll do what we call 'stick skills'. This is where you learn all about the variety of different sounds you can make with your drum groups.",
+          "paraphrase": "The afternoon is dedicated to stick skills, where students explore the different sounds they can produce with the drums.",
+          "explanation": "Người nói dùng đúng cụm từ 'stick skills' với dấu nháy, ngay sau 'what we call' - đây là thuật ngữ chuyên biệt cần ghi đúng. Hoạt động buổi chiều tập trung vào kỹ thuật sử dụng dùi trống."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Drumming improves people's",
+          "afterGap": "and fitness.",
+          "answer": "MOOD",
+          "acceptedAnswers": ["MOOD"],
+          "script": "It also puts you in a better mood. You'll feel great after a day of drumming.",
+          "paraphrase": "In addition to physical fitness, drumming also lifts your mood and makes you feel great.",
+          "explanation": "Câu bài thi có cấu trúc 'improves people's ___ and fitness'. Script nói 'puts you in a better mood' + đánh trống giúp tập thể dục (fitness). Từ khoá: 'better mood' = cải thiện 'mood'. Lưu ý: fitness được nhắc trước đó ('wonderful type of exercise, so you'll get fitter')."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The instructor's email address is",
+          "afterGap": "@taiko.uk",
+          "answer": "PAXMEN",
+          "acceptedAnswers": ["PAXMEN"],
+          "script": "If you're interested in attending the class, you'll need to send an email to the class instructor, Steve Paxmen. His address is paxmen at taiko dot uk.",
+          "paraphrase": "To register for the class, students should email the instructor Steve Paxmen at paxmen@taiko.uk.",
+          "explanation": "Tên của instructor là Steve Paxmen, và email dùng họ: paxmen@taiko.uk. Đây là dạng câu hỏi tên riêng - cần nghe chính xác và viết đúng chính tả. Câu bài thi đã cho sẵn '@taiko.uk', chỉ cần điền 'paxmen'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "instructions": "Questions 20–25. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/l3t4tlbfw2gx7mmc3zoza/Preliminary2_test2_audio4.mp3?rlkey=yl5o08pt80x1nusldgtnzl2cf&raw=1",
+      "context": "You will hear an interview with a young woman called Lara Andrews, who has a baking business.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Why did Lara decide to open her baking business?",
+          "options": {
+            "A": "Her parents encouraged her to do it.",
+            "B": "Her teacher thought she'd be successful.",
+            "C": "Her school friends bought cakes from her."
+          },
+          "answer": "A",
+          "script": "I've loved baking since I was a child, when I started baking for fun. Some of them even offered to pay me to make birthday cakes, but I just did it for fun. I also made one for a teacher who said it was brilliant. Anyway, when I told Mum and Dad, they said I should make a business out of it. They both work in sales, so I guess it's in our family!",
+          "paraphrase": "It was Lara's parents who suggested she turn her baking hobby into a business, given their own background in sales.",
+          "explanation": "Bạn bè đề nghị trả tiền nhưng Lara không nhận (loại C). Giáo viên khen ngon (loại B - không nói 'she'd be successful'). Bố mẹ là người nói 'you should make a business out of it' (A). Từ khoá: 'when I told Mum and Dad, they said I should make a business out of it' = 'her parents encouraged her'."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "What challenge did Lara have to deal with when she started her business?",
+          "options": {
+            "A": "managing her time",
+            "B": "dealing with complaints",
+            "C": "finding the right recipes"
+          },
+          "answer": "C",
+          "script": "I wanted everything to be absolutely perfect and I didn't always know where to look to learn about what ingredients to use, how much of each and so on. The internet was useful though, and luckily I haven't had to handle customers being negative about my products. I thought it'd take ages to get enough customers but fortunately it didn't.",
+          "paraphrase": "Lara's main challenge was figuring out the right ingredients and quantities to use when she first started baking professionally.",
+          "explanation": "Lara nói 'didn't always know... what ingredients to use, how much of each' = khó tìm công thức đúng (C). Đáp án nhiễu: B - 'luckily I haven't had to handle customers being negative' (không có vấn đề này); A - thời gian không được đề cập. Từ khoá: 'ingredients to use, how much of each' = 'finding the right recipes'."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "Lara says that baking bread is",
+          "options": {
+            "A": "more popular than making cakes.",
+            "B": "more difficult than making cakes.",
+            "C": "more fun than making cakes."
+          },
+          "answer": "B",
+          "script": "I love baking both! I love simple cakes, but I'll try making anything. Bread's complicated, so I'm always pleased when I get it right. It requires more skill and you have to be patient and do lots of things all in the right order.",
+          "paraphrase": "Lara considers bread more challenging than cakes because it demands more skill, patience, and careful sequencing.",
+          "explanation": "Lara nói bánh mì 'complicated', 'requires more skill', 'have to be patient' - khó hơn bánh ngọt (B). Đáp án nhiễu: A - không so sánh độ phổ biến; C - cô thích làm cả hai, không nói cái nào vui hơn. Từ khoá: 'Bread's complicated... requires more skill' = 'more difficult than making cakes'."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What does Lara feel that she needs to do to improve her business?",
+          "options": {
+            "A": "spend more money on advertising",
+            "B": "sell more traditional products",
+            "C": "develop more confidence in herself"
+          },
+          "answer": "C",
+          "script": "Well, I've recently had several ideas for working with and mixing together unusual ingredients, which I'm experimenting with, rather than just familiar favourites. I'm good at using my imagination – I just have to trust myself more that my ideas'll work. I recently put some ads in our local paper, and as a result, I've had several orders come in, which is great.",
+          "paraphrase": "Lara feels she already has creative ideas but needs to trust herself more and be more confident that her ideas will succeed.",
+          "explanation": "Quảng cáo - cô đã làm rồi và hiệu quả (loại A). Sản phẩm truyền thống - cô đang thử món mới, không về traditional (loại B). Tự tin - 'I just have to trust myself more that my ideas'll work' (C). Từ khoá: 'trust myself more' = 'develop more confidence in herself'."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "What does Lara intend to do in the future?",
+          "options": {
+            "A": "have her own café",
+            "B": "teach young people",
+            "C": "write a book"
+          },
+          "answer": "B",
+          "script": "One thing I'll definitely do is start a video blog for children and teenagers so they can bake with me as they watch. And a friend of mine suggested that I produce my own cookery book one day. I'm not sure about that though. I've also considered opening a café, but that's very different from what I really enjoy doing, which is baking at home.",
+          "paraphrase": "Lara is committed to starting a video baking blog for young people, while a café and a cookbook remain uncertain plans.",
+          "explanation": "Viết sách - bạn gợi ý nhưng 'I'm not sure about that' (loại C). Mở quán cà phê - 'considered' nhưng không chắc (loại A). Video blog cho trẻ em và thiếu niên - 'One thing I'll DEFINITELY do' (B). Từ khoá: 'definitely' = kế hoạch chắc chắn; 'children and teenagers' = 'teach young people'."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "Lara advises people who want to start a baking business to",
+          "options": {
+            "A": "learn from famous bakers.",
+            "B": "get a qualification before they start.",
+            "C": "be realistic about what they can achieve."
+          },
+          "answer": "C",
+          "script": "Well, speaking as someone with experience in this industry, I think it's important to remember that you'd be very lucky if you actually got rich. You don't need professional training, but do practise. Remember the old saying – practice makes perfect!",
+          "paraphrase": "Lara's advice is to have realistic expectations about success and to keep practising rather than expecting to get rich quickly.",
+          "explanation": "'You'd be very lucky if you actually got rich' = đừng kỳ vọng quá cao, hãy thực tế (C). Đáp án nhiễu: A - không nhắc đến học từ baker nổi tiếng; B - 'You don't need professional training' (ngược lại với B). Từ khoá: 'you'd be very lucky if you actually got rich' = 'be realistic about what they can achieve'."
+        }
+      ]
+    }
+
+  ]
+}
