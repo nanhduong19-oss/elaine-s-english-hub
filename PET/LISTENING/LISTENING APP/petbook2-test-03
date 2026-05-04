@@ -1,0 +1,361 @@
+{
+  "testId": "petbook2-test-03",
+  "title": "PET Listening Test 03 BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "instructions": "Questions 1–7. For each question, choose the correct answer.",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/vk6zrizgb4lah57f1g75f/book2-test-3-part-1-1-3.png?rlkey=iqv4mycwm3paeic1ztgul8vj9&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/2c5j8e5i9inrx6oxvq4t7/book2-test-3-part-1-4-7.png?rlkey=a3lc22zm7zqfcrdd5zatk0rea&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "audioUrl": "https://www.dropbox.com/scl/fi/duglefpi5s5ynehmx1ee5/Preliminary2_test3_audio1.mp3?rlkey=17ca4k9exd8mrbyvzvt12bfg6&raw=1",
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What did the man do yesterday?",
+          "answer": "C",
+          "script": "Woman: Did you go into town yesterday?\nMan: Yes. I wanted to take a jacket back to the shop 'cos it didn't fit. There was a huge queue though, so I decided to go back later and went off to do something at the bank. But it had closed by the time I got there, so I couldn't do that, either! I did manage to stop at the bookshop and get a novel I wanted, on the way back. The queue at the clothes shop was still no better, so I'll try tomorrow.",
+          "paraphrase": "The man went to town but only managed to buy a book, as both the clothes shop queue and the bank were problems.",
+          "explanation": "Người đàn ông dự định trả áo khoác (quần đếu dài - không làm được), định đến ngân hàng (đã đóng cửa - không làm được), chỉ mua được sách tại hiệu sách. Đáp án C là mua sách. Từ khoá: 'I did manage to stop at the bookshop and get a novel I wanted' - chỉ việc này thành công."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "How did the woman travel back from her holiday?",
+          "answer": "A",
+          "script": "Man: Hi – how was your trip?\nWoman: Lovely, thanks! And getting round the city by bus was so easy; we saw lots of interesting things.\nMan: When did you get home?\nWoman: Not until 3 a.m.! There was a storm, so all flights were delayed for hours. We just had to sit and wait!\nMan: Oh no! And I suppose getting home by train would take ages.\nWoman: Actually, the journey's not that long and the station wasn't far from our hotel. But the trains were affected too. The journey went pretty quickly after we'd taken off.",
+          "paraphrase": "Despite the storm causing delays, the woman eventually flew home as the journey went quickly once they took off.",
+          "explanation": "Xe buýt - dùng để tham quan trong kỳ nghỉ, không phải phương tiện về nhà. Tàu hỏa - bị ảnh hưởng bởi bão, không dùng. Máy bay - bị hoãn vì bão nhưng cuối cùng vẫn bay về ('after we'd taken off'). Từ khoá: 'taken off' = máy bay. Đây là bẫy vì xe buýt và tàu đều được nhắc đến nhưng không phải phương tiện về nhà."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Which hat did the fashion model wear in the photos?",
+          "answer": "A",
+          "script": "Man: I love these photos of you in this magazine, especially the ones with you in that hat!\nWoman: Thanks! I hadn't planned on wearing one, but the photographer suggested it. He had loads to choose from. Like, sun hats you'd wear to the beach, and baseball caps in different colours. But the woolly hat reminded me of the type my grandmother used to knit for me. So even though it was a sunny day, I thought it looked great, especially since it was a bright colour and went with my dress.",
+          "paraphrase": "The model chose a brightly coloured woolly hat that reminded her of the ones her grandmother used to knit.",
+          "explanation": "Ba loại mũ được nhắc: mũ đi biển (sun hats), mũ lưỡi trai (baseball caps), mũ len (woolly hat). Người mẫu chọn mũ len vì gợi nhớ mũ bà ngoại đan, màu sắc nổi bật hợp với váy. Từ khoá: 'woolly hat reminded me of the type my grandmother used to knit' + 'bright colour'."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Where did the man leave his driving licence?",
+          "answer": "C",
+          "script": "Man: Julia, it's Mark. I'm on my way back to the hotel. I left there to get my flight, but when I got to check-in at the airport, I realised I didn't have my driving licence with me. I think I left it on the bedside table in my room. No-one's answering the phone at the hotel reception, so I've had to go back for it. As soon as I've found it, I'll hurry back to the airport. I just hope I won't miss my flight.",
+          "paraphrase": "Mark left his driving licence on the bedside table in his hotel room and had to go back to collect it.",
+          "explanation": "Mark phát hiện mất giấy phép lái xe khi check-in tại sân bay, nhưng anh bỏ quên ở bàn đầu giường trong phòng khách sạn. Đáp án nhiễu: sân bay (nơi phát hiện ra, không phải nơi để quên); quầy lễ tân khách sạn (không ai bắt máy). Từ khoá: 'I think I left it on the bedside table in my room'."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Where are they going walking?",
+          "answer": "A",
+          "script": "Man: It's nearly time to go. Are you going to change your shoes? Those sandals don't look very suitable for a long walk!\nWoman: They'll be fine. After all, we're only walking along the beach.\nMan: Oh. Didn't I tell you? Rick changed the arrangements. We're meeting at the car park near the beach, but the walk we're doing is up the cliff path. My walking boots are still wet from the forest walk we did the other day, so I'm going to wear my trainers.\nWoman: OK. I'll do the same.",
+          "paraphrase": "The plan was changed by Rick - instead of walking on the beach, they will be going up the cliff path.",
+          "explanation": "Người phụ nữ nghĩ họ đi dọc bãi biển (beach), rừng được nhắc là nơi đã đi hôm trước. Kế hoạch thực tế do Rick thay đổi là đường mòn trên vách đá (cliff path). Từ khoá: 'Rick changed the arrangements... the walk we're doing is up the cliff path' = cliff."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What will the woman do to her friend's car?",
+          "answer": "C",
+          "script": "Woman: Michael, it's me. Thanks for letting me use your car while mine's at the garage. It's great – better than mine, and it doesn't use as much petrol, either. I just wanted to let you know that there might be a problem with one of your tyres. I think it needs more air, so I'll stop and put some in on the way home, but I think you should check it again tomorrow. No other problems. Now I've seen how nice yours looks, I think I'll have to clean mine!",
+          "paraphrase": "The woman noticed a tyre that needed more air and planned to stop and inflate it on her way home.",
+          "explanation": "Người phụ nữ phát hiện lốp xe thiếu hơi và sẽ bơm thêm (inflate the tyre) trên đường về. Đáp án nhiễu: đổ xăng - xe ít tốn xăng hơn, không cần; rửa xe - cô nói sẽ rửa xe CỦA MÌNH, không phải xe bạn. Từ khoá: 'I'll stop and put some [air] in on the way home' = bơm lốp."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "What did the woman eat at the restaurant?",
+          "answer": "B",
+          "script": "Man: Have you been to that restaurant I told you about yet?\nWoman: I went on Tuesday.\nMan: What did you have?\nWoman: Well, I know you recommended the fish, but they'd run out. So I had to choose between the roast chicken or an omelette with salad.\nMan: What did you choose?\nWoman: I wasn't that hungry, so I was going to have the omelette with salad. Then I smelt the chicken and decided to go for that. I wasn't disappointed! I must go again to try the fish!\nMan: I knew you'd like that restaurant!",
+          "paraphrase": "Although the woman initially planned to order the omelette, she changed her mind and chose the roast chicken instead.",
+          "explanation": "Ba món được nhắc: cá (hết hàng - loại), trứng tráng với salad (định gọi nhưng đổi ý), gà quay (ngửi thấy mùi thơm và chọn - B). Đây là bẫy hai bước: nghe thấy 'omelette' trước nhưng đó là ý định ban đầu, không phải món thực tế. Từ khoá: 'decided to go for that [chicken]'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "instructions": "Questions 8–13. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/0eioa57e0q3eaxxrhuowu/Preliminary2_test3_audio2.mp3?rlkey=7v9435wcnddydd63kgp9wehsq&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "context": "You will hear two friends talking about the woman's dress.",
+          "questionText": "Why is the woman returning the dress to the shop?",
+          "options": {
+            "A": "It's the wrong colour.",
+            "B": "It's damaged.",
+            "C": "It doesn't fit."
+          },
+          "answer": "A",
+          "script": "Man: Ready for Max and Julie's wedding?\nWoman: No!\nMan: Why not?\nWoman: It's the dress I bought. I didn't have time to try it on in the shop. I just grabbed my size and paid. I put it on at home for the first time, but the fit wasn't the problem, but it looked different. In the shop, it looked blue, but it's actually grey, which doesn't match my shoes. I'm hoping they'll change it even though there's nothing wrong with it. I did once take something else back to that shop because it had a hole in it, and I got a refund. Hopefully, it'll be fine.",
+          "paraphrase": "The woman is returning the dress because the colour looked different at home than it did in the shop lighting.",
+          "explanation": "Kích cỡ - 'the fit wasn't the problem' (loại C). Hỏng hóc - 'there's nothing wrong with it' (loại B). Màu sắc - trong cửa hàng trông xanh nhưng thực ra là xám, không hợp giày (A). Từ khoá: 'In the shop, it looked blue, but it's actually grey' = sai màu."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "context": "You will hear two friends talking about a new sports centre.",
+          "questionText": "They agree that it needs to have",
+          "options": {
+            "A": "more staff available.",
+            "B": "better equipment.",
+            "C": "bigger changing rooms."
+          },
+          "answer": "A",
+          "script": "Man: What do you think of the new sports centre?\nWoman: It's great. I think it'll be really popular.\nMan: It was certainly busy in the changing rooms when I was there. They need more space.\nWoman: Oh, I think they're quite large – although it was hard to find them.\nMan: That's another thing I noticed. There aren't enough people around if you have questions. The reception desk was empty when I looked.\nWoman: It was the same when I was there. I wanted someone to show me how to use one of the exercise machines.\nMan: Yeah, some of them look quite complicated to use.",
+          "paraphrase": "Both friends agreed that the sports centre does not have enough staff available to help visitors with questions.",
+          "explanation": "Phòng thay đồ - người đàn ông phàn nàn nhỏ nhưng người phụ nữ thấy đủ rộng (không đồng ý - loại C). Thiết bị - phức tạp được nhắc nhưng không ai nói cần thiết bị tốt hơn (loại B). Nhân viên - cả hai đều gặp tình trạng không có ai ở quầy lễ tân và không có người hỗ trợ (A). Từ khoá: 'The reception desk was empty' + 'It was the same when I was there'."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "context": "You will hear a woman talking to a receptionist in a hotel.",
+          "questionText": "Why has the woman gone to the hotel?",
+          "options": {
+            "A": "to book a room",
+            "B": "to meet someone",
+            "C": "to make a complaint"
+          },
+          "answer": "B",
+          "script": "Man: Good morning, madam. Welcome to the Royal Hotel. Can I help you?\nWoman: I hope so. A friend's staying in a room here for two days, and I've come to see her. Can you tell me which room she's in?\nMan: I'm sorry, but staff here aren't allowed to give out information about our guests' room numbers.\nWoman: Aren't you? Well, that's not very helpful. What can you do?\nMan: I'll need some details. If you give me your name, I can call the room and see if she's there. You'll have to wait in the lounge.\nWoman: OK, thank you, that's fine. I can wait.",
+          "paraphrase": "The woman came to the hotel to visit a friend who is staying there as a guest.",
+          "explanation": "Đặt phòng - không đề cập (loại A). Khiếu nại - người phụ nữ hơi khó chịu nhưng đó là phản ứng, không phải mục đích đến (loại C). Gặp bạn - 'A friend's staying in a room here... I've come to see her' (B). Từ khoá: 'I've come to see her' = mục đích rõ ràng."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "context": "You will hear a man telling a friend about his holiday in the mountains.",
+          "questionText": "What did he enjoy most about it?",
+          "options": {
+            "A": "having skiing lessons",
+            "B": "seeing the countryside",
+            "C": "spending time with friends"
+          },
+          "answer": "B",
+          "script": "Woman: How was your holiday, Bruce? That was your first time skiing, wasn't it?\nMan: Yeah, that's right. I was glad I'd had some sessions with a ski instructor at that indoor centre before I went. The friends I went on holiday with are good skiers, so I was pleased I'd had a bit of experience. I actually went hiking a lot rather than skiing with them though, as I didn't feel very confident. It was great to have such fantastic views of the lakes and mountains, instead of racing around on skis. I'll definitely go to that area again.",
+          "paraphrase": "Although Bruce went on a skiing holiday, what he enjoyed most was hiking and taking in the beautiful views of the lakes and mountains.",
+          "explanation": "Học trượt tuyết - đã học trước chuyến đi, trong kỳ nghỉ không trượt nhiều vì thiếu tự tin (loại A). Bạn bè - có mặt nhưng Bruce đi bộ leo núi một mình thay vì trượt tuyết cùng họ (loại C). Phong cảnh - 'fantastic views of the lakes and mountains' là điều anh thấy tuyệt nhất (B). Từ khoá: 'It was great to have such fantastic views' = enjoyed seeing the countryside."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "context": "You will hear two friends talking about playing the guitar.",
+          "questionText": "What's the man going to do?",
+          "options": {
+            "A": "practise playing with other people",
+            "B": "start playing a different instrument",
+            "C": "try to play every day"
+          },
+          "answer": "A",
+          "script": "Woman: Hi Tom, how's your guitar playing going?\nMan: It's fine, but it's taking a while to see any improvement.\nWoman: Well, you only started playing last year. It takes time to play well. Do you have a daily practice routine?\nMan: Do you think that's the answer? To be honest, I find playing at home on my own a bit boring.\nWoman: You definitely need to play more. Why not set up a group who get together and play at weekends?\nMan: That's not a bad idea. I was beginning to think I ought to try an easier instrument, but I'll try your suggestion first.",
+          "paraphrase": "After considering switching instruments, Tom decided to follow his friend's suggestion and try playing in a group instead.",
+          "explanation": "Luyện tập hằng ngày - Tom thấy chán khi tập một mình ở nhà, không chọn C. Đổi nhạc cụ - anh có nghĩ đến ('was beginning to think') nhưng quyết định thử gợi ý kia trước (loại B). Chơi nhóm - 'I'll try your suggestion first' = thực hiện gợi ý lập nhóm chơi cuối tuần (A). Từ khoá: 'set up a group who get together and play' + 'I'll try your suggestion first'."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "context": "You will hear two friends talking about a film they've just seen.",
+          "questionText": "What does the man say about the film?",
+          "options": {
+            "A": "It wasn't very funny.",
+            "B": "It won an important prize.",
+            "C": "It was easy to predict the ending."
+          },
+          "answer": "C",
+          "script": "Man: What did you think of the film?\nWoman: It was OK, although I thought it was supposed to be a comedy – I've laughed more at other films.\nMan: Oh, I laughed quite a lot. I just sat back and focused on the jokes because it was obvious to me what was going to happen quite early on.\nWoman: I had no idea until the very end. You know, I think I read somewhere that it won something.\nMan: Like a prize? I'll have to look at the reviews and see whether that's true. I'd be interested to know.",
+          "paraphrase": "The man found the ending easy to guess from early in the film, which allowed him to simply enjoy the humour.",
+          "explanation": "Không buồn cười - người phụ nữ nói vậy nhưng người đàn ông 'laughed quite a lot' (loại A - đây là ý kiến của người phụ nữ, không phải người đàn ông). Giải thưởng - người phụ nữ đề cập, người đàn ông không biết chắc ('I'll have to look... to see whether that's true') (loại B). Đoán trước kết thúc - 'it was obvious to me what was going to happen quite early on' (C). Từ khoá: 'obvious... what was going to happen' = 'easy to predict the ending'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "instructions": "Questions 14–19. For each question, write the correct answer in the gap. Write one or two words or a number or a date or a time.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/87rkz24d0s8sft3kpsqkj/Preliminary2_test3_audio3.mp3?rlkey=67z15c3mbll6dqzew04xabvfc&raw=1",
+      "noteTitle": "Song writing competition",
+      "context": "You will hear an announcement about a song writing competition.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "Songs in this year's competition must be about the",
+          "afterGap": ".",
+          "answer": "MOON",
+          "acceptedAnswers": ["MOON"],
+          "script": "In previous years, songs have been about particular topics – for example, the sea. We're hoping that the topic we've chosen this time – the moon – is popular.",
+          "paraphrase": "This year's required topic for all competition entries is the moon, replacing previous themes like the sea.",
+          "explanation": "Chủ đề năm ngoái là biển (sea) - đây là bẫy nhiễu rất phổ biến. Chủ đề năm nay là mặt trăng (moon). Từ khoá: 'the topic we've chosen this time – the moon'. Lưu ý dấu gạch ngang trong script thường báo hiệu thông tin quan trọng cần ghi lại."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Songs must be no longer than",
+          "afterGap": ".",
+          "answer": "210 SECONDS",
+          "acceptedAnswers": ["210 SECONDS", "210 SECS", "210S", "3 MINUTES 30 SECONDS", "3.5 MINUTES"],
+          "script": "Most popular songs last about two to three minutes, or between 120 and 180 seconds, but lots of songs are longer, so we've increased the maximum length to 210 seconds this year.",
+          "paraphrase": "The maximum permitted length for entries has been extended to 210 seconds this year, up from the usual range.",
+          "explanation": "Nhiều con số được nhắc: 2-3 phút, 120-180 giây (độ dài thông thường), 210 giây (giới hạn tối đa năm nay). Chỉ 210 seconds là đáp án. Đây là bẫy số điển hình của Part 3. Từ khoá: 'increased the maximum length to 210 seconds this year'."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "The judge this year is a famous",
+          "afterGap": ".",
+          "answer": "POET",
+          "acceptedAnswers": ["POET"],
+          "script": "We originally booked the amazing singer Anton Mitchell to judge the competition for us but unfortunately he's had to cancel. In his place, a very well-known poet has agreed to help us, but we're keeping who it is secret for now.",
+          "paraphrase": "The original judge Anton Mitchell had to cancel, and a well-known poet has taken his place, though their identity is being kept secret.",
+          "explanation": "Ca sĩ Anton Mitchell (singer) là giám khảo ban đầu nhưng đã huỷ - đây là bẫy nhiễu. Giám khảo thực tế là nhà thơ nổi tiếng (poet). Từ khoá: 'In his place, a very well-known poet has agreed to help us'."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The prize for the winner is a trip to a",
+          "afterGap": ".",
+          "answer": "STUDIO",
+          "acceptedAnswers": ["STUDIO", "MUSIC STUDIO", "RECORDING STUDIO"],
+          "script": "If you're lucky enough to come first, you'll spend a day in a studio. There you'll watch musicians making a recording of your song! The person in second place will win tickets to a concert of their choice.",
+          "paraphrase": "The first prize is a day in a recording studio watching musicians record the winner's song.",
+          "explanation": "Giải nhì là vé concert - đây là bẫy nhiễu. Giải nhất là đến studio xem thu âm bài hát của mình. Từ khoá: 'come first, you'll spend a day in a studio'. Câu bài thi dùng 'trip to a' nên đáp án là danh từ chỉ địa điểm."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "The closing date for entries is",
+          "afterGap": ".",
+          "answer": "13TH OCTOBER",
+          "acceptedAnswers": ["13TH OCTOBER", "13 OCTOBER", "OCTOBER 13", "OCTOBER 13TH", "13TH OCT", "13 OCT"],
+          "script": "Your completed song should reach us, at the latest, by the thirteenth of October, and the winner will be announced on the first of November. There'll also be a special event on the twelfth of November when the winning songs will be performed.",
+          "paraphrase": "All entries must be submitted by the 13th of October, with the winner announced on 1st November.",
+          "explanation": "Ba ngày được nhắc: 13 tháng 10 (hạn nộp bài - đáp án), 1 tháng 11 (công bố người thắng), 12 tháng 11 (sự kiện biểu diễn). Từ khoá: 'should reach us, at the latest, by the thirteenth of October' = closing date."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The email address to send songs to is",
+          "afterGap": "@songwriters.net",
+          "answer": "DELHAR",
+          "acceptedAnswers": ["DELHAR"],
+          "script": "You need to send it to Andrea Delhar, and her email address is Delhar at songwriters dot net. I'll spell that for you … it's D-E-L-H-A-R at songwriters dot net.",
+          "paraphrase": "Songs should be emailed to Andrea Delhar at delhar@songwriters.net - the announcer even spells out the surname.",
+          "explanation": "Tên đầy đủ là Andrea Delhar, nhưng email dùng họ: delhar@songwriters.net. Người đọc đánh vần rõ ràng D-E-L-H-A-R - đây là tín hiệu quan trọng trong bài nghe, thường báo đáp án cần ghi chính xác. Câu bài thi đã cho '@songwriters.net', chỉ cần điền 'delhar'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "instructions": "Questions 20–25. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/e1hguqlndekp6lijwxxfo/Preliminary2_test3_audio4.mp3?rlkey=at6p1ded5emhw203rrkiif4xv&raw=1",
+      "context": "You will hear an interview with a professional explorer called Alexis Bartoli, who travels to places that few other people visit.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Alexis decided to become an explorer after",
+          "options": {
+            "A": "reading a book.",
+            "B": "listening to a talk.",
+            "C": "seeing a TV programme."
+          },
+          "answer": "B",
+          "script": "My father loved stories about explorers from the past, so we often watched documentaries on TV about them, but I soon got bored because it'd all happened so long ago. Then a modern-day explorer who'd written a really popular book about her travels came to my school and told us about the places she'd been to. I knew then I wanted to do what she did.",
+          "paraphrase": "Alexis was inspired to become an explorer after hearing a talk at school from a modern explorer who visited and shared her experiences.",
+          "explanation": "Xem TV - Alexis xem phim tài liệu với bố nhưng nhanh chán (loại C). Đọc sách - nhà thám hiểm khách mời có viết sách nổi tiếng nhưng Alexis không nói đọc sách đó (loại A). Nghe bài nói - nhà thám hiểm đó đến trường và kể chuyện, đây là điều truyền cảm hứng (B). Từ khoá: 'came to my school and told us... I knew then I wanted to do what she did'."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "Alexis felt anxious before his first expedition because",
+          "options": {
+            "A": "he didn't know what to expect.",
+            "B": "he knew it would be quite dangerous.",
+            "C": "he'd never been very far away from home."
+          },
+          "answer": "A",
+          "script": "Very anxious! I'd spent a few years studying in New Zealand, thousands of miles from my family, so I was used to being away, but I just couldn't imagine what a day in the life of an explorer would be like. Some of the places I was planning to visit weren't very safe, but that excited me rather than making me feel scared.",
+          "paraphrase": "Alexis was nervous because he had no idea what daily life as an explorer would actually involve.",
+          "explanation": "Xa nhà - đã quen vì từng học ở New Zealand (loại C). Nguy hiểm - biết nguy hiểm nhưng điều đó làm anh hứng khởi, không lo lắng (loại B). Không biết kỳ vọng gì - 'I just couldn't imagine what a day in the life of an explorer would be like' (A). Từ khoá: 'couldn't imagine what a day... would be like' = 'didn't know what to expect'."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "Why did Alexis start making films on his expeditions?",
+          "options": {
+            "A": "to make money for future trips",
+            "B": "to provide scientists with information",
+            "C": "to learn a new skill"
+          },
+          "answer": "B",
+          "script": "In some places, there were plants and animals that few people had ever seen. I'd already learned about film making at university, so I could easily record these rare species and show the films to science experts when I got home. Later on, I was surprised when TV companies wanted to buy them, but this helped pay for other trips.",
+          "paraphrase": "Alexis originally started filming to document rare species and share the footage with scientists, though it later became a source of income.",
+          "explanation": "Kiếm tiền - xảy ra sau ('Later on'), không phải lý do ban đầu (loại A). Học kỹ năng mới - đã học làm phim ở đại học rồi (loại C). Cung cấp thông tin cho khoa học - 'show the films to science experts when I got home' là mục đích ban đầu (B). Từ khoá: 'record these rare species and show the films to science experts' = cung cấp thông tin cho nhà khoa học."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "Alexis says his favourite part of any expedition is",
+          "options": {
+            "A": "discovering new landscapes.",
+            "B": "experiencing different climates.",
+            "C": "meeting new people."
+          },
+          "answer": "C",
+          "script": "I enjoy so many things, but if I had to choose one, it'd be getting to know members of the local population. Seeing the incredible geography and the environment where they live comes a close second, though. The weather can be a problem as well as a pleasure, so that's not usually top of my list.",
+          "paraphrase": "If forced to choose, Alexis says meeting and getting to know local people is the most enjoyable part of any expedition.",
+          "explanation": "Khám phá địa hình - thú vị nhưng chỉ là 'a close second' (loại A). Thời tiết/khí hậu - 'can be a problem', không phải yêu thích nhất (loại B). Gặp gỡ người địa phương - 'if I had to choose one, it'd be getting to know members of the local population' (C). Từ khoá: 'if I had to choose one, it'd be' = điều yêu thích nhất."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "Alexis's latest expedition involved",
+          "options": {
+            "A": "walking across a desert.",
+            "B": "sailing across an ocean.",
+            "C": "spending time in a rainforest."
+          },
+          "answer": "B",
+          "script": "Yes, because up till then, I'd always explored places on land, from rainforests to the world's highest mountains. This time, though, I spent four months at sea on a tiny boat, travelling from America to Australia. After walking alone across the world's largest desert, that felt very different!",
+          "paraphrase": "Alexis's most recent expedition was a four-month solo boat journey across the ocean from America to Australia.",
+          "explanation": "Rừng nhiệt đới và sa mạc - đều là những chuyến đi TRƯỚC ĐÓ (loại A và C). Chuyến đi MỚI NHẤT là đi thuyền qua đại dương - 'I spent four months at sea on a tiny boat, travelling from America to Australia' (B). Từ khoá: 'This time, though' = chuyến đi mới nhất."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "What does Alexis say he wants to do in the future?",
+          "options": {
+            "A": "try a different profession",
+            "B": "explore his home country",
+            "C": "return to places he's visited before"
+          },
+          "answer": "B",
+          "script": "I'm not a person who likes going back somewhere I've already explored – I like to keep doing new things. I love what I do though, so it would feel wrong to start thinking about any other kind of career. Actually, I've spent so long abroad that I haven't had time to see much of where I'm from, so that's my next project.",
+          "paraphrase": "Alexis plans to explore his home country next, since he has spent so much time travelling abroad that he has never properly seen it.",
+          "explanation": "Đổi nghề - 'it would feel wrong to start thinking about any other kind of career' (loại A). Quay lại nơi đã đến - 'I'm not a person who likes going back somewhere I've already explored' (loại C). Khám phá quê nhà - 'I haven't had time to see much of where I'm from, so that's my next project' (B). Từ khoá: 'where I'm from' = home country; 'next project' = kế hoạch tương lai."
+        }
+      ]
+    }
+
+  ]
+}
