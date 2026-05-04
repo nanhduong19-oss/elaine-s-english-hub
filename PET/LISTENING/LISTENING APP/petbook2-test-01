@@ -1,0 +1,361 @@
+{
+  "testId": "petbook2-test-01",
+  "title": "PET Listening Test 01 BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "instructions": "Questions 1–7. For each question, choose the correct answer.",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/wkpll9g7fm0eom3ay6rj1/book2-test-1-part-1-1-3.png?rlkey=1nggdj1yb90v97riyb39ch3mw&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/23jro53orsv4nkq0kxjn4/book2-test-1-part-1-4-7.png?rlkey=tmkfg3e775b5yl54q1y13esx7&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "audioUrl": "https://www.dropbox.com/scl/fi/x4valjeri7qk62pn5pw09/Preliminary2_test1_audio1.mp3?rlkey=tj8ewn2hgxcl3znjugj21uu2g&raw=1",
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What has the woman left behind?",
+          "answer": "C",
+          "script": "Man: Our queue for the check-in's over there. Have you got your passport ready?\nWoman: Mine's in my backpack, with my books and phone. … Oh no! I don't believe it.\nMan: What! You haven't left your passport at home, have you?\nWoman: I know I forgot it once, but I'm more careful now. It's that guidebook I bought last week. The one I told you about? I thought I'd put it in my backpack with my phone and stuff, but I guess I didn't.\nMan: Perhaps you left it on the kitchen table.",
+          "paraphrase": "The woman left her guidebook behind, not her passport or phone.",
+          "explanation": "Người phụ nữ nói rằng cô ấy đã bỏ quên cuốn sách hướng dẫn du lịch (guidebook) mà cô vừa mua tuần trước. Đáp án nhiễu: hộ chiếu (passport) - cô ấy có mang theo; điện thoại (phone) - cũng có trong balo. Từ khoá paraphrase: 'left it behind' = 'forgot to bring it'."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "Which T-shirt does the boy want?",
+          "answer": "C",
+          "script": "Boy: Mum, when you're in town, can you get me that T-shirt I told you about? It's in the sale at the T-shirt shop on the ground floor of the shopping centre. It's black and white and divided into two parts. The top part has black and white stripes, and there are stars on the white parts. The bottom half of the T-shirt has black circles on a white background. They've got lots of similar designs in the store, so please check you've got the one I want. Thanks Mum!",
+          "paraphrase": "The boy wants the T-shirt with stripes and stars on top, and black circles on the bottom half.",
+          "explanation": "Cậu bé mô tả chi tiết: phần trên có sọc đen trắng và ngôi sao, phần dưới có chấm tròn đen trên nền trắng. Câu hỏi này kiểm tra khả năng nghe chi tiết mô tả (description). Từ khoá: 'stripes', 'stars', 'circles', 'black and white'."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "How did the woman book tickets for the show?",
+          "answer": "A",
+          "script": "Man: Did you get tickets for the show?\nWoman: Yes, finally! It's really popular so there were long queues of people waiting to buy tickets outside the theatre.",
+          "paraphrase": "The woman queued outside the theatre to buy the tickets in person.",
+          "explanation": "Người phụ nữ nói có hàng dài người xếp hàng bên ngoài rạp hát để mua vé - tức là cô ấy mua trực tiếp tại quầy. Đáp án nhiễu: điện thoại hoặc laptop (đặt online) không được đề cập. Từ khoá: 'long queues', 'waiting to buy tickets outside the theatre'."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Why is the train to Histon delayed?",
+          "answer": "B",
+          "script": "PASTE AUDIO SCRIPT FOR QUESTION 4 HERE.",
+          "paraphrase": "The train to Histon is delayed due to a fallen tree on the line.",
+          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 4 HERE."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Where are the tourists most likely to see a tiger?",
+          "answer": "B",
+          "script": "PASTE AUDIO SCRIPT FOR QUESTION 5 HERE.",
+          "paraphrase": "Tourists are most likely to spot a tiger in the open grassland area.",
+          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 5 HERE."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "Which film will they go and see?",
+          "answer": "A",
+          "script": "PASTE AUDIO SCRIPT FOR QUESTION 6 HERE.",
+          "paraphrase": "They chose to watch the detective film set in a rainy city.",
+          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 6 HERE."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "How did the man travel to work?",
+          "answer": "C",
+          "script": "PASTE AUDIO SCRIPT FOR QUESTION 7 HERE.",
+          "paraphrase": "The man walked to work under an umbrella because of the rain.",
+          "explanation": "PASTE VIETNAMESE EXPLANATION FOR QUESTION 7 HERE."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "instructions": "Questions 8–13. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/tcwnles4zg7n77ybosc68/Preliminary2_test1_audio2.mp3?rlkey=6176g57bf3a1stk9v953uw7as&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "context": "You will hear a husband and wife talking about keeping fit and healthy.",
+          "questionText": "What do they both agree to change?",
+          "options": {
+            "A": "their sleep routines",
+            "B": "their eating habits",
+            "C": "their exercise programmes"
+          },
+          "answer": "B",
+          "script": "Man: So, shall we pay for another year's gym membership?\nWoman: Definitely! I'd like to carry on playing badminton and you enjoy swimming. It's a nice thing to do after work, isn't it?\nMan: I agree. And maybe we should have our main meal earlier in the evening, rather than so late at night. What do you think?\nWoman: It's worth trying. We're always hungry after the gym.\nMan: And it's not good to go to bed with a full stomach. It's a shame we can't stay up later, but we've both got to get up so early for work every day.\nWoman: I know.",
+          "paraphrase": "Both the husband and wife agreed they should eat their main meal earlier instead of late at night.",
+          "explanation": "Cả hai đồng ý tiếp tục tập gym (không thay đổi lịch tập), nhưng cùng nhau muốn ăn bữa chính sớm hơn. Đáp án nhiễu: A (giờ ngủ) - họ chỉ than thở về việc phải dậy sớm, không đồng ý thay đổi; C (tập thể dục) - họ đều muốn giữ nguyên. Từ khoá paraphrase: 'have our main meal earlier' = 'change their eating habits'."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "context": "You will hear two friends talking about the woman's work.",
+          "questionText": "How does the woman feel?",
+          "options": {
+            "A": "She's pleased to have a new boss.",
+            "B": "She's excited about some recent changes.",
+            "C": "She's more positive than she was before."
+          },
+          "answer": "C",
+          "script": "Man: I heard there's a new boss at your company. How's it going?\nWoman: I wasn't exactly delighted when I heard about all the changes she was going to make – like moving the office around, giving people more responsibilities. It's taken me a while to get used to the situation. But I have, I mean, I've got to, if I want to stay there, which I do. And I'm hoping to become a manager myself in the next six months, which would mean I'd have to work longer hours, of course. But that doesn't bother me!\nMan: Well, good luck.\nWoman: Thanks!",
+          "paraphrase": "The woman was not happy at first but has now adapted and feels better about her situation at work.",
+          "explanation": "Người phụ nữ dùng 'wasn't exactly delighted' (không vui lắm lúc đầu) - loại A và B. Nhưng cuối cùng cô nói 'I have (got used to it)' và tỏ ra lạc quan hơn - đây là C. Từ khoá paraphrase: 'taken me a while to get used to' → 'more positive than before'."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "context": "You will hear a man telling a friend about his holiday.",
+          "questionText": "How did the man feel when he visited some ancient ruins?",
+          "options": {
+            "A": "surprised not to be able to climb them",
+            "B": "disappointed by their location",
+            "C": "impressed by their size"
+          },
+          "answer": "C",
+          "script": "Woman: How was your holiday?\nMan: Fantastic! We went to see some ancient ruins. I thought they were all in the middle of the jungle but the ones we visited were right by the sea – the colour of the water behind them was gorgeous. Then I hoped we'd be able to do was climb and stand on the top like you see people doing in photos. The ruins look even higher in real life – incredible. But I knew we wouldn't be able to go up them, as too many tourists have damaged the place over time, which is a shame.",
+          "paraphrase": "The man was amazed by how tall the ancient ruins were when he saw them in person.",
+          "explanation": "Người đàn ông nói 'The ruins look even higher in real life – incredible' - ông ấy ấn tượng bởi kích thước thực tế. Đáp án nhiễu: A - ông ấy đã biết trước không leo được ('I knew we wouldn't be able to'); B - vị trí bên bờ biển thực ra rất đẹp ('gorgeous'). Từ khoá: 'higher in real life' = 'impressed by their size'."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "context": "You will hear two friends talking about doing a foreign language course.",
+          "questionText": "What do they agree about?",
+          "options": {
+            "A": "which level of course to take",
+            "B": "where to take the course",
+            "C": "how long the course should be"
+          },
+          "answer": "A",
+          "script": "Woman: Shall we take Japanese classes before we go to Japan next year?\nMan: Good idea, but we wouldn't be in the same class – you already speak a bit and I know nothing.\nWoman: Well, it's a long time since I studied Japanese, and I've forgotten almost everything. I'd be happy to start again.\nMan: OK, if you don't mind. Have you found any courses?\nWoman: There's one at the local college. It lasts three months.\nMan: That's more than I was expecting.\nWoman: You have to take lots of classes before you can say much in another language. Anyway, let's see if other places have courses.",
+          "paraphrase": "Both friends agreed to start from the beginner level together since the woman is willing to start over.",
+          "explanation": "Ban đầu người đàn ông lo họ sẽ học khác lớp vì trình độ khác nhau, nhưng người phụ nữ đồng ý học lại từ đầu - cả hai chốt cùng level. Đáp án nhiễu: B - họ chưa quyết định địa điểm ('let's see if other places have courses'); C - người đàn ông không đồng ý với thời lượng 3 tháng. Từ khoá: 'I'd be happy to start again' → agree on level."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "context": "You will hear two people talking about a music festival they're organising.",
+          "questionText": "They're both worried about",
+          "options": {
+            "A": "how good the music will be.",
+            "B": "how many people will attend.",
+            "C": "how suitable the weather will be."
+          },
+          "answer": "B",
+          "script": "Woman: I think we're ready for the start of the music festival next month, so everything should be OK, as long as it doesn't rain.\nMan: Well, we'll just move things under cover if the forecast's bad – we can use the hall instead of being outside.\nWoman: True. We haven't sold as many tickets as I'd expected. We need to get a bigger crowd.\nMan: So we'd better focus more on advertising the event then. By the way, have you managed to find a band to replace the one which cancelled?\nWoman: Yeah – I haven't heard them play live, but I'm sure they'll be fine.",
+          "paraphrase": "Both people are concerned that not enough people will come to the festival and agree to advertise more.",
+          "explanation": "Người phụ nữ nói 'We haven't sold as many tickets as I'd expected' và người đàn ông đồng ý cần quảng cáo thêm - cả hai lo về số lượng khán giả. Đáp án nhiễu: A - người phụ nữ 'sure they'll be fine' về ban nhạc; C - người đàn ông có giải pháp dự phòng cho thời tiết nên không còn lo. Từ khoá: 'We need to get a bigger crowd' = 'worried about how many people will attend'."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "context": "You will hear two friends discussing an article about air pollution.",
+          "questionText": "The woman is",
+          "options": {
+            "A": "surprised by some new information.",
+            "B": "annoyed by the writer's attitude.",
+            "C": "confused by all the details."
+          },
+          "answer": "A",
+          "script": "Man: Did you read that article about pollution? The one which says that some cleaning products are creating as much air pollution as traffic does?\nWoman: Yeah! It's quite shocking. I don't understand why we haven't heard about this before.\nMan: We're always told cars and trucks are getting 'greener' so they don't damage the environment, but from what I read it seems there are other things polluting our air – stuff we use indoors can affect our health too. The article says we should start using safer products for cleaning – if they make them available, of course.\nWoman: Yeah, exactly. Let's hope they do.",
+          "paraphrase": "The woman was shocked to learn that cleaning products can pollute the air as much as cars do.",
+          "explanation": "Người phụ nữ nói 'It's quite shocking. I don't understand why we haven't heard about this before' - cô ấy ngạc nhiên với thông tin mới này. Đáp án nhiễu: B - cô không bày tỏ sự khó chịu với tác giả; C - cô không bị nhầm lẫn, cô đồng ý với bài báo ('Yeah, exactly'). Từ khoá: 'quite shocking' + 'haven't heard about this before' = 'surprised by new information'."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "instructions": "Questions 14–19. For each question, write the correct answer in the gap. Write one or two words or a number or a date or a time.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/c0q6c664hdv13nwziy0kh/Preliminary2_test1_audio3.mp3?rlkey=2o87hortangfvi5adaiz1gl9s&raw=1",
+      "noteTitle": "Group bike ride",
+      "context": "You will hear a woman talking to some cyclists about a group bike ride.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The group bike ride will be on",
+          "afterGap": "next week.",
+          "answer": "SUNDAY",
+          "acceptedAnswers": ["SUNDAY"],
+          "script": "We considered doing a ride on a Saturday, but the roads are always busy, so we're going to do a Sunday ride.",
+          "paraphrase": "The bike ride is planned for Sunday because the roads are too busy on Saturdays.",
+          "explanation": "Người phụ nữ nói họ đã cân nhắc Saturday nhưng chọn Sunday vì đường đông vào thứ 7. Bẫy nhiễu: nghe thấy 'Saturday' trước nhưng đó là lựa chọn bị loại. Từ khoá: 'considered... Saturday, but... going to do a Sunday ride'."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "The length of the bike ride will be",
+          "afterGap": ".",
+          "answer": "21 KM",
+          "acceptedAnswers": ["21 KM", "21KM", "21 KILOMETRES", "21 KILOMETERS", "21 KILOMETRE", "21 KILOMETER"],
+          "script": "We originally planned to do 25 kilometres, but decided that 21 kilometres would be enough. Eventually we hope to get it up to 30 kilometres.",
+          "paraphrase": "The final distance chosen for the ride is 21 kilometres, down from the original plan of 25.",
+          "explanation": "Ba con số được nhắc đến: 25km (kế hoạch ban đầu), 21km (quyết định cuối), 30km (mục tiêu tương lai). Chỉ 21km là đáp án đúng. Đây là dạng bẫy phổ biến nhất trong Part 3 - nghe nhiều số, phải bám theo logic 'decided that... would be enough'."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "The bike ride will begin from",
+          "afterGap": "Bridge.",
+          "answer": "SKERTEN",
+          "acceptedAnswers": ["SKERTEN"],
+          "script": "The bike ride will start at 10 a.m. under Skerten Bridge – that's S-K-E-R-T-E-N.",
+          "paraphrase": "The starting point is Skerten Bridge, and the woman even spells out the name letter by letter.",
+          "explanation": "Người phụ nữ đánh vần rõ ràng: S-K-E-R-T-E-N. Đây là tên riêng nên cần viết đúng chính tả. Cambridge thường chấp nhận lỗi chính tả nhỏ nếu phát âm gần đúng, nhưng nên viết đúng hoàn toàn."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The cyclists will stop beside the",
+          "afterGap": "to rest and eat something.",
+          "answer": "CASTLE",
+          "acceptedAnswers": ["CASTLE"],
+          "script": "We've chosen this route because the scenery's really beautiful and it gives us a chance to take a break just in front of the castle. From there, the views over the sea in the distance as you eat your lunch are amazing.",
+          "paraphrase": "The group will stop in front of the castle to rest and have lunch with a view of the sea.",
+          "explanation": "Bài chỉ đề cập một nơi dừng chân cụ thể là 'in front of the castle'. Lưu ý: câu trong bài dùng 'beside' nhưng script nói 'in front of' - đây là paraphrase. Từ khoá: 'take a break just in front of the castle' = 'stop beside the castle'."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Riders can buy",
+          "afterGap": "at a shop during the ride.",
+          "answer": "CAKE",
+          "acceptedAnswers": ["CAKE", "CAKES", "A CAKE", "SOME CAKES", "SOME CAKE"],
+          "script": "The route will take us past a great shop, famous for its cakes. You can buy some there for the picnic.",
+          "paraphrase": "Along the route, there is a shop known for its cakes where riders can buy some for the picnic.",
+          "explanation": "Cửa hàng được mô tả là 'famous for its cakes' - đây là thứ có thể mua. Đáp án nhiễu: 'sandwiches or other snacks' cũng được nhắc nhưng đó là thứ cần mang theo từ nhà, không phải mua tại cửa hàng. Từ khoá: 'a great shop, famous for its cakes. You can buy some there'."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The cyclists must wear",
+          "afterGap": ".",
+          "answer": "GLOVES",
+          "acceptedAnswers": ["GLOVES", "SOME GLOVES"],
+          "script": "Although the weather's getting warmer now, make sure you have gloves on. They'll protect your hands from the wind. I don't expect we'll need raincoats, and you could wear shorts if you want to.",
+          "paraphrase": "Despite warmer weather, wearing gloves is compulsory to protect hands from the wind during the ride.",
+          "explanation": "Người phụ nữ dùng từ mệnh lệnh 'make sure you have gloves on' - đây là bắt buộc. Đáp án nhiễu: raincoats (không cần), shorts (tùy chọn). Từ khoá: 'make sure' = 'must wear'. Đây là dạng bẫy: thời tiết ấm nhưng vẫn cần đeo găng tay."
+        }
+      ]
+    },
+
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "instructions": "Questions 20–25. For each question, choose the correct answer.",
+      "audioUrl": "https://www.dropbox.com/scl/fi/oqroqpdl0bew1umyyv859/Preliminary2_test1_audio4.mp3?rlkey=2o87hortangfvi5adaiz1gl9s&raw=1",
+      "context": "You will hear an interview with a wildlife photographer called James Thomson who has won a photography competition.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "What made James become interested in photography?",
+          "options": {
+            "A": "receiving a camera as a gift",
+            "B": "seeing his mother taking photographs",
+            "C": "attending a photography exhibition"
+          },
+          "answer": "A",
+          "script": "My mother's a painter, and I often took her to art exhibitions so I think a love of being creative comes from her. And one day my uncle bought me a camera, and from then on I started taking pictures.",
+          "paraphrase": "James began his photography journey after his uncle gave him a camera as a present.",
+          "explanation": "James nói 'my uncle bought me a camera, and from then on I started taking pictures' - đây là điều trực tiếp khiến anh bắt đầu chụp ảnh. Đáp án nhiễu: B - mẹ anh là họa sĩ, không phải nhiếp ảnh gia; C - anh đưa mẹ đến triển lãm nghệ thuật, không phải nhiếp ảnh. Từ khoá: 'my uncle bought me a camera' = 'receiving a camera as a gift'."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "What does James say about the park where he took his prize-winning photo?",
+          "options": {
+            "A": "He had taken photos in it before.",
+            "B": "Someone he knew recommended it to him.",
+            "C": "It's always been well known for its natural beauty."
+          },
+          "answer": "A",
+          "script": "Actually, in a park in my city, where my friends and I used to play. It's not the most attractive place, even though it's really improved a lot recently and the lake where I took the picture was made bigger. You'd be amazed how much wildlife there is, and I've managed to get some fantastic pictures there over the years.",
+          "paraphrase": "James had been visiting that park for years and had taken many photos there before winning the competition.",
+          "explanation": "James nói 'I've managed to get some fantastic pictures there over the years' - anh đã chụp ở đó nhiều lần trước. Đáp án nhiễu: B - không ai giới thiệu công viên này cho anh; C - anh nói 'not the most attractive place' - không nổi tiếng vì vẻ đẹp. Từ khoá: 'over the years' = 'had taken photos in it before'."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "After winning the competition, James felt",
+          "options": {
+            "A": "keen to tell his parents about his achievement.",
+            "B": "pleased to meet a famous photographer.",
+            "C": "surprised because he hadn't won in previous competitions."
+          },
+          "answer": "B",
+          "script": "Honestly, I was shocked – I'd never entered one before. My parents were really excited because they got the phone call saying I'd won. The best bit was being introduced to a well-known photographer who takes pictures for an international magazine – I got lots of tips.",
+          "paraphrase": "The highlight of winning for James was getting to meet and receive advice from a well-known photographer.",
+          "explanation": "James nói 'The best bit was being introduced to a well-known photographer' - đây là điều anh thích nhất sau khi thắng. Đáp án nhiễu: A - bố mẹ anh là người nhận điện thoại và hào hứng, không phải anh chủ động kể; C - anh chưa từng tham dự cuộc thi nào trước đó ('never entered one before'), không phải chưa thắng. Từ khoá: 'the best bit' = điều khiến anh 'pleased'."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "In James' opinion, what is most important for a good photograph?",
+          "options": {
+            "A": "It needs plenty of planning.",
+            "B": "It must be beautiful to look at.",
+            "C": "It teaches people something new."
+          },
+          "answer": "C",
+          "script": "Photos are more than just pretty pictures. They should be worth looking at, and help you learn things about life. So I'm always ready because you never know what you'll see!",
+          "paraphrase": "According to James, the most valuable photographs are those that give viewers something new to learn about life.",
+          "explanation": "James nói 'help you learn things about life' là điều quan trọng nhất. Đáp án nhiễu: A - anh luôn sẵn sàng ('always ready') nhưng không nói về lên kế hoạch trước; B - anh nói 'more than just pretty pictures' - vẻ đẹp thôi chưa đủ. Từ khoá: 'help you learn things about life' = 'teaches people something new'."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "James thinks that photography is a good hobby because",
+          "options": {
+            "A": "it involves travelling to interesting places.",
+            "B": "it can become a successful career.",
+            "C": "it's a great social activity."
+          },
+          "answer": "C",
+          "script": "Well, many people have this idea of a photographer alone on a mountain somewhere, but actually, there are lots of clubs, and it's really fun doing it with other people.",
+          "paraphrase": "James argues that photography is actually very social because people can join clubs and enjoy it together.",
+          "explanation": "James bác bỏ hình ảnh 'photographer alone on a mountain' và nhấn mạnh 'lots of clubs', 'fun doing it with other people' - đây là hoạt động xã hội. Đáp án nhiễu: A - anh nói người thường có thể chụp gần nhà; B - không đề cập đến sự nghiệp. Từ khoá: 'doing it with other people' = 'great social activity'."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "What advice does James have for other photographers?",
+          "options": {
+            "A": "Spend a lot of time taking pictures.",
+            "B": "Do a course to get the right skills.",
+            "C": "Get the best equipment possible."
+          },
+          "answer": "A",
+          "script": "Find out what works and what doesn't. I didn't learn my skills by taking a course – nothing's better than getting out there and getting experience. Of course, there's lots of fantastic equipment available but it's really not necessary and most phones take great pictures.",
+          "paraphrase": "James advises photographers to gain as much hands-on experience as possible rather than taking courses or buying expensive equipment.",
+          "explanation": "James nói 'nothing's better than getting out there and getting experience' - thực hành nhiều là quan trọng nhất. Đáp án nhiễu: B - anh nói 'I didn't learn my skills by taking a course'; C - anh nói thiết bị đắt tiền 'really not necessary'. Từ khoá: 'getting out there and getting experience' = 'spend a lot of time taking pictures'."
+        }
+      ]
+    }
+
+  ]
+}
