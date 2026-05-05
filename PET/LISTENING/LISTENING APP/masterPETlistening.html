@@ -794,6 +794,7 @@ audio::-webkit-media-controls-panel{background:rgba(255,255,255,0.08);}
 // ═══════════════════════ CONFIG ═══════════════════════
 const INDEX_URL = 'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/index.json';
 const TEACHER_PWD = 'easygame19';
+let isTeacherMode = false;
 const PARA_REPS = 3;
 const PASS_PRACTICE = 0.80;
 const PASS_FULL = 22;
@@ -1229,7 +1230,7 @@ function switchP1Group(partNum,grpIdx){
   if(!part||!part.pageGroups[grpIdx]) return;
   // Re-render part with different group in view
   const isRetake=S.round>1;
-  const allQs=isRetake?part.questions.filter(q=>S.wrongIds.includes(q.id)):part.questions;
+  const allQs=isRetake?part.questions.filter(q=>S.wrongIds.includes(quid(part,q))):part.questions;
   const grp=part.pageGroups[grpIdx];
   const grpQs=allQs.filter(q=>grp.questionNumbers.includes(q.number));
 
@@ -1505,9 +1506,9 @@ function buildT2(){
             :`<div class="para-track">${[...Array(PARA_REPS)].map((_,i)=>`<div class="pdot ${i<cnt?'done':''}" id="pd2-${uid}-${i}"></div>`).join('')}</div>
              <input type="text" class="para-inp" id="pi2-${uid}" placeholder="Type the paraphrase here (no paste)..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
                onkeydown="if(event.key==='Enter')chkParaT2('${uid}')"
-               onpaste="event.preventDefault();toast('⛔ Paste is disabled — please type it out!')"
-               ondrop="event.preventDefault()"
-               oncontextmenu="event.preventDefault()">
+               onpaste="if(isTeacherMode){return;}event.preventDefault();toast('⛔ Paste is disabled — please type it out!')"
+               ondrop="if(isTeacherMode){return;}event.preventDefault()"
+               oncontextmenu="if(isTeacherMode){return;}event.preventDefault()">
              <button class="para-submit" onclick="chkParaT2('${uid}')">Check ✓</button>`
           }
         </div>
@@ -1788,7 +1789,7 @@ function setupViolation(){
 // ── GLOBAL PROTECTION (entire app) ──────────────────────────
 (function initProtection(){
   // Disable right-click everywhere
-  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.addEventListener('contextmenu', e => { if(!isTeacherMode) e.preventDefault(); });
 
   // Disable keyboard shortcuts that expose source/tools
   document.addEventListener('keydown', e => {
@@ -1797,17 +1798,17 @@ function setupViolation(){
     const shift = e.shiftKey;
 
     // F12 - DevTools
-    if(k === 'F12'){ e.preventDefault(); return; }
+    if(k === 'F12'){ if(!isTeacherMode) e.preventDefault(); return; }
     // Ctrl+U - View source
-    if(ctrl && k.toLowerCase() === 'u'){ e.preventDefault(); return; }
+    if(ctrl && k.toLowerCase() === 'u'){ if(!isTeacherMode) e.preventDefault(); return; }
     // Ctrl+Shift+I - DevTools
-    if(ctrl && shift && k.toLowerCase() === 'i'){ e.preventDefault(); return; }
+    if(ctrl && shift && k.toLowerCase() === 'i'){ if(!isTeacherMode) e.preventDefault(); return; }
     // Ctrl+Shift+J - Console
-    if(ctrl && shift && k.toLowerCase() === 'j'){ e.preventDefault(); return; }
+    if(ctrl && shift && k.toLowerCase() === 'j'){ if(!isTeacherMode) e.preventDefault(); return; }
     // Ctrl+Shift+C - Inspect element
-    if(ctrl && shift && k.toLowerCase() === 'c'){ e.preventDefault(); return; }
+    if(ctrl && shift && k.toLowerCase() === 'c'){ if(!isTeacherMode) e.preventDefault(); return; }
     // Ctrl+S - Save page (source)
-    if(ctrl && k.toLowerCase() === 's'){ e.preventDefault(); return; }
+    if(ctrl && k.toLowerCase() === 's'){ if(!isTeacherMode) e.preventDefault(); return; }
   });
 
   // Detect DevTools open via window size heuristic (best-effort)
@@ -1894,6 +1895,7 @@ function openTchr(){document.getElementById('tchr-overlay').classList.add('open'
 function closeTchr(){document.getElementById('tchr-overlay').classList.remove('open');document.getElementById('tchr-pwd').value='';}
 function chkTchrPwd(){
   if(document.getElementById('tchr-pwd').value===TEACHER_PWD){
+    isTeacherMode=true;
     closeTchr();
     let html=`<b>${S.student.name||'—'}</b> · ${S.student.class||''}<br>Mode: ${S.mode} · Round: ${S.round} · Violations: ${S.violations}<br><br>`;
     if(S.activeParts.length){
@@ -1917,6 +1919,7 @@ function chkTchrPwd(){
 function closeTchrPanel(){document.getElementById('tchr-panel').classList.remove('open');}
 function tchrReset(){
   closeTchrPanel();
+  isTeacherMode=false;
   S={mode:'practice',student:{id:'',name:'',class:''},testIndex:S.testIndex,testData:null,activeParts:[],round:1,answers:{},firstRoundAns:{},wrongIds:[],paraProgress:{},paraDone:{},violations:0,startTime:null,unlocked:false,submittedRounds:[],ftScore:null,currentPartIdx:0};
   audioEls={};
   showScreen('landing');
