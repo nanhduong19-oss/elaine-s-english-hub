@@ -2,51 +2,81 @@
   "tests": [
     {
       "testId": "petbook2-test-01",
-      "title": "PET Listening Test 01 - Book 2",
+      "title": "PET Listening Test 01 - BOOK 2",
       "level": "B1",
       "totalQuestions": 25,
-      "parts": [1, 2, 3, 4],
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
       "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/petbook2-test-01"
     },
     {
       "testId": "petbook2-test-02",
-      "title": "PET Listening Test 02 - Book 2",
+      "title": "PET Listening Test 02 - BOOK 2",
       "level": "B1",
       "totalQuestions": 25,
-      "parts": [1, 2, 3, 4],
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
       "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/petbook2-test-02"
     },
     {
       "testId": "petbook2-test-03",
-      "title": "PET Listening Test 03 - Book 2",
+      "title": "PET Listening Test 03 - BOOK 2",
       "level": "B1",
       "totalQuestions": 25,
-      "parts": [1, 2, 3, 4],
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
       "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/petbook2-test-03"
     },
     {
       "testId": "petbook2-test-04",
-      "title": "PET Listening Test 04 - Book 2",
+      "title": "PET Listening Test 04 - BOOK 2",
       "level": "B1",
       "totalQuestions": 25,
-      "parts": [1, 2, 3, 4],
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
       "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/petbook2-test-04"
     },
-     {
-     "testId": "trainerbook2-test-01",
-     "title": "PET Listening Test 01 TRAINER BOOK 2",
-     "level": "B1",
-     "totalQuestions": 25,
-     "parts": [1, 2, 3, 4],
-     "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/trainerbook2-test-01"
-     },
     {
-    "testId": "trainerbook2-test-02",
-    "title": "PET Listening Test 02 TRAINER BOOK 2",
-    "level": "B1",
-    "totalQuestions": 25,
-    "parts": [1, 2, 3, 4],
-    "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/trainerbook2-test-02"
+      "testId": "trainerbook2-test-01",
+      "title": "PET Listening Test 01 - TRAINER BOOK 2",
+      "level": "B1",
+      "totalQuestions": 25,
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/trainerbook2-test-01"
+    },
+    {
+      "testId": "trainerbook2-test-02",
+      "title": "PET Listening Test 02 - TRAINER BOOK 2",
+      "level": "B1",
+      "totalQuestions": 25,
+      "parts": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/trainerbook2-test-02"
     }
   ]
 }
