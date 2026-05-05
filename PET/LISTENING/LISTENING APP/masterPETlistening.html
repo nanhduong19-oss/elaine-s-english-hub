@@ -1,0 +1,1931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PET Listening Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cherry:       #C8102E;
+  --cherry-dark:  #8B1A1A;
+  --cherry-deep:  #5C0F18;
+  --cherry-light: #FDECEA;
+  --cherry-mid:   #F4B8BC;
+  --cream:        #F5EDE3;
+  --cream-dark:   #EAD9C8;
+  --leaf:         #4A7C3F;
+  --leaf-light:   #EBF3E8;
+  --white:        #FFFFFF;
+  --ink:          #1A1A1A;
+  --ink-mid:      #4A4A4A;
+  --ink-light:    #8A8A8A;
+  --border:       #E8DDD5;
+  --selected-bg:  #FDF0F1;
+  --selected-bd:  #C8102E;
+  --correct-bg:   #EBF3E8;
+  --correct-bd:   #4A7C3F;
+  --wrong-bg:     #FDECEA;
+  --wrong-bd:     #C8102E;
+  --shadow-sm:    0 1px 4px rgba(0,0,0,0.08);
+  --shadow:       0 4px 16px rgba(0,0,0,0.10);
+  --shadow-lg:    0 8px 32px rgba(0,0,0,0.14);
+  --r:            10px;
+  --r-sm:         7px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);min-height:100vh;}
+.screen{display:none;}
+.screen.active{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── HEADER ── */
+.hdr{
+  background:var(--cherry);
+  color:var(--white);
+  padding:0 20px;
+  height:52px;
+  display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 8px rgba(140,10,30,0.3);
+  flex-shrink:0;
+}
+.hdr-logo{font-family:'Nunito',sans-serif;font-weight:900;font-size:17px;letter-spacing:-0.3px;}
+.hdr-logo span{opacity:0.7;font-weight:600;font-size:13px;margin-left:8px;}
+.hdr-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.hdr-badge{
+  background:rgba(255,255,255,0.18);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:100px;padding:3px 10px;
+  font-size:12px;font-weight:600;
+}
+
+/* ── LANDING ── */
+#screen-landing .body{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  padding:40px 20px;max-width:480px;margin:0 auto;width:100%;
+}
+.hero-icon{
+  width:88px;height:88px;border-radius:24px;
+  background:var(--cherry);
+  display:flex;align-items:center;justify-content:center;
+  font-size:40px;margin-bottom:20px;
+  box-shadow:0 8px 24px rgba(200,16,46,0.35);
+}
+.hero-title{font-family:'Nunito',sans-serif;font-size:26px;font-weight:900;text-align:center;margin-bottom:8px;}
+.hero-sub{color:var(--ink-mid);font-size:14px;text-align:center;line-height:1.6;margin-bottom:32px;}
+.mode-cards{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.mc{
+  background:var(--white);border:2px solid var(--border);
+  border-radius:var(--r);padding:16px 18px;
+  cursor:pointer;display:flex;align-items:center;gap:14px;
+  transition:all 0.18s;
+}
+.mc:hover{border-color:var(--cherry);box-shadow:var(--shadow);}
+.mc.selected{border-color:var(--cherry);background:var(--cherry-light);}
+.mc-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.mc-icon.p{background:var(--leaf-light);}
+.mc-icon.f{background:var(--cream-dark);}
+.mc-info h3{font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;margin-bottom:2px;}
+.mc-info p{font-size:12px;color:var(--ink-mid);}
+
+/* ── LOGIN ── */
+#screen-login .body{
+  flex:1;padding:24px 16px;
+  max-width:440px;margin:0 auto;width:100%;
+}
+.login-card{background:var(--white);border-radius:var(--r);padding:24px;box-shadow:var(--shadow);}
+.login-card h2{font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;margin-bottom:4px;}
+.login-card .sub{font-size:13px;color:var(--ink-mid);margin-bottom:20px;}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:12px;font-weight:600;color:var(--ink-mid);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.5px;}
+.fg input,.fg select{
+  width:100%;padding:10px 13px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);
+  outline:none;transition:border-color 0.18s;background:var(--white);
+}
+.fg input:focus,.fg select:focus{border-color:var(--cherry);}
+.part-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.pchip{
+  padding:7px 14px;border-radius:100px;
+  border:1.5px solid var(--border);background:var(--white);
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.15s;color:var(--ink-mid);
+}
+.pchip:hover{border-color:var(--cherry);color:var(--cherry);}
+.pchip.on{background:var(--cherry);border-color:var(--cherry);color:var(--white);}
+
+/* ── BUTTONS ── */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 22px;border-radius:100px;border:none;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:14px;
+  transition:all 0.18s;
+}
+.btn-primary{background:var(--cherry);color:var(--white);}
+.btn-primary:hover{background:var(--cherry-dark);box-shadow:0 4px 14px rgba(200,16,46,0.4);transform:translateY(-1px);}
+.btn-ghost{background:var(--border);color:var(--ink);}
+.btn-ghost:hover{background:var(--cream-dark);}
+.btn-full{width:100%;}
+.btn:disabled{opacity:0.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+
+/* ── PLAYER LAYOUT ── */
+#screen-player{flex-direction:column;}
+#screen-player .player-body{
+  flex:1;display:flex;flex-direction:column;
+  max-width:960px;margin:0 auto;width:100%;padding:12px 12px 0;
+}
+
+/* sticky audio */
+.audio-sticky{
+  background:var(--ink);color:var(--white);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:12px;
+  flex-shrink:0;
+}
+.audio-label-sm{font-size:11px;font-weight:700;opacity:0.6;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap;}
+.audio-sticky audio{flex:1;height:32px;min-width:0;}
+audio::-webkit-media-controls-panel{background:rgba(255,255,255,0.08);}
+.no-seek-wrap{flex:1;display:flex;align-items:center;gap:10px;}
+.play-only-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--cherry);border:none;cursor:pointer;
+  color:var(--white);font-size:14px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background 0.15s;
+}
+.play-only-btn:hover{background:var(--cherry-dark);}
+.audio-progress-bar{
+  flex:1;height:4px;background:rgba(255,255,255,0.2);
+  border-radius:2px;overflow:hidden;
+}
+.audio-progress-fill{height:100%;background:var(--cherry);width:0%;transition:width 0.5s linear;}
+.audio-time{font-size:11px;opacity:0.6;white-space:nowrap;}
+
+/* bottom nav bar */
+.bottom-nav{
+  background:var(--white);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;height:48px;
+  flex-shrink:0;position:sticky;bottom:0;z-index:100;
+}
+.bn-part{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  border-right:1px solid var(--border);
+  font-size:12px;font-weight:600;color:var(--ink-light);
+  cursor:pointer;transition:all 0.15s;gap:6px;padding:0 8px;
+}
+.bn-part:last-child{border-right:none;}
+.bn-part.active{color:var(--cherry);border-bottom:2px solid var(--cherry);}
+.bn-part .bn-prog{font-size:11px;opacity:0.8;}
+.bn-q-nums{
+  display:flex;align-items:center;gap:3px;padding:0 10px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.bn-q-nums::-webkit-scrollbar{display:none;}
+.qnum{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;cursor:pointer;
+  background:var(--cream);color:var(--ink-mid);
+  transition:all 0.12s;flex-shrink:0;border:1.5px solid transparent;
+}
+.qnum.answered{background:var(--cherry-light);color:var(--cherry);border-color:var(--cherry-mid);}
+.qnum.current{background:var(--cherry);color:var(--white);border-color:var(--cherry-dark);}
+.submit-btn-wrap{
+  padding:8px 12px;display:flex;align-items:center;
+  border-left:1px solid var(--border);flex-shrink:0;
+}
+
+/* ── QUESTION VIEW ── */
+.qview{flex:1;display:flex;flex-direction:column;min-height:0;}
+
+/* Part 1 split */
+.p1-split{
+  flex:1;display:flex;min-height:0;
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:var(--shadow);background:var(--white);
+  margin-bottom:8px;
+}
+.p1-left{
+  flex:0 0 68%;
+  background:#F0EBE5;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+  border-right:1px solid var(--border);
+}
+.p1-left img{
+  width:100%;height:100%;object-fit:contain;
+  max-height:calc(100vh - 200px);
+}
+.p1-pg-badge{
+  position:absolute;top:10px;right:10px;
+  background:rgba(0,0,0,0.5);color:white;
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;
+}
+.p1-right{
+  flex:1;padding:16px 12px;
+  overflow-y:auto;display:flex;flex-direction:column;gap:14px;
+}
+.p1-qrow{border-bottom:1px solid var(--border);padding-bottom:14px;}
+.p1-qrow:last-child{border-bottom:none;padding-bottom:0;}
+.p1-qtxt{font-size:13px;font-weight:600;margin-bottom:10px;line-height:1.4;
+  display:flex;align-items:flex-start;gap:7px;}
+.p1-qtxt .qn{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--cherry);color:white;
+  font-size:10px;font-weight:800;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.p1-opts{display:flex;gap:8px;}
+.p1-opt{
+  flex:1;border:2px solid var(--border);border-radius:8px;
+  background:var(--white);cursor:pointer;
+  padding:8px 4px;
+  font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;
+  color:var(--ink-mid);transition:all 0.15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.p1-opt:hover:not(:disabled){border-color:var(--cherry);color:var(--cherry);}
+.p1-opt.sel{background:var(--selected-bg);border-color:var(--selected-bd);color:var(--cherry);}
+.p1-opt.correct{background:var(--correct-bg);border-color:var(--correct-bd);color:var(--leaf);}
+.p1-opt.wrong{background:var(--wrong-bg);border-color:var(--wrong-bd);color:var(--cherry);}
+.p1-opt:disabled{cursor:default;}
+
+/* Part 2/4 MCQ */
+.p24-wrap{
+  flex:1;background:var(--white);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow-y:auto;
+  margin-bottom:8px;
+}
+.p24-context{
+  background:var(--cream);padding:12px 16px;
+  font-size:12px;color:var(--ink-mid);font-style:italic;
+  border-bottom:1px solid var(--border);
+  line-height:1.5;
+}
+.p24-q{padding:16px 16px 12px;}
+.p24-qnum{
+  display:flex;align-items:center;gap:8px;margin-bottom:10px;
+}
+.p24-qnum .n{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--cherry);color:white;
+  font-size:11px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.p24-qnum .qtxt{font-size:15px;font-weight:600;line-height:1.4;}
+.p24-opts{display:flex;flex-direction:column;gap:6px;padding:0 0 4px;}
+.p24-opt{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;
+  border:1.5px solid var(--border);border-radius:8px;
+  background:var(--white);cursor:pointer;
+  font-size:14px;color:var(--ink);transition:all 0.14s;text-align:left;width:100%;
+  font-family:'DM Sans',sans-serif;
+}
+.p24-opt:hover:not(:disabled){border-color:var(--cherry);background:var(--cherry-light);}
+.p24-opt .ol{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--cream);color:var(--ink-mid);
+  font-size:11px;font-weight:700;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;transition:all 0.14s;
+}
+.p24-opt.sel{border-color:var(--cherry);background:var(--cherry-light);}
+.p24-opt.sel .ol{background:var(--cherry);color:white;}
+.p24-opt.correct{border-color:var(--correct-bd);background:var(--correct-bg);}
+.p24-opt.correct .ol{background:var(--leaf);color:white;}
+.p24-opt.wrong{border-color:var(--wrong-bd);background:var(--wrong-bg);}
+.p24-opt.wrong .ol{background:var(--cherry);color:white;}
+.p24-opt:disabled{cursor:default;}
+
+/* Part 3 note */
+.p3-wrap{
+  flex:1;background:var(--white);border-radius:var(--r);
+  box-shadow:var(--shadow);overflow-y:auto;margin-bottom:8px;
+}
+.note-title{
+  background:var(--cherry);color:white;
+  text-align:center;padding:14px;
+  font-family:'Nunito',sans-serif;font-size:17px;font-weight:800;
+}
+.note-context{
+  background:var(--cream);padding:10px 16px;
+  font-size:12px;color:var(--ink-mid);font-style:italic;
+  border-bottom:1px solid var(--border);
+}
+.note-lines{padding:16px;display:flex;flex-direction:column;gap:14px;}
+.note-line{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  font-size:14px;line-height:2;padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+}
+.note-line:last-child{border-bottom:none;padding-bottom:0;}
+.note-line .qn{
+  width:20px;height:20px;border-radius:50%;
+  background:var(--cherry);color:white;
+  font-size:10px;font-weight:800;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.gap-in{
+  border:none;border-bottom:2px solid var(--cherry);
+  padding:2px 8px;min-width:110px;max-width:160px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  text-transform:uppercase;text-align:center;
+  background:transparent;outline:none;color:var(--ink);
+  transition:border-color 0.18s;
+}
+.gap-in:focus{border-bottom-color:var(--cherry-dark);}
+.gap-in.correct{border-bottom-color:var(--leaf);color:var(--leaf);}
+.gap-in.wrong{border-bottom-color:var(--cherry);color:var(--cherry);}
+
+/* ── RESULTS ── */
+#screen-results .body{
+  flex:1;max-width:680px;margin:0 auto;width:100%;padding:14px 12px;
+}
+.score-hero{
+  background:linear-gradient(135deg,var(--cherry) 0%,var(--cherry-dark) 100%);
+  border-radius:var(--r);padding:22px 20px;
+  color:white;display:flex;align-items:center;gap:16px;
+  margin-bottom:12px;box-shadow:0 6px 20px rgba(200,16,46,0.3);
+}
+.sh-left .big{font-family:'Nunito',sans-serif;font-size:48px;font-weight:900;line-height:1;}
+.sh-left .sub{font-size:13px;opacity:0.8;margin-top:2px;}
+.sh-right{flex:1;}
+.sh-pct{font-family:'Nunito',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;}
+.sh-detail{font-size:13px;opacity:0.85;line-height:1.7;}
+.sh-badge{
+  display:inline-block;padding:4px 14px;border-radius:100px;
+  font-size:12px;font-weight:700;margin-top:8px;
+  background:rgba(255,255,255,0.2);
+}
+
+.retake-bar{
+  background:var(--cream-dark);border:1.5px solid var(--cherry-mid);
+  border-radius:var(--r-sm);padding:12px 14px;
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;margin-bottom:10px;
+}
+.retake-bar b{color:var(--cherry);}
+
+.wrong-section{margin-bottom:80px;}
+.ws-hdr{
+  font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;
+  color:var(--ink-light);margin-bottom:8px;
+}
+.wi{
+  background:var(--white);border-radius:var(--r-sm);
+  margin-bottom:8px;overflow:hidden;
+  border:1.5px solid var(--border);
+  box-shadow:var(--shadow-sm);
+}
+.wi-hdr{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;cursor:pointer;
+  border-bottom:1px solid var(--border);
+}
+.wi-hdr .wn{
+  width:22px;height:22px;border-radius:50%;
+  background:var(--cherry);color:white;
+  font-size:10px;font-weight:800;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.wi-hdr .wq{font-size:13px;font-weight:600;flex:1;line-height:1.3;}
+.wi-hdr .wa{display:flex;gap:10px;font-size:12px;white-space:nowrap;}
+.wi-hdr .wa .yr{color:var(--cherry);}
+.wi-hdr .wa .cr{color:var(--leaf);}
+.wi-body{padding:12px 14px;display:none;}
+.wi-body.open{display:block;}
+
+/* Paraphrase */
+.para-box{
+  background:var(--cream);border-radius:8px;padding:12px 13px;margin-bottom:10px;
+}
+.para-box .pl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:var(--cherry);margin-bottom:6px;}
+.para-text{font-size:13px;font-style:italic;color:var(--ink);line-height:1.6;margin-bottom:10px;}
+.para-track{display:flex;gap:4px;margin-bottom:8px;}
+.pdot{width:9px;height:9px;border-radius:50%;background:var(--border);transition:background 0.2s;}
+.pdot.done{background:var(--leaf);}
+.para-inp{
+  width:100%;padding:9px 11px;
+  border:1.5px solid var(--border);border-radius:7px;
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color 0.18s;margin-bottom:7px;
+}
+.para-inp:focus{border-color:var(--cherry);}
+.para-inp.ok{border-color:var(--leaf);background:var(--correct-bg);}
+.para-inp.no{border-color:var(--cherry);background:var(--wrong-bg);}
+.para-submit{
+  padding:7px 14px;background:var(--cherry);color:white;
+  border:none;border-radius:7px;cursor:pointer;
+  font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;
+  transition:background 0.15s;
+}
+.para-submit:hover{background:var(--cherry-dark);}
+.para-done{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 11px;background:var(--correct-bg);color:var(--leaf);
+  border-radius:6px;font-size:12px;font-weight:700;
+}
+
+/* Script toggle */
+.script-toggle-btn{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:600;color:var(--ink-mid);
+  cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;
+  padding:4px 0;margin-top:2px;
+}
+.script-box{
+  font-size:12px;color:var(--ink-mid);line-height:1.8;
+  white-space:pre-line;margin-top:8px;
+  background:var(--cream);border-radius:7px;padding:10px 12px;
+  display:none;
+}
+.script-box.open{display:block;}
+.expl-box{
+  font-size:12px;color:var(--ink);line-height:1.7;margin-top:6px;
+  background:#FFFBF0;border-left:3px solid var(--cherry-mid);
+  padding:8px 11px;border-radius:0 7px 7px 0;
+  display:none;
+}
+.expl-box.open{display:block;}
+
+/* Results bottom bar */
+.results-bottom{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--white);border-top:1px solid var(--border);
+  padding:10px 16px;display:flex;gap:10px;
+  max-width:680px;margin:0 auto;
+  box-shadow:0 -4px 12px rgba(0,0,0,0.08);
+}
+
+/* ── MODALS ── */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  display:none;align-items:center;justify-content:center;
+  z-index:500;padding:20px;
+}
+.overlay.open{display:flex;}
+.modal{
+  background:var(--white);border-radius:var(--r);
+  padding:24px;max-width:340px;width:100%;
+  box-shadow:var(--shadow-lg);
+}
+.modal h3{font-family:'Nunito',sans-serif;font-weight:800;font-size:17px;margin-bottom:6px;}
+.modal p{color:var(--ink-mid);font-size:13px;margin-bottom:16px;line-height:1.6;}
+.modal input{
+  width:100%;padding:10px 13px;
+  border:1.5px solid var(--border);border-radius:var(--r-sm);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  outline:none;margin-bottom:14px;text-align:center;letter-spacing:3px;
+}
+.modal input:focus{border-color:var(--cherry);}
+.modal-btns{display:flex;gap:8px;}
+
+/* Teacher button */
+.teacher-fab{
+  position:fixed;bottom:68px;right:16px;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--ink);color:white;border:none;
+  cursor:pointer;font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow);z-index:300;transition:transform 0.15s;
+}
+.teacher-fab:hover{transform:scale(1.1);}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:70px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--ink);color:white;
+  padding:8px 18px;border-radius:100px;
+  font-size:13px;font-weight:500;
+  opacity:0;transition:all 0.25s;z-index:600;white-space:nowrap;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Violation banner */
+.vbanner{
+  background:var(--cherry);color:white;
+  padding:8px 14px;font-size:12px;font-weight:700;
+  display:none;text-align:center;
+}
+
+/* Mode pill */
+.mode-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 13px;border-radius:100px;
+  font-size:12px;font-weight:700;margin-bottom:10px;
+}
+.mode-pill.test{background:var(--wrong-bg);color:var(--cherry);border:1px solid var(--cherry-mid);}
+.mode-pill.study{background:var(--cream);color:var(--ink-mid);border:1px solid var(--border);}
+.mode-pill.practice{background:var(--leaf-light);color:var(--leaf);border:1px solid #C5E0C0;}
+
+@media(max-width:600px){
+  .p1-split{flex-direction:column;}
+  .p1-left{flex:0 0 auto;height:45vw;}
+  .p1-right{padding:10px;}
+  .score-hero{flex-direction:column;gap:10px;}
+}
+
+/* ── FOOTER ── */
+.app-footer{
+  background:var(--ink);color:rgba(255,255,255,0.55);
+  text-align:center;padding:14px 20px;
+  font-size:11px;line-height:1.7;
+  flex-shrink:0;
+}
+.app-footer strong{color:rgba(255,255,255,0.85);font-weight:600;}
+
+/* ── TIER 1: Score summary ── */
+.t1-wrap{
+  max-width:480px;margin:0 auto;padding:24px 16px;
+  display:flex;flex-direction:column;align-items:center;gap:16px;
+}
+.t1-score-circle{
+  width:140px;height:140px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cherry),var(--cherry-dark));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:white;box-shadow:0 8px 28px rgba(200,16,46,0.4);
+  flex-shrink:0;
+}
+.t1-score-circle .big{font-family:'Nunito',sans-serif;font-size:38px;font-weight:900;line-height:1;}
+.t1-score-circle .pct{font-size:15px;font-weight:700;opacity:0.85;}
+.t1-info{
+  background:var(--white);border-radius:var(--r);padding:18px 20px;
+  width:100%;box-shadow:var(--shadow);text-align:center;
+}
+.t1-info .label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--ink-light);margin-bottom:4px;}
+.t1-info .val{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:var(--cherry);}
+.t1-retake-msg{
+  background:var(--cream-dark);border:1.5px solid var(--cherry-mid);
+  border-radius:var(--r-sm);padding:13px 16px;
+  font-size:13px;width:100%;line-height:1.6;
+}
+
+/* ── TIER 2: Review ── */
+.t2-wrap{max-width:680px;margin:0 auto;padding:14px 12px 100px;}
+.review-progress{
+  background:var(--white);border-radius:var(--r-sm);padding:12px 16px;
+  margin-bottom:14px;box-shadow:var(--shadow-sm);
+  display:flex;align-items:center;gap:12px;
+}
+.rp-bar-wrap{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.rp-bar-fill{height:100%;background:var(--leaf);border-radius:3px;transition:width 0.4s;}
+.rp-label{font-size:12px;font-weight:700;color:var(--ink-mid);white-space:nowrap;}
+.rp-count{font-size:12px;color:var(--leaf);font-weight:700;white-space:nowrap;}
+
+/* ── TIER 3: Final ── */
+.t3-wrap{
+  max-width:480px;margin:0 auto;padding:32px 20px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+  text-align:center;
+}
+.t3-trophy{font-size:72px;line-height:1;animation:pop 0.4s ease;}
+@keyframes pop{0%{transform:scale(0.5);opacity:0;}70%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+.t3-grade-card{
+  background:linear-gradient(135deg,var(--cherry),var(--cherry-dark));
+  border-radius:var(--r);padding:28px 32px;color:white;width:100%;
+  box-shadow:0 8px 28px rgba(200,16,46,0.4);
+}
+.t3-score{font-family:'Nunito',sans-serif;font-size:56px;font-weight:900;line-height:1;}
+.t3-pct{font-size:20px;font-weight:700;opacity:0.85;margin-top:4px;}
+.t3-grade{
+  display:inline-block;margin-top:12px;
+  padding:6px 20px;border-radius:100px;
+  background:rgba(255,255,255,0.25);
+  font-size:14px;font-weight:800;
+}
+.t3-cam{font-size:13px;opacity:0.8;margin-top:6px;}
+.t3-message{
+  background:var(--white);border-radius:var(--r);padding:20px;
+  width:100%;box-shadow:var(--shadow);
+  font-size:15px;line-height:1.7;color:var(--ink);
+  font-style:italic;
+}
+.t3-message strong{color:var(--cherry);font-style:normal;}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="screen-landing" class="screen active">
+  <header class="hdr">
+    <span class="hdr-logo">🎧 PET Listening <span>Ruby School</span></span>
+  </header>
+  <div class="body">
+    <div class="hero-icon">🎧</div>
+    <h1 class="hero-title">PET Listening Practice</h1>
+    <p class="hero-sub">Cambridge B1 Preliminary · Real tests · Smart review</p>
+    <div class="section-label" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--ink-light);margin-bottom:10px;width:100%">Select mode</div>
+    <div class="mode-cards">
+      <div class="mc" id="mc-practice" onclick="selectMode('practice',this)">
+        <div class="mc-icon p">📚</div>
+        <div class="mc-info">
+          <h3>Part Practice</h3>
+          <p>Choose parts to practise · Random from test bank · Full review after</p>
+        </div>
+      </div>
+      <div class="mc" id="mc-fulltest" onclick="selectMode('fulltest',this)">
+        <div class="mc-icon f">📝</div>
+        <div class="mc-info">
+          <h3>Full Test</h3>
+          <p>All 25 questions · Cambridge scoring · Test conditions</p>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="goLogin()">Continue →</button>
+  </div>
+  <footer class="app-footer"><strong>Compiled and digitalized by Elaine Nguyen</strong><br>Empowering students through knowledge and technology</footer>
+</div>
+
+<!-- LOGIN -->
+<div id="screen-login" class="screen">
+  <header class="hdr">
+    <span class="hdr-logo">🎧 PET Listening</span>
+    <div class="hdr-right">
+      <span class="hdr-badge" id="hdr-mode-badge">Practice</span>
+    </div>
+  </header>
+  <div class="body">
+    <div class="login-card">
+      <h2>Student Details</h2>
+      <div class="sub" id="login-sub">Fill in your information to start</div>
+      <div class="fg">
+        <label>Student ID</label>
+        <div style="position:relative;">
+          <input id="inp-id" placeholder="Enter your ID..." autocomplete="off"
+            oninput="autoFillStudent(this.value)"
+            style="padding-right:36px;">
+          <span id="id-status" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:14px;"></span>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Full Name <span style="font-size:10px;color:var(--ink-light);font-weight:400">(auto-filled)</span></label>
+        <input id="inp-name" placeholder="Enter ID above..." readonly
+          style="background:var(--cream);color:var(--ink-mid);cursor:default;">
+      </div>
+      <div class="fg">
+        <label>Class <span style="font-size:10px;color:var(--ink-light);font-weight:400">(auto-filled)</span></label>
+        <input id="inp-class" placeholder="Enter ID above..." readonly
+          style="background:var(--cream);color:var(--ink-mid);cursor:default;">
+      </div>
+      <div class="fg" id="part-wrap" style="display:none">
+        <label>Step 1 · Select parts to practise</label>
+        <div class="part-chips" id="part-chip-list">
+          <div class="pchip" onclick="togPart(1,this)" data-part="1">Part 1</div>
+          <div class="pchip" onclick="togPart(2,this)" data-part="2">Part 2</div>
+          <div class="pchip" onclick="togPart(3,this)" data-part="3">Part 3</div>
+          <div class="pchip" onclick="togPart(4,this)" data-part="4">Part 4</div>
+        </div>
+      </div>
+      <div class="fg" id="qty-wrap" style="display:none">
+        <label>Step 2 · How many tests per part?</label>
+        <div id="qty-rows" style="display:flex;flex-direction:column;gap:10px;"></div>
+        <div style="font-size:11px;color:var(--ink-light);margin-top:5px" id="qty-hint">App will randomly pick different tests for each part.</div>
+      </div>
+      <div class="fg" id="test-wrap" style="display:none">
+        <label>Select Test</label>
+        <select id="test-sel"><option value="">Loading...</option></select>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="startSession()" style="margin-top:6px">Start 🚀</button>
+    </div>
+  </div>
+  <footer class="app-footer"><strong>Compiled and digitalized by Elaine Nguyen</strong><br>Empowering students through knowledge and technology</footer>
+</div>
+
+<!-- PLAYER -->
+<div id="screen-player" class="screen">
+  <div id="vbanner" class="vbanner"></div>
+  <!-- Sticky audio -->
+  <div class="audio-sticky" id="audio-bar">
+    <span class="audio-label-sm" id="audio-part-label">Part</span>
+    <div id="audio-player-wrap" style="flex:1;display:flex;align-items:center;gap:10px;min-width:0;">
+      <!-- filled by JS -->
+    </div>
+  </div>
+  <!-- Mode pill -->
+  <div style="padding:8px 12px 0;max-width:960px;margin:0 auto;width:100%">
+    <div id="mode-pill-wrap"></div>
+  </div>
+  <!-- Question area -->
+  <div class="player-body" style="flex:1;">
+    <div class="qview" id="qview">
+      <div style="text-align:center;padding:60px 20px">
+        <div style="width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--cherry);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 12px;"></div>
+        <p style="color:var(--ink-mid);font-size:14px">Loading...</p>
+      </div>
+    </div>
+  </div>
+  <!-- Bottom nav -->
+  <div class="bottom-nav" id="bottom-nav">
+    <div id="bn-parts" style="display:flex;flex:1;"></div>
+    <div class="submit-btn-wrap">
+      <button class="btn btn-primary" id="btn-submit" onclick="submit()" disabled style="padding:8px 16px;font-size:13px">Submit ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS TIER 1 -->
+<div id="screen-t1" class="screen">
+  <header class="hdr"><span class="hdr-logo">🎧 PET Listening <span>Results</span></span></header>
+  <div id="t1-content" style="flex:1;overflow-y:auto;"></div>
+  <footer class="app-footer"><strong>Compiled and digitalized by Elaine Nguyen</strong><br>Empowering students through knowledge and technology</footer>
+</div>
+
+<!-- RESULTS TIER 2 (Review) -->
+<div id="screen-t2" class="screen">
+  <header class="hdr">
+    <span class="hdr-logo">✍️ Review Wrong Answers</span>
+    <div class="hdr-right"><span class="hdr-badge" id="t2-badge">0/0 done</span></div>
+  </header>
+  <div id="t2-content" style="flex:1;overflow-y:auto;"></div>
+  <div class="results-bottom" id="t2-bottom"></div>
+  <footer class="app-footer"><strong>Compiled and digitalized by Elaine Nguyen</strong><br>Empowering students through knowledge and technology</footer>
+</div>
+
+<!-- RESULTS TIER 3 (Final) -->
+<div id="screen-t3" class="screen">
+  <header class="hdr"><span class="hdr-logo">🎧 PET Listening <span>Complete</span></span></header>
+  <div id="t3-content" style="flex:1;overflow-y:auto;"></div>
+  <footer class="app-footer"><strong>Compiled and digitalized by Elaine Nguyen</strong><br>Empowering students through knowledge and technology</footer>
+</div>
+
+<!-- RESULTS (legacy, kept for compatibility) -->
+<div id="screen-results" class="screen" style="display:none">
+  <header class="hdr" id="results-hdr"><span class="hdr-logo">🎧 Results</span></header>
+  <div class="body" id="results-body"></div>
+  <div class="results-bottom" id="results-bottom"></div>
+</div>
+
+<!-- Teacher modal -->
+<div class="overlay" id="tchr-overlay">
+  <div class="modal">
+    <h3>🔑 Teacher Mode</h3>
+    <p>Enter password to view answers and reset session.</p>
+    <input type="password" id="tchr-pwd" placeholder="••••••" onkeydown="if(event.key==='Enter')chkTchrPwd()">
+    <div class="modal-btns">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeTchr()">Cancel</button>
+      <button class="btn btn-primary" style="flex:1" onclick="chkTchrPwd()">Enter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Teacher panel -->
+<div class="overlay" id="tchr-panel">
+  <div class="modal" style="max-width:400px">
+    <h3>🎓 Teacher Panel</h3>
+    <div id="tchr-content" style="font-size:13px;color:var(--ink-mid);line-height:1.9;max-height:60vh;overflow-y:auto;margin-bottom:14px;"></div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeTchrPanel()">Close</button>
+      <button class="btn btn-primary" style="flex:1;background:var(--cherry)" onclick="tchrReset()">Reset Session</button>
+    </div>
+  </div>
+</div>
+
+<button class="teacher-fab" onclick="openTchr()" title="Teacher Mode">🔑</button>
+<div class="toast" id="toast"></div>
+
+<style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+
+<script>
+// ═══════════════════════ CONFIG ═══════════════════════
+const INDEX_URL = 'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/index.json';
+const TEACHER_PWD = 'easygame19';
+const PARA_REPS = 3;
+const PASS_PRACTICE = 0.80;
+const PASS_FULL = 22;
+const MAX_RT_PRACTICE = 3;
+const MAX_RT_STUDY = 2;
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz2ehAKVf2Nr3VbRnmy2WZOgYGJq5idO_2u4LZzCvtl8Ci_vaK1XEUyK4_TzeaO6y8NWA/exec';
+// Paste your Google Sheet published CSV URL here
+// File → Share → Publish to web → Sheet: data_student → CSV format
+// ── STUDENT DATA (JSON from GitHub) ──────────────────────────
+const STUDENT_JSON_URL = 'https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/students.json';
+let studentCache = null;
+
+async function fetchStudentData(){
+  if(studentCache) return studentCache;
+  try{
+    const r = await fetch(STUDENT_JSON_URL);
+    const data = await r.json();
+    const map = {};
+    for(const s of (data.students || [])){
+      if(s.id) map[s.id.toUpperCase()] = {
+        id:   s.id,
+        name: s.name     || '',
+        nick: s.nickname || '',
+        cls:  s.class    || ''
+      };
+    }
+    studentCache = map;
+    return map;
+  }catch(e){
+    console.warn('Could not load student data:', e);
+    return null;
+  }
+}
+
+async function autoFillStudent(val){
+  const id = val.trim().toUpperCase();
+  const statusEl = document.getElementById('id-status');
+
+  if(id.length < 3){
+    document.getElementById('inp-name').value = '';
+    document.getElementById('inp-class').value = '';
+    document.getElementById('inp-name').style.borderColor = '';
+    document.getElementById('inp-class').style.borderColor = '';
+    if(statusEl) statusEl.textContent = '';
+    return;
+  }
+
+  if(statusEl) statusEl.textContent = '⏳';
+  const map = await fetchStudentData();
+
+  if(!map){
+    if(statusEl) statusEl.textContent = '⚠️';
+    return;
+  }
+
+  const student = map[id];
+  const nameEl  = document.getElementById('inp-name');
+  const classEl = document.getElementById('inp-class');
+
+  if(student){
+    nameEl.value  = student.name;
+    classEl.value = student.cls;
+    nameEl.style.borderColor  = 'var(--leaf)';
+    classEl.style.borderColor = 'var(--leaf)';
+    if(statusEl) statusEl.textContent = '✅';
+    toast('✓ ' + student.name + '  ·  Class ' + student.cls);
+  } else {
+    nameEl.value  = '';
+    classEl.value = '';
+    nameEl.style.borderColor  = 'var(--cherry)';
+    classEl.style.borderColor = '';
+    if(statusEl) statusEl.textContent = '❌';
+    toast('❌ ID not found — please check again');
+  }
+}
+
+// Pre-fetch student data on page load so lookup is instant
+fetchStudentData();
+
+const CAM = [0,20,41,61,82,102,105,108,111,114,117,120,123,126,129,131,134,137,140,144,148,152,156,160,165,170];
+const camScale = r => CAM[Math.min(r,25)];
+const camGrade = s => s>=160?'Grade A':s>=153?'Grade B':s>=140?'Grade C (Pass)':s>102?'Fail':'Not Reported';
+
+// ═══════════════════════ STATE ═══════════════════════
+let S = {
+  mode:'practice', student:{id:'',name:'',class:''},
+  testIndex:null, testData:null, activeParts:[],
+  round:1, answers:{}, firstRoundAns:{},
+  wrongIds:[], paraProgress:{}, paraDone:{},
+  violations:0, startTime:null, unlocked:false,
+  submittedRounds:[], ftScore:null,
+  currentPartIdx:0,
+};
+// audio management
+let audioEls = {};
+let playOnlyMode = false;
+
+// ═══════════════════════ UI UTILS ═══════════════════════
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+  const el=document.getElementById('screen-'+id);
+  el.style.display='flex'; el.classList.add('active');
+}
+function toast(msg,dur=2500){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),dur);
+}
+function norm(s){return(s||'').toString().trim().toUpperCase().replace(/\s+/g,' ');}
+
+// ═══════════════════════ LANDING ═══════════════════════
+let selMode='practice';
+function selectMode(m,el){
+  selMode=m;
+  document.querySelectorAll('.mc').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function goLogin(){
+  S.mode=selMode;
+  document.getElementById('hdr-mode-badge').textContent=S.mode==='practice'?'Part Practice':'Full Test';
+  document.getElementById('part-wrap').style.display=S.mode==='practice'?'':'none';
+  document.getElementById('qty-wrap').style.display='none';
+  document.getElementById('test-wrap').style.display=S.mode==='fulltest'?'':'none';
+  // Reset part selection
+  document.querySelectorAll('#part-chip-list .pchip').forEach(c=>c.classList.remove('on'));
+  partQty={};
+  if(S.mode==='practice'&&!S.testIndex){
+    loadIndex().then(()=>buildQtyRows());
+  }
+  if(S.mode==='fulltest') loadIndex();
+  showScreen('login');
+}
+
+// ═══════════════════════ INDEX ═══════════════════════
+async function loadIndex(){
+  try{
+    const r=await fetch(INDEX_URL);
+    S.testIndex=await r.json();
+    const sel=document.getElementById('test-sel');
+    sel.innerHTML=S.testIndex.tests.map(t=>`<option value="${t.url}">${t.title}</option>`).join('');
+  }catch(e){document.getElementById('test-sel').innerHTML='<option>Error loading</option>';}
+}
+
+// ═══════════════════════ PART CHIPS ═══════════════════════
+// partQty[partNumber] = how many tests to load for that part
+let partQty={};
+
+function togPart(n,el){
+  el.classList.toggle('on');
+  buildQtyRows();
+}
+
+function buildQtyRows(){
+  const sel=[...document.querySelectorAll('#part-chip-list .pchip.on')].map(c=>parseInt(c.dataset.part));
+  const qtyWrap=document.getElementById('qty-wrap');
+  const rows=document.getElementById('qty-rows');
+  if(!sel.length){qtyWrap.style.display='none';return;}
+  qtyWrap.style.display='';
+  rows.innerHTML='';
+  sel.forEach(pn=>{
+    const max=S.testIndex?S.testIndex.tests.filter(t=>t.parts.includes(pn)).length:4;
+    const cur=Math.min(partQty[pn]||1,max);
+    partQty[pn]=cur;
+    rows.innerHTML+=`
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span style="font-size:13px;font-weight:700;color:var(--cherry);min-width:52px;">Part ${pn}</span>
+        <input type="number" id="qty-inp-${pn}" min="1" max="${max}" value="${cur}"
+          style="width:60px;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;
+          font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;text-align:center;
+          color:var(--cherry);outline:none;"
+          oninput="validateQty(${pn},${max},this)"
+          onfocus="this.style.borderColor='var(--cherry)'"
+          onblur="this.style.borderColor='var(--border)'">
+        <span style="font-size:12px;color:var(--ink-light);">of <b>${max}</b> available</span>
+      </div>`;
+  });
+}
+
+function validateQty(pn,max,el){
+  let v=parseInt(el.value)||1;
+  if(v<1)v=1;
+  if(v>max)v=max;
+  el.value=v;
+  partQty[pn]=v;
+}
+
+function setQty(pn,n,el){
+  partQty[pn]=n;
+}
+
+function getSelParts(){
+  // Returns flat array of partNumbers repeated by qty
+  // e.g. Part2 x2, Part4 x1 → [2,2,4]
+  const sel=[...document.querySelectorAll('#part-chip-list .pchip.on')].map(c=>parseInt(c.dataset.part));
+  const result=[];
+  sel.forEach(pn=>{
+    const qty=partQty[pn]||1;
+    for(let i=0;i<qty;i++) result.push(pn);
+  });
+  return result;
+}
+
+// ═══════════════════════ START ═══════════════════════
+async function startSession(){
+  const id=document.getElementById('inp-id').value.trim();
+  const name=document.getElementById('inp-name').value.trim();
+  const cls=document.getElementById('inp-class').value.trim();
+  if(!id){toast('Please enter your Student ID!');return;}
+  if(!name||!cls){
+    toast('\u274c Student ID not found. Please check your ID.');
+    document.getElementById('inp-id').focus();
+    return;
+  }
+  S.student={id,name,class:cls};
+  S.round=1;S.answers={};S.wrongIds=[];
+  S.paraProgress={};S.paraDone={};
+  S.violations=0;S.startTime=Date.now();
+  S.unlocked=false;S.submittedRounds=[];
+  S.ftScore=null;S.firstRoundAns={};
+  S.currentPartIdx=0;
+  audioEls={};
+
+  showScreen('player');
+  if(S.mode==='practice'){
+    const selChips=[...document.querySelectorAll('#part-chip-list .pchip.on')];
+    if(!selChips.length){toast('Please select at least one Part!');showScreen('login');return;}
+    const parts=getSelParts();
+    if(!parts.length){toast('Please select at least one Part!');showScreen('login');return;}
+    await loadRandParts(parts);
+  } else {
+    const url=document.getElementById('test-sel').value;
+    if(!url){toast('Please select a test!');showScreen('login');return;}
+    await loadFullTest(url);
+  }
+  setupViolation();
+}
+
+// ═══════════════════════ LOAD DATA ═══════════════════════
+async function loadRandParts(nums){
+  // nums is array like [2,2,4] meaning: Part2 test1, Part2 test2, Part4 test1
+  try{
+    if(!S.testIndex){const r=await fetch(INDEX_URL);S.testIndex=await r.json();}
+    const picked=[];
+    const usedPerPart={}; // track which testIds used per partNumber
+    const testCache={};
+    for(const pn of nums){
+      if(!usedPerPart[pn]) usedPerPart[pn]=new Set();
+      const avail=S.testIndex.tests.filter(t=>t.parts.includes(pn));
+      const unused=avail.filter(t=>!usedPerPart[pn].has(t.testId));
+      const pool=unused.length>0?unused:avail; // fallback if exhausted
+      const chosen=pool[Math.floor(Math.random()*pool.length)];
+      usedPerPart[pn].add(chosen.testId);
+      if(!testCache[chosen.testId]){
+        const r=await fetch(chosen.url);
+        testCache[chosen.testId]=await r.json();
+      }
+      const data=testCache[chosen.testId];
+      const part=data.parts.find(p=>p.partNumber===pn);
+      if(part) picked.push({...part,_src:chosen.title,_srcId:chosen.testId,_idx:picked.length});
+    }
+    S.activeParts=picked;
+    renderPlayer();
+  }catch(e){
+    document.getElementById('qview').innerHTML=`<div style="padding:20px;color:red">Error: ${e.message}</div>`;
+  }
+}
+async function loadFullTest(url){
+  try{
+    const r=await fetch(url);
+    const data=await r.json();
+    S.testData=data;
+    S.activeParts=data.parts.map((p,i)=>({...p,_idx:i}));
+    renderPlayer();
+  }catch(e){
+    document.getElementById('qview').innerHTML=`<div style="padding:20px;color:red">Error: ${e.message}</div>`;
+  }
+}
+
+// ═══════════════════════ RENDER PLAYER ═══════════════════════
+function renderPlayer(){
+  const isPractice=S.mode==='practice';
+  const isTestMode=!isPractice&&S.round===1;
+  playOnlyMode=isTestMode;
+
+  // Mode pill
+  let pill='';
+  if(isPractice&&S.round>1) pill=`<div class="mode-pill study">🔄 Retry ${S.round}/${MAX_RT_PRACTICE} · ${S.wrongIds.length} wrong questions</div>`;
+  else if(isPractice) pill=`<div class="mode-pill practice">📚 Part Practice</div>`;
+  else if(isTestMode) pill=`<div class="mode-pill test">🚨 TEST MODE · No seeking · ${S.activeParts.reduce((a,p)=>a+p.questions.length,0)} questions</div>`;
+  else pill=`<div class="mode-pill study">📖 STUDY MODE · Round ${S.round-1}/${MAX_RT_STUDY} · Listen to wrong answers</div>`;
+  document.getElementById('mode-pill-wrap').innerHTML=pill;
+
+  // Build bottom nav parts
+  renderBottomNav();
+  // Show first part
+  S.currentPartIdx=0;
+  showPart(0);
+}
+
+function renderBottomNav(){
+  const bnParts=document.getElementById('bn-parts');
+  bnParts.innerHTML=S.activeParts.map((p,i)=>{
+    const qsToShow=S.round>1?p.questions.filter(q=>S.wrongIds.includes(quid(p,q))):p.questions;
+    if(!qsToShow.length) return '';
+    const answered=qsToShow.filter(q=>S.answers[quid(p,q)]!==undefined).length;
+    return `<div class="bn-part ${i===S.currentPartIdx?'active':''}" onclick="showPart(${i})" id="bnp-${i}">
+      ${p.partTitle}<span class="bn-prog">${answered}/${qsToShow.length}</span>
+    </div>`;
+  }).join('');
+}
+
+function showPart(idx){
+  S.currentPartIdx=idx;
+  const part=S.activeParts[idx];
+  if(!part) return;
+
+  // Update bottom nav active
+  document.querySelectorAll('.bn-part').forEach((el,i)=>el.classList.toggle('active',i===idx));
+
+  // Audio bar
+  renderAudioBar(part,idx);
+
+  // Q view
+  const isRetake=S.round>1;
+  const qsToShow=isRetake?part.questions.filter(q=>S.wrongIds.includes(quid(part,q))):part.questions;
+
+  let html='';
+  if(part.partNumber===1) html=renderPart1(part,qsToShow);
+  else if(part.partNumber===3) html=renderPart3(part,qsToShow);
+  else html=renderPart24(part,qsToShow);
+
+  document.getElementById('qview').innerHTML=html;
+  updateSubmitBtn();
+}
+
+// ─── AUDIO BAR ───
+function renderAudioBar(part,idx){
+  const label=document.getElementById('audio-part-label');
+  label.textContent=(part._src?`${part.partTitle} · ${part._src}`:part.partTitle);
+
+  const wrap=document.getElementById('audio-player-wrap');
+  const audioId='aud-'+idx;
+
+  if(playOnlyMode){
+    // Test mode round 1: play/pause only, no seek bar
+    wrap.innerHTML=`
+      <button class="play-only-btn" id="play-btn-${idx}" onclick="togglePlayOnly(${idx})">▶</button>
+      <div class="audio-progress-bar"><div class="audio-progress-fill" id="apf-${idx}"></div></div>
+      <span class="audio-time" id="atime-${idx}">0:00</span>
+      <audio id="${audioId}" style="display:none">
+        <source src="${part.audioUrl}" type="audio/mpeg">
+      </audio>`;
+    // Hook up progress
+    setTimeout(()=>{
+      const a=document.getElementById(audioId);
+      if(!a) return;
+      audioEls[idx]=a;
+      a.addEventListener('timeupdate',()=>{
+        const pct=a.duration?a.currentTime/a.duration*100:0;
+        const pf=document.getElementById('apf-'+idx);
+        if(pf) pf.style.width=pct+'%';
+        const t=document.getElementById('atime-'+idx);
+        if(t) t.textContent=fmt(a.currentTime)+(a.duration?' / '+fmt(a.duration):'');
+      });
+      a.addEventListener('ended',()=>{
+        const btn=document.getElementById('play-btn-'+idx);
+        if(btn) btn.textContent='▶';
+      });
+    },50);
+  } else {
+    // Full seek bar
+    wrap.innerHTML=`<audio controls id="${audioId}" style="flex:1;height:32px;min-width:0">
+      <source src="${part.audioUrl}" type="audio/mpeg">
+    </audio>`;
+    setTimeout(()=>{audioEls[idx]=document.getElementById(audioId);},50);
+  }
+}
+
+function togglePlayOnly(idx){
+  const a=audioEls[idx]||document.getElementById('aud-'+idx);
+  if(!a) return;
+  const btn=document.getElementById('play-btn-'+idx);
+  if(a.paused){a.play();if(btn)btn.textContent='⏸';}
+  else{a.pause();if(btn)btn.textContent='▶';}
+}
+
+function fmt(s){
+  const m=Math.floor(s/60),sec=Math.floor(s%60);
+  return m+':'+(sec<10?'0':'')+sec;
+}
+
+// ─── PART 1 ───
+function renderPart1(part,qs){
+  if(!part.pageGroups) return renderPart24(part,qs);
+  let html='<div class="p1-split">';
+  // Find current page group based on first question
+  const grp=part.pageGroups.find(g=>g.questionNumbers.some(n=>qs.some(q=>q.number===n)))||part.pageGroups[0];
+  const grpQs=qs.filter(q=>grp.questionNumbers.includes(q.number));
+
+  html+=`<div class="p1-left">
+    <img src="${grp.imageUrl}" alt="Questions ${grp.questionNumbers.join('-')}" loading="eager">
+    <div class="p1-pg-badge">Questions ${grp.questionNumbers[0]}–${grp.questionNumbers[grp.questionNumbers.length-1]}</div>
+  </div>
+  <div class="p1-right">`;
+
+  for(const q of grpQs){
+    const uid=`${part._idx}_${q.id}`;
+    const saved=S.answers[uid]||'';
+    html+=`<div class="p1-qrow">
+      <div class="p1-qtxt"><span class="qn">${q.number}</span>${q.questionText}</div>
+      <div class="p1-opts">`;
+    for(const k of['A','B','C']){
+      html+=`<button class="p1-opt ${saved===k?'sel':''}" onclick="pickMCQ('${uid}','${k}',this)" data-qid="${uid}" data-val="${k}">${k}</button>`;
+    }
+    html+='</div></div>';
+  }
+  html+='</div></div>';
+
+  // Page switcher if multiple groups
+  if(part.pageGroups.length>1){
+    html+=`<div style="display:flex;gap:8px;margin-bottom:6px;">`;
+    part.pageGroups.forEach((g,i)=>{
+      const active=g===grp;
+      html+=`<button onclick="switchP1Group(${part.partNumber},${i})" style="padding:5px 14px;border-radius:100px;border:1.5px solid ${active?'var(--cherry)':'var(--border)'};background:${active?'var(--cherry-light)':'var(--white)'};color:${active?'var(--cherry)':'var(--ink-mid)'};cursor:pointer;font-size:12px;font-weight:700;">Q${g.questionNumbers[0]}–${g.questionNumbers[g.questionNumbers.length-1]}</button>`;
+    });
+    html+='</div>';
+  }
+  return html;
+}
+
+function switchP1Group(partNum,grpIdx){
+  const part=S.activeParts.find(p=>p.partNumber===partNum);
+  if(!part||!part.pageGroups[grpIdx]) return;
+  // Re-render part with different group in view
+  const isRetake=S.round>1;
+  const allQs=isRetake?part.questions.filter(q=>S.wrongIds.includes(q.id)):part.questions;
+  const grp=part.pageGroups[grpIdx];
+  const grpQs=allQs.filter(q=>grp.questionNumbers.includes(q.number));
+
+  let html=`<div class="p1-split">
+    <div class="p1-left">
+      <img src="${grp.imageUrl}" alt="" loading="eager">
+      <div class="p1-pg-badge">Questions ${grp.questionNumbers[0]}–${grp.questionNumbers[grp.questionNumbers.length-1]}</div>
+    </div>
+    <div class="p1-right">`;
+  for(const q of grpQs){
+    const uid=`${part._idx}_${q.id}`;
+    const saved=S.answers[uid]||'';
+    html+=`<div class="p1-qrow">
+      <div class="p1-qtxt"><span class="qn">${q.number}</span>${q.questionText}</div>
+      <div class="p1-opts">`;
+    for(const k of['A','B','C']){
+      html+=`<button class="p1-opt ${saved===k?'sel':''}" onclick="pickMCQ('${uid}','${k}',this)" data-qid="${uid}" data-val="${k}">${k}</button>`;
+    }
+    html+='</div></div>';
+  }
+  html+='</div></div>';
+
+  html+=`<div style="display:flex;gap:8px;margin-bottom:6px;">`;
+  part.pageGroups.forEach((g,i)=>{
+    const active=i===grpIdx;
+    html+=`<button onclick="switchP1Group(${partNum},${i})" style="padding:5px 14px;border-radius:100px;border:1.5px solid ${active?'var(--cherry)':'var(--border)'};background:${active?'var(--cherry-light)':'var(--white)'};color:${active?'var(--cherry)':'var(--ink-mid)'};cursor:pointer;font-size:12px;font-weight:700;">Q${g.questionNumbers[0]}–${g.questionNumbers[g.questionNumbers.length-1]}</button>`;
+  });
+  html+='</div>';
+
+  document.getElementById('qview').innerHTML=html;
+  updateSubmitBtn();
+}
+
+// ─── PART 2/4 ───
+function renderPart24(part,qs){
+  let html=`<div class="p24-wrap">`;
+  if(part.context){
+    html+=`<div class="p24-context">${part.context}</div>`;
+  }
+  for(const q of qs){
+    const uid=`${part._idx}_${q.id}`;
+    const saved=S.answers[uid]||'';
+    html+=`<div class="p24-q">
+      ${q.context?`<div style="font-size:12px;color:var(--ink-mid);font-style:italic;margin-bottom:6px;">${q.context}</div>`:''}
+      <div class="p24-qnum"><span class="n">${q.number}</span><span class="qtxt">${q.questionText||''}</span></div>
+      <div class="p24-opts">`;
+    if(q.options){
+      for(const[k,v] of Object.entries(q.options)){
+        html+=`<button class="p24-opt ${saved===k?'sel':''}" onclick="pickMCQ('${uid}','${k}',this)" data-qid="${uid}" data-val="${k}">
+          <span class="ol">${k}</span><span>${v}</span>
+        </button>`;
+      }
+    }
+    html+=`</div></div>`;
+    if(qs.indexOf(q)<qs.length-1) html+=`<div style="height:1px;background:var(--border);margin:0 16px;"></div>`;
+  }
+  html+='</div>';
+  return html;
+}
+
+// ─── PART 3 ───
+function renderPart3(part,qs){
+  let html=`<div class="p3-wrap">
+    <div class="note-title">${part.noteTitle||'Notes'}</div>
+    ${part.context?`<div class="note-context">${part.context}</div>`:''}
+    <div class="note-lines">`;
+  for(const q of qs){
+    const uid=`${part._idx}_${q.id}`;
+    const saved=S.answers[uid]||'';
+    html+=`<div class="note-line">
+      <span class="qn">${q.number}</span>
+      <span>${q.beforeGap}</span>
+      <input class="gap-in" id="g-${uid}" data-qid="${uid}"
+        placeholder="..." value="${saved}"
+        oninput="onGap('${uid}',this)">
+      <span>${q.afterGap}</span>
+    </div>`;
+  }
+  html+=`</div></div>`;
+  return html;
+}
+
+// ═══════════════════════ ANSWER HANDLERS ═══════════════════════
+function pickMCQ(qId,val,btn){
+  S.answers[qId]=val;
+  // Update ALL buttons for this question (p1 and p24)
+  document.querySelectorAll(`[data-qid="${qId}"]`).forEach(b=>{
+    b.classList.remove('sel');
+    if(b.dataset.val===val) b.classList.add('sel');
+  });
+  updateSubmitBtn();
+  updateBnProg();
+}
+
+function onGap(qId,el){
+  el.value=el.value.toUpperCase();
+  S.answers[qId]=el.value;
+  updateSubmitBtn();
+  updateBnProg();
+}
+
+function updateSubmitBtn(){
+  const total=totalQ();
+  const answered=Object.keys(S.answers).length;
+  document.getElementById('btn-submit').disabled=answered<total;
+}
+
+function updateBnProg(){
+  S.activeParts.forEach((p,i)=>{
+    const qsToShow=S.round>1?p.questions.filter(q=>S.wrongIds.includes(quid(p,q))):p.questions;
+    const answered=qsToShow.filter(q=>S.answers[quid(p,q)]!==undefined).length;
+    const el=document.querySelector(`#bnp-${i} .bn-prog`);
+    if(el) el.textContent=`${answered}/${qsToShow.length}`;
+  });
+}
+
+function totalQ(){
+  return S.activeParts.reduce((s,p)=>{
+    const qs=S.round>1?p.questions.filter(q=>S.wrongIds.includes(quid(p,q))):p.questions;
+    return s+qs.length;
+  },0);
+}
+
+// ═══════════════════════ SUBMIT ═══════════════════════
+function quid(part,q){return `${part._idx}_${q.id}`;}
+
+function submit(){
+  const wrong=[];let correct=0;
+  for(const part of S.activeParts){
+    const qs=S.round>1?part.questions.filter(q=>S.wrongIds.includes(quid(part,q))):part.questions;
+    for(const q of qs){
+      const uid=quid(part,q);
+      const ua=norm(S.answers[uid]);
+      const ca=norm(q.answer);
+      let ok=false;
+      if(part.partNumber===3){
+        const acc=(q.acceptedAnswers||[q.answer]).map(a=>norm(a));
+        ok=acc.includes(ua);
+      } else {
+        ok=ua===ca;
+      }
+      if(ok) correct++;
+      else wrong.push(uid);
+    }
+  }
+
+  // Save round 1 full test answers
+  if(S.round===1&&S.mode==='fulltest'){
+    S.firstRoundAns={...S.answers};
+    let ft=0;
+    for(const part of S.activeParts){
+      for(const q of part.questions){
+        const uid=quid(part,q);
+        const ua=norm(S.firstRoundAns[uid]);
+        const ca=norm(q.answer);
+        let ok=part.partNumber===3
+          ?(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(ua)
+          :ua===ca;
+        if(ok) ft++;
+      }
+    }
+    S.ftScore=ft;
+  }
+
+  S.wrongIds=wrong;
+  S.submittedRounds.push(S.round);
+
+  const maxRT=S.mode==='practice'?MAX_RT_PRACTICE:(MAX_RT_STUDY+1);
+  const passed=S.mode==='practice'?(correct/totalQ())>=PASS_PRACTICE:(S.ftScore>=PASS_FULL);
+  S.unlocked=passed||S.submittedRounds.length>=maxRT;
+
+  showResults(correct,wrong,passed);
+  if(S.unlocked) doSave();
+}
+
+// ═══════════════════════ RESULTS ═══════════════════════
+// ── RESULTS STATE ──
+let R = { correct:0, wrongIds:[], passed:false, total:0, pct:0 };
+
+function showResults(correct,wrongIds,passed){
+  R={correct,wrongIds,passed,
+    total:totalQ(),
+    pct:0
+  };
+  R.pct=Math.round(R.correct/R.total*100);
+  showTier1();
+}
+
+// ── TIER 1: Score summary ──
+function showTier1(){
+  const isPractice=S.mode==='practice';
+  const maxRT=isPractice?MAX_RT_PRACTICE:(MAX_RT_STUDY+1);
+  const remaining=maxRT-S.submittedRounds.length;
+  const score=isPractice?R.correct:S.ftScore;
+  const total=isPractice?R.total:25;
+  const pct=Math.round(score/total*100);
+
+  let html=`<div class="t1-wrap">
+    <div class="t1-score-circle">
+      <div class="big">${score}/${total}</div>
+      <div class="pct">${pct}%</div>
+    </div>
+    <div class="t1-info">
+      <div class="label">${isPractice?S.activeParts.map(p=>p.partTitle).join(' + '):'Full Test'}</div>
+      <div class="val">${R.wrongIds.length} wrong &nbsp;·&nbsp; ${R.correct} correct</div>
+    </div>`;
+
+  if(!S.unlocked&&R.wrongIds.length>0){
+    html+=`<div class="t1-retake-msg">
+      🎧 You have <b>${remaining} attempt${remaining!==1?'s':''}</b> left.<br>
+      Listen to the audio again and retry the wrong answers.
+    </div>
+    <button class="btn btn-primary btn-full" onclick="doRetake()">🔄 Retry wrong answers →</button>`;
+  } else if(S.unlocked&&R.wrongIds.length===0){
+    // Perfect score - skip to tier 3
+    html+=`<div style="font-size:36px;text-align:center">🎉</div>
+    <div style="font-family:'Nunito',sans-serif;font-weight:800;font-size:18px;text-align:center">Perfect score!</div>`;
+    html+=`<button class="btn btn-primary btn-full" onclick="showTier3()">See your results →</button>`;
+  } else if(S.unlocked&&R.wrongIds.length>0){
+    html+=`<div class="t1-retake-msg" style="border-color:var(--leaf);background:var(--correct-bg);">
+      ✅ Scripts unlocked! Review each wrong answer and write the paraphrase <b>${PARA_REPS} times</b> to unlock the script.
+    </div>
+    <button class="btn btn-primary btn-full" onclick="showTier2()">✍️ Review wrong answers →</button>`;
+  }
+
+  html+=`<button class="btn btn-ghost btn-full" onclick="goHome()">← Home</button></div>`;
+  document.getElementById('t1-content').innerHTML=html;
+  showScreen('t1');
+}
+
+// ── TIER 2: Review + Dictation ──
+function showTier2(){
+  buildT2();
+  showScreen('t2');
+  updateT2Progress();
+}
+
+function buildT2(){
+  const wrongItems=S.activeParts.flatMap(p=>
+    p.questions.filter(q=>R.wrongIds.includes(quid(p,q))).map(q=>({part:p,q}))
+  );
+
+  let html=`<div class="t2-wrap">
+    <div class="review-progress">
+      <span class="rp-label">✍️ Paraphrase Progress</span>
+      <div class="rp-bar-wrap"><div class="rp-bar-fill" id="rp-fill" style="width:0%"></div></div>
+      <span class="rp-count" id="rp-count">0/${wrongItems.length}</span>
+    </div>`;
+
+  for(const {part,q} of wrongItems){
+    const uid=quid(part,q);
+    const done=S.paraDone[uid];
+    const cnt=S.paraProgress[uid]||0;
+    const ua=(S.answers[uid]||'').toString().toUpperCase();
+    const ca=q.answer.toString().toUpperCase();
+    const qLabel=q.questionText||(q.beforeGap+' ___ '+q.afterGap);
+
+    html+=`<div class="wi" id="wi2-${uid}" style="${done?'border-color:var(--correct-bd)':''}">
+      <div class="wi-hdr" onclick="toggleWI2('${uid}')">
+        <span class="wn">${q.number}</span>
+        <span class="wq">${qLabel}</span>
+        <span class="wa">
+          <span class="yr">✗ ${ua||'—'}</span>
+          ${done?`<span class="cr">✓ ${ca} ✅</span>`:'<span style="color:var(--ink-light);font-size:11px">unlock after paraphrase</span>'}
+        </span>
+      </div>
+      <div class="wi-body ${done?'open':''}" id="wib2-${uid}">
+        <div class="para-box">
+          <div class="pl">✍ Write the paraphrase ${PARA_REPS} times to unlock the script</div>
+          <div class="para-text">${q.paraphrase||''}</div>
+          ${done
+            ?`<div class="para-done">✅ Completed! Script unlocked.</div>`
+            :`<div class="para-track">${[...Array(PARA_REPS)].map((_,i)=>`<div class="pdot ${i<cnt?'done':''}" id="pd2-${uid}-${i}"></div>`).join('')}</div>
+             <input type="text" class="para-inp" id="pi2-${uid}" placeholder="Type the paraphrase here (no paste)..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               onkeydown="if(event.key==='Enter')chkParaT2('${uid}')"
+               onpaste="event.preventDefault();toast('⛔ Paste is disabled — please type it out!')"
+               ondrop="event.preventDefault()"
+               oncontextmenu="event.preventDefault()">
+             <button class="para-submit" onclick="chkParaT2('${uid}')">Check ✓</button>`
+          }
+        </div>
+        ${done?`
+        <button class="script-toggle-btn" onclick="togScript2('${uid}')">
+          📜 Script & Explanation <span id="sarr2-${uid}">▼</span>
+        </button>
+        <div class="script-box" id="sb2-${uid}">${q.script||''}</div>
+        <div class="expl-box" id="eb2-${uid}">${q.explanation||''}</div>`:''}
+      </div>
+    </div>`;
+  }
+  html+=`</div>`;
+  document.getElementById('t2-content').innerHTML=html;
+
+  // Bottom bar
+  const allDone=R.wrongIds.every(uid=>S.paraDone[uid]);
+  document.getElementById('t2-bottom').innerHTML=`
+    <button class="btn btn-primary" style="flex:1" id="t2-finish-btn"
+      onclick="showTier3()" ${allDone?'':'disabled'}>
+      🏁 See final results →
+    </button>
+    <button class="btn btn-ghost" onclick="showTier1()">← Back</button>`;
+}
+
+function toggleWI2(uid){
+  const b=document.getElementById('wib2-'+uid);
+  if(b) b.classList.toggle('open');
+}
+function togScript2(uid){
+  const sb=document.getElementById('sb2-'+uid);
+  const eb=document.getElementById('eb2-'+uid);
+  const arr=document.getElementById('sarr2-'+uid);
+  const open=sb?sb.classList.toggle('open'):false;
+  if(eb) eb.classList.toggle('open',open);
+  if(arr) arr.textContent=open?'▲':'▼';
+}
+
+function chkParaT2(uid){
+  const inp=document.getElementById('pi2-'+uid);
+  if(!inp) return;
+  let q=null;
+  for(const p of S.activeParts){
+    const found=p.questions.find(qq=>quid(p,qq)===uid);
+    if(found){q=found;break;}
+  }
+  if(!q) return;
+  const ua=inp.value.trim().toLowerCase().replace(/\s+/g,' ');
+  const target=(q.paraphrase||'').trim().toLowerCase().replace(/\s+/g,' ');
+  inp.classList.remove('ok','no');
+  if(ua===target){
+    inp.classList.add('ok');
+    S.paraProgress[uid]=(S.paraProgress[uid]||0)+1;
+    inp.value='';
+    setTimeout(()=>inp.classList.remove('ok'),500);
+    if(S.paraProgress[uid]>=PARA_REPS){
+      S.paraDone[uid]=true;
+      toast('✅ Paraphrase complete! Script unlocked 🔓');
+      // Rebuild this item to show script
+      rebuildT2Item(uid,q);
+      updateT2Progress();
+    } else {
+      // update dots
+      for(let i=0;i<PARA_REPS;i++){
+        const d=document.getElementById(`pd2-${uid}-${i}`);
+        if(d) d.classList.toggle('done',i<S.paraProgress[uid]);
+      }
+      toast(`✅ ${S.paraProgress[uid]}/${PARA_REPS}`);
+      updateT2Progress();
+    }
+  } else {
+    inp.classList.add('no');
+    toast('✗ Not quite right, try again');
+    setTimeout(()=>inp.classList.remove('no'),700);
+  }
+}
+
+function rebuildT2Item(uid,q){
+  const ca=q.answer.toString().toUpperCase();
+  const ua=(S.answers[uid]||'').toString().toUpperCase();
+  const qLabel=q.questionText||(q.beforeGap+' ___ '+q.afterGap);
+  const item=document.getElementById('wi2-'+uid);
+  if(!item) return;
+  item.style.borderColor='var(--correct-bd)';
+  item.querySelector('.wi-hdr').innerHTML=`
+    <span class="wn" style="background:var(--leaf)">${q.number}</span>
+    <span class="wq">${qLabel}</span>
+    <span class="wa">
+      <span class="yr">✗ ${ua}</span>
+      <span class="cr">✓ ${ca} ✅</span>
+    </span>`;
+  item.querySelector('.wi-hdr').onclick=()=>document.getElementById('wib2-'+uid).classList.toggle('open');
+  const body=document.getElementById('wib2-'+uid);
+  if(body){
+    body.innerHTML=`
+      <div class="para-box">
+        <div class="pl">✍ Paraphrase complete</div>
+        <div class="para-text">${q.paraphrase||''}</div>
+        <div class="para-done">✅ Completed ${PARA_REPS} times!</div>
+      </div>
+      <button class="script-toggle-btn" onclick="togScript2('${uid}')">
+        📜 Script & Explanation <span id="sarr2-${uid}">▼</span>
+      </button>
+      <div class="script-box" id="sb2-${uid}">${q.script||''}</div>
+      <div class="expl-box" id="eb2-${uid}">${q.explanation||''}</div>`;
+    body.classList.add('open');
+  }
+}
+
+function updateT2Progress(){
+  const total=R.wrongIds.length;
+  const done=R.wrongIds.filter(uid=>S.paraDone[uid]).length;
+  const pct=total>0?Math.round(done/total*100):100;
+  const fill=document.getElementById('rp-fill');
+  const count=document.getElementById('rp-count');
+  const badge=document.getElementById('t2-badge');
+  const finBtn=document.getElementById('t2-finish-btn');
+  if(fill) fill.style.width=pct+'%';
+  if(count) count.textContent=`${done}/${total}`;
+  if(badge) badge.textContent=`${done}/${total} done`;
+  if(finBtn) finBtn.disabled=done<total;
+  if(done===total&&total>0){
+    toast('🎉 All paraphrases complete! Tap "See final results"',3000);
+  }
+}
+
+// ── TIER 3: Final results ──
+function showTier3(){
+  const isPractice=S.mode==='practice';
+  const score=isPractice?R.correct:S.ftScore;
+  const total=isPractice?R.total:25;
+  const pct=Math.round(score/total*100);
+
+  // Trophy and message by band
+  let trophy,message;
+  if(pct>=90){
+    trophy='🏆';
+    message=`<strong>Outstanding!</strong> You scored ${pct}% — you're absolutely ready for the real test. Keep up this amazing work!`;
+  } else if(pct>=80){
+    trophy='🌟';
+    message=`<strong>Great work!</strong> ${pct}% is a solid B1 performance. Review the scripts carefully and you'll push even higher next time.`;
+  } else if(pct>=60){
+    trophy='💪';
+    message=`<strong>Good effort!</strong> You got ${pct}%. Go back and listen to the audio again — understanding why each answer is wrong will make a big difference.`;
+  } else {
+    trophy='🌱';
+    message=`<strong>Keep going!</strong> Every listening session builds your skills. Review the scripts, practise the paraphrases, and try again — progress takes time.`;
+  }
+
+  let camHTML='';
+  if(!isPractice){
+    const sc=camScale(S.ftScore);
+    const gr=camGrade(sc);
+    camHTML=`<div class="t3-cam">Cambridge Scale: ${sc} &nbsp;|&nbsp; ${gr}</div>`;
+  }
+
+  const wrongCount=R.wrongIds.length;
+  const rightCount=score;
+
+  const html=`<div class="t3-wrap">
+    <div class="t3-trophy">${trophy}</div>
+    <div class="t3-grade-card">
+      <div class="t3-score">${score}/${total}</div>
+      <div class="t3-pct">${pct}%</div>
+      <div class="t3-grade">${isPractice?S.activeParts.map(p=>p.partTitle).join(' + '):'Full Test · '+camGrade(camScale(S.ftScore))}</div>
+      ${camHTML}
+    </div>
+    <div class="t3-message">${message}</div>
+    <div style="background:var(--white);border-radius:var(--r);padding:16px 20px;width:100%;box-shadow:var(--shadow-sm);display:flex;justify-content:space-around;">
+      <div style="text-align:center">
+        <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:var(--leaf)">${rightCount}</div>
+        <div style="font-size:12px;color:var(--ink-mid)">Correct</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:var(--cherry)">${wrongCount}</div>
+        <div style="font-size:12px;color:var(--ink-mid)">Wrong</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div style="text-align:center">
+        <div style="font-family:'Nunito',sans-serif;font-size:28px;font-weight:900;color:var(--cherry-dark)">${PARA_REPS*wrongCount}</div>
+        <div style="font-size:12px;color:var(--ink-mid)">Lines written</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="goHome()" style="margin-top:4px">← Practice again</button>
+  </div>`;
+
+  document.getElementById('t3-content').innerHTML=html;
+  showScreen('t3');
+  doSave();
+}
+
+function toggleWI(qId){
+  const body=document.getElementById('wib-'+qId);
+  if(body) body.classList.toggle('open');
+}
+function togScript(qId){
+  const sb=document.getElementById('sb-'+qId);
+  const eb=document.getElementById('eb-'+qId);
+  const arr=document.getElementById('sarr-'+qId);
+  const open=sb.classList.toggle('open');
+  if(eb) eb.classList.toggle('open',open);
+  if(arr) arr.textContent=open?'▲':'▼';
+}
+
+// ═══════════════════════ RETAKE ═══════════════════════
+function doRetake(){
+  S.round++;
+  for(const id of S.wrongIds) delete S.answers[id];
+  showScreen('player');
+  renderPlayer();
+  window.scrollTo(0,0);
+}
+function goHome(){
+  showScreen('landing');
+}
+
+// ═══════════════════════ PARAPHRASE ═══════════════════════
+function chkPara(uid){
+  const inp=document.getElementById('pi-'+uid);
+  if(!inp) return;
+  // uid is like "0_p3q14" - find by matching suffix
+  let q=null;
+  for(const p of S.activeParts){
+    const found=p.questions.find(qq=>quid(p,qq)===uid);
+    if(found){q=found;break;}
+  }
+  if(!q) return;
+  const qId=uid; // use uid as key throughout
+  const ua=inp.value.trim().toLowerCase().replace(/\s+/g,' ');
+  const target=(q.paraphrase||'').trim().toLowerCase().replace(/\s+/g,' ');
+  inp.classList.remove('ok','no');
+  if(ua===target){
+    inp.classList.add('ok');
+    S.paraProgress[qId]=(S.paraProgress[qId]||0)+1;
+    inp.value='';
+    setTimeout(()=>inp.classList.remove('ok'),600);
+    if(S.paraProgress[qId]>=PARA_REPS){
+      S.paraDone[qId]=true;
+      const box=document.querySelector(`#wi-${qId} .para-box`);
+      if(box){
+        box.querySelector('.para-track')?.remove();
+        box.querySelector('.para-inp')?.remove();
+        box.querySelector('.para-submit')?.remove();
+        const done=document.createElement('div');
+        done.className='para-done';done.textContent=`✅ Completed ${PARA_REPS} times!`;
+        box.appendChild(done);
+      }
+      toast('🎉 Paraphrase complete!');
+    } else {
+      // update dots
+      for(let i=0;i<PARA_REPS;i++){
+        const d=document.getElementById(`pd-${qId}-${i}`);
+        if(d) d.classList.toggle('done',i<S.paraProgress[qId]);
+      }
+      toast(`✅ Correct! ${S.paraProgress[qId]}/${PARA_REPS}`);
+    }
+  } else {
+    inp.classList.add('no');
+    toast('✗ Not quite right, try again');
+    setTimeout(()=>inp.classList.remove('no'),800);
+  }
+}
+
+// ═══════════════════════ VIOLATION ═══════════════════════
+function setupViolation(){
+  if(S.mode!=='fulltest') return;
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden&&S.round===1){
+      S.violations++;
+      const v=document.getElementById('vbanner');
+      v.style.display='block';
+      v.textContent=`⚠ Violation #${S.violations}: tab switched / left the page. Recorded.`;
+    }
+  });
+}
+
+// ── GLOBAL PROTECTION (entire app) ──────────────────────────
+(function initProtection(){
+  // Disable right-click everywhere
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // Disable keyboard shortcuts that expose source/tools
+  document.addEventListener('keydown', e => {
+    const k = e.key;
+    const ctrl = e.ctrlKey || e.metaKey;
+    const shift = e.shiftKey;
+
+    // F12 - DevTools
+    if(k === 'F12'){ e.preventDefault(); return; }
+    // Ctrl+U - View source
+    if(ctrl && k.toLowerCase() === 'u'){ e.preventDefault(); return; }
+    // Ctrl+Shift+I - DevTools
+    if(ctrl && shift && k.toLowerCase() === 'i'){ e.preventDefault(); return; }
+    // Ctrl+Shift+J - Console
+    if(ctrl && shift && k.toLowerCase() === 'j'){ e.preventDefault(); return; }
+    // Ctrl+Shift+C - Inspect element
+    if(ctrl && shift && k.toLowerCase() === 'c'){ e.preventDefault(); return; }
+    // Ctrl+S - Save page (source)
+    if(ctrl && k.toLowerCase() === 's'){ e.preventDefault(); return; }
+  });
+
+  // Detect DevTools open via window size heuristic (best-effort)
+  let devToolsOpen = false;
+  const threshold = 160;
+  setInterval(() => {
+    const widthDiff = window.outerWidth - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+    if((widthDiff > threshold || heightDiff > threshold) && !devToolsOpen){
+      devToolsOpen = true;
+      if(S.mode === 'fulltest' && S.round === 1){
+        S.violations++;
+        const v = document.getElementById('vbanner');
+        if(v){ v.style.display='block'; v.textContent=`⚠ Violation #${S.violations}: DevTools detected. Recorded.`; }
+      }
+    } else if(widthDiff <= threshold && heightDiff <= threshold){
+      devToolsOpen = false;
+    }
+  }, 1500);
+})();
+
+// ═══════════════════════ SAVE ═══════════════════════
+function doSave(){
+  if(!APPS_SCRIPT) return;
+  const isPractice=S.mode==='practice';
+  const total=isPractice?totalQ():25;
+  let correct=0;
+  const ans=isPractice?S.answers:S.firstRoundAns;
+  for(const p of S.activeParts){
+    for(const q of p.questions){
+      const uid=quid(p,q);
+      const ua=norm(ans[uid]);
+      const ok=p.partNumber===3?(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(ua):ua===norm(q.answer);
+      if(ok)correct++;
+    }
+  }
+  // Build source info
+  const partSource=S.activeParts.map(p=>{
+    const src=p._src||p._srcId||'';
+    return `Part ${p.partNumber}${src?' ('+src+')':''}`;
+  }).join(', ');
+  const testTitle=S.testData?S.testData.title:(S.activeParts[0]?S.activeParts[0]._src||'':'');
+
+  const payload=isPractice?{
+    sheet:'PartPractice',
+    timestamp:new Date().toISOString(),
+    duration:Math.round((Date.now()-S.startTime)/1000),
+    studentId:S.student.id,name:S.student.name,class:S.student.class,
+    level:'B1',
+    part:partSource,
+    totalQ:total,correct,wrong:total-correct,
+    percentage:Math.round(correct/total*100),
+    attempts:S.submittedRounds.length,unlocked:S.unlocked
+  }:{
+    sheet:'FullTest',
+    timestamp:new Date().toISOString(),
+    duration:Math.round((Date.now()-S.startTime)/1000),
+    studentId:S.student.id,name:S.student.name,class:S.student.class,
+    testTitle,
+    totalCorrect:S.ftScore,totalWrong:25-S.ftScore,
+    percentage:Math.round(S.ftScore/25*100),
+    grade:camGrade(camScale(S.ftScore)),cambridgeScore:camScale(S.ftScore),
+    violations:S.violations,
+    p1Correct:partScore(1),p2Correct:partScore(2),p3Correct:partScore(3),p4Correct:partScore(4)
+  };
+  fetch(APPS_SCRIPT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}).catch(()=>{});
+}
+
+function partScore(pn){
+  const p=S.activeParts.find(pt=>pt.partNumber===pn);if(!p)return 0;
+  const src=S.mode==='fulltest'?S.firstRoundAns:S.answers;
+  let c=0;
+  for(const q of p.questions){
+    const uid=quid(p,q);
+    const ua=norm(src[uid]);
+    const ok=pn===3?(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(ua):ua===norm(q.answer);
+    if(ok)c++;
+  }
+  return c;
+}
+
+// ═══════════════════════ TEACHER ═══════════════════════
+function openTchr(){document.getElementById('tchr-overlay').classList.add('open');setTimeout(()=>document.getElementById('tchr-pwd').focus(),100);}
+function closeTchr(){document.getElementById('tchr-overlay').classList.remove('open');document.getElementById('tchr-pwd').value='';}
+function chkTchrPwd(){
+  if(document.getElementById('tchr-pwd').value===TEACHER_PWD){
+    closeTchr();
+    let html=`<b>${S.student.name||'—'}</b> · ${S.student.class||''}<br>Mode: ${S.mode} · Round: ${S.round} · Violations: ${S.violations}<br><br>`;
+    if(S.activeParts.length){
+      html+='<b>Answer Key:</b><br>';
+      for(const p of S.activeParts){
+        html+=`<span style="color:var(--cherry);font-weight:700">${p.partTitle}</span><br>`;
+        for(const q of p.questions){
+          const uid=quid(p,q);
+          html+=`Q${q.number}: <b style="color:var(--leaf)">${q.answer}</b> | Student: ${S.answers[uid]||'—'}<br>`;
+        }
+        html+='<br>';
+      }
+    }
+    document.getElementById('tchr-content').innerHTML=html;
+    document.getElementById('tchr-panel').classList.add('open');
+  } else {
+    toast('Wrong password!');
+    document.getElementById('tchr-pwd').value='';
+  }
+}
+function closeTchrPanel(){document.getElementById('tchr-panel').classList.remove('open');}
+function tchrReset(){
+  closeTchrPanel();
+  S={mode:'practice',student:{id:'',name:'',class:''},testIndex:S.testIndex,testData:null,activeParts:[],round:1,answers:{},firstRoundAns:{},wrongIds:[],paraProgress:{},paraDone:{},violations:0,startTime:null,unlocked:false,submittedRounds:[],ftScore:null,currentPartIdx:0};
+  audioEls={};
+  showScreen('landing');
+  toast('Session reset!');
+}
+
+// Init
+document.getElementById('mc-practice').classList.add('selected');
+showScreen('landing');
+</script>
+</body>
+</html>
