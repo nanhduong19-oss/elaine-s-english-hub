@@ -800,7 +800,7 @@ const PASS_PRACTICE = 0.80;
 const PASS_FULL = 22;
 const MAX_RT_PRACTICE = 3;
 const MAX_RT_STUDY = 2;
-const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbz2ehAKVf2Nr3VbRnmy2WZOgYGJq5idO_2u4LZzCvtl8Ci_vaK1XEUyK4_TzeaO6y8NWA/exec';
+const APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbytqqZGkBA399X7jTBE5FQYxQNulEnL2FMa1Rtafp4-0mO0OIJGQopTdg6Xs02Hajja/exec';
 // Paste your Google Sheet published CSV URL here
 // File → Share → Publish to web → Sheet: data_student → CSV format
 // ── STUDENT DATA (JSON from GitHub) ──────────────────────────
@@ -1834,17 +1834,28 @@ function setupViolation(){
 function doSave(){
   if(!APPS_SCRIPT) return;
   const isPractice=S.mode==='practice';
-  const total=isPractice?totalQ():25;
+
+  // Always use FULL question count (not retake-filtered totalQ())
+  const total=isPractice
+    ?S.activeParts.reduce((s,p)=>s+p.questions.length,0)
+    :25;
+
+  // Count correct across ALL questions using accumulated answers
   let correct=0;
   const ans=isPractice?S.answers:S.firstRoundAns;
   for(const p of S.activeParts){
     for(const q of p.questions){
       const uid=quid(p,q);
       const ua=norm(ans[uid]);
-      const ok=p.partNumber===3?(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(ua):ua===norm(q.answer);
+      const ok=p.partNumber===3
+        ?(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(ua)
+        :ua===norm(q.answer);
       if(ok)correct++;
     }
   }
+  // Safety clamp
+  const safeCorrect=Math.min(Math.max(correct,0),total);
+  const safeWrong=total-safeCorrect;
   // Build source info
   const partSource=S.activeParts.map(p=>{
     const src=p._src||p._srcId||'';
@@ -1859,8 +1870,8 @@ function doSave(){
     studentId:S.student.id,name:S.student.name,class:S.student.class,
     level:'B1',
     part:partSource,
-    totalQ:total,correct,wrong:total-correct,
-    percentage:Math.round(correct/total*100),
+    totalQ:total,correct:safeCorrect,wrong:safeWrong,
+    percentage:Math.round(safeCorrect/total*100),
     attempts:S.submittedRounds.length,unlocked:S.unlocked
   }:{
     sheet:'FullTest',
