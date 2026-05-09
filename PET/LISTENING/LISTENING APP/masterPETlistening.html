@@ -598,6 +598,15 @@ audio::-webkit-media-controls-panel{background:rgba(255,255,255,0.08);}
   background:rgba(255,255,255,0.25);
   font-size:14px;font-weight:800;
 }
+/* ── TEST TITLE in Tier 3 (NEW) ── */
+.t3-test-title{
+  font-size:13px;
+  color:rgba(255,255,255,0.75);
+  margin-top:10px;
+  font-weight:500;
+  letter-spacing:0.2px;
+  line-height:1.5;
+}
 .t3-cam{font-size:13px;opacity:0.8;margin-top:6px;}
 .t3-message{
   background:var(--white);border-radius:var(--r);padding:20px;
@@ -775,13 +784,48 @@ audio::-webkit-media-controls-panel{background:rgba(255,255,255,0.08);}
 
 <!-- Teacher panel -->
 <div class="overlay" id="tchr-panel">
-  <div class="modal" style="max-width:400px">
-    <h3>🎓 Teacher Panel</h3>
-    <div id="tchr-content" style="font-size:13px;color:var(--ink-mid);line-height:1.9;max-height:60vh;overflow-y:auto;margin-bottom:14px;"></div>
-    <div class="modal-btns">
-      <button class="btn btn-ghost" style="flex:1" onclick="closeTchrPanel()">Close</button>
-      <button class="btn btn-primary" style="flex:1;background:var(--cherry)" onclick="tchrReset()">Reset Session</button>
+  <div class="modal" style="max-width:480px;width:100%;padding:20px;">
+
+    <!-- VIEW 1: Info + auto-fill choice -->
+    <div id="tchr-view-main">
+      <h3 style="margin-bottom:10px;">&#127891; Teacher Panel</h3>
+      <div id="tchr-content" style="font-size:13px;color:var(--ink-mid);line-height:1.8;max-height:28vh;overflow-y:auto;margin-bottom:12px;padding-right:4px;"></div>
+
+      <!-- Auto-fill: only on player screen -->
+      <div id="tchr-autofill-wrap" style="display:none;">
+        <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--ink-light);margin-bottom:8px;">Test App - Auto-fill Answers</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button class="btn" style="flex:1;font-size:12px;padding:9px 8px;background:var(--leaf);color:white;border-radius:8px;" onclick="tchrAutoFill('correct')">&#10003; All Correct</button>
+          <button class="btn" style="flex:1;font-size:12px;padding:9px 8px;background:#7B5EA7;color:white;border-radius:8px;" onclick="tchrAutoFill('mixed')">&#8646; Mixed (~40% wrong)</button>
+        </div>
+        <div style="font-size:11px;color:var(--ink-light);line-height:1.5;padding:7px 10px;background:var(--cream);border-radius:6px;">
+          After auto-fill, click "Review &amp; Adjust" to fine-tune each answer before submitting.
+        </div>
+        <button class="btn" id="tchr-review-btn" style="width:100%;margin-top:8px;padding:9px;background:var(--ink);color:white;border-radius:8px;font-size:12px;display:none;" onclick="tchrShowReview()">
+          &#9998; Review &amp; Adjust Answers
+        </button>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px;">
+        <button class="btn btn-ghost" style="flex:1;" onclick="closeTchrPanel()">Close</button>
+        <button class="btn btn-primary" style="flex:1;background:var(--cherry);" onclick="tchrReset()">Reset Session</button>
+      </div>
     </div>
+
+    <!-- VIEW 2: Review & adjust table -->
+    <div id="tchr-view-review" style="display:none;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <button onclick="tchrBackToMain()" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--ink-mid);">&#8592;</button>
+        <h3 style="flex:1;">&#9998; Review &amp; Adjust</h3>
+        <button class="btn" style="padding:7px 16px;background:var(--cherry);color:white;font-size:12px;border-radius:8px;" onclick="tchrApplyAndClose()">Apply &amp; Close &#10003;</button>
+      </div>
+      <div style="font-size:11px;color:var(--ink-light);margin-bottom:10px;">
+        Click any answer button to change it. Part 3 answers can be typed directly.
+      </div>
+      <div id="tchr-review-table" style="max-height:55vh;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding-right:4px;"></div>
+    </div>
+
   </div>
 </div>
 
@@ -882,6 +926,7 @@ const camGrade = s => s>=160?'Grade A':s>=153?'Grade B':s>=140?'Grade C (Pass)':
 let S = {
   mode:'practice', student:{id:'',name:'',class:''},
   testIndex:null, testData:null, activeParts:[],
+  selectedTestTitle:'',
   round:1, answers:{}, firstRoundAns:{},
   wrongIds:[], paraProgress:{}, paraDone:{},
   violations:0, startTime:null, unlocked:false,
@@ -1015,6 +1060,7 @@ async function startSession(){
   S.unlocked=false;S.submittedRounds=[];
   S.ftScore=null;S.firstRoundAns={};
   S.currentPartIdx=0;
+  S.selectedTestTitle='';
   audioEls={};
 
   showScreen('player');
@@ -1025,8 +1071,12 @@ async function startSession(){
     if(!parts.length){toast('Please select at least one Part!');showScreen('login');return;}
     await loadRandParts(parts);
   } else {
-    const url=document.getElementById('test-sel').value;
+    const sel=document.getElementById('test-sel');
+    const url=sel.value;
     if(!url){toast('Please select a test!');showScreen('login');return;}
+    // Save the visible title text from the dropdown option
+    const selOpt=sel.options[sel.selectedIndex];
+    S.selectedTestTitle=selOpt?selOpt.text.trim():'';
     await loadFullTest(url);
   }
   setupViolation();
@@ -1658,6 +1708,21 @@ function showTier3(){
     message=`<strong>Keep going!</strong> Every listening session builds your skills. Review the scripts, practise the paraphrases, and try again — progress takes time.`;
   }
 
+  // ── TEST TITLE: build label depending on mode ──
+  let testTitleLabel = '';
+  if(isPractice){
+    // Practice mode: show which parts from which sources
+    const srcSet = new Set(S.activeParts.map(p => p._src).filter(Boolean));
+    if(srcSet.size > 0){
+      testTitleLabel = [...srcSet].join(' · ');
+    }
+  } else {
+    // Full Test mode: priority order of fallbacks
+    testTitleLabel = S.selectedTestTitle
+      || (S.testData && S.testData.title)
+      || '';
+  }
+
   let camHTML='';
   if(!isPractice){
     const sc=camScale(S.ftScore);
@@ -1674,6 +1739,7 @@ function showTier3(){
       <div class="t3-score">${score}/${total}</div>
       <div class="t3-pct">${pct}%</div>
       <div class="t3-grade">${isPractice?S.activeParts.map(p=>p.partTitle).join(' + '):'Full Test · '+camGrade(camScale(S.ftScore))}</div>
+      ${testTitleLabel ? `<div class="t3-test-title">${testTitleLabel}</div>` : ''}
       ${camHTML}
     </div>
     <div class="t3-message">${message}</div>
@@ -1904,34 +1970,233 @@ function partScore(pn){
 // ═══════════════════════ TEACHER ═══════════════════════
 function openTchr(){document.getElementById('tchr-overlay').classList.add('open');setTimeout(()=>document.getElementById('tchr-pwd').focus(),100);}
 function closeTchr(){document.getElementById('tchr-overlay').classList.remove('open');document.getElementById('tchr-pwd').value='';}
+
 function chkTchrPwd(){
   if(document.getElementById('tchr-pwd').value===TEACHER_PWD){
     isTeacherMode=true;
     closeTchr();
-    let html=`<b>${S.student.name||'—'}</b> · ${S.student.class||''}<br>Mode: ${S.mode} · Round: ${S.round} · Violations: ${S.violations}<br><br>`;
-    if(S.activeParts.length){
-      html+='<b>Answer Key:</b><br>';
-      for(const p of S.activeParts){
-        html+=`<span style="color:var(--cherry);font-weight:700">${p.partTitle}</span><br>`;
-        for(const q of p.questions){
-          const uid=quid(p,q);
-          html+=`Q${q.number}: <b style="color:var(--leaf)">${q.answer}</b> | Student: ${S.answers[uid]||'—'}<br>`;
-        }
-        html+='<br>';
-      }
-    }
-    document.getElementById('tchr-content').innerHTML=html;
-    document.getElementById('tchr-panel').classList.add('open');
+    tchrOpenPanel();
   } else {
     toast('Wrong password!');
     document.getElementById('tchr-pwd').value='';
   }
 }
-function closeTchrPanel(){document.getElementById('tchr-panel').classList.remove('open');}
+
+function tchrOpenPanel(){
+  // Build info + answer key summary
+  let html=`<b>${S.student.name||'—'}</b> · ${S.student.class||''}<br>Mode: ${S.mode} · Round: ${S.round} · Violations: ${S.violations}`;
+  if(S.activeParts.length){
+    html+='<br><br><b>Current Answers:</b><br>';
+    for(const p of S.activeParts){
+      html+=`<span style="color:var(--cherry);font-weight:700">${p.partTitle}</span><br>`;
+      for(const q of p.questions){
+        const uid=quid(p,q);
+        const stu=S.answers[uid]||'—';
+        const correct=norm(stu)===norm(q.answer)||
+          (p.partNumber===3&&(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(norm(stu)));
+        const col=stu==='—'?'var(--ink-light)':correct?'var(--leaf)':'var(--cherry)';
+        html+=`Q${q.number}: <b style="color:var(--leaf)">${q.answer}</b> → <span style="color:${col}">${stu}</span><br>`;
+      }
+      html+='<br>';
+    }
+  }
+  document.getElementById('tchr-content').innerHTML=html;
+
+  // Show auto-fill only on player screen with questions
+  const onPlayer=document.getElementById('screen-player').classList.contains('active');
+  const hasQ=S.activeParts.length>0;
+  const afWrap=document.getElementById('tchr-autofill-wrap');
+  afWrap.style.display=(onPlayer&&hasQ)?'':'none';
+
+  // Show review button only if some answers already filled
+  const anyFilled=Object.keys(S.answers).length>0;
+  const revBtn=document.getElementById('tchr-review-btn');
+  if(revBtn) revBtn.style.display=(onPlayer&&hasQ&&anyFilled)?'':'none';
+
+  // Reset to main view
+  document.getElementById('tchr-view-main').style.display='';
+  document.getElementById('tchr-view-review').style.display='none';
+  document.getElementById('tchr-panel').classList.add('open');
+}
+
+function closeTchrPanel(){
+  document.getElementById('tchr-panel').classList.remove('open');
+}
+
+// ── AUTO-FILL ──
+function tchrAutoFill(mode){
+  if(!S.activeParts.length){toast('No questions loaded.');return;}
+  const wrongRatio=0.4;
+  const opts=['A','B','C'];
+
+  for(const p of S.activeParts){
+    const qs=S.round>1
+      ?p.questions.filter(q=>S.wrongIds.includes(quid(p,q)))
+      :p.questions;
+    for(const q of qs){
+      const uid=quid(p,q);
+      if(mode==='correct'){
+        S.answers[uid]=p.partNumber===3
+          ?norm((q.acceptedAnswers&&q.acceptedAnswers[0])||q.answer)
+          :q.answer;
+      } else {
+        const makeWrong=Math.random()<wrongRatio;
+        if(makeWrong&&p.partNumber!==3){
+          const wrongOpts=opts.filter(o=>o!==q.answer);
+          S.answers[uid]=wrongOpts[Math.floor(Math.random()*wrongOpts.length)];
+        } else if(makeWrong&&p.partNumber===3){
+          S.answers[uid]='WRONG';
+        } else {
+          S.answers[uid]=p.partNumber===3
+            ?norm((q.acceptedAnswers&&q.acceptedAnswers[0])||q.answer)
+            :q.answer;
+        }
+      }
+    }
+  }
+
+  // Show the review button after filling
+  const revBtn=document.getElementById('tchr-review-btn');
+  if(revBtn) revBtn.style.display='';
+
+  const label=mode==='correct'?'All correct.':'Mixed (~40% wrong).';
+  toast('Filled: '+label+' Click "Review & Adjust" to fine-tune.');
+}
+
+// ── REVIEW TABLE: show all Q with editable current answer ──
+function tchrShowReview(){
+  const tbl=document.getElementById('tchr-review-table');
+  tbl.innerHTML='';
+
+  for(const p of S.activeParts){
+    // Part header
+    const ph=document.createElement('div');
+    ph.style.cssText='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:var(--cherry);padding:6px 0 2px;';
+    ph.textContent=p.partTitle+(p._src?' · '+p._src:'');
+    tbl.appendChild(ph);
+
+    const qs=S.round>1
+      ?p.questions.filter(q=>S.wrongIds.includes(quid(p,q)))
+      :p.questions;
+
+    for(const q of qs){
+      const uid=quid(p,q);
+      const cur=S.answers[uid]||'';
+      const correct=norm(q.answer);
+
+      const row=document.createElement('div');
+      row.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--white);border:1.5px solid var(--border);border-radius:8px;';
+      row.id='trow-'+uid;
+
+      // Q number
+      const qn=document.createElement('span');
+      qn.style.cssText='width:22px;height:22px;border-radius:50%;background:var(--cherry);color:white;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+      qn.textContent=q.number;
+      row.appendChild(qn);
+
+      // Question label (truncated)
+      const qlabel=document.createElement('span');
+      qlabel.style.cssText='font-size:12px;color:var(--ink-mid);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+      const qtext=q.questionText||(q.beforeGap||'')+'___'+(q.afterGap||'');
+      qlabel.title=qtext; // full text on hover
+      qlabel.textContent=qtext.length>40?qtext.slice(0,40)+'…':qtext;
+      row.appendChild(qlabel);
+
+      // Correct answer badge
+      const ca=document.createElement('span');
+      ca.style.cssText='font-size:11px;color:var(--leaf);font-weight:700;white-space:nowrap;flex-shrink:0;';
+      ca.textContent='Ans: '+correct;
+      row.appendChild(ca);
+
+      // Answer control
+      if(p.partNumber===3){
+        // Text input for gap-fill
+        const inp=document.createElement('input');
+        inp.type='text';
+        inp.value=cur;
+        inp.placeholder='type…';
+        inp.style.cssText='width:90px;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;text-align:center;color:var(--ink);outline:none;flex-shrink:0;';
+        inp.oninput=()=>{
+          S.answers[uid]=inp.value.toUpperCase();
+          tchrUpdateRowStyle(row,uid,q,p);
+        };
+        inp.onfocus=()=>inp.style.borderColor='var(--cherry)';
+        inp.onblur=()=>tchrUpdateRowStyle(row,uid,q,p);
+        inp.id='tinp-'+uid;
+        row.appendChild(inp);
+      } else {
+        // A/B/C toggle buttons
+        const btnWrap=document.createElement('div');
+        btnWrap.style.cssText='display:flex;gap:4px;flex-shrink:0;';
+        for(const opt of['A','B','C']){
+          const btn=document.createElement('button');
+          btn.textContent=opt;
+          btn.id='topt-'+uid+'-'+opt;
+          const isSel=cur===opt;
+          const isCorrect=opt===correct;
+          btn.style.cssText=`width:30px;height:30px;border-radius:6px;border:1.5px solid ${isSel?(isCorrect?'var(--leaf)':'var(--cherry)'):'var(--border)'};background:${isSel?(isCorrect?'var(--correct-bg)':'var(--wrong-bg)'):'var(--cream)'};color:${isSel?(isCorrect?'var(--leaf)':'var(--cherry)'):'var(--ink-mid)'};font-weight:800;font-size:13px;cursor:pointer;transition:all 0.12s;`;
+          btn.onclick=()=>{
+            S.answers[uid]=opt;
+            // Update all buttons in this row
+            for(const o of['A','B','C']){
+              const b=document.getElementById('topt-'+uid+'-'+o);
+              if(!b) continue;
+              const sel=o===opt;
+              const corr=o===correct;
+              b.style.border=`1.5px solid ${sel?(corr?'var(--leaf)':'var(--cherry)'):'var(--border)'}`;
+              b.style.background=sel?(corr?'var(--correct-bg)':'var(--wrong-bg)'):'var(--cream)';
+              b.style.color=sel?(corr?'var(--leaf)':'var(--cherry)'):'var(--ink-mid)';
+            }
+            tchrUpdateRowStyle(row,uid,q,p);
+          };
+          btnWrap.appendChild(btn);
+        }
+        row.appendChild(btnWrap);
+      }
+
+      tbl.appendChild(row);
+      tchrUpdateRowStyle(row,uid,q,p);
+    }
+  }
+
+  document.getElementById('tchr-view-main').style.display='none';
+  document.getElementById('tchr-view-review').style.display='';
+}
+
+function tchrUpdateRowStyle(row,uid,q,p){
+  const cur=S.answers[uid]||'';
+  if(!cur){row.style.borderColor='var(--border)';return;}
+  let ok=false;
+  if(p.partNumber===3){
+    ok=(q.acceptedAnswers||[q.answer]).map(a=>norm(a)).includes(norm(cur));
+  } else {
+    ok=cur===q.answer;
+  }
+  row.style.borderColor=ok?'var(--correct-bd)':'var(--wrong-bd)';
+  row.style.background=ok?'var(--correct-bg)':'var(--wrong-bg)';
+  setTimeout(()=>{row.style.background='';},400);
+}
+
+function tchrBackToMain(){
+  document.getElementById('tchr-view-main').style.display='';
+  document.getElementById('tchr-view-review').style.display='none';
+  // Refresh the review button visibility
+  const anyFilled=Object.keys(S.answers).length>0;
+  const revBtn=document.getElementById('tchr-review-btn');
+  if(revBtn) revBtn.style.display=anyFilled?'':'none';
+}
+
+function tchrApplyAndClose(){
+  closeTchrPanel();
+  showPart(S.currentPartIdx);
+  updateSubmitBtn();
+  toast('Answers applied. Review on the test, then submit when ready.');
+}
+
 function tchrReset(){
   closeTchrPanel();
   isTeacherMode=false;
-  S={mode:'practice',student:{id:'',name:'',class:''},testIndex:S.testIndex,testData:null,activeParts:[],round:1,answers:{},firstRoundAns:{},wrongIds:[],paraProgress:{},paraDone:{},violations:0,startTime:null,unlocked:false,submittedRounds:[],ftScore:null,currentPartIdx:0};
+  S={mode:'practice',student:{id:'',name:'',class:''},testIndex:S.testIndex,testData:null,activeParts:[],selectedTestTitle:'',round:1,answers:{},firstRoundAns:{},wrongIds:[],paraProgress:{},paraDone:{},violations:0,startTime:null,unlocked:false,submittedRounds:[],ftScore:null,currentPartIdx:0};
   audioEls={};
   showScreen('landing');
   toast('Session reset!');
