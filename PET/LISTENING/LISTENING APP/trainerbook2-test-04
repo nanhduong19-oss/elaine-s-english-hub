@@ -1,0 +1,346 @@
+{
+  "testId": "trainerbook2-test-04",
+  "title": "PET Listening Test 04 TRAINER BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/uevn5atk491mv655uiwwk/B1PFS_Trainer2_Track_55.mp3?rlkey=ctw107a0e7hjpmn8a1piln1gz&st=w1dvjmba&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/rke0qkw4f5c22w3imyhe1/trainerbook2-test-4-part-1-1-3.png?rlkey=3r4ypn0xxwgq4nygp8yvjjeue&st=j9hb5rga&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/0n2v4fmub6lihf94a7w58/trainerbook2-test-4-part-1-4-7.png?rlkey=e947knrv4pbl1ifkqf2rswm4q&st=1n0eoor2&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What kind of coat did the girl buy?",
+          "answer": "C",
+          "script": "Boy: I love your new coat! Where did you get it?\nGirl: In that shop on the high street. I wanted to get one with big pockets, but the last one they had in the store was the wrong size for me. The shop assistant showed me this one with big buttons and I liked it much more. Even better, it'll keep my head warm.",
+          "paraphrase": "The girl wanted a coat with big pockets but her size was not available, so she bought a different one with big buttons that also has a hood to keep her head warm.",
+          "explanation": "Cô bé muốn áo có túi to nhưng không có cỡ phù hợp, nên mua áo có nút to và có mũ trùm giữ ấm đầu → đáp án C (áo có nút to / có mũ)."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "Where does Freddy's mum pick him up?",
+          "answer": "A",
+          "script": "Woman: Freddy, where are you? I've been driving around looking for you. You said you were going to be outside the stadium.\nFreddy: Sorry Mum. There was a lot of traffic there and we thought you wouldn't be able to stop, so we walked down the high street. We're just at the clock tower on the road going out of town. You know, the one that's before you get to the grocer's. Can you pick us up here?\nWoman: OK, I won't be long.",
+          "paraphrase": "Freddy moved from the stadium to the clock tower on the road out of town, just before the grocer's, and asked his mum to pick him up there.",
+          "explanation": "Freddy di chuyển từ sân vận động, đi theo phố chính và đứng chờ ở tháp đồng hồ (clock tower) trên con đường ra khỏi thị trấn, trước cửa hàng tạp hóa → đáp án A."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Which object was a gift from the French president?",
+          "answer": "A",
+          "script": "Now, this is a display of objects from the royal bedroom. Here you can see the chest of drawers that the queen used to keep her personal objects in. It was made two centuries ago and many queens used it before her. On the armchair you can see the fine cushion that was given to her in 1970 by the French president for her wedding. The vase on the right comes from more recent times. It was given to her by her husband on her birthday.",
+          "paraphrase": "The cushion on the armchair was given to the queen by the French president in 1970 as a wedding gift.",
+          "explanation": "Chiếc gối (cushion) trên ghế bành được tặng bởi Tổng thống Pháp năm 1970 nhân dịp đám cưới → đáp án A. Tủ ngăn kéo là đồ cổ của hoàng hậu các đời, chiếc bình do chồng tặng sinh nhật."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "What happened to the phone?",
+          "answer": "C",
+          "script": "Girl: What's the matter, Liam?\nLiam: I feel terrible. I borrowed my sister's phone to look something up for my homework project. I put it on a chair while I went to get a notebook and forgot it was there. At that moment, Mum came home early from work because she had a bad headache, so I told her to sit down while I got her some water and you know what happened? She knocked it on the floor and the screen broke! Sally's going to be so annoyed with me!",
+          "paraphrase": "Liam left his sister's phone on a chair, and when his mum came home sick and sat down, she knocked the phone onto the floor and broke the screen.",
+          "explanation": "Điện thoại để trên ghế bị mẹ vô tình làm rơi xuống sàn và vỡ màn hình → đáp án C (màn hình vỡ)."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "What does the girl need to repair?",
+          "answer": "A",
+          "script": "Boy: Do you want to go out?\nGirl: I'd love to, but I promised Dad that I'd help him first. Do you want to give me a hand?\nBoy: Sure, what can I do? Is your scooter broken again?\nGirl: I think we'll have to take that back to the shop to get it mended. No, this time the wheel on my skateboard came off so Dad's gone to buy a new one. He asked me to repair the brakes on that old kid's bike we've got so my sister can start learning.",
+          "paraphrase": "The girl needs to fix the brakes on an old children's bike for her sister, while the skateboard wheel and scooter need to be dealt with separately.",
+          "explanation": "Cô bé được bố nhờ sửa phanh (brakes) của chiếc xe đạp trẻ em cũ để em gái tập đi → đáp án A (xe đạp). Ván trượt thì bố đi mua bánh mới, xe scooter phải mang ra tiệm."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What is Sophie worried about?",
+          "answer": "B",
+          "script": "Boy: You look worried, Sophie!\nSophie: I am. I've got to get this school work finished for Friday. It's a report on that geography trip we went on.\nBoy: How many words do you have to write?\nSophie: That's not the problem. I'm happy to give in a written report, especially if I can do it on the computer, not by hand, but this time it's a recorded presentation and they'll play it in front of the whole class. I'm anxious that I'll sound really boring!",
+          "paraphrase": "Sophie is not worried about writing the report itself, but she is anxious because this time it has to be a recorded presentation played in front of the whole class.",
+          "explanation": "Sophie không lo về việc viết bài (vui lòng làm việc đó), nhưng lo lắng vì phải thu âm bài thuyết trình và phát trước cả lớp, sợ mình sẽ nghe nhàm chán → đáp án B (thuyết trình được ghi âm)."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "Which afterschool club will the boy join?",
+          "answer": "B",
+          "script": "Girl: Are you going to join an afterschool club this year?\nBoy: I haven't decided which one yet. What about you?\nGirl: Well, I thought swimming might be fun for a change. I like to do some exercise.\nBoy: Me too. I wanted to do table tennis, but there are no spaces left because everyone likes that one. I'm not keen on swimming, so it'll probably be the chess club for me this year, not so many people do that.\nGirl: You won't be doing much physical exercise there!",
+          "paraphrase": "The boy wanted to do table tennis but it was full, and he does not like swimming, so he decided to join the chess club.",
+          "explanation": "Cậu bé muốn chơi bóng bàn nhưng hết chỗ, không thích bơi lội, nên quyết định tham gia câu lạc bộ cờ vua (chess club) → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/c9rjmqdhxov78s9csnn9k/B1PFS_Trainer2_Track_56.mp3?rlkey=b10b142rdz9f1said4ouj8bgm&st=ch0zholb&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear two friends talking about a visit to a castle. The friends agree that",
+          "options": {
+            "A": "the park area was pleasant.",
+            "B": "the guide was helpful.",
+            "C": "the art was surprising."
+          },
+          "answer": "B",
+          "script": "Girl: Did you enjoy the castle? It was my first time there.\nBoy: Me too. It was fun, although I thought there were too many of the usual old paintings. But I learned a lot from the woman who gave the tour. I took some useful notes for our history project.\nGirl: I did think that her explanations were easy to understand. Oh, and I loved those amazing statues.\nBoy: It was just a shame we couldn't spend more time outside sitting under the trees.\nGirl: I was happy to go back in. It was getting very hot and there were too many insects!",
+          "paraphrase": "Both friends agreed that the tour guide was helpful and easy to understand, even though they had different opinions about the outdoor area.",
+          "explanation": "Cả hai đều đồng ý hướng dẫn viên rất hữu ích và dễ hiểu (boy: learned a lot / took notes; girl: explanations were easy to understand) → đáp án B. Công viên thì cậu bé thích ngồi bên ngoài nhưng cô bé thì không (côn trùng, nóng) → A không phải điểm đồng ý. Tranh cổ thì cậu thấy bình thường (not surprising) → C sai."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear a girl telling her friend about her part-time job. Why did she take the job?",
+          "options": {
+            "A": "She needed some extra money.",
+            "B": "She had a lot of free time.",
+            "C": "She wanted to learn something."
+          },
+          "answer": "C",
+          "script": "Boy: How's your job going?\nGirl: Not too bad. It's harder than I imagined and I'm not really finding out much about plants. All I do is cut grass and the machine I have to use is really heavy so it's quite tiring. My plan was to be better prepared for my degree in biology, but the hours are long, and I was already busy with school work before this anyway. They pay me quite well, which I hadn't expected, but that's not the most important thing. I'll probably have to give it up next term.",
+          "paraphrase": "The girl took the job hoping to learn about plants and prepare for her biology degree, but she is mostly just cutting grass and not learning much.",
+          "explanation": "Mục đích ban đầu của cô bé là chuẩn bị tốt hơn cho ngành sinh học (learn about plants / be better prepared for her degree) → wanted to learn something → đáp án C. Tiền lương tốt hơn mong đợi nhưng không phải lý do chính (A sai). Cô đã bận với việc học rồi (B sai - không phải nhiều thời gian rảnh)."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear two friends talking about a party. They need to",
+          "options": {
+            "A": "ask some more people.",
+            "B": "arrange the food.",
+            "C": "decorate a room."
+          },
+          "answer": "A",
+          "script": "Boy: Only one day till the party! Is everything ready?\nGirl: I think so. My dad's put all the stuff we got at the weekend in the freezer, and you've got the snacks, haven't you?\nBoy: I've ticked that off the list! Did you tell the kids from the football club about it?\nGirl: I completely forgot! Can you text Mark? And I'll send a message to the rest. I hope they'll be able to come. Oh, did the others finish putting up the balloons and setting up the music?\nBoy: I thought they wouldn't have time, but Harry's just called me to say it's all done.",
+          "paraphrase": "The food and decorations are ready, but the girl forgot to invite the kids from the football club, so they still need to contact them.",
+          "explanation": "Thức ăn đã được chuẩn bị (B xong), trang trí và âm nhạc đã xong (C xong), nhưng cô bé quên mời các bạn trong câu lạc bộ bóng đá → cần nhắn tin mời thêm người → đáp án A."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear a boy telling his friend about a new phone app. The boy advises the girl to",
+          "options": {
+            "A": "use it for a school project.",
+            "B": "protect her identity.",
+            "C": "share it with a friend."
+          },
+          "answer": "A",
+          "script": "Boy: I've just started using a great app my friend Leo recommended.\nGirl: What's it like?\nBoy: You can record videos and then add sound or music afterwards to tell a story. He showed me how he used it for a presentation he had to give in class. You should do that for the one we've got next week.\nGirl: Can anyone use it?\nBoy: If you're over 12. The videos can be shared, but the good thing is that anyone who appears in a video has to allow you to use it, so nobody will see you if you don't want them to.",
+          "paraphrase": "The boy recommends the girl use the app for their upcoming school presentation, just as his friend Leo did for his class project.",
+          "explanation": "Cậu bé gợi ý cô bé dùng app cho bài thuyết trình tuần tới ở trường → use it for a school project → đáp án A. App tự có tính năng bảo vệ quyền riêng tư (B không phải lời khuyên chủ đích). Cậu bé không khuyên chia sẻ app với bạn (C sai)."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear two friends talking about a news report. The girl is disappointed that",
+          "options": {
+            "A": "she missed an event.",
+            "B": "someone is unable to perform.",
+            "C": "a concert has been cancelled."
+          },
+          "answer": "B",
+          "script": "Boy: Did you hear the news? Our favourite band played a surprise concert in town last night.\nGirl: Oh, I thought they were doing a concert this weekend. I know they changed it to the sports stadium so more people could go and I've got a ticket.\nBoy: Don't worry, they're still doing that.\nGirl: That's good.\nBoy: But the real news is that in the middle of a song, the singer lost her voice, so the band will have to play without her on Saturday.\nGirl: Oh no, she's the best part of the group!",
+          "paraphrase": "The girl is disappointed to hear that the singer lost her voice and will not be able to perform at the Saturday concert.",
+          "explanation": "Concert cuối tuần vẫn diễn ra (C sai), cô bé có vé nên không bỏ lỡ sự kiện (A sai). Nhưng ca sĩ chính mất giọng nên không thể biểu diễn thứ Bảy → someone is unable to perform → đáp án B."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear a boy telling his friend about a dance video. The boy disliked",
+          "options": {
+            "A": "the way the picture looked.",
+            "B": "the quality of the sound.",
+            "C": "the dancers' movements."
+          },
+          "answer": "B",
+          "script": "Girl: How did you get on in the dance video competition? Did they like your dance?\nBoy: We came third, but I really wasn't happy with the final version of our show.\nGirl: What happened?\nBoy: We'd worked really hard on the routine and our steps went well, but you couldn't hear the tune properly. It seemed as if we weren't in time to the music even though we'd used my uncle's video camera, which is brand new, so the audience could see us perfectly. The winners obviously used a better recording than us.\nGirl: Never mind. Coming third was still pretty good.",
+          "paraphrase": "The boy was unhappy because the sound quality was poor so the music could not be heard clearly, even though the dance moves went well and the picture quality was good.",
+          "explanation": "Hình ảnh rõ ràng (camera mới → A sai), các bước nhảy tốt (C sai), nhưng âm thanh kém - không nghe rõ nhạc → the quality of the sound → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/bwu4sepv4oxigd2rn1odj/B1PFS_Trainer2_Track_57.mp3?rlkey=f9delkrjtltk8yzck4dva06ez&st=y96yypbz&dl=0&raw=1",
+      "noteTitle": "Silverton Shopping Centre",
+      "context": "You will hear a student called Oliver telling his class about a new shopping centre.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The fastest way to get to the shopping centre is by",
+          "afterGap": ".",
+          "answer": "underground",
+          "acceptedAnswers": ["underground", "UNDERGROUND", "the underground", "THE UNDERGROUND", "metro", "METRO", "tube", "TUBE"],
+          "script": "It's really easy to get to because there's an underground stop right there but you can also get a bus from the city centre, which takes a bit longer. I went with my family in Mum's car, but that was definitely slower.",
+          "paraphrase": "The underground is the quickest way to reach the shopping centre, faster than taking the bus or going by car.",
+          "explanation": "Oliver nói có ga tàu điện ngầm (underground stop) ngay tại đó - nhanh hơn xe buýt và xe hơi → đáp án: underground."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Oliver thinks the",
+          "afterGap": "is the best part of the shopping centre.",
+          "answer": "games area",
+          "acceptedAnswers": ["games area", "GAMES AREA", "game area", "GAME AREA"],
+          "script": "Of course, there are lots of shops there and an area with restaurants, including some of my favourites such as a burger place and an Italian. What's absolutely brilliant is the games area. For fans of video games, like me, it's got everything you can imagine.",
+          "paraphrase": "Oliver thinks the games area is the best part because it has everything a video game fan could want.",
+          "explanation": "Oliver dùng từ 'absolutely brilliant' để mô tả khu vực trò chơi điện tử (games area) → đáp án: games area."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "Clothes shops for young people can be found on the",
+          "afterGap": ".",
+          "answer": "second floor",
+          "acceptedAnswers": ["second floor", "SECOND FLOOR", "2nd floor", "2ND FLOOR"],
+          "script": "They've put the same kind of shops together, so you just have to go for the area you're interested in. The teenage fashion section is on the second floor. My mum got me this really cool T-shirt and then we went down to the first floor so that my parents could look at furniture.",
+          "paraphrase": "The teenage fashion section is located on the second floor, and furniture shops are on the first floor below it.",
+          "explanation": "Khu thời trang tuổi teen nằm ở tầng hai (second floor) → đáp án: second floor."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "Oliver bought something to eat in a",
+          "afterGap": ".",
+          "answer": "(small) market",
+          "acceptedAnswers": ["market", "MARKET", "small market", "SMALL MARKET"],
+          "script": "The shopping centre is very spacious with wide hallways and there are plenty of little shops where you can buy snacks as well as a small market. I got a bag of popcorn there as I always feel hungry when I'm shopping!",
+          "paraphrase": "Oliver bought popcorn at the small market in the shopping centre because he always gets hungry when shopping.",
+          "explanation": "Oliver mua bắp rang (popcorn) tại khu chợ nhỏ (small market) → đáp án: (small) market."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Oliver was surprised there was a",
+          "afterGap": "in the shopping centre.",
+          "answer": "garden",
+          "acceptedAnswers": ["garden", "GARDEN"],
+          "script": "When we got to the top, I couldn't believe what I saw. There's a garden there where you can walk around or sit and have a coffee. The glass roof meant it was a bit hot, though.",
+          "paraphrase": "Oliver was amazed to find a garden at the top of the shopping centre where visitors can walk around or relax with a coffee.",
+          "explanation": "Oliver nói 'I couldn't believe what I saw' khi thấy khu vườn (garden) trên tầng cao nhất → đáp án: garden."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The shopping centre is open from 9.30 to",
+          "afterGap": ".",
+          "answer": "11 pm",
+          "acceptedAnswers": ["11 pm", "11PM", "11 PM", "23.00", "23:00", "eleven pm", "ELEVEN PM"],
+          "script": "We got there late morning, so there were already a lot of people there because the shopping centre opens at 9.30. It got busier in the afternoon. Some of the shops started closing around 7.30, but the shopping centre itself doesn't close until 11 pm because of the restaurants. We left at around 8. We'd had enough by then.",
+          "paraphrase": "Although individual shops start closing from 7.30, the shopping centre itself stays open until 11 pm for the restaurants.",
+          "explanation": "Các cửa hàng đóng lúc 7.30 nhưng trung tâm thương mại đóng cửa lúc 11 pm (do các nhà hàng) → đáp án: 11 pm / 23.00."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/br7a8hv2t2ydo56wh4x5z/B1PFS_Trainer2_Track_58.mp3?rlkey=7re7r4fu1sgq4dxoskearzlky&st=4awvhf2r&dl=0&raw=1",
+      "context": "You will hear an interview with a young woman called Emma who is a sports reporter.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Emma started working on TV",
+          "options": {
+            "A": "through a contact in a TV company.",
+            "B": "after doing reports on the internet.",
+            "C": "because she was a sports star."
+          },
+          "answer": "B",
+          "script": "Presenter: Emma, you've been working as a sports reporter on TV for a few years now. How did you start working on TV?\nEmma: I've always loved sport and I used to work with a basketball team organising their advertising. This meant doing blogs about their matches. A TV station saw them and got in touch with me to say they liked what I did, and they offered me a job.",
+          "paraphrase": "Emma wrote blogs about basketball matches online, and a TV station noticed her work and offered her a job.",
+          "explanation": "Emma viết blog (trên internet) về các trận bóng rổ, đài truyền hình thấy và liên hệ mời làm → after doing reports on the internet → đáp án B. Không ai quen biết giới thiệu (A sai), cô không phải vận động viên nổi tiếng (C sai)."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "Why does Emma enjoy reporting on football matches?",
+          "options": {
+            "A": "She admires a lot of the football players.",
+            "B": "She used to play football herself.",
+            "C": "She can talk about different details of the team."
+          },
+          "answer": "C",
+          "script": "Presenter: You mostly report on football matches now. Do you enjoy it?\nEmma: Well, it is the most popular sport in the country! It wasn't my sport when I was young, but it's exciting and there's lots to say because the ball is always moving. There are many famous players, so I like to let people know what each one is doing and facts about them.",
+          "paraphrase": "Emma enjoys football reporting because there is always a lot to talk about, from the constantly moving ball to sharing different facts and details about each player.",
+          "explanation": "Emma thích vì luôn có nhiều điều để bình luận - bóng luôn di chuyển, nhiều cầu thủ với nhiều chi tiết khác nhau → can talk about different details → đáp án C. Bóng đá không phải môn cô chơi hồi nhỏ (B sai). Cô không đặc biệt ngưỡng mộ cầu thủ (A sai - chỉ muốn chia sẻ thông tin về họ)."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "What is difficult about Emma's job?",
+          "options": {
+            "A": "remembering people's names",
+            "B": "concentrating on the game",
+            "C": "giving information quickly"
+          },
+          "answer": "B",
+          "script": "Presenter: What's difficult about your job?\nEmma: I've had to learn the names of lots of sportsmen and women, but I have a good memory, which helps. The challenge is when I'm talking in a live game. I have to follow what 22 players are doing and they move so fast. I have to pay attention all the time. It's easy to miss something important.",
+          "paraphrase": "The hardest part of Emma's job is staying focused during a live game because she has to follow 22 fast-moving players at the same time.",
+          "explanation": "Emma có trí nhớ tốt nên nhớ tên không khó (A sai). Thách thức là phải theo dõi 22 cầu thủ di chuyển nhanh cùng lúc trong trận đấu trực tiếp, không được sao nhãng → concentrating on the game → đáp án B."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What does Emma do to relax?",
+          "options": {
+            "A": "go out with people from work",
+            "B": "get some exercise",
+            "C": "spend time in nature"
+          },
+          "answer": "C",
+          "script": "Presenter: It must be a bit stressful sometimes. How do you relax in your free time?\nEmma: My job is hard work so I decided I need a complete change from sport. So, instead of going to the gym, I've taken up art. I often go out with an art group to the countryside to draw animals and plants. They're not into sport, so we talk about everything except that!",
+          "paraphrase": "Emma relaxes by going to the countryside with an art group to draw animals and plants, completely away from the world of sport.",
+          "explanation": "Emma thư giãn bằng cách đi vẽ ở nông thôn với nhóm nghệ thuật → spend time in nature → đáp án C. Cô đi với nhóm nghệ thuật chứ không phải đồng nghiệp (A sai). Cô bỏ tập gym, chọn vẽ thay thế (B sai)."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "Emma's favourite moment is when",
+          "options": {
+            "A": "a team does well.",
+            "B": "she prepares before a game.",
+            "C": "she meets important players."
+          },
+          "answer": "A",
+          "script": "Presenter: So, what's the best moment for you in your work?\nEmma: I'm happy because it's quite varied. The mornings are often less interesting because I'm just searching for information on the next game. Getting the opportunity to chat to well-known people from time to time is great, but there's nothing like the noise of the crowd when a goal is scored.",
+          "paraphrase": "Emma's favourite moment is hearing the crowd cheer when a goal is scored, which represents a team doing well.",
+          "explanation": "Emma nói không có gì bằng tiếng hò reo của khán giả khi bàn thắng được ghi (a goal is scored = a team does well) → đáp án A. Buổi sáng chuẩn bị thông tin thì ít thú vị (B sai). Gặp người nổi tiếng thì thỉnh thoảng mới có và không phải khoảnh khắc yêu thích nhất (C sai)."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "In the future, Emma wants to",
+          "options": {
+            "A": "give people advice about jobs.",
+            "B": "help people become sports stars.",
+            "C": "travel to another country."
+          },
+          "answer": "A",
+          "script": "Presenter: So, what would you like to do in the future?\nEmma: I've thought about going abroad to work in a different sport, like baseball, which is much more popular in places like Japan and the USA, but that's quite hard. Recently, a friend suggested giving talks in schools to encourage teenagers to get involved in other areas of sport, not just dream of being a great player. They can do things like sports medicine, organising events or being a trainer. I'd prefer to stay here and do something like that.",
+          "paraphrase": "Emma prefers to stay and give talks in schools to help teenagers explore career options in sport beyond just being a player.",
+          "explanation": "Emma nghĩ đến việc ra nước ngoài nhưng thấy khó (C loại). Cô muốn nói chuyện tại trường để khuyến khích thanh thiếu niên khám phá các nghề trong thể thao (y học thể thao, tổ chức sự kiện, huấn luyện viên) chứ không phải trở thành vận động viên → give people advice about jobs → đáp án A."
+        }
+      ]
+    }
+  ]
+}
