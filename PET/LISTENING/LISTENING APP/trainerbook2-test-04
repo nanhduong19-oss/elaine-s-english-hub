@@ -243,7 +243,7 @@
           "beforeGap": "The shopping centre is open from 9.30 to",
           "afterGap": ".",
           "answer": "11 pm",
-          "acceptedAnswers": ["11 pm", "11PM", "11 PM", "23.00", "23:00", "eleven pm", "ELEVEN PM"],
+          "acceptedAnswers": ["11 pm", "11PM", "11 PM", "11 P.M.", "11 p.m.", "23.00", "23:00", "eleven pm", "ELEVEN PM"],
           "script": "We got there late morning, so there were already a lot of people there because the shopping centre opens at 9.30. It got busier in the afternoon. Some of the shops started closing around 7.30, but the shopping centre itself doesn't close until 11 pm because of the restaurants. We left at around 8. We'd had enough by then.",
           "paraphrase": "Although individual shops start closing from 7.30, the shopping centre itself stays open until 11 pm for the restaurants.",
           "explanation": "Các cửa hàng đóng lúc 7.30 nhưng trung tâm thương mại đóng cửa lúc 11 pm (do các nhà hàng) → đáp án: 11 pm / 23.00."
