@@ -22,65 +22,65 @@
         {
           "id": "p1q1",
           "number": 1,
-          "questionText": "What kind of coat did the girl buy?",
+          "questionText": "What's the girl's coat like?",
           "answer": "C",
           "script": "Boy: I love your new coat! Where did you get it?\nGirl: In that shop on the high street. I wanted to get one with big pockets, but the last one they had in the store was the wrong size for me. The shop assistant showed me this one with big buttons and I liked it much more. Even better, it'll keep my head warm.",
-          "paraphrase": "The girl wanted a coat with big pockets but her size was not available, so she bought a different one with big buttons that also has a hood to keep her head warm.",
-          "explanation": "Cô bé muốn áo có túi to nhưng không có cỡ phù hợp, nên mua áo có nút to và có mũ trùm giữ ấm đầu → đáp án C (áo có nút to / có mũ)."
+          "paraphrase": "The girl wanted a coat with big pockets but it was the wrong size, so she bought one with big buttons that also keeps her head warm.",
+          "explanation": "Cô bé muốn áo có túi to nhưng không có cỡ phù hợp → mua áo có nút to (big buttons) và giữ ấm đầu (hood/collar). Đáp án C là áo có nút to. A (túi to) sai vì không có cỡ, B sai vì không được đề cập."
         },
         {
           "id": "p1q2",
           "number": 2,
-          "questionText": "Where does Freddy's mum pick him up?",
+          "questionText": "Where are the friends waiting?",
           "answer": "A",
           "script": "Woman: Freddy, where are you? I've been driving around looking for you. You said you were going to be outside the stadium.\nFreddy: Sorry Mum. There was a lot of traffic there and we thought you wouldn't be able to stop, so we walked down the high street. We're just at the clock tower on the road going out of town. You know, the one that's before you get to the grocer's. Can you pick us up here?\nWoman: OK, I won't be long.",
-          "paraphrase": "Freddy moved from the stadium to the clock tower on the road out of town, just before the grocer's, and asked his mum to pick him up there.",
-          "explanation": "Freddy di chuyển từ sân vận động, đi theo phố chính và đứng chờ ở tháp đồng hồ (clock tower) trên con đường ra khỏi thị trấn, trước cửa hàng tạp hóa → đáp án A."
+          "paraphrase": "Freddy and his friends moved from the stadium and are now waiting at the clock tower on the road out of town, just before the grocer's.",
+          "explanation": "Freddy không đứng ở sân vận động (B sai) mà đi bộ theo phố chính đến tháp đồng hồ (clock tower) trên đường ra khỏi thị trấn, trước cửa hàng tạp hóa → đáp án A. C sai vì không đề cập siêu thị hay trạm xe."
         },
         {
           "id": "p1q3",
           "number": 3,
-          "questionText": "Which object was a gift from the French president?",
+          "questionText": "Which is the oldest thing in the museum?",
           "answer": "A",
           "script": "Now, this is a display of objects from the royal bedroom. Here you can see the chest of drawers that the queen used to keep her personal objects in. It was made two centuries ago and many queens used it before her. On the armchair you can see the fine cushion that was given to her in 1970 by the French president for her wedding. The vase on the right comes from more recent times. It was given to her by her husband on her birthday.",
-          "paraphrase": "The cushion on the armchair was given to the queen by the French president in 1970 as a wedding gift.",
-          "explanation": "Chiếc gối (cushion) trên ghế bành được tặng bởi Tổng thống Pháp năm 1970 nhân dịp đám cưới → đáp án A. Tủ ngăn kéo là đồ cổ của hoàng hậu các đời, chiếc bình do chồng tặng sinh nhật."
+          "paraphrase": "The chest of drawers is the oldest object because it was made two centuries ago and used by many queens before the current one.",
+          "explanation": "Tủ ngăn kéo (chest of drawers) được làm từ hai thế kỷ trước và nhiều hoàng hậu đã dùng trước → đồ cổ nhất → đáp án A. Gối (cushion) tặng năm 1970 (B sai), bình hoa là từ thời gần đây nhất (C sai)."
         },
         {
           "id": "p1q4",
           "number": 4,
-          "questionText": "What happened to the phone?",
+          "questionText": "What's Liam unhappy about?",
           "answer": "C",
           "script": "Girl: What's the matter, Liam?\nLiam: I feel terrible. I borrowed my sister's phone to look something up for my homework project. I put it on a chair while I went to get a notebook and forgot it was there. At that moment, Mum came home early from work because she had a bad headache, so I told her to sit down while I got her some water and you know what happened? She knocked it on the floor and the screen broke! Sally's going to be so annoyed with me!",
-          "paraphrase": "Liam left his sister's phone on a chair, and when his mum came home sick and sat down, she knocked the phone onto the floor and broke the screen.",
-          "explanation": "Điện thoại để trên ghế bị mẹ vô tình làm rơi xuống sàn và vỡ màn hình → đáp án C (màn hình vỡ)."
+          "paraphrase": "Liam is upset because his mum accidentally knocked his sister's phone off a chair and broke the screen, and now his sister will be angry with him.",
+          "explanation": "Điện thoại của chị Sally bị mẹ vô tình làm rơi → vỡ màn hình → chị sẽ tức giận với Liam → Liam buồn vì làm hỏng điện thoại của chị → đáp án C (broken phone screen / chị sẽ giận). A và B không khớp với nội dung script."
         },
         {
           "id": "p1q5",
           "number": 5,
-          "questionText": "What does the girl need to repair?",
+          "questionText": "What do the friends need to fix?",
           "answer": "A",
           "script": "Boy: Do you want to go out?\nGirl: I'd love to, but I promised Dad that I'd help him first. Do you want to give me a hand?\nBoy: Sure, what can I do? Is your scooter broken again?\nGirl: I think we'll have to take that back to the shop to get it mended. No, this time the wheel on my skateboard came off so Dad's gone to buy a new one. He asked me to repair the brakes on that old kid's bike we've got so my sister can start learning.",
-          "paraphrase": "The girl needs to fix the brakes on an old children's bike for her sister, while the skateboard wheel and scooter need to be dealt with separately.",
-          "explanation": "Cô bé được bố nhờ sửa phanh (brakes) của chiếc xe đạp trẻ em cũ để em gái tập đi → đáp án A (xe đạp). Ván trượt thì bố đi mua bánh mới, xe scooter phải mang ra tiệm."
+          "paraphrase": "The girl and the boy need to fix the brakes on an old children's bike so her sister can learn to ride it.",
+          "explanation": "Việc cần làm ngay là sửa phanh (brakes) của xe đạp trẻ em cũ → đáp án A (bicycle/bike). Xe scooter phải mang ra tiệm (không tự sửa), ván trượt thì bố đi mua bánh mới (không phải việc hai người cần làm)."
         },
         {
           "id": "p1q6",
           "number": 6,
-          "questionText": "What is Sophie worried about?",
+          "questionText": "What does Sophie need for her presentation?",
           "answer": "B",
           "script": "Boy: You look worried, Sophie!\nSophie: I am. I've got to get this school work finished for Friday. It's a report on that geography trip we went on.\nBoy: How many words do you have to write?\nSophie: That's not the problem. I'm happy to give in a written report, especially if I can do it on the computer, not by hand, but this time it's a recorded presentation and they'll play it in front of the whole class. I'm anxious that I'll sound really boring!",
-          "paraphrase": "Sophie is not worried about writing the report itself, but she is anxious because this time it has to be a recorded presentation played in front of the whole class.",
-          "explanation": "Sophie không lo về việc viết bài (vui lòng làm việc đó), nhưng lo lắng vì phải thu âm bài thuyết trình và phát trước cả lớp, sợ mình sẽ nghe nhàm chán → đáp án B (thuyết trình được ghi âm)."
+          "paraphrase": "Sophie needs to make a recorded presentation instead of a written report, and she is worried she will sound boring when it is played in front of the class.",
+          "explanation": "Lần này không phải viết bài mà phải làm bài thuyết trình được thu âm (recorded presentation) → đáp án B. A (viết tay) sai vì Sophie nói thích làm trên máy tính. C sai vì không đề cập cần thêm tài liệu hay hình ảnh."
         },
         {
           "id": "p1q7",
           "number": 7,
-          "questionText": "Which afterschool club will the boy join?",
+          "questionText": "Which club is the most popular?",
           "answer": "B",
           "script": "Girl: Are you going to join an afterschool club this year?\nBoy: I haven't decided which one yet. What about you?\nGirl: Well, I thought swimming might be fun for a change. I like to do some exercise.\nBoy: Me too. I wanted to do table tennis, but there are no spaces left because everyone likes that one. I'm not keen on swimming, so it'll probably be the chess club for me this year, not so many people do that.\nGirl: You won't be doing much physical exercise there!",
-          "paraphrase": "The boy wanted to do table tennis but it was full, and he does not like swimming, so he decided to join the chess club.",
-          "explanation": "Cậu bé muốn chơi bóng bàn nhưng hết chỗ, không thích bơi lội, nên quyết định tham gia câu lạc bộ cờ vua (chess club) → đáp án B."
+          "paraphrase": "Table tennis is the most popular club because there are no spaces left, as everyone wants to join it.",
+          "explanation": "Cậu bé nói bóng bàn (table tennis) không còn chỗ vì 'everyone likes that one' → câu lạc bộ phổ biến nhất → đáp án B. Bơi lội (A) và cờ vua (C) ít người tham gia hơn."
         }
       ]
     },
