@@ -22,56 +22,56 @@
         {
           "id": "p1q1",
           "number": 1,
-          "questionText": "Where is the boy going next?",
+          "questionText": "Which ride has the boy already tried?",
           "answer": "A",
           "script": "Girl: This park is great, isn't it?\nBoy: Yeah, there's so much to do, but I didn't expect so many people here. I got in the queue for the car driving ride, but I soon left because they said I'd have to wait for an hour. The queue for the big wheel was shorter so I went on that instead. I hope there aren't too many people waiting for the boat ride, because that's where I'm going next.\nGirl: I'll come with you.",
-          "paraphrase": "The boy waited too long for the car ride so he went on the big wheel instead, and now he is heading to the boat ride.",
-          "explanation": "Cậu bé đã bỏ hàng đợi xe hơi (chờ 1 tiếng), đi vòng đu quay (hàng ngắn hơn), và tiếp theo sẽ đến trò chơi thuyền → đáp án A."
+          "paraphrase": "The boy joined the queue for the car driving ride but left because the wait was too long, so he went on the big wheel instead and is now heading to the boat ride.",
+          "explanation": "Cậu bé bỏ hàng đợi xe hơi (chờ 1 tiếng) và đã đi vòng đu quay - big wheel (hàng ngắn hơn) → trò chơi đã thử là Ferris wheel → đáp án A. Xe hơi (B/bumper cars) cậu bỏ hàng chứ không đi, thuyền (C) là điểm tiếp theo chưa đến."
         },
         {
           "id": "p1q2",
           "number": 2,
-          "questionText": "Where is the girl's laptop now?",
+          "questionText": "Where did the girl leave her laptop?",
           "answer": "C",
           "script": "Girl: Dad, I forgot my laptop. Could you bring it to school for me?\nDad: Alright. I have to go into town this morning. Where is it?\nGirl: Well, I had it on the sofa when I was watching TV last night and then I put it on the table in the living room to charge the battery. Before breakfast, I remembered to put it in the hall, but I'd put it under the chair so I didn't notice it when I was leaving.\nDad: OK. I'll bring it later.",
-          "paraphrase": "The girl left her laptop under the chair in the hall because she forgot to notice it when she was leaving.",
-          "explanation": "Laptop cuối cùng được đặt dưới ghế trong hành lang (hall) → đáp án C. Cô bé đã di chuyển nó từ ghế sofa → bàn phòng khách → hành lang, nhưng để dưới ghế và không nhìn thấy khi ra đi."
+          "paraphrase": "The girl moved her laptop from the sofa to the table to charge, then to the hall before breakfast, but left it under the chair and did not notice it when leaving.",
+          "explanation": "Laptop cuối cùng nằm dưới ghế trong hành lang → đáp án C (under the chair). A (on the table) sai - cô đặt lên bàn để sạc rồi chuyển đi, B (on the sofa) sai - đó là vị trí buổi tối hôm trước."
         },
         {
           "id": "p1q3",
           "number": 3,
-          "questionText": "Which instrument is the boy learning to play now?",
+          "questionText": "Which instrument is the boy learning?",
           "answer": "C",
           "script": "Girl: Are you enjoying your music classes?\nBoy: Yeah, but they're quite difficult. You know, when you start to play an instrument very young, like I did with the piano, it's much easier than taking up a new one when you're a teenager. The sound I make with the trumpet is awful, but I'll continue with the classes this year. I think playing a guitar is simpler though, so maybe I'll try that after the summer.",
-          "paraphrase": "The boy is currently learning the trumpet even though he finds it difficult, and he is thinking of trying the guitar after summer.",
-          "explanation": "Cậu bé đang học kèn trumpet (trumpet classes this year) → đáp án C. Piano là nhạc cụ học từ nhỏ, guitar chỉ là dự định sau hè."
+          "paraphrase": "The boy learned piano when he was young, is currently learning trumpet even though he finds it hard, and is thinking of trying guitar after summer.",
+          "explanation": "Cậu bé đang học kèn trumpet hiện tại (will continue with the classes this year) → đáp án C. Piano (A) là nhạc cụ học từ nhỏ, guitar (B) chỉ là dự định sau hè."
         },
         {
           "id": "p1q4",
           "number": 4,
-          "questionText": "How much did the girl and her brother pay for the video game?",
+          "questionText": "How much did the game cost?",
           "answer": "B",
           "script": "Boy: So, you got the new videogame in the end!\nGirl: Yeah, I'm really happy. My brother and I bought it together. I'd saved €7.50 which was more than enough, and although it usually costs £13.50, they had a special offer last Saturday with great reductions so we got it for £11.50. Do you want to come over to play it? It should be fun with the three of us.\nBoy: That's a great idea!",
-          "paraphrase": "The game normally costs £13.50 but they bought it at a special offer price of £11.50 last Saturday.",
-          "explanation": "Giá gốc £13.50, nhưng có khuyến mãi nên mua được với giá £11.50 → đáp án B."
+          "paraphrase": "The game usually costs £13.50 but the girl and her brother bought it for £11.50 during a special offer last Saturday.",
+          "explanation": "Giá thực tế trả là £11.50 (special offer) → đáp án B. A (£7.50) là số tiền cô bé tiết kiệm được, C (£13.50) là giá gốc bình thường."
         },
         {
           "id": "p1q5",
           "number": 5,
-          "questionText": "What food did the boy buy?",
+          "questionText": "What has the boy brought to eat on the bus trip?",
           "answer": "A",
-          "script": "Girl: Did you bring something to eat on the bus?\nBoy: Yeah, but we didn't have anything at home, so I went to the shop on the corner near school. It's a small one so they don't have much choice. I usually like to have fruit, but they only had bananas and I can't stand them, so I thought one of those big packets of crisps would be great to share. It cost too much so I had to go for a sandwich instead. You can have half if you like.",
-          "paraphrase": "The boy wanted fruit but there were only bananas, then he considered crisps but they were too expensive, so he ended up buying a sandwich.",
-          "explanation": "Cậu bé muốn mua hoa quả (không có), crisps (quá đắt), cuối cùng mua sandwich → đáp án A."
+          "script": "Girl: Did you bring something to eat on the bus?\nBoy: Yeah, but we didn't have anything at home, so I went to the shop on the corner near school. It's a small one so they don't have much choice. I usually like to have fruit, but they only had bananas and I can't stand them, so I thought one of those big packets of crisps would be great to share. It cost too much so I had to go for a sandwich instead. You can have half if you like.\nGirl: Thanks!",
+          "paraphrase": "The boy wanted fruit but the shop only had bananas, then he considered crisps but they were too expensive, so he ended up buying a sandwich.",
+          "explanation": "Cậu bé muốn hoa quả (chỉ có chuối, không thích) → tính mua crisps (quá đắt) → cuối cùng mua sandwich → đáp án A. B (banana) cậu không thích, C (crisps) quá đắt nên không mua."
         },
         {
           "id": "p1q6",
           "number": 6,
-          "questionText": "When is the biology test?",
+          "questionText": "Which class have they got first?",
           "answer": "C",
           "script": "Boy: I'm really nervous about the biology test today.\nGirl: Me too. I want to look at the section about plants if I have time in the morning.\nBoy: But it's before that. Don't you remember? The maths teacher isn't coming in first thing today, so they changed her class to later. That means we have biology in the second period after the geography class.\nGirl: Oh no! I'd forgotten about that.",
-          "paraphrase": "The biology test is in the second period today, after the geography class, because the maths teacher changed her slot.",
-          "explanation": "Thứ tự tiết học hôm nay: Tiết 1 = Geography, Tiết 2 = Biology (do Toán chuyển sang sau). Vậy Biology là tiết 2 → đáp án C."
+          "paraphrase": "Geography is first today, followed by biology in the second period, because the maths class was moved to later in the day.",
+          "explanation": "Tiết 1 hôm nay là Geography → đáp án C. Maths (A) bị chuyển sang sau (maths teacher isn't coming in first thing). Biology (B) là tiết 2, sau Geography."
         },
         {
           "id": "p1q7",
@@ -79,8 +79,8 @@
           "questionText": "What does the new PE teacher look like?",
           "answer": "B",
           "script": "Girl: Have you met the new PE teacher? He's going to do the basketball training for the team.\nBoy: I saw someone in the teachers' room yesterday. He's bald, isn't he, and quite tall?\nGirl: That was the new physics teacher. Actually, he's smaller than me and I'm not very tall. I was surprised because they say he plays basketball very well. You can't miss him. He's got his hair tied back.\nBoy: I hope he's a good coach!",
-          "paraphrase": "The new PE teacher is short with his hair tied back, not the tall bald man the boy saw, who turned out to be the physics teacher.",
-          "explanation": "Giáo viên Thể dục: người nhỏ con, buộc tóc ra sau → đáp án B. Người hói đầu cao chính là giáo viên Vật lý."
+          "paraphrase": "The new PE teacher is short with his hair tied back - the tall bald man the boy saw was actually the new physics teacher.",
+          "explanation": "Giáo viên Thể dục: người thấp, buộc tóc ra sau (hair tied back) → đáp án B. A (tall and bald) là giáo viên Vật lý. C không được đề cập trong script."
         }
       ]
     },
