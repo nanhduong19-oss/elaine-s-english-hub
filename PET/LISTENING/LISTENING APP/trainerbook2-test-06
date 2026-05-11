@@ -1,0 +1,346 @@
+{
+  "testId": "trainerbook2-test-06",
+  "title": "PET Listening Test 06 TRAINER BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/iyrq4nonnduntbltd9mrw/B1PFS_Trainer2_Track_71.mp3?rlkey=37ifgr0ixqhumtwkx1bxyfi4v&st=2f3hzw97&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/9tqtb7i2rszu080jbrr2r/trainerbook2-test-6-part-1-1-3.png?rlkey=tg67mi8eebp8ghvdgpi53y2qy&st=dn9bl77b&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/ribjtyp9v8orizkvcd6ur/trainerbook2-test-6-part-1-4-7.png?rlkey=41zflmoqxq85r1ax6c7dxxxhm&st=gqb3kzdw&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "Which is the girl's favourite painting?",
+          "answer": "B",
+          "script": "Here's my opinion of the exhibition. The artist who painted the mountain scene is clearly very talented, although those huge peaks were rather depressing and dark. I was more attracted by the paintings with light and water in them, like the waterfall scene and the one of the sea. The way the artist showed the waves, you could almost see them moving. I'd go back to see it again any day. The picture of the waterfall was amazing, but less realistic, so it's not one I'd have on my wall.",
+          "paraphrase": "The girl liked paintings with light and water, and although the waterfall was amazing, it was less realistic, so her favourite was the sea painting with its moving waves.",
+          "explanation": "Tranh núi thì u ám (A sai). Tranh thác nước đẹp nhưng không thực tế (C sai). Tranh biển với những con sóng chuyển động sinh động nhất và cô thích nhất → đáp án B."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What new series do the friends decide to watch?",
+          "answer": "C",
+          "script": "Girl: What shall we do tonight?\nBoy: I feel like staying at home and watching a series. There's a new one about a group of kids who start a dance group.\nGirl: I've heard about that one, but they say the music is old-fashioned. There's a hospital one that's actually a comedy.\nBoy: Maybe, or what about the school series with super intelligent teenagers that have adventures?\nGirl: I like the sound of that, but I fancy watching something funny this evening. Do you agree?\nBoy: OK. Let's watch that then.",
+          "paraphrase": "The girl wants to watch something funny, so they agree on the hospital comedy series instead of the dance or school adventure series.",
+          "explanation": "Series nhảy (A) bị loại vì nhạc lỗi thời. Series phiêu lưu học đường (B) cậu bé thích nhưng cô bé muốn xem gì đó hài hước tối nay. Cả hai đồng ý xem series bệnh viện hài hước (hospital comedy) → đáp án C."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Where can the visitors to the museum get information from?",
+          "answer": "A",
+          "script": "Visitors to our museum will have a totally new experience with our interactive systems. There will be touch screens giving you all the details of each item on display. These replace the headphones we used to have, but there will still be information in several languages. Our new service is popular with all our visitors and means we no longer need to have an information desk, so no one has to queue any more. We look forward to seeing you soon!",
+          "paraphrase": "The museum now uses touch screens to provide information, replacing the old headphones, and the information desk is no longer needed.",
+          "explanation": "Màn hình cảm ứng (touch screens) thay thế tai nghe cũ (C sai) và bàn thông tin không còn cần thiết nữa (B sai) → đáp án A."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Which video game does the girl prefer?",
+          "answer": "A",
+          "script": "Boy: What did you buy with your birthday money?\nGirl: Video games of course! You know I've been waiting for ages to get City Creation.\nBoy: Do you like it?\nGirl: I've started playing it and it's alright. It's not as exciting as Car Race 2, which I got last year, and the first stages are a bit too easy. I also had enough to buy Space Star, you can make incredible rockets and the graphics are really special. I've played it more often than the other two because of that. You should try it!",
+          "paraphrase": "The girl bought City Creation and Space Star, but she plays Space Star most often because of its incredible graphics and rocket-building feature.",
+          "explanation": "City Creation (C) thì 'alright' nhưng không hào hứng. Car Race 2 (B) mua năm ngoái, thú vị hơn nhưng không phải game yêu thích nhất. Space Star (A) cô chơi nhiều nhất vì đồ họa đặc biệt → đáp án A."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Why did the boy go to the match by train?",
+          "answer": "C",
+          "script": "Girl: Did you get to your football match on time?\nBoy: In the end, yes. You know, I usually cycle, but this time it was too far to go by bike and the weather was terrible, so Mum offered to give me a lift. We'd just gone a short way when there was a huge traffic jam, so she turned off and dropped me at the station. Luckily, I just got there ten minutes before the game started.",
+          "paraphrase": "The boy's mum drove him but they hit a traffic jam, so she dropped him at the station and he took the train to the match instead.",
+          "explanation": "Đi xe đạp vì quá xa và thời tiết xấu (A/B là lý do bỏ xe đạp, không phải lý do đi tàu). Mẹ lái xe cho cậu nhưng gặp kẹt xe → mẹ rẽ vào ga → cậu đi tàu vì kẹt xe → đáp án C."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What did the boy buy for the holiday?",
+          "answer": "C",
+          "script": "Girl: Are you ready for your holiday tomorrow?\nBoy: Almost. I just have to pack my suitcase. We went shopping yesterday to get things for the beach. I wanted to get some sunglasses and I needed some sandals. I already have a big towel that I bought last year. I found some cool glasses that weren't too expensive, but they didn't have my size in the shoe shop so I'll have to buy sandals when I get there.",
+          "paraphrase": "The boy already had a towel and could not find sandals in his size, so the only thing he actually bought was sunglasses.",
+          "explanation": "Khăn tắm (A) đã có từ năm ngoái. Dép (B) không có cỡ phù hợp → phải mua sau. Chỉ mua được kính mát (sunglasses) → đáp án C."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "What is the girl famous for?",
+          "answer": "A",
+          "script": "Last night, the star of the New Year TV show was the famous Emily Energy. This well-known artist surprised the audience with her strong voice as no one had heard her sing before. Everyone was excited to see her new dance routine and they all agreed it was even better than the style that has made her so popular. This time she also joined the band to play the drums, showing us what a talented performer she is.",
+          "paraphrase": "Emily Energy surprised people by singing and playing drums, but she is best known for her dance routines which have made her so popular.",
+          "explanation": "Hát (B) là điều bất ngờ - trước đây chưa ai nghe cô hát. Chơi trống (C) là lần đầu tiên. Cô nổi tiếng nhờ phong cách nhảy (dance routine that has made her so popular) → đáp án A."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/b2pev95v43uxsd04pcjuw/B1PFS_Trainer2_Track_72.mp3?rlkey=ioz0vt8jgjceskoq7bm37fwlg&st=qrq1lmse&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear two friends talking about a band. What does the girl think is most original about the band?",
+          "options": {
+            "A": "what they sang about",
+            "B": "how well they sang",
+            "C": "how they were dressed"
+          },
+          "answer": "A",
+          "script": "Girl: The concert was great. I loved the second band that played.\nBoy: Yeah, they were pretty good. The singer was amazing, wasn't she?\nGirl: She wasn't bad, although I thought the guitarist was more talented. What surprised me was their message. It was so unusual. I'd never heard anything like it before.\nBoy: Neither had I. It was interesting.\nGirl: But they did look strange in those long coats, a bit like they were from the 80s or something. They reminded me of that other band that you like.\nBoy: They are quite similar, but their music is totally different.",
+          "paraphrase": "The girl thought the guitarist was more talented than the singer, found their outfits odd, but was most surprised and impressed by the unusual message in their songs.",
+          "explanation": "Cô bé nghĩ guitarist tài năng hơn ca sĩ (B - hát hay không phải điều đặc biệt nhất). Trang phục áo khoác dài trông kỳ lạ (C) chứ không phải độc đáo. Điều bất ngờ nhất là thông điệp (message) trong lời hát rất độc lạ → what they sang about → đáp án A."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear a boy talking about a restaurant. Why did his family decide to go to the restaurant?",
+          "options": {
+            "A": "The food was a reasonable price.",
+            "B": "There was lots of space.",
+            "C": "They could park there."
+          },
+          "answer": "B",
+          "script": "Girl: How was your weekend? Did you go out?\nBoy: It was good. We went to that new restaurant on Saturday night. You know, the one that's just by the school so it's really easy for us to walk there rather than taking the car.\nGirl: It was your sister's birthday, wasn't it?\nBoy: That's right. We were going to go to that expensive place near the cinema, but we tried to book too late so it was full. The new one is pretty big and has plenty of tables, so we chose to go there instead. It didn't cost too much and the meal was delicious.",
+          "paraphrase": "The family planned to go to the expensive restaurant but it was fully booked, so they chose the new one because it was large and had plenty of available tables.",
+          "explanation": "Gia đình đi bộ đến nhà hàng (không liên quan đến đỗ xe → C sai). Giá không quá đắt là điều tốt nhưng không phải lý do chính để chọn (A sai). Lý do chính là nhà hàng kia hết bàn, nhà hàng mới to và còn nhiều bàn trống → B."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear a boy and a girl talking about recycling. The boy is trying to convince the girl to",
+          "options": {
+            "A": "join an activity.",
+            "B": "support his plan.",
+            "C": "give up a habit."
+          },
+          "answer": "A",
+          "script": "Boy: The biology teacher suggested some of us could do a recycling project next term. We'd be organising bins for different types of rubbish and then making sure everything goes in the right place.\nGirl: It sounds interesting, but I don't have much time. I'm so busy with the orchestra and football practice.\nBoy: I don't think it'd be too much. You wouldn't have to stop doing your usual things. Maybe just an hour or two a week. I'm going to sign up.\nGirl: Hmm. Maybe I could.\nBoy: It'll be fun. Lots of the others want to take part.\nGirl: I'll think about it.",
+          "paraphrase": "The boy encourages the girl to sign up for the school recycling project by reassuring her that it would not take up much time.",
+          "explanation": "Cậu bé muốn cô bé tham gia dự án tái chế (join an activity → đáp án A). Không phải ủng hộ kế hoạch của cậu (B - đây là dự án của cô giáo sinh học). Không đề cập thay đổi thói quen (C sai)."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear two friends talking about their classroom. What do they have to do next week?",
+          "options": {
+            "A": "move the furniture",
+            "B": "decorate the walls",
+            "C": "remove their books"
+          },
+          "answer": "C",
+          "script": "Boy: It's nearly the holidays. I can't wait!\nGirl: Me neither. Did you hear that they want to paint all the classrooms while we're away? Our class teacher sent a message saying we need to clear up next week.\nBoy: I suppose that means putting all the chairs and desks somewhere.\nGirl: We won't be doing that. It's like taking all the posters down and making sure that all our personal stuff is out because things could get lost when the painters come in. They don't know where everything goes to put it back in its place.",
+          "paraphrase": "Students do not need to move furniture, but they do need to remove their personal belongings and posters so nothing gets lost when the painters come.",
+          "explanation": "Di chuyển bàn ghế (A) - cô bé nói 'we won't be doing that'. Trang trí tường (B) là việc của thợ sơn. Học sinh phải gỡ poster và đem đồ cá nhân ra khỏi lớp (remove their books/personal stuff) → đáp án C."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear a girl telling a friend about a job advertisement. How does she feel about it?",
+          "options": {
+            "A": "hopeful she'll get work",
+            "B": "shocked by the wages",
+            "C": "keen to work hard"
+          },
+          "answer": "B",
+          "script": "Girl: Did you see that advertisement for a job in the sports centre?\nBoy: No. What are they looking for?\nGirl: They need people at the weekend to work on reception.\nBoy: Are you going to apply?\nGirl: Well, I'd love to have a job and the hours are good so I'd still have some free time, but the money's terrible. I didn't realise they were allowed to pay so little. I suppose they think that students don't need much, but it's awful.",
+          "paraphrase": "The girl wants a job and likes the hours, but is shocked that the pay is so low she did not know such low wages were legal.",
+          "explanation": "Cô bé muốn có việc làm (A gần đúng) nhưng phản ứng mạnh nhất là về lương quá thấp đến mức không biết được phép trả ít vậy → shocked by the wages → đáp án B."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear a boy talking about a photograph. What was difficult about taking it?",
+          "options": {
+            "A": "It became too dark.",
+            "B": "The weather was bad.",
+            "C": "The location was hard to get to."
+          },
+          "answer": "B",
+          "script": "Girl: Did you get a photo for our presentation about natural spaces?\nBoy: I finally got a good one in the national park, but it wasn't easy.\nGirl: Why?\nBoy: Well, Dad gave me a lift to the mountain and it wasn't too bad walking up. I'd expected it to be worse. At first, it was really sunny, but by the time I got to the forest, it was so windy that I couldn't get a proper picture of the trees because they were moving so much. In the end I had to wait until it was calmer, so it took a long time.",
+          "paraphrase": "The walk up was not too bad, but the strong wind in the forest made it impossible to photograph the trees properly until the weather calmed down.",
+          "explanation": "Leo núi không tệ như tưởng (C sai - địa điểm không khó đến). Không đề cập trời tối (A sai). Gió quá mạnh làm cây chuyển động không chụp được ảnh rõ → bad weather (wind) → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/9mpqq5qtvxqedtbco5e68/B1PFS_Trainer2_Track_73.mp3?rlkey=brf72icipgth11xeael5csnk5&st=6ydjemno&dl=0&raw=1",
+      "noteTitle": "My roller-skating club",
+      "context": "You will hear a student talking about a roller-skating club.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The club offers classes for beginners on",
+          "afterGap": ".",
+          "answer": "Thursdays",
+          "acceptedAnswers": ["Thursdays", "THURSDAYS", "Thursday", "THURSDAY"],
+          "script": "There are classes every day for different levels. I go on Friday afternoons, but if you're just starting, there's a group on Thursdays. I also like to watch the advanced students who train on Wednesdays - they do some amazing tricks.",
+          "paraphrase": "The speaker goes on Fridays, advanced students train on Wednesdays, and beginners have their class on Thursdays.",
+          "explanation": "Lớp người mới bắt đầu (beginners) học vào thứ Năm (Thursdays). Người nói đi vào thứ Sáu, học viên nâng cao luyện thứ Tư → đáp án: Thursdays."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "At the weekends when the weather is good, they skate in",
+          "afterGap": ".",
+          "answer": "parks",
+          "acceptedAnswers": ["parks", "PARKS", "the parks", "THE PARKS"],
+          "script": "On Saturdays or Sundays, we do trips to different places in the city, unless it's raining. In that case we go to the skating centre near the football stadium for a couple of hours. The group leaders take us to parks where we're allowed to skate and there we can practise what we've learned.",
+          "paraphrase": "When the weather is good at weekends, the group goes on city trips to parks where skating is allowed, and when it rains they go to the skating centre instead.",
+          "explanation": "Khi trời đẹp cuối tuần, họ đến các công viên (parks) trong thành phố để trượt. Khi trời mưa mới đến trung tâm trượt băng → đáp án: parks."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "When they are skating in the city, they have to wear a",
+          "afterGap": "and a helmet.",
+          "answer": "jacket",
+          "acceptedAnswers": ["jacket", "JACKET", "yellow jacket", "YELLOW JACKET"],
+          "script": "Of course, you'll need to buy some skates and a helmet. The club recommends you use protection for your knees and elbows as well. On the city trips, they give each of us a yellow jacket so that no one gets lost. Parents are happy about this rule and we look like a real team!",
+          "paraphrase": "On city trips, each member is given a yellow jacket to wear along with a helmet so no one gets lost and they look like a team.",
+          "explanation": "Khi trượt ngoài thành phố, mỗi người được phát áo khoác vàng (yellow jacket) để không bị lạc và nhận ra nhau → đáp án: jacket."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "At the National Championships, the club members were surprised to get special",
+          "afterGap": ".",
+          "answer": "seats",
+          "acceptedAnswers": ["seats", "SEATS", "front row seats", "FRONT ROW SEATS"],
+          "script": "Once we went to watch the National Championships together. When we arrived, we were given seats in the front row. They're normally for more important people than us! We took a lot of photos to remember that day.",
+          "paraphrase": "At the National Championships, the club members were unexpectedly given front row seats, which are usually reserved for VIPs.",
+          "explanation": "Các thành viên câu lạc bộ bất ngờ được ngồi hàng đầu (front row seats) - thường dành cho những người quan trọng hơn → đáp án: seats."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "The class wants to learn to",
+          "afterGap": "on skates.",
+          "answer": "jump",
+          "acceptedAnswers": ["jump", "JUMP"],
+          "script": "Some teams performed dance routines and there was also an amazing jump event. All on skates! We all agreed that we'd like to try that in our next class, but not too high though!",
+          "paraphrase": "After watching the jump event at the Championships, the whole class agreed they want to try jumping on skates in their next session.",
+          "explanation": "Sau khi xem màn nhảy (jump event) tại Giải Vô địch, cả lớp đều muốn thử nhảy trên giày trượt → đáp án: jump."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The club training sessions take place in a",
+          "afterGap": "in a school.",
+          "answer": "playground",
+          "acceptedAnswers": ["playground", "PLAYGROUND"],
+          "script": "If anyone is interested in coming to train with the club, you'll find it in the secondary school next to the station. They let us use the playground, which is great because it has a roof for when it's very sunny or raining so we don't have to find a sports hall. I hope to see you there!",
+          "paraphrase": "The club trains in the playground of a secondary school near the station, which has a roof that provides shelter from sun and rain.",
+          "explanation": "Câu lạc bộ sử dụng sân chơi (playground) của trường trung học cơ sở, sân có mái che nên không cần tìm nhà thi đấu → đáp án: playground."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/ulwyndimv0kjai2so1e1g/B1PFS_Trainer2_Track_74.mp3?rlkey=aw5v1ktna491ab2z4x9zy8zhr&st=lmkcdnvh&dl=0&raw=1",
+      "context": "You will hear an interview with a young man called James Clark, who designs clothes.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "How did James first learn about making clothes?",
+          "options": {
+            "A": "He went to classes.",
+            "B": "He watched other people.",
+            "C": "His mother taught him."
+          },
+          "answer": "B",
+          "script": "Presenter: Good morning James. You've been working as a designer for five years now. When did you first learn about making clothes?\nJames: In primary school we were encouraged to be creative, so I was always making models and drawing. Then, one day I found an old sewing machine in the attic at home. My mum had no idea how to use it, but I looked online and the videos I saw helped me start. They showed me the basic techniques.",
+          "paraphrase": "James found a sewing machine in the attic, and since his mum did not know how to use it, he taught himself by watching online videos.",
+          "explanation": "Không đi học lớp may (A sai). Mẹ không biết dùng máy may (C sai). James tự học bằng cách xem video online → He watched other people → đáp án B."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "What kind of clothes does James like designing now?",
+          "options": {
+            "A": "dresses",
+            "B": "trousers",
+            "C": "T-shirts"
+          },
+          "answer": "B",
+          "script": "Presenter: What kind of clothes do you design now?\nJames: The simplest ones, like T-shirts, are often the easiest to make, but I like a challenge. Creating comfortable trousers is my main interest at the moment, although I'd also like to get more into the world of women's fashion, like dresses.",
+          "paraphrase": "James finds T-shirts too easy and wants a challenge, so his main focus now is designing comfortable trousers, with an interest in dresses for the future.",
+          "explanation": "T-shirts (C) dễ quá. Váy đầm (A) là điều muốn thử trong tương lai. Hiện tại anh đang tập trung vào thiết kế quần thoải mái (comfortable trousers) → đáp án B."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "James thinks he's successful because",
+          "options": {
+            "A": "his clothes are a good price.",
+            "B": "his ideas are original.",
+            "C": "his designs are for young people."
+          },
+          "answer": "A",
+          "script": "Presenter: Why do you think you are successful?\nJames: I make clothes that all kinds of people want to wear every day and, more importantly, clothes that they can afford. I like to use traditional materials which are natural and feel better.",
+          "paraphrase": "James believes his success comes from making everyday clothes that all kinds of people can afford, using natural traditional materials.",
+          "explanation": "Không đề cập ý tưởng độc đáo (B sai) hay thiết kế riêng cho người trẻ (C sai). Thành công vì làm quần áo mà mọi người có thể mua được (clothes that they can afford = good price) → đáp án A."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "How did James feel about showing his designs in the London fashion show?",
+          "options": {
+            "A": "nervous about speaking in public",
+            "B": "certain it would improve his career",
+            "C": "surprised he was chosen to be there"
+          },
+          "answer": "C",
+          "script": "Presenter: You showed your designs in the last London Fashion Show. How did you feel about that?\nJames: I was so lucky to have had this chance. I never expected to be invited but a famous designer asked me to join his team and show a couple of my designs. I hope it'll give me more opportunities in the future as he mentioned my name in his final speech.",
+          "paraphrase": "James was surprised to be invited to the London Fashion Show since he never expected it, and he hopes it will open new doors for him.",
+          "explanation": "Không đề cập lo lắng khi phát biểu trước đám đông (A sai). Anh hy vọng sẽ có thêm cơ hội (không chắc chắn → B sai). Anh không ngờ được mời → surprised he was chosen → đáp án C."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "What does James like most about his work?",
+          "options": {
+            "A": "drawing",
+            "B": "travelling abroad",
+            "C": "meeting people"
+          },
+          "answer": "A",
+          "script": "Presenter: What do you like most about your work?\nJames: That's hard to say. I get to know a lot of models and photographers who do a great job, but I'm quite shy really so nothing makes me happier than sitting at my work desk putting my ideas on paper. I'm often away looking for new materials, especially in Asia, and when I am, I miss doing that.",
+          "paraphrase": "Although James meets many people and travels abroad for materials, he is shy and happiest when sitting at his desk drawing his ideas on paper.",
+          "explanation": "Gặp người mẫu và nhiếp ảnh gia (C) thì anh thích nhưng tự nhận mình khá nhút nhát. Đi tìm vật liệu ở nước ngoài (B) là công việc thường xuyên nhưng khi đi anh lại nhớ ở nhà. Điều khiến anh hạnh phúc nhất là ngồi vẽ ý tưởng → drawing → đáp án A."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "James thinks it's important to",
+          "options": {
+            "A": "help the planet.",
+            "B": "keep learning.",
+            "C": "protect fashion workers."
+          },
+          "answer": "A",
+          "script": "Presenter: Would you like to try anything new? What's important for you?\nJames: Apart from designing, I'm interested in the production process, which can be done with a 3D printer. I'm exploring the possibilities of this as it reduces waste and also uses recycled materials, which is essential nowadays. We'll need to train people to work in this area. I know many young people who are interested so I'd like to set up a fashion school to do this.",
+          "paraphrase": "James believes using 3D printing is essential because it reduces waste and uses recycled materials, which he sees as vital for the environment today.",
+          "explanation": "Không đề cập bảo vệ công nhân thời trang (C sai). Học hỏi liên tục (B) ngụ ý có nhưng không phải điều anh nhấn mạnh. Anh nhấn mạnh giảm thiểu rác thải và dùng vật liệu tái chế là điều thiết yếu hiện nay (essential) → help the planet → đáp án A."
+        }
+      ]
+    }
+  ]
+}
