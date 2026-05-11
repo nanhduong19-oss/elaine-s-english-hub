@@ -1,0 +1,346 @@
+{
+  "testId": "trainerbook2-test-05",
+  "title": "PET Listening Test 05 TRAINER BOOK 2",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/46nw0h9hvxsp7f6dc78xh/B1PFS_Trainer2_Track_63.mp3?rlkey=qovynjkqv6zbx03c96zf9gw6i&st=9ooe9uou&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/zifu80lov80tf6c6v29ke/trainerbook2-test-5-part-1-1-3.png?rlkey=s6qvmlwqmvqs4v0w2je19b31i&st=trco6ui1&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/zkr7d95b1ktp2k9btixiv/trainerbook2-test-5-part-1-4-7.png?rlkey=vidpudua4dvguxbjxdyj9phub&st=qu87785m&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "Which book did the boy buy?",
+          "answer": "A",
+          "script": "Jenni: Did you get something for your dad's birthday?\nSaul: Yes, I bought him a book. It wasn't easy to find something he might like. You know he's really into nature and wildlife, but he's already got loads of books about that. I saw a good one about planes with some amazing pictures and then another one about Chinese cooking. He likes to try different recipes, but I think he gets them from the internet, so I ended up getting the first one.\nGirl: I hope he likes it.",
+          "paraphrase": "Saul's dad loves wildlife books but already has many, so Saul chose the book about planes over the one about Chinese cooking since his dad gets recipes online.",
+          "explanation": "Bố thích sách về thiên nhiên nhưng đã có nhiều rồi → loại B. Bố tìm công thức nấu ăn trên mạng nên không cần sách nấu ăn → loại C. Saul mua cuốn đầu tiên (the first one) = sách về máy bay → đáp án A."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What problem did Jessica have with her surprise lunch?",
+          "answer": "A",
+          "script": "Eduardo: You look upset. What happened?\nJessica: I wanted to give my parents a surprise lunch and I decided to make chicken and pasta. I was frying the chicken when some hot oil went on my hand and it really hurt. It looked really red. Anyway, I managed to finish the cooking alright, but when my parents came home, they were quite shocked. In the end, the food tasted pretty good and at least I hadn't burned it or broken anything, but I'll have to be more careful next time.",
+          "paraphrase": "While frying chicken, hot oil splashed onto Jessica's hand and burned it, though she managed to finish cooking and the food tasted good.",
+          "explanation": "Dầu nóng bắn vào tay gây bỏng (hot oil went on my hand → burned herself with hot oil) → đáp án A. B sai vì câu hỏi dùng 'hurt her hand' nhưng vấn đề cụ thể là bỏng do dầu, không phải chấn thương thông thường. C sai vì cô ấy nói 'hadn't broken anything'."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "What do the students need to bring for the experiment?",
+          "answer": "B",
+          "script": "OK everyone. Tomorrow we're going to do the chemistry experiment we've been reading about. We'll be using some dangerous things, so you must make sure you're all wearing the correct equipment. Apart from something to protect your eyes, which the school provides, there will be gloves for you all to wear. It's important to wear a long sleeved shirt as well. In fact, if you don't wear one, you can't take part, so remember to bring one to school.",
+          "paraphrase": "The school provides eye protection and gloves, but students must bring their own long-sleeved shirt or they will not be allowed to participate.",
+          "explanation": "Kính bảo hộ (safety glasses) do trường cung cấp → A không cần mang. Găng tay (gloves) cũng do trường cung cấp → C không cần mang. Áo tay dài (long-sleeved shirt) bắt buộc phải tự mang, nếu không có thì không được tham gia → đáp án B."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "What did the divers find?",
+          "answer": "A",
+          "script": "I watched a really interesting documentary yesterday about a group of divers who were looking for valuable objects from a ship that sank two centuries ago. They were trying to find gold coins that were on the ship. It was an ancient ship just like the one in that mystery story about the magic necklace. Sadly, they didn't get what they wanted, but they found a box with old documents and personal objects in it like an 18th-century watch, which probably belonged to the captain. And it still worked!",
+          "paraphrase": "The divers were searching for gold coins but did not find them, instead discovering a box containing old documents and an 18th-century watch that still worked.",
+          "explanation": "Thợ lặn tìm kiếm vàng (B gold coins) nhưng không tìm thấy → B sai. Vòng cổ ma thuật chỉ là chi tiết trong câu chuyện bí ẩn → C sai. Họ tìm được hộp có đồng hồ cổ thế kỷ 18 (watch) → đáp án A."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Where will James be next week?",
+          "answer": "C",
+          "script": "Suzie: So, you're off on holiday next week!\nJames: Yeah, I've been looking forward to it for ages. I've never been to that part of France before. It's our big holiday this year. Instead of going to the coast, we're off to the mountains. I hope the weather's good because last time we went sightseeing in the capital and it rained all the time. I can't wait to try a new winter sport this time.",
+          "paraphrase": "James is going to the mountains in France next week instead of the coast, hoping to try a new winter sport there.",
+          "explanation": "Thay vì đi bờ biển (A beach), gia đình chọn đi núi (mountains) → đáp án C. B sai vì lần trước mới đi thủ đô (capital), lần này đi núi."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What time do all the friends have to be at the station?",
+          "answer": "B",
+          "script": "Miriam: So what are the plans for tomorrow? Are we all meeting in the station?\nJan: Yes, we are. Mark's dad is picking you and me up and taking us to the station at quarter past nine because he has to get to work. It's a bit early for the train, which leaves at eleven thirty, but I thought that it'd be nice to have breakfast in the station before we leave. So I've told the others to meet us there at a quarter to ten. I hope they're not late!",
+          "paraphrase": "Mark's dad drops Jan and Miriam at the station at 9:15, but the other friends are asked to meet them there at 9:45, before the train at 11:30.",
+          "explanation": "A (9:15) là giờ bố Mark chở Jan và Miriam đến ga - không phải tất cả. C (11:30) là giờ tàu chạy. Jan dặn những người còn lại đến ga lúc 'a quarter to ten' = 9:45 → tất cả bạn bè tập hợp lúc 9:45 → đáp án B."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "What does the doctor recommend?",
+          "answer": "C",
+          "script": "Cindy: So what can I do about my backache?\nDoctor: I've looked at your test results and there's nothing serious, so I don't think you need to spend so much time resting in bed now. In fact, some gentle exercise would be good, so you could try going for a short walk every day. It's also better to sit on a chair rather than lying on the sofa for too long.",
+          "paraphrase": "The doctor says Cindy's condition is not serious and recommends gentle daily walks instead of resting in bed or lying on the sofa.",
+          "explanation": "Bác sĩ khuyên không nên nằm nghỉ nhiều (A resting in bed - sai), không nên nằm dài trên sofa (B lying on sofa - sai), mà nên đi bộ nhẹ mỗi ngày (going for walks) → đáp án C."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/twuv5igk2n2mebsto4br3/B1PFS_Trainer2_Track_64.mp3?rlkey=5bvs9aakdgdlatyhl10d77fov&st=9y4kprom&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear two friends talking about getting fit. What does the girl want to try?",
+          "options": {
+            "A": "doing an activity with a friend",
+            "B": "training for a competition",
+            "C": "going back to something she did before"
+          },
+          "answer": "A",
+          "script": "Lucie: I've been studying so much this year I've got really unfit.\nStan: Well, now your exams have finished, you should do something.\nLucie: But I'm not sure what. I used to play in a basketball team, but I don't fancy that anymore. My teammates were really into competing and when we lost, everyone was upset.\nStan: You could come to my swimming club. I go twice a week and the coach is really nice. She's really helped me improve my style. We practise different things every class.\nLucie: That sounds much more relaxing. I think I'll join you!",
+          "paraphrase": "Lucie does not want to return to basketball or compete, so she decides to join Stan's swimming club to do an activity with a friend.",
+          "explanation": "Lucie không muốn quay lại bóng rổ (C sai) hay thi đấu cạnh tranh (B sai). Cô quyết định tham gia câu lạc bộ bơi lội cùng Stan (join you) → doing an activity with a friend → đáp án A."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear a boy telling a friend about a talk on cycling. What did the boy learn?",
+          "options": {
+            "A": "what he needs for mountain biking",
+            "B": "how to cycle safely on roads",
+            "C": "a rule about where cycling is forbidden"
+          },
+          "answer": "C",
+          "script": "Teresa: Where have you been?\nHarry: I stayed after school to listen to a policeman telling us about cycling.\nTeresa: Was it interesting?\nHarry: Actually, it was. We often go cycling in the mountains and I know that it's important to be able to communicate with someone if there's an accident, so I always have my phone with me. We're also careful when we cycle wherever there are cars and we've got lights if it's dark. But I didn't realise that you're supposed to get off your bike on a pedestrian crossing in a town.",
+          "paraphrase": "Harry already knew about mountain biking safety and road cycling rules, but he did not know that cyclists must get off their bike at a pedestrian crossing.",
+          "explanation": "Harry đã biết về đồ dùng cần thiết khi đạp xe núi (A sai) và an toàn khi đi trên đường có xe (B sai). Điều mới học được là phải xuống xe ở vạch qua đường dành cho người đi bộ (pedestrian crossing) → a rule about where cycling is forbidden → đáp án C."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear two friends talking about a birthday gift. The girl suggests the boy should",
+          "options": {
+            "A": "ask someone for advice",
+            "B": "buy something similar to last time",
+            "C": "get ideas on the internet"
+          },
+          "answer": "C",
+          "script": "Fred: I don't know what to get my sister for her birthday and I can't ask her what she'd like because I want it to be a surprise. Do you think she'd like a book?\nHadley: Well, that's what you got her the last two years. Maybe you should think about something different.\nFred: That's true. Perhaps I should ask her friend Emily.\nHadley: I wouldn't do that; she can't keep a secret! But there's a great online shop for teenagers where I got my sister's present last month. That might be the best place to look.\nFred: I'll have a look at it. Thanks.",
+          "paraphrase": "Hadley tells Fred not to repeat the book gift or ask Emily, but instead recommends a great online shop for teenagers where she recently bought a gift.",
+          "explanation": "Hadley không khuyên mua sách giống mọi năm (B sai) hay hỏi Emily vì cô ấy không giữ được bí mật (A sai). Thay vào đó gợi ý xem cửa hàng online dành cho thanh thiếu niên → get ideas on the internet → đáp án C."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear two friends talking about a new sports centre. What does the girl like best about it?",
+          "options": {
+            "A": "the convenient location",
+            "B": "the range of facilities",
+            "C": "the classes they offer"
+          },
+          "answer": "B",
+          "script": "Ben: Have you been to the new sports centre yet?\nAlyson: Yeah, I went last weekend. It's amazing. There's a gym, a pool, courts for basketball and even a rock climbing wall. I'm interested in learning to climb and they've got several beginner groups so I might sign up for that.\nBen: Yeah, I've heard the teachers are good. You live nearby, don't you?\nAlyson: I do, so it's only a few minutes' walk, so for me it's better than the one on the other side of town. It's great that there are so many things to do there. That's what impressed me most.",
+          "paraphrase": "Although Alyson appreciates the convenient location, what impressed her most was the wide range of activities available at the sports centre.",
+          "explanation": "Alyson đề cập vị trí gần nhà (A) và các lớp leo núi (C) nhưng điều ấn tượng nhất (impressed me most) là có rất nhiều thứ để làm (gym, pool, basketball, climbing) → the range of facilities → đáp án B."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear a boy telling a friend about a history lesson. The boy was",
+          "options": {
+            "A": "confused about a date",
+            "B": "surprised by the information",
+            "C": "interested in learning more about it"
+          },
+          "answer": "B",
+          "script": "Zara: I missed the history class today because I had to go to the doctor. What did you do?\nLiam: It was all about travelling to the Americas hundreds of years ago. It was fun because we had to imagine we were going to explore and what we needed for the journey. I couldn't believe how long the journey across the Atlantic took in those days. The teacher explained when it all happened really well. I won't forget the year 1492! So, we've finished this period, I think we've learned a lot this term.\nZara: Could I borrow your notes?\nLiam: Of course!",
+          "paraphrase": "Liam was surprised by how long the Atlantic crossing took in those days, and the lesson impressed him enough that he will not forget the year 1492.",
+          "explanation": "Liam nhớ rõ năm 1492 (không bị confused về ngày tháng → A sai). Cậu nói 'I couldn't believe how long the journey took' → bất ngờ với thông tin → surprised by the information → đáp án B. C sai vì bài học đã kết thúc chủ đề này."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear a boy talking about a hotel. The boy is pleased because",
+          "options": {
+            "A": "he'll have his own room",
+            "B": "he's going with a friend",
+            "C": "he'll be in a new place"
+          },
+          "answer": "A",
+          "script": "Olivia: What are you doing this summer?\nSeb: We're off to the beach. I can't wait.\nOlivia: Where are you going?\nSeb: To a hotel near the coast with my family. We've been there a couple of times already and I love going there because I've made a few mates who also go every year and it's right on the beach. Now that I'm older, I can go down to the beach whenever I want and I can sleep by myself so I don't have to share with my parents any more.\nOlivia: That sounds awesome. I hope you have a good time.",
+          "paraphrase": "Seb is happy to return to the same hotel because now that he is older, he can sleep in his own room instead of sharing with his parents.",
+          "explanation": "Seb đã đến khách sạn này vài lần rồi (C sai - không phải nơi mới). Cậu đi cùng gia đình, không đề cập bạn bè đi cùng (B sai). Điều cậu vui là bây giờ đã lớn, được ngủ phòng riêng không phải chung với bố mẹ → he'll have his own room → đáp án A."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/9a8xkqwbpezg1pra0m7u7/B1PFS_Trainer2_Track_65.mp3?rlkey=efz964974nh3kp6ebphzcdutz&st=phjycmdr&dl=0&raw=1",
+      "noteTitle": "Small Animal Rescue Centre",
+      "context": "You will hear someone talking about the Small Animal Rescue Centre.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The animal centre opened in",
+          "afterGap": ".",
+          "answer": "May",
+          "acceptedAnswers": ["May", "MAY", "may"],
+          "script": "You may know that the centre's located in the town and we need people to help. The building was finished at the end of April so we took the first animals in May, and we're expecting a lot more in the summer months. So, in July and August we're looking for extra people to give us a hand.",
+          "paraphrase": "The building was completed at the end of April and the centre started taking in animals in May.",
+          "explanation": "Toà nhà hoàn thành cuối tháng Tư, nhận động vật đầu tiên vào tháng Năm (May) → đáp án: May."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "The animal centre cannot look after",
+          "afterGap": ".",
+          "answer": "birds",
+          "acceptedAnswers": ["birds", "BIRDS", "a bird", "A BIRD", "bird", "BIRD"],
+          "script": "The animal centre takes different kinds of animal, but mostly cats. Occasionally, there might be a lost snake but in general they are typical small animals you might have at home. Unfortunately, birds require special cages so we aren't able to take them.",
+          "paraphrase": "The centre looks after most small animals but cannot take in birds because they need special cages.",
+          "explanation": "Trung tâm nhận hầu hết động vật nhỏ nhưng không thể nhận chim (birds) vì chúng cần lồng đặc biệt → đáp án: birds."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "You may be able to borrow",
+          "afterGap": "if you don't have your own.",
+          "answer": "boots",
+          "acceptedAnswers": ["boots", "BOOTS", "some boots", "SOME BOOTS"],
+          "script": "We provide most of the equipment. There are brushes and buckets for cleaning and we'll give you a T-shirt. You should wear old trousers and make sure you have strong shoes, although we can lend you some boots if we have ones the right size.",
+          "paraphrase": "The centre provides brushes, buckets and a T-shirt, and may also lend volunteers boots if the right size is available.",
+          "explanation": "Trung tâm cung cấp chổi, xô và áo phông. Tình nguyện viên cần tự mang quần cũ và giày chắc chắn, nhưng có thể mượn ủng (boots) nếu có đúng cỡ → đáp án: boots."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "On Saturdays, before giving the animals water, helpers clean their",
+          "afterGap": ".",
+          "answer": "bowls",
+          "acceptedAnswers": ["bowls", "BOWLS", "bowl", "BOWL"],
+          "script": "We're hoping you'll offer to help us at the weekends because there's always a lot to do. For example, Saturday morning starts with collecting the animals' bowls in order to clean them before filling them. Then, you'll clean their cages.",
+          "paraphrase": "On Saturday mornings, helpers first collect and clean the animals' bowls before filling them with water, then move on to cleaning the cages.",
+          "explanation": "Buổi sáng thứ Bảy bắt đầu bằng việc thu gom và rửa bát (bowls) của động vật trước khi đổ nước vào, sau đó mới dọn chuồng → đáp án: bowls."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Another way to help is to give information to",
+          "afterGap": "about the animals.",
+          "answer": "visitors",
+          "acceptedAnswers": ["visitors", "VISITORS", "visitor", "VISITOR"],
+          "script": "It's not always dirty work, though! You'll also help show visitors around the centre. To do this you should know the animal's name and a little bit about their story if we know where they came from. There is always a vet present to report on the animals' health.",
+          "paraphrase": "Volunteers also guide visitors around the centre, sharing each animal's name and background story when available.",
+          "explanation": "Tình nguyện viên không chỉ làm việc dọn dẹp mà còn dẫn khách tham quan (visitors) tìm hiểu về các con vật → đáp án: visitors."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "To apply to help at the centre you should go to the website, www.",
+          "afterGap": ".com",
+          "answer": "pawshome",
+          "acceptedAnswers": ["pawshome", "PAWSHOME", "paws home", "PAWS HOME"],
+          "script": "So, if you're keen to join us and learn more about animals please go online to our webpage and complete the application form. The address is www.pawshome.com. That's P-A-W-S-H-O-M-E. We'd be happy to hear from you!",
+          "paraphrase": "To apply, volunteers should visit the website at www.pawshome.com and fill in the online application form.",
+          "explanation": "Địa chỉ trang web được đánh vần rõ ràng: P-A-W-S-H-O-M-E → pawshome → đáp án: pawshome."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/zhmog231wz4kzhw5iu2yt/B1PFS_Trainer2_Track_66.mp3?rlkey=3rga03f5f4r0a3zfy2d436lgd&st=jf416wfk&dl=0&raw=1",
+      "context": "You will hear an interview with a young chess player called Tara.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Tara became interested in playing chess",
+          "options": {
+            "A": "because her family encouraged her.",
+            "B": "when she started competing.",
+            "C": "while she was at primary school."
+          },
+          "answer": "B",
+          "script": "Presenter: Hello Tara. Can you tell us something about when you became interested in playing chess?\nTara: We used to play all the time at home, but I wasn't that keen because being the youngest child, I always lost. It wasn't until I was a teenager that I discovered that I could actually play quite well and they chose me for the school team. It was much more fun to be able to win school championships, and I was soon really into it.",
+          "paraphrase": "Tara played chess at home but did not enjoy it because she always lost, until she joined the school team as a teenager and started winning competitions.",
+          "explanation": "Gia đình không khuyến khích mà cô thường thua (A sai). Sự quan tâm bắt đầu khi được chọn vào đội trường và thắng các giải đấu (when she started competing) → đáp án B. C sai vì lúc nhỏ cô không thích môn này."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "What does Tara enjoy most about travelling to international competitions?",
+          "options": {
+            "A": "going sightseeing",
+            "B": "learning new things about the game",
+            "C": "meeting new people"
+          },
+          "answer": "C",
+          "script": "Presenter: Now you travel a lot for international competitions. Do you enjoy it?\nTara: It's great to go to new places, although it's not often easy to see much of the city I'm in because the competitions can last all day and even into the evening. I also need to spend a lot of time studying the other players, and I watch their games when I haven't got a match, so it's hard work. But the best bit is getting to know them socially afterwards.",
+          "paraphrase": "Tara rarely gets to sightsee and spends a lot of time studying opponents, but what she enjoys most is socialising and getting to know the other players after the games.",
+          "explanation": "Tara ít có thời gian tham quan thành phố (A sai). Nghiên cứu người chơi khác là công việc vất vả chứ không phải điều thích nhất (B sai). Điều cô thích nhất là giao lưu với các đối thủ sau các trận đấu (getting to know them socially) → meeting new people → đáp án C."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "How did she feel about her last competition?",
+          "options": {
+            "A": "confident she was well prepared",
+            "B": "pleased she was improving",
+            "C": "impressed by the other players"
+          },
+          "answer": "C",
+          "script": "Presenter: What about your last competition. How did you feel about it?\nTara: I was a bit disappointed because I didn't play as well as I did last year. I realised I hadn't spent enough time getting ready for it. To do well you need to practise and learn from past games. Anyway, this time, the other players were so much more talented than me that I knew I wouldn't win.",
+          "paraphrase": "Tara was disappointed with her own performance and felt the other players were far more talented than her at the last competition.",
+          "explanation": "Tara biết mình chưa chuẩn bị đủ (A sai - không tự tin). Cô chơi kém hơn năm ngoái (B sai - không tiến bộ). Cô nhận thấy các người chơi khác tài năng hơn mình rất nhiều → impressed by the other players → đáp án C."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What does she do to relax?",
+          "options": {
+            "A": "read books",
+            "B": "do a team sport",
+            "C": "play an instrument"
+          },
+          "answer": "A",
+          "script": "Presenter: It sounds very hard. What do you do to relax in your free time?\nTara: I'm an active person so I like to go out for a run most days. After a stressful day studying, I like to pick up a novel for a while because it makes me feel calm, or listen to jazz music. I love the sound of the trumpet, for example.",
+          "paraphrase": "To relax, Tara goes for runs, reads novels to feel calm, and listens to jazz music including the trumpet.",
+          "explanation": "Tara chạy bộ (individual sport, không phải team sport → B sai) và nghe nhạc jazz/kèn trumpet nhưng không chơi nhạc cụ (C sai). Điều giúp cô thư giãn nhất được nhấn mạnh là đọc tiểu thuyết (pick up a novel / makes me feel calm) → read books → đáp án A."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "Why does Tara teach children to play chess?",
+          "options": {
+            "A": "to help very intelligent children",
+            "B": "to learn more herself",
+            "C": "to earn more money"
+          },
+          "answer": "B",
+          "script": "Presenter: You also teach children to play chess. Why do you do that?\nTara: It's actually a way to support children who find school difficult. It isn't about the money, which is always useful, but not the most important reason. I simply enjoy it and get lots of ideas from them for my own techniques for my game as well.",
+          "paraphrase": "Tara teaches chess to help children who struggle at school, and she also gains new ideas and techniques for her own game from them.",
+          "explanation": "Không phải dạy trẻ thông minh (A sai - dạy trẻ gặp khó khăn ở trường). Tiền không phải lý do chính (C sai). Cô học được nhiều ý tưởng và kỹ thuật mới từ học sinh cho game của chính mình → to learn more herself → đáp án B."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "What does Tara plan to do next?",
+          "options": {
+            "A": "learn a new language",
+            "B": "work in computing",
+            "C": "study at university"
+          },
+          "answer": "C",
+          "script": "Presenter: And what about the future?\nTara: I'd like to use my skills in a different area. I've been offered work with programming for online chess games, but it's not something that interests me much. I've signed up to do a degree in maths, which requires similar thinking. Maybe I'll learn Japanese as well, but that'll have to wait until I have more time.",
+          "paraphrase": "Tara has turned down a programming job and instead signed up for a maths degree, while learning Japanese is a future idea she will consider later.",
+          "explanation": "Tara từ chối công việc lập trình (B sai). Học tiếng Nhật là dự định sau này khi có thêm thời gian (A sai - chưa có kế hoạch ngay). Cô đã đăng ký học bằng Toán (signed up to do a degree in maths) → study at university → đáp án C."
+        }
+      ]
+    }
+  ]
+}
