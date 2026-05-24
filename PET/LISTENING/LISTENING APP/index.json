@@ -49,6 +49,11 @@
       "testId": "trainerbook2-test-06", "title": "PET Listening Test 06 - TRAINER BOOK 2", "level": "B1", "totalQuestions": 25,
       "parts": [1, 2, 3, 4],
       "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/trainerbook2-test-06"
+    },
+    {
+      "testId": "b1book2fS-test-01", "title": "PET Listening Test 01 - B1 BOOK 2 for School", "level": "B1", "totalQuestions": 25,
+      "parts": [1, 2, 3, 4],
+      "url": "https://raw.githubusercontent.com/nanhduong19-oss/elaine-s-english-hub/refs/heads/main/PET/LISTENING/LISTENING%20APP/PET/b1book2fS-test-01"
     }
   ]
 }
