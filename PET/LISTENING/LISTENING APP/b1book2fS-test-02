@@ -1,0 +1,346 @@
+{
+  "testId": "b1book2fS-test-02",
+  "title": "PET Listening BOOK 2 for School Test 02",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/8gqa6suj6k2z9n8ys6pb8/B1Prefs2_test2_audio1.mp3?rlkey=3h0tnvnb3nhjgb1e1ubmlg17z&st=1mx04k96&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/4eaesqi5sx9ou0hhf5rdz/book2fS-test-2-part-1-1-3.png?rlkey=m1tlr78jkzot1r3lwuidjdgjp&st=042mjq21&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/v3dbi7fiersotssadnqsw/book2fS-test-2-part-1-4-7.png?rlkey=ezz916acyrpoewuqrmbaqvoa5&st=mtoo66fi&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "Which sport will the girl do next term?",
+          "answer": "A",
+          "script": "Girl: Have you decided which sport to do next term? We have to tell the teacher.\nBoy: I love watching cricket - I'd really like to try that.\nGirl: Is cricket an option? That'd be fun.\nBoy: Afraid not. I suppose I'll do tennis again.\nGirl: You're good at that, aren't you? I was thinking of volleyball.\nBoy: Lots of people do that - it's very difficult to get into the school team. Why don't you join me at tennis?\nGirl: I've never tried it - but OK, why not? We can always play volleyball in the park after school.",
+          "paraphrase": "The girl was considering volleyball but was persuaded to join the boy at tennis instead, since cricket is not available and volleyball is hard to get into the school team for.",
+          "explanation": "Cô bé nghĩ đến bóng chuyền (C) nhưng cậu bé thuyết phục vì khó vào đội. Cricket (B) không có trong danh sách. Cô bé đồng ý tham gia tennis cùng cậu bé → đáp án A."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "Which object in the museum did the boy like?",
+          "answer": "C",
+          "script": "Girl: I didn't think I'd enjoy that museum - but it was great.\nBoy: I didn't like much of the stuff actually ... apart from something I saw in the transport section.\nGirl: You mean the old train?\nBoy: I was thinking of that old-fashioned bike with unusual wheels.\nGirl: Oh, right. Did you see that big old pot with the lion on? It's really valuable.\nBoy: I thought it looked pretty strange. And I didn't think much of the furniture, either.\nGirl: Oh, but I loved the enormous chair.\nBoy: I read it was designed for kings to sit on.",
+          "paraphrase": "The boy didn't enjoy much of the museum but was impressed by the old-fashioned bicycle with unusual wheels in the transport section.",
+          "explanation": "Bình lớn (A) cậu bé thấy kỳ lạ. Ghế lớn (B) cô bé thích, không phải cậu bé. Cậu bé chỉ thích chiếc xe đạp cổ điển có bánh xe đặc biệt trong khu vận tải → đáp án C."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "What does the boy decide to leave behind?",
+          "answer": "B",
+          "script": "Boy: I can't fit everything in my suitcase, Mum.\nWoman: I'm not surprised, you don't need to take a tablet and your laptop!\nBoy: But I like reading on one and watching films on the other. I've got my camera in there, too.\nWoman: But it's quite big. Can't you hang it round your neck?\nBoy: That'll help, I guess. I can manage without my laptop if I've got to. The tablet takes up less room. But I'm going to have to pack my case again, I think.\nWoman: Don't worry. I'll give you a hand.",
+          "paraphrase": "The boy decides he can manage without his laptop, keeping both the tablet and the camera, which can be hung around his neck.",
+          "explanation": "Camera (A) sẽ đeo quanh cổ → mang theo. Tablet (C) chiếm ít không gian hơn → giữ lại. Cậu bé quyết định bỏ lại laptop → đáp án B."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "What is the baby giraffe doing?",
+          "answer": "A",
+          "script": "Woman: Here we have our newest giraffe in the wildlife park! The staff are very happy with her progress. Giraffes are pretty big, so they need lots of food! Babies start drinking milk within the first hour of their lives. They feed on this for the next few months - this little giraffe's just finished that part of her life. Later, the baby giraffe begins eating leaves. As you can see, the mother has to pull them off the tree to feed her baby as very young giraffes can't reach them yet!",
+          "paraphrase": "The baby giraffe has just finished the milk-drinking stage and is now being fed leaves pulled from trees by its mother, since it is still too young to reach them.",
+          "explanation": "Giai đoạn bú sữa vừa kết thúc (B sai - không còn bú sữa). Hươu cao cổ con chưa với tới lá cây (C sai). Mẹ phải kéo lá từ cây để cho con ăn → being fed by its mother → đáp án A."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "What does the boy decide to make in the cookery lesson?",
+          "answer": "C",
+          "script": "Woman: You can choose what to make using fruit and vegetables in tomorrow's cookery lesson. Any questions?\nBoy: But I don't like the taste of them ...\nWoman: You can make them delicious, like those milk drinks in fast food places. Just mix milk, strawberries and ice.\nBoy: I'll do that! My mum once made a cake with carrots and I liked that.\nWoman: Making cakes with vegetables is a great way to get them into your diet ...\nBoy: Yeah! I helped my friend make some burgers from beans once! They were good!\nWoman: See? It's easy!",
+          "paraphrase": "Although cakes and burgers are mentioned, the boy immediately says 'I'll do that' when the teacher describes the milk drink with strawberries and ice.",
+          "explanation": "Bánh (A) được đề cập nhưng cậu chỉ nhớ mẹ đã làm. Burger đậu (B) cũng chỉ kể lại. Ngay khi cô giáo mô tả đồ uống sữa (milk drink), cậu bé nói 'I'll do that!' → đáp án C."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "Where did the girl go on holiday?",
+          "answer": "C",
+          "script": "Boy: How was your holiday?\nGirl: Cool! We did a road trip in the USA. Well, actually we only did the part of it you can see in this photo. You wouldn't believe how strong the wind was by the lake, which was huge. The road went all the way off to the city on the west coast. It's famous for its skyscrapers. That was too far for us to go, though. The road also passes through a big desert where there are enormous rocks - I'd love to see that one day.",
+          "paraphrase": "The girl's road trip took her to a huge lake, while the city with skyscrapers and the desert were places along the route they did not visit.",
+          "explanation": "Sa mạc (A) và thành phố (B) được đề cập nhưng quá xa, họ không đến. Cô bé và gia đình đã đến hồ lớn (lake) nơi gió rất mạnh → đáp án C."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "How did the boy travel to his aunt's house?",
+          "answer": "B",
+          "script": "Girl: What did you do at the weekend?\nBoy: My dad and I went to visit my aunt.\nGirl: Is her house near here?\nBoy: Not really. She lives quite a long way away, by the sea. We usually go by train, but the train drivers were on strike.\nGirl: So did your dad drive?\nBoy: Well, our car broke down last week and Dad thought about hiring another one, but in the end, we decided to go by coach. It was nearly as fast as going by car. Anyway, I slept most of the journey.",
+          "paraphrase": "The usual train was unavailable due to a strike and the car had broken down, so the boy and his dad travelled by coach instead.",
+          "explanation": "Tàu hỏa (C) đình công. Xe hơi (A) bị hỏng, bố nghĩ thuê xe nhưng cuối cùng không thuê. Hai bố con đi xe coach → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/jqooekm10enpwsamwvv93/B1Prefs2_test2_audio2.mp3?rlkey=ryb27jvow5hpqbgseepx3dhn5&st=iz5096e3&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear a boy telling his friend about a school show. The show is cancelled because of a problem with",
+          "options": {
+            "A": "the stage lighting.",
+            "B": "the musicians.",
+            "C": "the main performer."
+          },
+          "answer": "C",
+          "script": "Boy: Have you heard? They've cancelled tonight's school show.\nGirl: Oh, no! Was there a problem with the sound system for the music again?\nBoy: Actually, the lead dancer's had to go home because she wasn't feeling well. Nobody else has practised her part and she's on stage in almost every scene.\nGirl: What a shame!\nBoy: I know! And we worked so hard to get those lights above the stage working properly.\nGirl: I hope it'll go ahead soon. But it can't be next week - quite a few members of the orchestra have got a sports competition then, so they'll be busy with that.",
+          "paraphrase": "The show is cancelled because the lead dancer is sick and no one else knows her part, even though the lighting was fixed and the musicians are available this week.",
+          "explanation": "Đèn sân khấu (A) đã được sửa xong. Nhạc công (B) tuần này không bận nhưng tuần sau mới có xung đột lịch. Vấn đề là vũ công chính bị ốm và không ai luyện tập phần của cô ấy → đáp án C."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear two friends talking about homework. What does the girl say about homework?",
+          "options": {
+            "A": "Younger students shouldn't have to do it.",
+            "B": "Students should only get it in certain subjects.",
+            "C": "There should be less homework for maths."
+          },
+          "answer": "B",
+          "script": "Girl: I've got so much homework. It gets more and more as I get older. This week I've got so much for geography, IT and maths.\nBoy: Well, we have to study more subjects than younger students, I suppose.\nGirl: True, but at our age, we have loads of other things to do too, like helping out at home. I never had to do that when I was eight. I can see why we get so much homework for a subject like maths, but I don't think teachers ought to give it for every subject we do.\nBoy: No, I agree.",
+          "paraphrase": "The girl understands why maths requires a lot of homework but thinks teachers should not assign it for every single subject.",
+          "explanation": "Cô bé không nói học sinh nhỏ tuổi không nên có bài tập (A sai - chỉ đề cập bản thân hồi 8 tuổi). Cô không nói giảm bài tập toán (C sai - cô hiểu tại sao toán cần nhiều bài). Cô nghĩ không phải môn nào cũng nên có bài tập → only certain subjects → đáp án B."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear two friends talking about a computer game. What does the boy think about it?",
+          "options": {
+            "A": "It has very clear instructions.",
+            "B": "It's challenging to play.",
+            "C": "It's not too expensive to buy."
+          },
+          "answer": "B",
+          "script": "Boy: Have you played that game Monsterfun yet? I spent all weekend trying to complete it! I couldn't understand the information about how to play at first.\nGirl: Nor me, but I'm nearly at the last level!\nBoy: Really? I've spent hours trying to get past the first monster!\nGirl: Oh - you go through a cave behind some rocks.\nBoy: That makes sense. I was really stuck! Anyway, I don't like games that are too simple.\nGirl: I know. Some are so easy you've finished in a couple of hours!\nBoy: Yes. It's annoying to pay a lot for a game, and then finish it quickly.",
+          "paraphrase": "The boy found the game's instructions confusing and has been stuck on the first level all weekend, but he likes that the game is not too simple.",
+          "explanation": "Hướng dẫn không rõ ràng (A sai - ban đầu không hiểu). Giá đắt được nhắc đến như điều khó chịu khi game dễ quá (C sai). Cậu bé thích game có thử thách, bị kẹt ở màn đầu cả tuần → challenging to play → đáp án B."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear a girl and a boy talking about a sports centre. What is the girl doing?",
+          "options": {
+            "A": "suggesting an activity",
+            "B": "apologising for a mistake",
+            "C": "reminding him about an arrangement"
+          },
+          "answer": "A",
+          "script": "Boy: Hi, how was the sports centre?\nGirl: Good, thanks. I'm sorry you couldn't come.\nBoy: What did you do there?\nGirl: Badminton. It's a cool game. I think it'd really be your kind of thing. We should play.\nBoy: Definitely. But I thought you were going there to do swimming.\nGirl: Well, I wanted to try a swimming class like you did, but there weren't any places left - you have to book in advance if it's busy!\nBoy: Oh, I didn't realise that. Anyway, I like the sound of badminton.\nGirl: We can go on Monday after school.",
+          "paraphrase": "The girl suggests that the boy would enjoy badminton and proposes they go play together on Monday after school.",
+          "explanation": "Cô bé xin lỗi ngắn gọn (không phải mục đích chính → B sai). Không có kế hoạch trước với cậu bé (C sai). Cô bé gợi ý cậu bé thử chơi cầu lông vì nghĩ cậu sẽ thích → suggesting an activity → đáp án A."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear two friends talking about a party. What do they agree that they need advice about?",
+          "options": {
+            "A": "decorating the room",
+            "B": "choosing the music",
+            "C": "preparing the food"
+          },
+          "answer": "A",
+          "script": "Girl: Mum says we can have the end-of-term class party at my house! She's offered to do the food, too.\nBoy: Remember, though, we've asked everyone to bring a dish. So it's less work.\nGirl: You're right, I'd forgotten.\nBoy: What about putting up balloons and coloured lights?\nGirl: I'd prefer it if we talk to my parents about that - in case we damage something.\nBoy: Like the walls, you mean? Probably best to ask, yeah. Anyway, I was thinking about the music. My brother's got some awesome speakers. He's going to show me how to connect a phone to them.\nGirl: That sounds great. I can't wait!",
+          "paraphrase": "Food is sorted by guests bringing dishes, music is handled through the brother's speakers, but both agree they need to ask the girl's parents about decorating in case something gets damaged.",
+          "explanation": "Thức ăn (C) mọi người tự mang. Âm nhạc (B) đã có giải pháp qua loa của anh trai. Cả hai đồng ý cần hỏi bố mẹ cô bé về trang trí phòng → đáp án A."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear two friends talking about a football match. How does the girl feel after her conversation with the coach?",
+          "options": {
+            "A": "confident that she'll play in another match soon",
+            "B": "curious about why she can't play in the match",
+            "C": "jealous of the girls who'll play in the match"
+          },
+          "answer": "A",
+          "script": "Boy: Is it true that the coach didn't choose you to play in the football match tomorrow?\nGirl: Well, I had a long talk about it with her yesterday. The thing is, I haven't been able to train as much as the other girls recently cos I hurt my leg in a match a few weeks ago. It's OK, though. The coach knows I've nearly recovered, and it won't be long before I'm back playing with the team again. I'm going to watch the others play tomorrow anyway to support them. I'd hate to miss seeing such a big match!\nBoy: I'll come, too.",
+          "paraphrase": "After talking with the coach, the girl understands why she was not selected and feels reassured that she will return to playing soon once she has fully recovered.",
+          "explanation": "Cô bé hiểu lý do không được chọn (B sai - không còn tò mò). Cô bé đi xem để ủng hộ đồng đội (C sai - không ghen tị). Huấn luyện viên biết cô gần hồi phục và sẽ sớm trở lại → confident she'll play soon → đáp án A."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/ho3dp144hoavsh1ums9l4/B1Prefs2_test2_audio3.mp3?rlkey=6ri1wqi8q4qxz5uw9ht3wn87t&st=pf9n6met&dl=0&raw=1",
+      "noteTitle": "News reporter",
+      "context": "You will hear a woman called Mona Dawson talking to a group of students about her work as a news reporter.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "Mona studied",
+          "afterGap": "before she became a news reporter.",
+          "answer": "history",
+          "acceptedAnswers": ["history", "HISTORY"],
+          "script": "Some reporters study journalism at university, or subjects like politics and economics. I did history, and that's really useful for understanding the world today.",
+          "paraphrase": "While many reporters study journalism or politics, Mona studied history at university, which she finds very useful for understanding current events.",
+          "explanation": "Mona học lịch sử (history) tại đại học, không phải báo chí hay kinh tế → đáp án: history."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Mona's first news article was about a",
+          "afterGap": ".",
+          "answer": "new road",
+          "acceptedAnswers": ["new road", "NEW ROAD", "road", "ROAD"],
+          "script": "My first article actually went on the front page - but it was only about a new road. There weren't many exciting events to write articles on, like, say, a bank robbery or celebrity wedding.",
+          "paraphrase": "Despite making the front page, Mona's first article was about something ordinary - a new road, not an exciting event like a robbery or celebrity wedding.",
+          "explanation": "Bài báo đầu tiên của Mona lên trang nhất nhưng chỉ về một con đường mới (new road), không có sự kiện thú vị nào → đáp án: new road."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "Mona never goes anywhere without a",
+          "afterGap": ".",
+          "answer": "pen",
+          "acceptedAnswers": ["pen", "PEN"],
+          "script": "A news reporter must always be ready for a news story. Most reporters never go anywhere without a laptop, but I'm old-fashioned. I take a pen wherever I go, and I've lost my phone so many times!",
+          "paraphrase": "Unlike most reporters who carry a laptop, Mona always takes a pen with her everywhere, as she considers herself old-fashioned.",
+          "explanation": "Hầu hết phóng viên mang laptop, Mona thì tự nhận mình 'old-fashioned' và luôn mang bút (pen) theo → đáp án: pen."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "Mona's next TV interview will be with a",
+          "afterGap": "from a large transport company.",
+          "answer": "lorry driver",
+          "acceptedAnswers": ["lorry driver", "LORRY DRIVER", "truck driver", "TRUCK DRIVER"],
+          "script": "Now I work on the news for a TV channel, and I sometimes interview famous people. The last one was a politician. I've just heard my next interview is with someone from a big transport company, but not the owner, or even a manager. Instead, it's with a lorry driver. I'm sure it'll be very interesting.",
+          "paraphrase": "Mona's next TV interview is not with the owner or manager of a transport company, but with one of their lorry drivers.",
+          "explanation": "Không phải chủ sở hữu hay quản lý, Mona sẽ phỏng vấn tài xế xe tải (lorry driver) từ công ty vận tải lớn → đáp án: lorry driver."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Mona thinks it's important for a TV news reporter to have a good",
+          "afterGap": ".",
+          "answer": "memory",
+          "acceptedAnswers": ["memory", "MEMORY"],
+          "script": "To be a TV reporter, lots of personal qualities are useful. Some people say a strong voice, others think it's necessary to have a smart appearance. I'd say it's my memory that really helps. It's easy to forget things, so it's essential to have a good one.",
+          "paraphrase": "While others value a strong voice or smart appearance, Mona believes a good memory is the most important quality for a TV news reporter.",
+          "explanation": "Người khác cho rằng giọng tốt hay ngoại hình chỉnh tề là quan trọng, nhưng Mona cho rằng trí nhớ tốt (good memory) mới là điều cần thiết nhất → đáp án: memory."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "Mona is going to write a book about using energy from",
+          "afterGap": ".",
+          "answer": "the sun",
+          "acceptedAnswers": ["the sun", "THE SUN", "sun", "SUN"],
+          "script": "What about the future? I love writing and I'm planning a book. I'm interested in energy, and I believe we need to stop using oil so much. We know that the wind and the sea can produce energy, but the subject I'm going to explore is how we can use the sun to produce it for our needs.",
+          "paraphrase": "Mona plans to write a book exploring how the sun can be used as an energy source, as she believes we need to move away from oil.",
+          "explanation": "Gió và biển được đề cập là đã biết, cuốn sách của Mona sẽ khám phá năng lượng từ mặt trời (the sun) → đáp án: the sun."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/7k4irddbw0lllhct2aw9r/B1Prefs2_test2_audio4.mp3?rlkey=nmrjnu3vwiecw96ke0z2uuvol&st=h5465hap&dl=0&raw=1",
+      "context": "You will hear an interview with a young man called Matt Luxton, who worked as a volunteer at a rescue centre for sick elephants.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Matt heard about the elephant rescue centre from his",
+          "options": {
+            "A": "friend.",
+            "B": "mother.",
+            "C": "teacher."
+          },
+          "answer": "C",
+          "script": "Woman: Matt, how did you learn about the rescue centre?\nMan: I've always loved elephants. My mum was worried about the idea of me going away when I told her about the organisation. It was one of my school teachers who'd shown me the advert for it. Luckily, my best friend supported me and helped me persuade Mum to let me go.",
+          "paraphrase": "A school teacher showed Matt the advertisement for the rescue centre, and although his mum was worried, his best friend helped him convince her to let him go.",
+          "explanation": "Bạn thân (A) giúp thuyết phục mẹ nhưng không phải người giới thiệu. Mẹ (B) lo lắng chứ không giới thiệu. Giáo viên (C) đã cho Matt xem quảng cáo về trung tâm → đáp án C."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "How did Matt get enough money for his trip?",
+          "options": {
+            "A": "He borrowed money from a relative.",
+            "B": "He worked for a local company.",
+            "C": "He sold some things he owned."
+          },
+          "answer": "B",
+          "script": "Woman: How did you pay for the trip?\nMan: Well, it wasn't cheap. My uncle offered to lend me the money, but I wanted to pay for myself. A surfboard business had opened in town, and I got a job there. I thought about selling some of my things online, but I managed to save enough money without having to do that.",
+          "paraphrase": "Matt declined his uncle's offer to lend money and instead earned the trip money himself by working at a new local surfboard shop.",
+          "explanation": "Chú muốn cho vay (A sai - Matt từ chối). Bán đồ (C) được nghĩ đến nhưng không cần thiết. Matt tự kiếm tiền bằng cách làm việc tại cửa hàng ván lướt sóng mới mở → đáp án B."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "What did Matt notice when he arrived at the rescue centre?",
+          "options": {
+            "A": "how beautiful all the plants were",
+            "B": "how friendly the people were",
+            "C": "how many elephants there were"
+          },
+          "answer": "B",
+          "script": "Man: It was evening when my plane landed and by the time I got to the rescue centre, all the elephants were asleep. The next day I was told there were over twenty of them! The welcome I got from the staff and the other volunteers was brilliant, I'll never forget it. It was too dark to look around the gardens when I got there. I've got some great photos of the gorgeous trees and flowers that it's known for.",
+          "paraphrase": "When Matt arrived, it was dark so he couldn't see the gardens or the elephants, but he was immediately struck by the warm and brilliant welcome from the staff and volunteers.",
+          "explanation": "Trời tối nên không thấy vườn cây đẹp (A sai). Voi đang ngủ, số lượng biết ngày hôm sau (C sai). Điều Matt nhận ra ngay khi đến là sự chào đón nồng nhiệt từ nhân viên và tình nguyện viên → đáp án B."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What was Matt's first job at the rescue centre?",
+          "options": {
+            "A": "He prepared the elephants' food.",
+            "B": "He helped the medical staff.",
+            "C": "He washed the elephants."
+          },
+          "answer": "A",
+          "script": "Man: It's important to get used to the elephants slowly. So I could only watch when they were given a bath in the river - it looked such fun! Instead, I was asked to put all the stuff that the elephants were going to eat in buckets for them. I really wanted to work with the vets, who look after the elephants when they get sick, but you need qualifications for that.",
+          "paraphrase": "Matt's first job was putting the elephants' food into buckets, as he was not yet allowed to bathe them or work with the vets due to lack of qualifications.",
+          "explanation": "Tắm voi (C) chỉ được quan sát. Làm việc với bác sĩ thú y (B) cần bằng cấp. Việc đầu tiên là chuẩn bị thức ăn cho voi vào các xô (prepare food) → đáp án A."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "What did Matt find difficult about working at the rescue centre?",
+          "options": {
+            "A": "getting up early",
+            "B": "dealing with the temperature",
+            "C": "communicating with people"
+          },
+          "answer": "C",
+          "script": "Man: I thought the heat would be hard. It was OK, though. We woke up at sunrise ready to start work - it's much cooler then. I met loads of people, but it wasn't easy to understand what they were saying. Strange - I'm usually pretty good at languages. I wasn't there long enough, I guess.",
+          "paraphrase": "Matt found the heat manageable and waking up early was fine, but he struggled to understand what people were saying despite usually being good at languages.",
+          "explanation": "Dậy sớm (A) ổn vì buổi sáng mát hơn. Nhiệt độ (B) không phải vấn đề như tưởng. Khó khăn là không hiểu người khác nói gì → communicating with people → đáp án C."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "The most surprising thing Matt learnt about elephants was how",
+          "options": {
+            "A": "kind they are to each other.",
+            "B": "different their characters are.",
+            "C": "well they remember things."
+          },
+          "answer": "B",
+          "script": "Man: They're wonderful creatures. I'd read so much about how clever they are, and what good memories they've got. But I just hadn't realised that no two elephants are the same, until I'd spent time with them. One elephant might be brave, another quite shy, and another good at looking after the young. That's what really impressed me.",
+          "paraphrase": "Matt had read about elephants' intelligence and memory before, but what truly surprised him was discovering that each elephant has a completely unique personality.",
+          "explanation": "Trí nhớ (C) và sự thông minh Matt đã đọc trước rồi, không bất ngờ. Không đề cập đặc biệt đến sự tốt bụng với nhau (A). Điều thực sự gây ấn tượng là mỗi con voi có cá tính hoàn toàn khác nhau → different characters → đáp án B."
+        }
+      ]
+    }
+  ]
+}
