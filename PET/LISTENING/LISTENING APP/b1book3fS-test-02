@@ -1,0 +1,346 @@
+{
+  "testId": "b1book3fS-test-02",
+  "title": "PET Listening BOOK 3 for School Test 02",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/636yvzpi5lgg1ept4kk8a/PfS3_PT_audio_track_05.mp3?rlkey=0473enxhldg8x1gvup08zbbcz&st=9xrpz32e&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/j3cdshpz1n12789mxytdd/book3fS-test-2-part-1-1-3.png?rlkey=f2yxeyh04qmkfabmh86v97r24&st=fj3i4i27&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/dk2tovfmwoe68kanddh6x/book3fS-test-2-part-1-4-7.png?rlkey=sy2y0okvzomlyoenptkpynojj&st=8hlh4ckk&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "Where did the boy spend his holiday?",
+          "answer": "B",
+          "script": "Girl: Hey, how was your holiday?\nBoy: It was great, thanks.\nGirl: Did you go by car?\nBoy: Yes, the journey took ages and my sister and I got a bit bored. We passed through a big city on our way. But when we finally got to the coast it was awesome and we had great fun there. On the way back we took a different route and went really close to some mountains, but we didn't stop - Dad was driving! I'd really like to go back there one day!",
+          "paraphrase": "The boy travelled through a city and past mountains on the journey, but spent the actual holiday at the coast where he had great fun.",
+          "explanation": "Qua thành phố và gần núi chỉ là trên đường đi/về. Gia đình đến bờ biển (coast) và đó là nơi họ ở lại vui chơi → đáp án B."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What does the boy have to take to school today?",
+          "answer": "B",
+          "script": "Boy: My school bag's so heavy today, Mum!\nWoman: Well, can't you leave something at home?\nBoy: Not really, I'll need my football kit for my sports class this afternoon and I really need my laptop, because I have to prepare a presentation for history.\nWoman: Could you do that on a computer in the library?\nBoy: Yeah, I'm sure I'll have time to go there after sports class. That's a good idea, Mum.\nWoman: Well, at least your violin lesson isn't until tomorrow, or you'd really have a lot to carry!",
+          "paraphrase": "The boy must take his football kit for sports class, and decides he can use the school library instead of bringing his laptop, so his bag still has the kit.",
+          "explanation": "Laptop (A) sẽ để lại vì có thể dùng máy tính ở thư viện. Violin (C) chỉ cần ngày mai. Bộ đồ bóng đá (football kit) phải mang hôm nay cho tiết thể thao → đáp án B."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Where will the girl go at the weekend?",
+          "answer": "B",
+          "script": "Boy: Hi Sally. What's wrong? You look worried.\nGirl: My cousins are coming at the weekend and I'm trying to think of a fun activity to do with them. I wondered about seeing a film.\nBoy: I don't think there's anything good on this week.\nGirl: Well then maybe we'd better do something active. They all enjoyed going to the pool last time they came.\nBoy: I know everyone loves swimming, but what about ice skating for a change?\nGirl: You know, I think I'll go for your suggestion! We can always go to the cinema next time.",
+          "paraphrase": "The girl considered the cinema and the swimming pool, but agreed to the boy's suggestion of going ice skating with her cousins instead.",
+          "explanation": "Rạp chiếu phim (A) không có phim hay tuần này. Hồ bơi (C) anh chị em họ đã từng đi. Cô bé đồng ý theo gợi ý trượt băng (ice skating) của cậu bé → đáp án B."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "How did the girl's mother get tickets for the concert?",
+          "answer": "C",
+          "script": "Boy: Did you get tickets for the concert?\nGirl: Mum got them actually. We looked online as soon as they went on sale but there were problems with the website and we kept losing the internet connection. It was so annoying! The ticket office is right next to where she works. We knew there'd be loads of people trying to get them, though. I suggested getting them from a ticket-sales app on the phone, but they were more expensive there, so she spent her lunch break in the queue getting them!\nBoy: Wow! Your mum's awesome!",
+          "paraphrase": "The online website had connection problems and the app was too expensive, so the girl's mum queued during her lunch break at the ticket office near her work.",
+          "explanation": "Website (A) gặp sự cố kết nối. App (B) đắt hơn. Mẹ xếp hàng giờ nghỉ trưa tại phòng vé gần nơi làm việc → đáp án C."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "How did they get to the top of the mountain?",
+          "answer": "A",
+          "script": "Girl: That was quite a climb! It was worth it, though - just look at that view! I've always watched people hiking up this mountain from back in the village. I've never actually reached the top before now.\nBoy: Great idea of yours to ride up - it was a lot easier on horse-back than when I tried to come up on my mountain bike. I only got to about halfway and then I had to turn around - my legs were really hurting. It was fun racing back down, though!",
+          "paraphrase": "The girl suggested riding up on horseback, which was much easier than the boy's previous attempt by mountain bike where he only made it halfway.",
+          "explanation": "Đi bộ (B) là điều mọi người thường làm nhưng không phải lần này. Xe đạp leo núi (C) là lần trước cậu bé thử chỉ đến nửa đường. Lần này họ cưỡi ngựa (horse-back) lên đỉnh → đáp án A."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "What will the students do in today's biology class?",
+          "answer": "A",
+          "script": "Woman: Right, everyone. I hope you're enjoying Food Week here at school. You've all worked so hard on your posters of the food chain that I thought, rather than display them in the classroom, we'd put them in the school hall for everyone else to take a look at. It's been great practice for the presentations you're going to do in a few days. If you can all go back to the laptops, we'll start learning about the software you'll need to use.",
+          "paraphrase": "The students have finished their food chain posters which will be displayed in the hall; today's class will focus on learning the software needed for their upcoming presentations.",
+          "explanation": "Poster đã làm xong và sẽ trưng bày ở hội trường (không phải làm hôm nay). Thuyết trình (B) sẽ diễn ra vài ngày tới. Hôm nay học cách dùng phần mềm trên máy tính (using software/laptops) → đáp án A."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "Where has the girl left her tennis racket?",
+          "answer": "B",
+          "script": "Girl: Dad - can you help me?\nMan: What is it?\nGirl: I can't find my tennis racket and we've got to leave for my lesson soon.\nMan: I'm sure I saw it by the door last night. Next to your tennis bag?\nGirl: No, it's not there, and my tennis bag's in the living room.\nMan: Maybe you took it to your bedroom?\nGirl: I remember now - I put it on my bed with my tennis clothes ready to take! I'll just get my bag and put everything in it. Then we can go.",
+          "paraphrase": "The racket is not by the door or in the living room; the girl remembers she put it on her bed along with her tennis clothes.",
+          "explanation": "Cạnh cửa (A) - bố thấy tối qua nhưng không còn đó. Phòng khách (C) là nơi có túi tennis. Cô bé nhớ ra để vợt trên giường cùng với quần áo tennis → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/70gqukiiod6yaimjx91pc/PfS3_PT_audio_track_06.mp3?rlkey=6fbc5yhkxjjn699zj6k5yg4lu&st=chsiqabz&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear two friends talking about going to some art classes. How does the girl feel about going?",
+          "options": {
+            "A": "curious about what they will study",
+            "B": "worried about using new techniques",
+            "C": "hopeful that her creative skills will improve"
+          },
+          "answer": "A",
+          "script": "Boy: Do you fancy going to art classes at the youth club with me?\nGirl: OK. I haven't done much art before, but that won't matter.\nBoy: Of course not!\nGirl: Do you think we'll do still life pictures, where you draw an object in front of you - fruit or whatever? That'd probably be better for me.\nBoy: Well, here's the website, let's see ... It says classes will cover a variety of topics and include painting, both indoors and outside.\nGirl: I wonder what that will involve? I'll have to go and find out. Though I'd prefer pencil drawing to painting.",
+          "paraphrase": "The girl does not know what the classes will involve and keeps asking questions and speculating about the content, showing she is curious about what they will study.",
+          "explanation": "Lo lắng về kỹ thuật mới (B sai - không đề cập lo lắng). Hy vọng cải thiện kỹ năng (C sai - không được đề cập). Cô bé liên tục đặt câu hỏi về nội dung, tự hỏi 'what will that involve?' → curious about what they will study → đáp án A."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear two students talking about the school canteen. They agree that it should have",
+          "options": {
+            "A": "lower prices.",
+            "B": "a wider choice of food.",
+            "C": "faster service."
+          },
+          "answer": "C",
+          "script": "Girl: I'm glad we've got a canteen - I've heard lots of schools don't have them, so we're quite lucky and the food's not too expensive either.\nBoy: Right, so everyone can afford to buy lunch. They seem to have the same meals a lot, though - like, a pasta dish two days in a row.\nGirl: Well, you can usually find something different to have every day. It's just that the queues are so long.\nBoy: Tell me about it - it'd be great if there wasn't so much standing around waiting for our meals. At least they're usually tasty!\nGirl: I know.",
+          "paraphrase": "Both students agree the price is fine and there is enough variety, but they are both frustrated by the long queues and waiting time.",
+          "explanation": "Giá cả (A) cả hai đều hài lòng. Đa dạng thức ăn (B): cậu bé phàn nàn nhưng cô bé không đồng ý. Cả hai đồng ý hàng đợi quá dài, muốn được phục vụ nhanh hơn → faster service → đáp án C."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear two friends talking about a TV talent show. What is the girl doing in the conversation?",
+          "options": {
+            "A": "reminding the boy of the rules",
+            "B": "warning the boy against entering",
+            "C": "suggesting how the boy could win it"
+          },
+          "answer": "B",
+          "script": "Girl: I heard you're thinking of entering that TV talent show.\nBoy: Yeah. It's a great opportunity ... and it'll be fun!\nGirl: I think you'd be crazy even to think about it. I mean, you are talented, but those shows just aim to make the people performing on them look silly.\nGirl: It's a bit more complicated than that. There'll be loads of serious people competing. Yeah you probably could, but is that how you want to start your career?\nBoy: Mmm - I hadn't really thought about it that seriously.",
+          "paraphrase": "The girl tells the boy he would be crazy to enter and warns him that the show aims to make performers look silly and that it could harm his career.",
+          "explanation": "Không nhắc nhở về luật (A sai). Không gợi ý cách thắng (C sai). Cô bé nói 'you'd be crazy to think about it' và nêu lý do chương trình có thể gây hại → warning him against entering → đáp án B."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear two friends talking about a homework project. What does the boy say about it?",
+          "options": {
+            "A": "The topic is an unusual one.",
+            "B": "It takes a long time to find information.",
+            "C": "Doing the research is interesting."
+          },
+          "answer": "C",
+          "script": "Girl: How are you getting on with your homework project?\nBoy: OK I think. Although I'm spending far too long online looking things up.\nGirl: Oh - is it hard to get what you need?\nBoy: The opposite - it's more that there's so much out there! And everything I discover makes me want to know more. Robot technology wasn't something I was familiar with really. I don't know why not - it's an important subject, and something I think most people have an opinion on.\nGirl: Well, you will too by the time you've finished!\nBoy: I certainly will!",
+          "paraphrase": "The boy spends a lot of time researching not because it is difficult, but because there is so much information and each discovery makes him want to learn more.",
+          "explanation": "Đề tài bất thường (A sai - cậu nói là chủ đề quan trọng). Mất nhiều thời gian tìm thông tin (B sai - không phải khó tìm mà là quá nhiều). Mỗi điều khám phá được khiến cậu muốn biết thêm → doing the research is interesting → đáp án C."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear two friends talking about sport on TV. The girl thinks that",
+          "options": {
+            "A": "there is not enough variety of programmes.",
+            "B": "there is too much discussion of the same subjects.",
+            "C": "there are a lot of repeated scenes."
+          },
+          "answer": "A",
+          "script": "Boy: Do you watch much sport on TV?\nGirl: Well, I'd like to watch more, but there always seems to be so much football and rugby on. It'd be good if there were other things on too. I don't mind the conversations they have about matches with all the experts sitting around chatting. That can be quite interesting actually.\nBoy: So, what would you rather see?\nGirl: Gymnastics, or basketball, or even hockey - that's hardly ever shown. I could watch some of the gymnastics stuff again and again. You always notice something different each time. Although some people would probably find that boring!",
+          "paraphrase": "The girl is frustrated that TV sport is dominated by football and rugby, and she would like to see a wider variety such as gymnastics, basketball and hockey.",
+          "explanation": "Không phàn nàn về thảo luận (B sai - cô thấy hay). Xem đi xem lại gymnastics (C) là điều cô thích làm, không phải phàn nàn. Cô muốn xem nhiều môn thể thao hơn, không chỉ bóng đá và bóng bầu dục → not enough variety → đáp án A."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear a girl talking to a friend about collecting wild food in the woods. What is she doing?",
+          "options": {
+            "A": "persuading him to try it",
+            "B": "describing what she did",
+            "C": "explaining what she will make"
+          },
+          "answer": "B",
+          "script": "Girl: I went on this wild food walk at the weekend, in the woods.\nBoy: What do you mean?\nGirl: Well, you'll probably think it's boring, but it was about identifying different types of herbs and fruits growing wild. We were hunting for things to eat. It's what people did hundreds of years ago. It's food that's free, fresh and tasty!\nBoy: Oh, right. What did you find?\nGirl: Wild garlic leaves, and plants called elderflowers - they're used to make cold drinks. I might go on another walk in the autumn to identify what mushrooms are safe to eat.\nBoy: Well, it's not my kind of thing.",
+          "paraphrase": "The girl recounts what happened on her wild food walk at the weekend - what it involved, what she found and what the plants are used for.",
+          "explanation": "Không thuyết phục bạn tham gia (A sai - cậu bé nói không phải sở thích và cô bé không ép). Không giải thích sẽ nấu gì (C sai). Cô bé kể lại chuyến đi cuối tuần - mô tả những gì đã làm → describing what she did → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/kypz9kb84rioftld36n0m/PfS3_PT_audio_track_07.mp3?rlkey=en026x4s14e5m7q5hb2lo07n4&st=vhqatbr1&dl=0&raw=1",
+      "noteTitle": "Visit to the City History Museum",
+      "context": "You will hear a teacher giving information about a school trip to a history museum.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The coach departs from school at",
+          "afterGap": "a.m.",
+          "answer": "8.30",
+          "acceptedAnswers": ["8.30", "8:30", "half past eight", "HALF PAST EIGHT", "eight thirty", "EIGHT THIRTY"],
+          "script": "We're going there by coach. It'll leave at half past eight, but we'd like everybody to be at school ready to board by eight fifteen at the latest, and our coach should arrive as the museum opens at nine o'clock.",
+          "paraphrase": "Students should arrive at school by 8:15 to board, as the coach leaves at 8:30 and is expected to arrive at the museum when it opens at 9:00.",
+          "explanation": "8:15 là giờ học sinh cần có mặt để lên xe. 9:00 là giờ đến bảo tàng. Xe khởi hành lúc 8:30 (half past eight) → đáp án: 8.30."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "You are allowed to take",
+          "afterGap": "on the coach.",
+          "answer": "water",
+          "acceptedAnswers": ["water", "WATER", "some water", "SOME WATER"],
+          "script": "It's not too far away. You'll need some water, but no other drinks for the journey. You'll be provided with a packed lunch when we get there, but can I remind you that you are not allowed to eat on the coach.",
+          "paraphrase": "Students may only bring water on the coach - no other drinks are allowed - and eating is also not permitted on the journey.",
+          "explanation": "Không được ăn trên xe. Không được mang đồ uống khác. Chỉ được mang nước (water) → đáp án: water."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "On arrival you will receive a",
+          "afterGap": "to keep.",
+          "answer": "pen",
+          "acceptedAnswers": ["pen", "PEN"],
+          "script": "When we arrive, you'll get a questionnaire to do as you go round the exhibitions, which I'll collect from you to check afterwards. The museum will give you a pen too, which you can use, and it'll be a nice souvenir of the day.",
+          "paraphrase": "Upon arrival, students will receive a questionnaire to complete as they explore, and the museum will also give them a pen to keep as a souvenir.",
+          "explanation": "Bảng câu hỏi (questionnaire) giáo viên sẽ thu lại sau. Bút (pen) do bảo tàng tặng và học sinh được giữ lại làm kỷ niệm → đáp án: pen."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The museum is famous for its display of",
+          "afterGap": "making.",
+          "answer": "chocolate",
+          "acceptedAnswers": ["chocolate", "CHOCOLATE"],
+          "script": "The museum has lots of interesting displays to see. My favourite one is of an old-fashioned street, where you can experience the sights, smells and sounds of life 150 years ago - you may even see someone making bread to a traditional recipe. I know you'll love the latest display about how chocolate was made in a city in the past - everyone who goes to the museum talks about it!",
+          "paraphrase": "Although the teacher's personal favourite is the old street display, the exhibit everyone talks about is the one showing how chocolate was made in the past.",
+          "explanation": "Triển lãm phố cổ và làm bánh mì là yêu thích của giáo viên. Triển lãm mà mọi người đều nhắc đến là về cách làm chocolate (chocolate making) → đáp án: chocolate."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "The museum shop has a good selection of",
+          "afterGap": "and books.",
+          "answer": "posters",
+          "acceptedAnswers": ["posters", "POSTERS", "poster", "POSTER"],
+          "script": "The museum does have a shop and at the end of the day, you can look round it. They have lots of excellent books and a great range of posters. A variety of food can be bought at a snack shop nearby.",
+          "paraphrase": "The museum shop sells books and a great range of posters, while food is available at a nearby snack shop.",
+          "explanation": "Đồ ăn bán ở cửa hàng snack gần đó, không phải cửa hàng bảo tàng. Cửa hàng bảo tàng có sách và poster (posters) → đáp án: posters."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The website of the museum is www.",
+          "afterGap": ".com",
+          "answer": "waysbury",
+          "acceptedAnswers": ["waysbury", "WAYSBURY"],
+          "script": "If you or your parents would like to find out more about the museum before we visit, you can look at the website: www dot W-A-Y-S-B-U-R-Y dot com. Did you get that?",
+          "paraphrase": "The museum's website is www.waysbury.com, spelled out as W-A-Y-S-B-U-R-Y.",
+          "explanation": "Địa chỉ website được đánh vần rõ ràng: W-A-Y-S-B-U-R-Y → waysbury → đáp án: waysbury."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/b03e2ofgl8ckkpujeso1j/PfS3_PT_audio_track_08.mp3?rlkey=f667jfrgdm52glhmezod2rn1s&st=r4osv22q&dl=0&raw=1",
+      "context": "You will hear an interview with a teenager called Mary Lyons, who started a skateboarding club for girls.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "What made Mary become interested in skateboarding?",
+          "options": {
+            "A": "talking to her brothers",
+            "B": "seeing older skateboarders",
+            "C": "watching a TV programme"
+          },
+          "answer": "B",
+          "script": "Man: So Mary, how did your interest in skateboarding actually begin?\nGirl: Well, there was an after school skateboarding session for students in classes above me and I used to pass it on my way home. I liked the look of it so I tried to persuade my brothers to get skateboards so we could learn together, but it wasn't their thing. And later I learnt more from a programme about skateboarding on TV, and soon I was skateboarding every weekend.",
+          "paraphrase": "Mary first became interested after passing and watching older students skateboarding after school, though she later also learned from a TV programme.",
+          "explanation": "Anh em trai (A) không muốn học trượt ván. Chương trình TV (C) giúp học thêm sau này, không phải lý do ban đầu. Điều khơi dậy hứng thú là nhìn thấy học sinh lớp trên trượt ván trên đường về nhà → seeing older skateboarders → đáp án B."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "Mary decided to start a skateboarding club for girls because",
+          "options": {
+            "A": "she wanted to share her hobby with them.",
+            "B": "she thought they needed somewhere different from boys.",
+            "C": "she was keen to make new friends."
+          },
+          "answer": "A",
+          "script": "Man: Then, you started a skateboarding club for girls. Why?\nGirl: Well, people thought it was because I didn't like being the only girl at the skate park, but in fact, I didn't mind that. Once I had started, though, I felt it'd be a great idea to encourage other girls to get involved as well. And of course, we still enjoy skateboarding with boys sometimes.",
+          "paraphrase": "Contrary to what people assumed, Mary did not mind being the only girl; she started the club simply because she wanted to encourage other girls to share her hobby.",
+          "explanation": "Không muốn tách riêng khỏi con trai (B sai - vẫn thích trượt ván cùng con trai). Làm bạn mới (C sai). Lý do thực sự là muốn khuyến khích các bạn gái khác tham gia sở thích của mình → wanted to share her hobby → đáp án A."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "Mary was annoyed by people who thought",
+          "options": {
+            "A": "skateboarding wasn't safe.",
+            "B": "money shouldn't be spent on skateparks.",
+            "C": "skateboarding wasn't good exercise."
+          },
+          "answer": "A",
+          "script": "Man: And did everyone support you?\nGirl: My parents did. But some people were a bit annoying. Saying things like, 'Why don't you take up something less dangerous, a sport like tennis.' I don't think they realised how few accidents there are, especially if you're fit and you practise a lot. But at least the town council agreed to support the club financially, which I didn't really expect.",
+          "paraphrase": "Mary was frustrated by people who told her to do something less dangerous, not understanding that skateboarding actually has very few accidents.",
+          "explanation": "Không đề cập chi phí công viên trượt ván (B sai). Không đề cập luyện tập thể chất (C sai). Mọi người gợi ý chơi môn ít nguy hiểm hơn, ngụ ý trượt ván không an toàn → Mary bực bội vì không biết thực tế ít tai nạn → đáp án A."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What has surprised Mary since she started the club?",
+          "options": {
+            "A": "how talented the other skateboarders are",
+            "B": "how good she is as a leader",
+            "C": "how well everyone gets on"
+          },
+          "answer": "C",
+          "script": "Man: Has anything surprised you?\nGirl: Well, I guess I'm amazed that all the club members like each other so much. You know, outside skateboarding, they'd probably never meet. There are members at all levels - which is what you'd probably expect. And I've found that people respect me, but well, I started the club so actually I can understand that.",
+          "paraphrase": "Mary is amazed by how well all the members get along, since they would never normally meet outside of skateboarding.",
+          "explanation": "Các thành viên giỏi (A) - điều này dự đoán được. Được tôn trọng vì lập câu lạc bộ (B) - cũng hiểu được. Điều bất ngờ thực sự là các thành viên quý mến nhau nhiều dù ngoài trượt ván họ chẳng bao giờ gặp → how well everyone gets on → đáp án C."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "When the champion skateboarder Judy Blake visited the club, she",
+          "options": {
+            "A": "seemed shy to start with.",
+            "B": "gave lots of advice.",
+            "C": "asked to film them."
+          },
+          "answer": "B",
+          "script": "Man: And the champion skateboarder Judy Blake visited the club, didn't she?\nGirl: Yes, she did. For us, she's such a huge star that, you know, some of us were a bit embarrassed to skate in front of her at first. But that feeling soon went. And she started suggesting loads of things we could do to improve our performances, as well as websites with great videos and stuff like that.",
+          "paraphrase": "The club members were initially embarrassed to skate in front of Judy Blake, but she quickly put them at ease and gave them lots of advice and tips for improvement.",
+          "explanation": "Shyness là của các thành viên câu lạc bộ, không phải Judy (A sai). Không đề cập quay phim (C sai). Judy ngay lập tức đưa ra nhiều gợi ý và lời khuyên để cải thiện → gave lots of advice → đáp án B."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "What would Mary like to do as a skateboarder in the future?",
+          "options": {
+            "A": "compete in international competitions",
+            "B": "design skateboarding products",
+            "C": "teach others to skateboard"
+          },
+          "answer": "A",
+          "script": "Man: So, any plans for the future, Mary?\nGirl: Well, now skateboarding's been accepted as an Olympic sport, my greatest ambition is to take part. I don't mind admitting that. It'll attract more attention from big companies that produce equipment too. When skateboarders get older, some train to become skateboarding instructors. But that's not what I'm thinking about at the moment.",
+          "paraphrase": "Mary's greatest ambition is to compete in the Olympics now that skateboarding is an Olympic sport, while teaching is something others do but not her current goal.",
+          "explanation": "Thiết kế sản phẩm (B) không được đề cập là mục tiêu. Dạy trượt ván (C) là điều người khác làm khi về già, không phải mục tiêu của Mary. Tham gia Olympic - thi đấu quốc tế (A) là tham vọng lớn nhất của cô → compete in international competitions → đáp án A."
+        }
+      ]
+    }
+  ]
+}
