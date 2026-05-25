@@ -1,0 +1,346 @@
+{
+  "testId": "b1book3fS-test-01",
+  "title": "PET Listening BOOK 3 for School Test 01",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/pc2pxyk0twthz291gjzlk/PfS3_PT_audio_track_01.mp3?rlkey=c4ptt47krfi3wn6drmia8t3rq&st=4ok9zvn6&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/43s0301mbi96ch5r628nn/book3fS-test-1-part-1-1-3.png?rlkey=vt2x3lkc1x1eytlocqoozsqg9&st=i8scarky&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/qyur37vzghndts8szfey2/book3fS-test-1-part-1-4-7.png?rlkey=ahot7s4itwnm0cdhucpr6xcij&st=i9g4x5k3&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What is the girl going to do on Saturday?",
+          "answer": "C",
+          "script": "Boy: I'm really looking forward to Luke's party on Saturday night. His brother's band's playing at it you know. Can we pick you up on the way?\nGirl: I meant to tell you. My mum's arranged for us to visit my grandpa that evening - she planned it ages ago. Give Luke a big hug from me, though, won't you?\nBoy: I will. Saturday's busy for lots of people. The school film club's showing that sci-fi film we were talking about too.\nGirl: Really? We must get to see that sometime. It sounds great.",
+          "paraphrase": "The girl cannot go to the party because her mum planned a visit to her grandpa long ago, and she mentions the sci-fi film as something she would like to see another time.",
+          "explanation": "Cô bé không đến bữa tiệc (A sai) vì mẹ đã lên kế hoạch thăm ông nội từ trước. Xem phim (B) chỉ là điều muốn làm sau này. Cô bé sẽ thăm ông nội (grandpa) vào tối thứ Bảy → đáp án C."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "What does the boy need to get for his camping trip?",
+          "answer": "C",
+          "script": "Woman: What do we need to organise for your camping trip? That tent of yours is no good.\nBoy: I know, Mum. I was going to look online and find another one, 'cos it's full of holes. But Steve's suggested I share his.\nWoman: Oh, good idea. And your boots?\nBoy: Just look at them! I doubt they'll still fit!\nWoman: Let's replace them. And we'll get you a proper torch. Not that toy thing you've got.\nBoy: Oh, don't worry about that! Dad's lending me his one. The light's amazingly bright.",
+          "paraphrase": "The boy will borrow a tent from Steve and a torch from his dad, so the only thing he actually needs to get is a new pair of boots.",
+          "explanation": "Lều (A) mượn của Steve. Đèn pin (B) mượn của bố. Chỉ cần mua ủng mới (boots) vì đôi cũ không còn vừa → đáp án C."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "Who is in the photo?",
+          "answer": "A",
+          "script": "Boy: Do you want to see my holiday photos?\nGirl: Sure... Wow! Looks like a great place you went to. Is that your cousin? He looks different from how I remember - I'm sure he didn't have a moustache the last time I saw him.\nBoy: That was ages ago - he's grown up a lot since then! He used to have quite long hair as well, down to his shoulders.\nGirl: I remember now. It suits him shorter. You actually look quite similar now.\nBoy: A lot of people say that.",
+          "paraphrase": "The photo shows the boy's cousin, who now has a moustache and shorter hair, looking quite similar to the boy himself.",
+          "explanation": "Người trong ảnh là anh họ (cousin) của cậu bé - hiện có ria mép và tóc ngắn hơn trước. Cô bé và cậu bé đều nhận ra đây là anh họ → đáp án A."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "Where is the boy's sports bag?",
+          "answer": "C",
+          "script": "Boy: Hi Mum, it's Paul. Can you help me? I haven't got my sports bag at school and we're playing volleyball later. I know where it is - I put it next to the wardrobe in my room because Dad said it was in the way next to the table in the living room. Anyway you should find it! Please can you bring it over to school? I don't want to get in trouble! Next week I'll put it by the front door, so I won't forget it. Thanks!",
+          "paraphrase": "Paul left his sports bag next to the wardrobe in his room after moving it from the living room where his dad said it was in the way.",
+          "explanation": "Phòng khách cạnh bàn (bố bảo để đó không tiện). Cửa trước (tuần sau mới để đó). Túi đang ở cạnh tủ quần áo trong phòng của cậu (next to the wardrobe in my room) → đáp án C."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "What is the boy going to do at the running event?",
+          "answer": "A",
+          "script": "Girl: So have you signed up to enter the fun run?\nBoy: Oh, didn't you know? I've got a problem with my knee so I'm out of this year's race. But I'll be waiting at the finish line ready to get some good pictures of the runners.\nGirl: For the school magazine?\nBoy: Yeah. I was asked to be one of the people giving out water bottles along the route.\nGirl: I'm going to do that.\nBoy: Right - but what I'm doing will make me feel more part of the race somehow.",
+          "paraphrase": "The boy cannot run due to a knee problem and turned down the water bottle job, choosing instead to take photographs at the finish line for the school magazine.",
+          "explanation": "Không thể tham gia chạy (B sai). Phát nước (C) là việc được yêu cầu nhưng cậu từ chối, để cô bé làm thay. Cậu bé sẽ chụp ảnh tại vạch đích cho tạp chí trường → take photographs → đáp án A."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "Where will the friends meet?",
+          "answer": "B",
+          "script": "Boy: I'm going to the library tomorrow afternoon to work on that geography project. Do you want to meet there?\nGirl: I ought to do something on it too. I'm supposed to see Lisa in the café at the station, though if I don't stay long with her I could still come. I'm not really sure because she wants to discuss something.\nBoy: Well, it's up to you.\nGirl: I'll come over to meet you afterwards, but I'll have to get the train home about four.\nBoy: I'll get the train back too.",
+          "paraphrase": "The girl will first meet Lisa at the café, then come to meet the boy at the library afterwards before they both take the train home.",
+          "explanation": "Ga tàu / quán cà phê là nơi gặp Lisa trước. Thư viện là điểm hẹn chính với cậu bé sau đó. Hai người gặp nhau tại thư viện (library) → đáp án B."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "What is the earliest time today's football match could start?",
+          "answer": "B",
+          "script": "Woman: I'm afraid today's football match will be postponed until a bit later. The original start time was eleven this morning but due to the very bad weather conditions, we're going to see what's happening in the next hour or so, around midday, and make a decision then. If it's stopped raining heavily at that time, we can start immediately. If not, maybe we can begin playing at one. If we can't do that, we'll have to cancel.",
+          "paraphrase": "The match was originally at 11 but is delayed; if the heavy rain stops by midday the match can start immediately, making 12:00 the earliest possible start time.",
+          "explanation": "11 giờ (A) là giờ gốc đã bị hoãn. 1 giờ chiều (C) là phương án nếu trời vẫn mưa lúc giữa trưa. Nếu ngừng mưa lúc giữa trưa (midday) thì bắt đầu ngay → sớm nhất là 12:00 → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/vl3ivswbcobk4a6e66ceb/PfS3_PT_audio_track_02.mp3?rlkey=8cdwd852ffpouxttcxs3ob4xm&st=9gbt9eld&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear two friends talking about a computer game. What is the boy doing?",
+          "options": {
+            "A": "complaining about the price of the game",
+            "B": "suggesting how the game could be improved",
+            "C": "admitting that he finds the game disappointing"
+          },
+          "answer": "C",
+          "script": "Boy: Have you played that new computer game yet - Critters 2?\nGirl: Not yet. Is it any good?\nBoy: It's definitely a lot better than the first version that came out ... better sound effects, for a start. And the colours are really cool. But ... I don't know ... I kind of thought it'd be a bit more exciting. I guess what I'm saying is that I wasn't very impressed. Oh well ... at least I can't say it cost a lot.\nGirl: Oh? Why's that then?\nBoy: Well my cousin lent it to me. That's why!\nGirl: Just as well.",
+          "paraphrase": "The boy says the game has improved features but admits he expected it to be more exciting and was not very impressed overall.",
+          "explanation": "Giá (A) không phải điều phàn nàn - game được mượn miễn phí. Gợi ý cải thiện (B) không đề cập. Cậu thừa nhận game không ấn tượng như kỳ vọng (wasn't very impressed) → admitting it's disappointing → đáp án C."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear two students talking about a history project for school. What does the girl need to do?",
+          "options": {
+            "A": "change her choice of topic",
+            "B": "find some helpful websites",
+            "C": "talk about her plan with someone else"
+          },
+          "answer": "A",
+          "script": "Boy: I've been thinking about that history project we've got to do. How about you?\nGirl: Yeah, I discussed what I'm going to do with our teacher yesterday. She said that three other people all wanted to do the same subject as me. Probably because there are so many new articles about it online. Anyway, she's asked me to do something else.\nBoy: That's a shame.\nGirl: Oh, it's OK. She's given me loads of ideas so I'm not that worried.\nBoy: I'll tell you where to look online for ideas if you like.\nGirl: Thanks, I already know some good ones so I'm fine actually.",
+          "paraphrase": "Three other students chose the same topic, so the teacher asked the girl to change her subject, but she is not worried as the teacher gave her plenty of new ideas.",
+          "explanation": "Cô đã biết website tốt (B sai). Đã thảo luận với giáo viên rồi (C sai). Giáo viên yêu cầu đổi đề tài vì có 3 người khác cùng chọn → change her choice of topic → đáp án A."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear a boy talking to his friend about a tennis lesson. How does the boy feel?",
+          "options": {
+            "A": "disappointed with his progress",
+            "B": "annoyed that he didn't play a match",
+            "C": "confused about something he was taught"
+          },
+          "answer": "A",
+          "script": "Girl: How was your tennis lesson today?\nBoy: OK. My instructor spent most of it showing me how to serve the ball to start the game off. It was difficult! You have to throw the ball up in the air and hit it hard as it falls. By the end of the lesson, I was doing OK, though not nearly as well as I'd hoped.\nGirl: So, have you had any long games?\nBoy: No, I've only had a few lessons so far. I'm just not really good enough yet. Maybe one day.",
+          "paraphrase": "The boy understood what he was taught and accepts he is at an early stage, but feels let down that he did not improve as much as he expected.",
+          "explanation": "Không phàn nàn về việc không đánh trận (B sai - mới học vài buổi). Không nhầm lẫn về kỹ thuật (C sai - hiểu cách giao bóng). Cuối buổi vẫn chưa đạt mức kỳ vọng → disappointed with his progress → đáp án A."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear two friends talking about a chess club. Why has the girl stopped going there?",
+          "options": {
+            "A": "She's not as good as the other players.",
+            "B": "It costs a lot to be a member.",
+            "C": "Her neighbour will give her lessons."
+          },
+          "answer": "C",
+          "script": "Boy: I haven't seen you at chess club. Everyone's been asking about you, hoping you're coming back.\nGirl: Yeah. They're lovely, but I'm not coming this term. I was talking to the woman next door, Tanya, about chess - she's a coach. And she suggested she could help me with my game. The price she's charging isn't too bad so...\nBoy: But some of the people at the club give really good advice.\nGirl: It's not that they don't. I just felt I needed an expert to train me, even if I have to pay for it. Who knows, I might come back!",
+          "paraphrase": "The girl stopped going to the chess club because her neighbour, a professional coach, offered to give her individual lessons to improve her game.",
+          "explanation": "Không kém hơn người khác (A sai - không đề cập). Giá dạy tư không đắt (B sai về câu lạc bộ). Hàng xóm là huấn luyện viên chuyên nghiệp đề nghị dạy riêng → her neighbour will give her lessons → đáp án C."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear two friends talking about travelling to school. The boy has started taking the school bus because he",
+          "options": {
+            "A": "thinks cycling takes too long.",
+            "B": "wants to protect the environment.",
+            "C": "likes travelling with his friends."
+          },
+          "answer": "A",
+          "script": "Girl: I see you're taking the bus to school nowadays. That's good 'cause cars cause so much pollution.\nBoy: True. Though actually, I always used to come by bike, which is even better because there's no pollution from that. But because I live quite far away, it's nearly an hour on my bike and that's hard, especially in the winter.\nGirl: Really? Well at least now you can meet up with all your mates before school. Like me. We chat the whole way.\nBoy: Oh well, Tim and Mike are still cycling, actually, but I enjoy just sitting listening to music on my phone.",
+          "paraphrase": "The boy switched from cycling to the bus not for environmental reasons, and not to socialise, but because the hour-long bike ride was too long especially in winter.",
+          "explanation": "Bảo vệ môi trường (B sai - xe đạp không ô nhiễm, đi xe buýt không phải lý do này). Gặp bạn bè (C sai - cậu nghe nhạc một mình). Nhà xa, đạp xe mất gần 1 tiếng nhất là mùa đông → takes too long → đáp án A."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear two students talking about the uniform at their school. What do they agree about wearing it?",
+          "options": {
+            "A": "It makes people respect the school.",
+            "B": "It makes everyone look the same.",
+            "C": "It makes getting ready for school easy."
+          },
+          "answer": "C",
+          "script": "Boy: I hate having to wear school uniform. Nobody can show their individual style.\nGirl: If you look at other people in uniform, you'll see loads of differences. The way they do their tie, or their shirt, or what socks they wear...\nBoy: I'd prefer to choose what I wear.\nGirl: But now I don't have to think about that, so I can get up much later than before.\nBoy: True, that's a positive thing. An extra half an hour!\nGirl: And everyone says we look so smart.\nBoy: Really? I think that's why we're expected to wear uniforms.\nGirl: I'm not so sure that's the main reason.",
+          "paraphrase": "Despite disagreeing on most things, both agree that wearing uniform saves time getting ready in the morning.",
+          "explanation": "Tôn trọng trường (A): cậu bé cho là lý do chính, cô bé không chắc → không đồng ý. Trông giống nhau (B): cô bé không đồng ý vì có nhiều khác biệt. Cả hai đều đồng ý đồng phục giúp chuẩn bị nhanh hơn buổi sáng → makes getting ready easy → đáp án C."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/e5uip82drhwe1xypqof49/PfS3_PT_audio_track_03.mp3?rlkey=1o0n1awql18paoglxwb6kb5y1&st=zrth39ie&dl=0&raw=1",
+      "noteTitle": "Indoor climbing centre",
+      "context": "You will hear a boy called Ben giving a class talk about an indoor climbing centre he went to.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The name of the climbing centre Ben went to is",
+          "afterGap": ".",
+          "answer": "Bridge House",
+          "acceptedAnswers": ["Bridge House", "BRIDGE HOUSE", "bridge house"],
+          "script": "If you're into climbing, I expect you know the Castle Sports Centre in the middle of town. My visit was to another climbing centre called Bridge House. It's by the river and it's really good.",
+          "paraphrase": "Ben went to Bridge House, a climbing centre by the river, rather than the more well-known Castle Sports Centre in town.",
+          "explanation": "Trung tâm nổi tiếng là Castle Sports Centre, nhưng Ben đến trung tâm khác tên Bridge House bên bờ sông → đáp án: Bridge House."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Ben's father paid £",
+          "afterGap": "for a 2-hour session.",
+          "answer": "7.80",
+          "acceptedAnswers": ["7.80", "7.8", "seven pounds eighty", "SEVEN POUNDS EIGHTY"],
+          "script": "A month's membership is twenty pounds seventy, or you can book a standard session, lasting a couple of hours, which is what we did. That was seven pounds eighty. For nine pounds fifty you can get a session of three hours.",
+          "paraphrase": "Ben's dad paid £7.80 for the standard 2-hour session, with other options being a monthly membership at £20.70 or a 3-hour session at £9.50.",
+          "explanation": "£20.70 là phí thành viên tháng. £9.50 là buổi 3 tiếng. Buổi 2 tiếng (standard session) giá £7.80 → đáp án: 7.80."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "Ben was not allowed to wear his",
+          "afterGap": "when climbing.",
+          "answer": "watch",
+          "acceptedAnswers": ["watch", "WATCH"],
+          "script": "All equipment's provided, including special climbing shoes. I wanted to wear my own trainers and they let me, but I had to leave my watch in a locker. They said it's dangerous to have things like that on. Every climber gets given a helmet to wear too.",
+          "paraphrase": "Ben was allowed to wear his own trainers but had to remove his watch and leave it in a locker as it is considered dangerous when climbing.",
+          "explanation": "Giày của riêng Ben được phép đi. Mũ bảo hiểm được cung cấp. Ben phải cất đồng hồ (watch) vào tủ khóa vì nguy hiểm khi leo → đáp án: watch."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "The colour of the wall that Ben started on was",
+          "afterGap": ".",
+          "answer": "blue",
+          "acceptedAnswers": ["blue", "BLUE"],
+          "script": "The walls have different colours depending on your climbing level. I can't wait to get to the expert one. That's red. I had to go on the blue one because it was my first time. That's the one for people who are new to it, but I soon got onto the purple one. And there's a green one after that. They get more and more difficult.",
+          "paraphrase": "Ben started on the blue wall for beginners, then progressed to the purple one, with green next and red for experts.",
+          "explanation": "Tường đỏ cho chuyên gia. Xanh lá là sau tường tím. Ben mới lần đầu nên phải bắt đầu từ tường xanh dương (blue) dành cho người mới → đáp án: blue."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Ben says that his",
+          "afterGap": "hurt after climbing.",
+          "answer": "shoulders",
+          "acceptedAnswers": ["shoulders", "SHOULDERS", "shoulder", "SHOULDER"],
+          "script": "It's easy to hurt yourself if you don't follow the instructions. Having strong arms helps. Personally, my shoulders were really sore by the time I got home. I thought I'd have problems with my hands, but they were fine.",
+          "paraphrase": "Ben expected his hands to ache but they were fine; it was actually his shoulders that were really sore after the climbing session.",
+          "explanation": "Ben nghĩ sẽ đau tay nhưng tay ổn. Vai (shoulders) mới đau sau buổi leo → đáp án: shoulders."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "The address of the climbing centre is 50",
+          "afterGap": "Road.",
+          "answer": "Wesleigh",
+          "acceptedAnswers": ["Wesleigh", "WESLEIGH"],
+          "script": "So where is this place? The address is number 50, Wesleigh Road, that's spelt W-E-S-L-E-I-G-H. It's easy to find and it's got a covered area to leave your bike if you want to cycle there.",
+          "paraphrase": "The climbing centre is at 50 Wesleigh Road, spelled W-E-S-L-E-I-G-H, and has a covered bike parking area.",
+          "explanation": "Địa chỉ được đánh vần rõ ràng: W-E-S-L-E-I-G-H → Wesleigh Road, số 50 → đáp án: Wesleigh."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/pj4rfs6mq64x1no8n6fi4/PfS3_PT_audio_track_04.mp3?rlkey=8veys52iqy9dztr3pbu0yud6f&st=sn7hy6b3&dl=0&raw=1",
+      "context": "You will hear an interview with a girl called Sofia, who collects toy bears.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Sofia first became interested in bears after",
+          "options": {
+            "A": "receiving one as a gift.",
+            "B": "hearing stories about one.",
+            "C": "seeing someone else's collection."
+          },
+          "answer": "B",
+          "script": "Man: Sofia, you have over a hundred toy bears in your collection. How did you become interested in bears?\nGirl: Because of a bear called Bernie! He belonged to my dad - he was given Bernie as a kid. Dad has a great imagination, and he'd entertain me with Bernie's adventures. That's how I got into it all. Mum has an old bear, too, and their two toys sit together on a shelf at home.",
+          "paraphrase": "Sofia became interested in bears because her dad used to entertain her with stories about his toy bear called Bernie.",
+          "explanation": "Không được tặng gấu (A sai - gấu Bernie là của bố). Không thấy bộ sưu tập của người khác (C sai). Bố kể chuyện phiêu lưu về chú gấu Bernie → hearing stories about one → đáp án B."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "Sofia says she loves collecting toy bears because they",
+          "options": {
+            "A": "make her feel better on a bad day.",
+            "B": "may earn her money one day.",
+            "C": "remind her of being a small child."
+          },
+          "answer": "C",
+          "script": "Man: Why do you like collecting bears so much?\nGirl: It's cos when I was a kid I felt safe with my own toy bear in my arms, falling asleep. I don't hug the bears I've got now, but those memories come back when I look at their cute faces. My collection might become valuable in the future - who knows? It'd be nice but it's not why I do it.",
+          "paraphrase": "Looking at the bears brings back childhood memories of feeling safe falling asleep with one, even though she no longer hugs them.",
+          "explanation": "Giúp cảm thấy tốt hơn (A sai - không đề cập). Kiếm tiền (B sai - sẽ tốt nhưng không phải lý do). Nhìn gấu gợi lại ký ức tuổi thơ cảm thấy an toàn → remind her of being a small child → đáp án C."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "How does Sofia feel when she finds a bear she wants to buy?",
+          "options": {
+            "A": "keen to show it to people she knows",
+            "B": "excited to put it with her other bears",
+            "C": "pleased to own something no one else has"
+          },
+          "answer": "B",
+          "script": "Man: How do you find bears to buy?\nGirl: I go to markets. I go alone - friends can put you off if they don't like something. Then you might not buy the bear you've seen and another collector buys it instead! When I get a new bear, I really look forward to adding it to the collection and seeing how it fits in.",
+          "paraphrase": "When Sofia buys a new bear, she looks forward to placing it with her existing collection and seeing how it fits in.",
+          "explanation": "Khoe với bạn bè (A sai - đi mua một mình để bạn bè không làm cô chùn bước). Sở hữu đồ độc nhất (C sai). Điều cô mong chờ là thêm gấu vào bộ sưu tập và xem nó phù hợp thế nào → excited to put it with her other bears → đáp án B."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "What advice does Sofia give for anyone who starts collecting bears?",
+          "options": {
+            "A": "Learn about the bears before you buy them.",
+            "B": "Try to get lots of bears of the same type.",
+            "C": "Only choose bears you really like."
+          },
+          "answer": "A",
+          "script": "Man: Any advice for people who want to collect bears?\nGirl: Not really, but I know some collectors often just buy one kind and become experts on them - like antique ones or famous brands. I guess the main thing is to find out information about what you're getting - its history, interesting facts. It could be one of a particular kind, or completely individual.",
+          "paraphrase": "Sofia's main advice is to research a bear before buying it - learning its history and interesting facts, regardless of whether you collect one type or varied ones.",
+          "explanation": "Mua nhiều gấu cùng loại (B) là cách của một số người, không phải lời khuyên chính. Chỉ chọn gấu yêu thích (C) không được đề cập. Điều quan trọng nhất là tìm hiểu thông tin về gấu trước khi mua → learn about them first → đáp án A."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "What mistake does Sofia say people often make when collecting bears?",
+          "options": {
+            "A": "not paying the right price for them",
+            "B": "not looking after them properly",
+            "C": "not keeping the ones they love"
+          },
+          "answer": "B",
+          "script": "Man: What mistakes can you make when collecting bears?\nGirl: If you're buying a bear that's supposed to be made by a designer, make sure it isn't a copy. That'd be a waste of money, but it's pretty rare. And take care of your bears - they'll lose their bright colours in direct sunlight or if you wash them - as so many collectors have found out. And avoid giving a favourite bear away even if a friend tries to persuade you! Most collectors are unlikely to do that.",
+          "paraphrase": "Sofia says many collectors damage their bears by exposing them to sunlight or washing them incorrectly, causing them to lose their bright colours.",
+          "explanation": "Mua gấu nhái (A) là sai lầm nhưng hiếm gặp. Tặng gấu yêu thích (C) ít nhà sưu tập làm. Lỗi phổ biến là không bảo quản đúng cách - để ánh nắng hay giặt làm mất màu → not looking after them properly → đáp án B."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "How did Sofia feel before she went on a TV programme?",
+          "options": {
+            "A": "anxious about having to answer questions",
+            "B": "nervous about meeting people she admired",
+            "C": "worried about what people would think of her"
+          },
+          "answer": "C",
+          "script": "Man: You recently appeared on a TV programme with your bears!\nGirl: I wasn't that comfortable with the idea of the programme's audience thinking I was silly. That'd be embarrassing. I wanted to explain why as a teenager I was still collecting toys! Actually, the presenters were really interested in what I do and asked me loads of things. It was cool being on a show I'd seen so many celebrities on.",
+          "paraphrase": "Sofia was worried the audience would think she was silly for collecting toys as a teenager, though she ended up enjoying the experience.",
+          "explanation": "Lo về việc trả lời câu hỏi (A sai - sau đó thực tế được hỏi nhiều và thích). Lo gặp người nổi tiếng (B sai - chỉ thấy thú vị khi gặp MC). Lo khán giả nghĩ mình ngớ ngẩn vì còn thu thập đồ chơi khi đã là teen → worried what people would think → đáp án C."
+        }
+      ]
+    }
+  ]
+}
