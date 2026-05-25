@@ -1,0 +1,346 @@
+{
+  "testId": "b1book2fS-test-03",
+  "title": "PET Listening BOOK 2 for School Test 03",
+  "level": "B1",
+  "totalQuestions": 25,
+  "parts": [
+    {
+      "partNumber": 1,
+      "partTitle": "Part 1",
+      "audioUrl": "https://www.dropbox.com/scl/fi/vfzezohj5kqqrbeb79vq4/B1Prefs2_test3_audio1.mp3?rlkey=ipii6m6wz9efqv9uwqsmldbqf&st=35ecbz2y&dl=0&raw=1",
+      "pageGroups": [
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/tl0jyajohhyp1ifgje00x/book2fS-test-3-part-1-1-3.png?rlkey=y2m6y88fus0dv3560g20hgv1p&st=p3es1rxk&dl=0&raw=1",
+          "questionNumbers": [1, 2, 3]
+        },
+        {
+          "imageUrl": "https://www.dropbox.com/scl/fi/grc1c84mw63qrg9iay0ep/book2fS-test-3-part-1-4-7.png?rlkey=7gmpzfx267cd6fsczm2rpauk0&st=usioovzj&dl=0&raw=1",
+          "questionNumbers": [4, 5, 6, 7]
+        }
+      ],
+      "questions": [
+        {
+          "id": "p1q1",
+          "number": 1,
+          "questionText": "What is the girl going to do this summer?",
+          "answer": "C",
+          "script": "Girl: I'm going to be a volunteer in our school holidays!\nBoy: Cool! I heard the wildlife park's looking for people to feed the animals.\nGirl: Yeah! I thought about that and I applied for it. Then I thought, \"Why don't I ask if I can be a guide showing visitors round?\" and they agreed. I know loads about the animals cos my dad's a vet there. I went to the park once to watch him giving medicine to some monkeys - I wasn't allowed to do anything, but I'd love to be a vet, too, one day.",
+          "paraphrase": "The girl applied to feed animals at the wildlife park but then asked to be a visitor guide instead, which was approved, so she will work as a guide this summer.",
+          "explanation": "Làm việc với thú y (A) chỉ là ước mơ tương lai. Cho động vật ăn (B) là ý tưởng ban đầu nhưng cô đổi sang vai trò hướng dẫn viên (guide). Cô bé sẽ làm hướng dẫn viên cho khách tham quan → đáp án C."
+        },
+        {
+          "id": "p1q2",
+          "number": 2,
+          "questionText": "Which book did the boy buy?",
+          "answer": "B",
+          "script": "Woman: Did you get a new book when you went to the bookstore today?\nBoy: Yeah, I did, Mum. I saw a really interesting crime novel. And there was a brilliant science-fiction one, too. I really wanted to get both of them!\nWoman: Oh? So what did you buy in the end?\nBoy: Well, they were both fairly expensive, especially the science-fiction one. Instead, I found a novel based on a true story about some guys who travel to different mountains looking for adventures. I'm going to save up for the crime novel.\nWoman: Great!",
+          "paraphrase": "The boy wanted the crime novel and the expensive science-fiction one, but bought a mountain adventure novel based on a true story instead, planning to save up for the crime novel.",
+          "explanation": "Tiểu thuyết khoa học viễn tưởng (A) quá đắt. Tiểu thuyết trinh thám (C) sẽ để dành tiền mua sau. Cậu bé mua cuốn tiểu thuyết phiêu lưu núi non dựa trên câu chuyện có thật (true story adventure) → đáp án B."
+        },
+        {
+          "id": "p1q3",
+          "number": 3,
+          "questionText": "How will the girl get home from school today?",
+          "answer": "C",
+          "script": "Girl: Mum, I'm phoning to say I'm staying after school today to help get the stage ready for tomorrow's concert. A few of us are. Anna's staying too, and her mum's offered to give me a lift back as I know you'll be busy later, and it'd be a lot easier than catching the train. You know how I feel about cycling in the dark. I'll leave my bike here. I think it'll be quite late when we finish ... so I'll ride it back tomorrow afternoon. Anyway, see you later. Bye!",
+          "paraphrase": "The girl is getting a car lift home from Anna's mum because she dislikes cycling in the dark and it is easier than taking the train.",
+          "explanation": "Xe đạp (A) để lại trường, đạp về ngày hôm sau. Tàu (B) cũng là lựa chọn nhưng không tiện bằng. Mẹ Anna sẽ lái xe đưa cô về nhà tối nay → đáp án C."
+        },
+        {
+          "id": "p1q4",
+          "number": 4,
+          "questionText": "What will the boy eat for breakfast?",
+          "answer": "A",
+          "script": "Woman: Do you fancy egg and toast this morning, Ben? You should have a good breakfast before football practice.\nBoy: I'd love that, Mum. I don't think I'll have time, though. I'll just grab a banana and an apple.\nWoman: Well, you won't be able to, as there are none left! There's some cereal, though.\nBoy: Looks like I'll have to have that then ... if we've got any milk?\nWoman: Oh, yes, there's plenty. Don't worry.\nBoy: Will you get some more fruit when you go out?\nWoman: Sure. I know you love it!",
+          "paraphrase": "The boy wanted egg and toast but had no time, then tried to grab fruit but there was none left, so he ended up having cereal with milk.",
+          "explanation": "Trứng và bánh mì nướng (B) không có thời gian. Hoa quả (C) đã hết. Chỉ còn ngũ cốc (cereal) và có sữa → đáp án A."
+        },
+        {
+          "id": "p1q5",
+          "number": 5,
+          "questionText": "Which lesson has the girl got next?",
+          "answer": "C",
+          "script": "Boy: How was your last lesson?\nGirl: Oh, OK. We were studying all about mountains and rivers in geography. It was quite interesting.\nBoy: Oh, all about water then? I've just had art, not my favourite, as you know. We had to draw a man's face. I'm not very good at art.\nGirl: That's what I've got after this break. It's one of my favourite subjects. I find it much more enjoyable than maths. I've got that straight after lunch.\nBoy: Oh, well, nearly time to go ...",
+          "paraphrase": "The girl just had geography, will have art after this break, and maths straight after lunch.",
+          "explanation": "Địa lý (B) là tiết vừa xong. Toán (A) là sau bữa trưa. Cô bé sẽ học mỹ thuật (art) sau giờ nghỉ này → đáp án C."
+        },
+        {
+          "id": "p1q6",
+          "number": 6,
+          "questionText": "How much were the girl's new sunglasses?",
+          "answer": "B",
+          "script": "Girl: I got my new sunglasses, Dad!\nMan: So I see - they look really nice! Is there any change from the money I gave you?\nGirl: Yes, here you are - twelve pounds fifty.\nMan: Thanks ... Oh, I wasn't expecting to get quite so much back. I gave you thirty pounds, so that means you only paid seventeen pounds fifty for them.\nGirl: Yes, they normally cost twenty-nine pounds fifty, but they were reduced in the sale.\nMan: That's great. They look really good on you.",
+          "paraphrase": "The sunglasses normally cost £29.50 but were on sale, so the girl paid £17.50 and returned £12.50 change from the £30 her dad gave her.",
+          "explanation": "£12.50 (A) là tiền thối lại. £29.50 (C) là giá gốc trước khuyến mãi. Bố cho £30, tiền thối £12.50 → giá thực trả là £17.50 → đáp án B."
+        },
+        {
+          "id": "p1q7",
+          "number": 7,
+          "questionText": "Where are the friends going to meet?",
+          "answer": "A",
+          "script": "Boy: Is your mum bringing you into town when we meet tomorrow?\nGirl: Yes, she's going to drive me there in the car on her way to the swimming pool - she's taking my brother for his lesson.\nBoy: Great. My bus stops by the shopping centre. How about we meet there? We could spend the whole morning there, and maybe get something to eat?\nGirl: Well, I'm meeting my mum for lunch in a café actually. You could join us, but, anyway, let's meet where you suggested.\nBoy: OK. That all sounds great.",
+          "paraphrase": "The boy suggested meeting at the shopping centre, and the girl agreed to meet there even though her mum is heading to the swimming pool and she has a café lunch later.",
+          "explanation": "Hồ bơi (C) là điểm đến của mẹ cô bé, không phải nơi hẹn. Quán café (B) là nơi cô bé ăn trưa với mẹ, không phải điểm hẹn. Cả hai đồng ý gặp nhau ở trung tâm thương mại (shopping centre) như cậu bé đề xuất → đáp án A."
+        }
+      ]
+    },
+    {
+      "partNumber": 2,
+      "partTitle": "Part 2",
+      "audioUrl": "https://www.dropbox.com/scl/fi/ghg48dcd50ycorjlvkh6w/B1Prefs2_test3_audio2.mp3?rlkey=ki116jy2zjgjowwh71p9jc20x&st=h8el5pnu&dl=0&raw=1",
+      "questions": [
+        {
+          "id": "p2q8",
+          "number": 8,
+          "questionText": "You will hear a brother and sister talking about a train journey. What do they both complain about?",
+          "options": {
+            "A": "the lack of seats",
+            "B": "the behaviour of passengers",
+            "C": "the temperature on the train"
+          },
+          "answer": "C",
+          "script": "Girl: Phew! I'm glad we're off that train now!\nBoy: Me too! What a nightmare having to stand all the way.\nGirl: I didn't mind that - but it was really hot with all those people on board, wasn't it?\nBoy: It made me want to take my jacket off, but there was no room. At least, we had something to listen to, to pass the time. I'm glad we'd downloaded that new music before we left home.\nGirl: ... yeah, but the people standing next to us didn't seem too happy. I think they could hear it. I felt a bit guilty about that.\nBoy: Yeah, me too.",
+          "paraphrase": "The boy complained about having to stand, but the girl did not mind that; however both agreed it was very hot on the train.",
+          "explanation": "Không có chỗ ngồi (A): cậu bé phàn nàn nhưng cô bé không bận tâm. Âm nhạc làm phiền người khác (B): cả hai cảm thấy tội lỗi nhưng không phải điều phàn nàn chính. Cả hai đều đồng ý trời rất nóng trên tàu → the temperature → đáp án C."
+        },
+        {
+          "id": "p2q9",
+          "number": 9,
+          "questionText": "You will hear two friends talking about going to the cinema. How does the boy feel?",
+          "options": {
+            "A": "unsure which film he'll enjoy",
+            "B": "worried that some films might be boring",
+            "C": "disappointed by the choice of films"
+          },
+          "answer": "B",
+          "script": "Boy: What's on at the cinema at the moment?\nGirl: Let's see ... That historical film you were talking about, a romantic comedy and a science-fiction film.\nBoy: Well, we should choose the historical film because it's about what we're studying at school. It's really long though, and it doesn't have much action. And romantic comedies are always the same kind of stories! What's the science-fiction film about?\nGirl: A journey through space. Sounds like it might be good?\nBoy: Well, it sounds quite exciting. Shall we see that?\nGirl: Yeah, OK. I agree.",
+          "paraphrase": "The boy is concerned that the historical film is too long with no action and romantic comedies are predictable, so he worries some films might be dull before settling on the science-fiction one.",
+          "explanation": "Cậu bé không phân vân phim nào (A sai - cuối cùng chọn sci-fi). Không thất vọng về sự lựa chọn (C sai - có phim thú vị). Cậu lo lịch sử dài và thiếu hành động, phim tình cảm hài luôn nhàm → worried some might be boring → đáp án B."
+        },
+        {
+          "id": "p2q10",
+          "number": 10,
+          "questionText": "You will hear two friends talking about a new swimming pool. What does the girl say about it?",
+          "options": {
+            "A": "The opening times are convenient.",
+            "B": "The changing rooms look modern.",
+            "C": "The drinks in the café are expensive."
+          },
+          "answer": "C",
+          "script": "Girl: Have you been to the new swimming pool?\nBoy: Yes, last Sunday.\nGirl: I went on Saturday. I'd really like to go for a swim after school, but it always seems to be closed for private swimming lessons then.\nBoy: I think it opens again later on weekdays for people who go after work. I was impressed by the changing rooms - the showers are great.\nGirl: They've got good hairdryers, too. I also went to the café there. I couldn't believe the price of juice and lemonade. More than other places. The food looked delicious, though, and it's open every day.",
+          "paraphrase": "The girl found the pool inconvenient after school and was shocked by how expensive the drinks in the café were compared to other places.",
+          "explanation": "Giờ mở cửa (A) không tiện cho cô sau giờ học. Phòng thay đồ (B) cậu bé nhận xét, không phải cô bé. Cô bé ngạc nhiên vì giá nước uống đắt hơn nơi khác → đáp án C."
+        },
+        {
+          "id": "p2q11",
+          "number": 11,
+          "questionText": "You will hear two friends talking about an after-school science club. What does the boy say about the club?",
+          "options": {
+            "A": "The girl would enjoy attending it.",
+            "B": "There were some challenging activities to do.",
+            "C": "He thinks the teacher is good."
+          },
+          "answer": "A",
+          "script": "Boy: We had our first after-school science club today. That new teacher's in charge of it.\nGirl: Oh, right. What kinds of things did you do?\nBoy: Well, not much yet, but the teacher was telling us about all the experiments we'll do, and they sound quite difficult, but you're really into science. You'd love it. If you haven't decided which club to go to yet, you should think about joining.\nGirl: I'll make up my mind soon. Anyway, you've made me think about it seriously, but I want to ask my brother which one he's going to join.\nBoy: OK.",
+          "paraphrase": "The boy tells the girl the experiments sound difficult but thinks she would love the science club because she is really into science.",
+          "explanation": "Thí nghiệm khó (B) được đề cập nhưng không phải điều chính cậu muốn nhấn mạnh. Không đánh giá giáo viên tốt (C). Cậu bé nghĩ cô bé sẽ rất thích vì cô yêu thích khoa học → đáp án A."
+        },
+        {
+          "id": "p2q12",
+          "number": 12,
+          "questionText": "You will hear a boy telling a friend about a family camping holiday he went on. What did the boy find disappointing?",
+          "options": {
+            "A": "the location of the campsite",
+            "B": "the evening entertainment",
+            "C": "the outdoor activities available"
+          },
+          "answer": "A",
+          "script": "Girl: How was your holiday?\nBoy: We went to a different campsite this year - we'd all got a bit bored with the usual place. This new one looked much better on the website, and it was in some ways, like you could do mini-golf and climbing. I was hoping it'd be nearer the sea than it was, though. There was no car park near the beach, so we had to walk.\nGirl: What did you do in the evening?\nBoy: There was a show each night, but I mostly played things like table tennis with other kids I'd met there, which was fun.",
+          "paraphrase": "The campsite had good activities and evening entertainment, but the boy was disappointed it was further from the sea than expected with no nearby car park.",
+          "explanation": "Hoạt động ngoài trời (C) tốt - có mini-golf và leo núi. Giải trí buổi tối (B) có show nhưng cậu chơi bóng bàn và vui vẻ. Điều thất vọng là trại không gần biển như mong đợi → location → đáp án A."
+        },
+        {
+          "id": "p2q13",
+          "number": 13,
+          "questionText": "You will hear two friends talking about an accident the boy had. The boy felt better after",
+          "options": {
+            "A": "going to the doctor.",
+            "B": "taking some medicine.",
+            "C": "putting on a bandage."
+          },
+          "answer": "B",
+          "script": "Girl: How did you hurt your arm?\nBoy: I slipped down the stairs at home and hit it as I fell.\nGirl: Oh, dear.\nBoy: Yeah, I was lucky not to break it. My mum tried to wrap it in a bandage, but I couldn't stand anything touching it. It was almost time for bed, so Mum gave me a few pills because of the pain. It was fine after that. She still wanted to take me to the doctor in the morning, but I persuaded her that there was no need, even if I did have to use my other arm more that day.",
+          "paraphrase": "The boy couldn't tolerate a bandage and refused to go to the doctor, but felt better after taking painkillers his mum gave him.",
+          "explanation": "Băng bó (C) cậu không chịu được. Bác sĩ (A) cậu thuyết phục mẹ không cần đi. Cậu uống thuốc giảm đau (pills) và cảm thấy ổn sau đó → đáp án B."
+        }
+      ]
+    },
+    {
+      "partNumber": 3,
+      "partTitle": "Part 3",
+      "audioUrl": "https://www.dropbox.com/scl/fi/nu0uqqlpvlpajfzqwrb0n/B1Prefs2_test3_audio3.mp3?rlkey=jdrr2btkhbigcq61oa10yhbps&st=i864jwj2&dl=0&raw=1",
+      "noteTitle": "Boat trip",
+      "context": "You will hear a boy called Victor talking about a boat trip.",
+      "questions": [
+        {
+          "id": "p3q14",
+          "number": 14,
+          "beforeGap": "The name of the boat Victor went on was",
+          "afterGap": ".",
+          "answer": "Silver Star",
+          "acceptedAnswers": ["Silver Star", "SILVER STAR", "silver star"],
+          "script": "My mum drove us to a little port called Seaville. There were loads of boats there taking people on trips. Their names all had connections with things in the sky. The one we chose was called Silver Star. There was a much bigger one called Golden Sun that I'd like to go on another time.",
+          "paraphrase": "All the boats were named after things in the sky; Victor's boat was called Silver Star, and there was a bigger one called Golden Sun he hopes to try another time.",
+          "explanation": "Tên các thuyền đều liên quan đến bầu trời. Victor đi trên thuyền tên Silver Star, còn Golden Sun là thuyền lớn hơn muốn đi lần sau → đáp án: Silver Star."
+        },
+        {
+          "id": "p3q15",
+          "number": 15,
+          "beforeGap": "Victor's boat trip lasted",
+          "afterGap": "hours.",
+          "answer": "three and a half",
+          "acceptedAnswers": ["three and a half", "THREE AND A HALF", "3.5", "3½"],
+          "script": "You can choose how long you want to go on a boat trip for. Three and a half hours was enough for us, but some boats go out for as much as ten hours, and others as little as an hour and a half.",
+          "paraphrase": "Victor chose a three and a half hour trip, which was enough for his group, though options range from one and a half to ten hours.",
+          "explanation": "Có nhiều lựa chọn thời gian từ 1.5 đến 10 tiếng. Victor chọn chuyến ba tiếng rưỡi (three and a half hours) → đáp án: three and a half."
+        },
+        {
+          "id": "p3q16",
+          "number": 16,
+          "beforeGap": "Victor saw some",
+          "afterGap": "swimming near the boat.",
+          "answer": "dolphins",
+          "acceptedAnswers": ["dolphins", "DOLPHINS", "dolphin", "DOLPHIN"],
+          "script": "At certain times of year, you might be lucky enough to see whales as they swim up the coast. We went at the wrong time for that, but a lovely group of dolphins came very close to us.",
+          "paraphrase": "Victor missed the whale season but was treated to a group of dolphins swimming very close to the boat.",
+          "explanation": "Đi sai mùa để xem cá voi, nhưng một đàn cá heo (dolphins) đã bơi rất gần thuyền → đáp án: dolphins."
+        },
+        {
+          "id": "p3q17",
+          "number": 17,
+          "beforeGap": "Victor especially enjoyed visiting some",
+          "afterGap": "on an island.",
+          "answer": "caves",
+          "acceptedAnswers": ["caves", "CAVES", "cave", "CAVE"],
+          "script": "We visited an island as part of the trip. There were some amazing cliffs, which looked very high, but even better were the caves there. They had lights in and we walked into several of them for a few hundred metres.",
+          "paraphrase": "On the island visit, Victor found the cliffs impressive but enjoyed the lit caves even more, walking several hundred metres into them.",
+          "explanation": "Vách đá (cliffs) ấn tượng nhưng điều Victor thích hơn là các hang động (caves) có đèn chiếu sáng → đáp án: caves."
+        },
+        {
+          "id": "p3q18",
+          "number": 18,
+          "beforeGap": "Boat trips are available all year except in",
+          "afterGap": ".",
+          "answer": "January",
+          "acceptedAnswers": ["January", "JANUARY"],
+          "script": "The captain of our boat said the best time to visit is in September. There's lots of wildlife around then, but avoid going in January as that's when the weather's really bad, and the crews all take their holidays. They're usually back by February.",
+          "paraphrase": "September is the best time to visit, but January should be avoided as the weather is bad and all the boat crews are on holiday.",
+          "explanation": "Tháng 9 là thời điểm tốt nhất. Tháng 1 (January) thời tiết xấu và thủy thủ đoàn nghỉ phép nên không có chuyến → đáp án: January."
+        },
+        {
+          "id": "p3q19",
+          "number": 19,
+          "beforeGap": "For more information, go to www.",
+          "afterGap": ".islandboattrips.com",
+          "answer": "robshaw",
+          "acceptedAnswers": ["robshaw", "ROBSHAW"],
+          "script": "The address is www dot robshaw dot islandboattrips dot com. I'll spell that for you ... it's R-O-B-S-H-A-W dot islandboattrips dot com.",
+          "paraphrase": "The website address is www.robshaw.islandboattrips.com, spelled out as R-O-B-S-H-A-W.",
+          "explanation": "Địa chỉ website được đánh vần rõ ràng: R-O-B-S-H-A-W → robshaw → đáp án: robshaw."
+        }
+      ]
+    },
+    {
+      "partNumber": 4,
+      "partTitle": "Part 4",
+      "audioUrl": "https://www.dropbox.com/scl/fi/jzo96v2ak02wwsjl2x5ps/B1Prefs2_test3_audio4.mp3?rlkey=xbl8lzociyixkho7l3x8prh3v&st=deql3zq5&dl=0&raw=1",
+      "context": "You will hear an interview with a young woman called Amy Wu, who makes video blogs and uploads them to the internet.",
+      "questions": [
+        {
+          "id": "p4q20",
+          "number": 20,
+          "questionText": "Amy got the idea of making video blogs",
+          "options": {
+            "A": "after meeting other bloggers.",
+            "B": "during a lesson at school.",
+            "C": "while she was unwell."
+          },
+          "answer": "C",
+          "script": "Woman: I was 11, and I was off school with a bad cold. Because I was bored, I went online to find something for one of the lessons I was missing. On one website, some video bloggers were talking about making their blogs. I thought ... I'm sure I could produce one people my age'd like to watch, so I did.",
+          "paraphrase": "Amy was home sick with a cold, went online out of boredom and discovered video bloggers, which inspired her to start her own blog.",
+          "explanation": "Cô bé không gặp blogger trực tiếp (A sai - chỉ xem online). Không phải trong giờ học (B sai - đang nghỉ ốm). Amy ở nhà vì cảm lạnh và nảy ra ý tưởng khi đang ốm → while she was unwell → đáp án C."
+        },
+        {
+          "id": "p4q21",
+          "number": 21,
+          "questionText": "What was Amy's last video blog about?",
+          "options": {
+            "A": "an exercise routine",
+            "B": "a kind of health food",
+            "C": "a brand of sports shoe"
+          },
+          "answer": "B",
+          "script": "Woman: Well, I do lots of stuff about health and fitness, so I'm often asked by companies to review their products. In my next one, for example, I'm trying out a pair of trainers while exercising to music. That'll be more fun than the latest one I've just uploaded to the internet. It was about a kind of yoghurt which is supposed to be really good for you.",
+          "paraphrase": "Amy just uploaded a blog about a healthy yoghurt, and her next one will be about testing trainers while exercising.",
+          "explanation": "Giày thể thao (C) là nội dung blog tiếp theo, chưa upload. Luyện tập thể dục (A) cũng là blog tiếp theo. Blog vừa đăng là về một loại sữa chua tốt cho sức khỏe (yoghurt = health food) → đáp án B."
+        },
+        {
+          "id": "p4q22",
+          "number": 22,
+          "questionText": "Before recording a video blog, Amy says it's important to",
+          "options": {
+            "A": "choose the right clothes.",
+            "B": "spend some time relaxing.",
+            "C": "practise what she will say."
+          },
+          "answer": "B",
+          "script": "Woman: I don't think too much about what I wear, and I try not to worry about what I'll say. I check my notes, but I avoid reading them aloud as I want to sound totally natural. Feeling calm's essential, so I sit quietly for a bit. Then I feel ready to record.",
+          "paraphrase": "Amy does not fuss over clothes or rehearse her words, but she always sits quietly to calm herself before recording.",
+          "explanation": "Trang phục (A) cô không để ý nhiều. Luyện tập lời nói (C) cô tránh để nghe tự nhiên. Điều quan trọng là cảm thấy bình tĩnh bằng cách ngồi yên lặng một lúc → spend time relaxing → đáp án B."
+        },
+        {
+          "id": "p4q23",
+          "number": 23,
+          "questionText": "Every day Amy makes sure that she",
+          "options": {
+            "A": "replies to messages from her fans.",
+            "B": "looks at social networking sites.",
+            "C": "writes a personal diary."
+          },
+          "answer": "A",
+          "script": "Woman: Well, the blog isn't like a personal diary - I don't blog every day. But when I do, I put links on my social media pages. Even on days when I don't post a blog, I communicate with anyone who's said something in the comments section of my videos. That's a daily event.",
+          "paraphrase": "Amy does not blog every day, but she always reads and responds to fan comments in the video section every single day.",
+          "explanation": "Blog không phải viết mỗi ngày (C sai). Đăng link lên mạng xã hội (B) chỉ khi đăng blog mới. Điều làm mỗi ngày là trả lời bình luận của người xem (comments) → replies to fans → đáp án A."
+        },
+        {
+          "id": "p4q24",
+          "number": 24,
+          "questionText": "Who does Amy enjoy interviewing most?",
+          "options": {
+            "A": "people who want to change the world",
+            "B": "people who have won sports competitions",
+            "C": "people who most teenagers admire"
+          },
+          "answer": "A",
+          "script": "Woman: Yes, I've interviewed some famous sports champions. I find them really easy to talk to. But they're not my favourite. I really like talking to people that want to make the planet a better place, especially if they're interested in the opinions of teenagers like me, because we're the future.",
+          "paraphrase": "Although Amy enjoys interviewing sports champions, she prefers talking to people who want to improve the world and value the opinions of young people.",
+          "explanation": "Vận động viên vô địch (B) dễ trò chuyện nhưng không phải yêu thích nhất. Thanh thiếu niên ngưỡng mộ (C) không được đề cập. Amy thích nhất phỏng vấn những người muốn làm cho hành tinh tốt đẹp hơn → want to change the world → đáp án A."
+        },
+        {
+          "id": "p4q25",
+          "number": 25,
+          "questionText": "Why did Amy make a video blog called \"My Mistakes\"?",
+          "options": {
+            "A": "to attract new audiences",
+            "B": "to show she's an ordinary person",
+            "C": "to make her fans laugh"
+          },
+          "answer": "B",
+          "script": "Woman: Oh, that ... Video blogging isn't just about being popular. I like my fans to see my true character so they don't think I'm perfect. I enjoy the silly moments, like when I pronounce something incorrectly. And I also like laughing at myself. It helps me not take everything too seriously.",
+          "paraphrase": "Amy made the 'My Mistakes' blog so her fans can see her true, imperfect character rather than thinking she is perfect.",
+          "explanation": "Thu hút khán giả mới (A) không được đề cập. Làm người xem cười (C) là kết quả phụ, không phải mục đích chính. Mục đích là để người xem thấy bản thân thật của cô, không hoàn hảo → show she's ordinary → đáp án B."
+        }
+      ]
+    }
+  ]
+}
