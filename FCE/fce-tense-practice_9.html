@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCE Tense Practice - Present &amp; Past Tense Review</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --c-primary:#B8DB80;
+    --c-bg-soft:#F7F6D3;
+    --c-check:#F39EB6;
+    --c-explain-bg:#FFE4EF;
+  }
+  *{ font-family:'Quicksand', sans-serif; }
+  body{ background: linear-gradient(180deg, var(--c-bg-soft) 0%, #ffffff 55%); }
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+  .btn-primary{
+    background: var(--c-primary);
+    transition: transform .15s ease, background .15s ease;
+  }
+  .btn-primary:hover{ background:#6fb9cc; transform: translateY(-1px); }
+  .btn-primary:active{ transform: translateY(0); }
+  .btn-primary:disabled{ opacity:.5; cursor:not-allowed; transform:none; }
+
+  .opt-btn{
+    border:2px solid var(--c-primary);
+    background:#fff;
+    transition: all .15s ease;
+  }
+  .opt-btn:hover:not(:disabled){ background: var(--c-bg-soft); }
+  .opt-btn:disabled{ cursor:not-allowed; }
+
+  .tab-btn{
+    transition: all .15s ease;
+    white-space:nowrap;
+  }
+
+  .fillblank-input{
+    border-bottom:2px solid var(--c-primary);
+    outline:none;
+    text-align:center;
+    min-width:150px;
+    font-weight:600;
+    background:transparent;
+    padding:2px 4px;
+  }
+  .fillblank-input:focus{ background: var(--c-bg-soft); border-radius:4px; }
+  .fillblank-input:disabled{ border-bottom-color:#d1d5db; color:#374151; }
+
+  #violation-overlay{
+    position:fixed; inset:0;
+    background:rgba(20,20,20,.55);
+    backdrop-filter: blur(3px);
+    display:none;
+    align-items:center; justify-content:center;
+    z-index:9999;
+  }
+  #toast-container{
+    position:fixed; top:16px; right:16px; z-index:10000;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .toast{
+    background:#3f3f46; color:#fff; padding:10px 16px; border-radius:10px;
+    font-size:14px; box-shadow:0 4px 12px rgba(0,0,0,.2);
+    animation: slideIn .2s ease;
+  }
+  @keyframes slideIn{ from{opacity:0; transform:translateX(20px);} to{opacity:1; transform:translateX(0);} }
+
+  .score-ring{ width:200px; height:200px; }
+
+  @keyframes shake{
+    10%,90%{ transform: translateX(-2px); }
+    20%,80%{ transform: translateX(4px); }
+    30%,50%,70%{ transform: translateX(-8px); }
+    40%,60%{ transform: translateX(8px); }
+  }
+  .shake-error{ animation: shake .5s ease; border-color:#dc2626 !important; }
+
+  ::-webkit-scrollbar{ width:8px; }
+  ::-webkit-scrollbar-thumb{ background: var(--c-check); border-radius:8px; }
+</style>
+</head>
+<body class="min-h-screen">
+
+<script>
+  // Diagnostic safety net: if ANY JavaScript error happens anywhere on this page
+  // (syntax error, runtime error, etc.), show it as a visible red banner instead
+  // of failing silently. This is placed in its own early <script> tag so it is
+  // active even if the main script below fails to parse.
+  window.addEventListener('error', function(e){
+    try{
+      var banner = document.createElement('div');
+      banner.setAttribute('style', 'position:fixed;top:0;left:0;right:0;z-index:999999;background:#dc2626;color:#fff;padding:12px 16px;font-family:monospace;font-size:13px;white-space:pre-wrap;box-shadow:0 2px 8px rgba(0,0,0,.3);');
+      banner.textContent = 'Loi JavaScript: ' + (e.message || e) + ' (dong ' + (e.lineno || '?') + ', cot ' + (e.colno || '?') + ')';
+      document.body.appendChild(banner);
+    } catch(bannerErr){ /* last resort: fail silently if even the banner cannot render */ }
+  });
+</script>
+
+<div id="toast-container"></div>
+
+<!-- ================= VIOLATION OVERLAY ================= -->
+<div id="violation-overlay">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center mx-4">
+    <div class="text-5xl mb-3">⚠️</div>
+    <h3 class="text-lg font-bold text-gray-800 mb-2">You left the exam screen</h3>
+    <p class="text-sm text-gray-500 mb-1">Violation <span id="ov-count">1</span>/3</p>
+    <p class="text-sm text-gray-600 mb-5">Please return to fullscreen mode to continue your exam.</p>
+    <button id="btn-back-fullscreen" class="btn-primary text-white font-semibold px-6 py-3 rounded-xl w-full">Back to Fullscreen</button>
+  </div>
+</div>
+
+<!-- ================= SCREEN 1: WELCOME (separate page) ================= -->
+<section id="screen-welcome" class="screen active min-h-screen flex items-center justify-center px-4" style="display:flex">
+  <div class="bg-white rounded-3xl shadow-xl p-8 md:p-10 max-w-md w-full">
+    <div class="text-center mb-6">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-3" style="background:var(--c-primary)">
+        <span class="text-2xl">📘</span>
+      </div>
+      <h1 class="text-2xl font-bold text-gray-800">FCE Tense Practice</h1>
+      <p class="text-sm text-gray-500 mt-1">Present &amp; Past Tense Review - Units 1 &amp; 2</p>
+    </div>
+
+    <label class="block text-sm font-semibold text-gray-700 mb-1">Full name</label>
+    <input id="input-name" type="text" placeholder="Enter your full name"
+      class="w-full border-2 rounded-xl px-4 py-3 mb-1 outline-none" style="border-color:var(--c-primary)">
+    <p id="name-error" class="text-red-600 font-semibold text-sm mb-4 hidden">⚠️ Please enter your full name before starting.</p>
+
+    <div class="rounded-xl p-4 mb-6 text-sm text-gray-600" style="background:var(--c-bg-soft)">
+      <p class="font-semibold text-gray-700 mb-1">Before you start:</p>
+      <ul class="list-disc list-inside space-y-1">
+        <li>The test has 3 parts: Matching, Multiple Choice, and Fill in the blank.</li>
+        <li>Each answer is checked right away - you'll see if it's correct and read the explanation immediately.</li>
+        <li>Once an answer is checked, it is locked and cannot be changed.</li>
+        <li>The exam runs in fullscreen mode. Do not switch tabs, minimize, or exit fullscreen.</li>
+        <li>After 3 violations, your exam will end automatically.</li>
+        <li>At the end, take a screenshot of your result screen and send it to your teacher.</li>
+      </ul>
+    </div>
+
+    <button id="btn-start" class="btn-primary text-white font-bold w-full py-3 rounded-xl text-base">Start Exam</button>
+  </div>
+</section>
+
+<!-- ================= SCREEN 2: EXAM (separate page: Matching -> MCQ -> Fill in the blank, in order) ================= -->
+<section id="screen-exam" class="screen min-h-screen px-3 md:px-6 py-4" style="display:none">
+  <div class="max-w-4xl mx-auto">
+
+    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <span id="part-progress" class="text-sm font-bold px-3 py-1 rounded-full text-white" style="background:var(--c-primary)"></span>
+      <span id="timer" class="text-sm font-semibold text-gray-500">00:00</span>
+    </div>
+
+    <div id="part-content" class="bg-white rounded-2xl shadow-md p-5 md:p-7 min-h-[300px]"></div>
+
+    <div class="flex justify-end mt-4 mb-8">
+      <button id="btn-next-part" class="btn-primary text-white font-bold px-6 py-3 rounded-xl" disabled>Next</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREEN 3: RESULT (separate page) ================= -->
+<section id="screen-result" class="screen min-h-screen flex items-center justify-center px-4 py-8" style="display:none">
+  <div class="bg-white rounded-3xl shadow-xl p-8 md:p-10 max-w-lg w-full text-center">
+    <h2 class="text-lg font-bold text-gray-500 mb-1">Exam Result</h2>
+    <p id="result-name" class="text-xl font-bold text-gray-800 mb-5">-</p>
+
+    <div class="flex items-center justify-center mb-4">
+      <div class="relative flex items-center justify-center">
+        <svg class="score-ring -rotate-90">
+          <circle cx="100" cy="100" r="88" stroke="#e5e7eb" stroke-width="14" fill="none"></circle>
+          <circle id="score-circle" cx="100" cy="100" r="88" stroke="var(--c-primary)" stroke-width="14" fill="none" stroke-linecap="round"></circle>
+        </svg>
+        <div class="absolute text-center">
+          <div id="score-percent" class="text-4xl font-extrabold text-gray-800">0%</div>
+          <div id="score-fraction" class="text-sm text-gray-400">0/50</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-2 mb-5 text-sm">
+      <div class="rounded-xl p-3" style="background:var(--c-bg-soft)">
+        <p class="text-gray-500 text-xs">Matching</p>
+        <p id="score-matching" class="font-bold text-gray-800">0/15</p>
+      </div>
+      <div class="rounded-xl p-3" style="background:var(--c-bg-soft)">
+        <p class="text-gray-500 text-xs">MCQ</p>
+        <p id="score-mcq" class="font-bold text-gray-800">0/20</p>
+      </div>
+      <div class="rounded-xl p-3" style="background:var(--c-bg-soft)">
+        <p class="text-gray-500 text-xs">Fill blank</p>
+        <p id="score-fillblank" class="font-bold text-gray-800">0/15</p>
+      </div>
+    </div>
+
+    <div class="text-left text-sm text-gray-600 space-y-1.5 border-t pt-4">
+      <p>Start time: <span id="result-start" class="font-semibold text-gray-800">-</span></p>
+      <p>End time: <span id="result-end" class="font-semibold text-gray-800">-</span></p>
+      <p>Total duration: <span id="result-duration" class="font-semibold text-gray-800">-</span></p>
+      <p>Violations detected: <span id="result-violations" class="font-semibold text-gray-800">0</span></p>
+    </div>
+
+    <p class="text-xs text-gray-400 mt-5">Take a screenshot of this screen and send it to your teacher.</p>
+  </div>
+</section>
+
+<script>
+/* ============ EXAM DATA ============ */
+const matchingLegend = [
+  {l:'A', t:"Permanent situations or states"},
+  {l:'B', t:"General truths and facts"},
+  {l:'C', t:"Habits or repeated actions"},
+  {l:'D', t:"Reviews, sports commentaries or dramatic narratives"},
+  {l:'E', t:"Actions happening at the moment of speaking"},
+  {l:'F', t:"Temporary situations"},
+  {l:'G', t:"Annoying habits, usually with 'always'"},
+  {l:'H', t:"Changing or developing situations"},
+  {l:'I', t:"Completed actions in the past"},
+  {l:'J', t:"A series of completed actions in the past"},
+  {l:'K', t:"An action in progress when another action interrupted it"},
+  {l:'L', t:"Two or more simultaneous actions in the past"},
+  {l:'M', t:"Background description in a narrative"},
+  {l:'N', t:"Past habits or states that are no longer true"},
+  {l:'O', t:"Past habits, but NOT past states"}
+];
+
+const matchingQuestions = [
+  {text:"Water boils at 100 degrees Celsius.", answer:'B'},
+  {text:"I go to the gym three times a week.", answer:'C'},
+  {text:"The main character finds a map, follows it, and discovers the treasure.", answer:'D'},
+  {text:"I am staying with my aunt until my flat is decorated.", answer:'F'},
+  {text:"My brother is always borrowing my clothes without asking!", answer:'G'},
+  {text:"Please be quiet, the baby is sleeping.", answer:'E'},
+  {text:"The weather is getting colder and colder.", answer:'H'},
+  {text:"I bought a new car last week.", answer:'I'},
+  {text:"He got up, took a shower, and left for work.", answer:'J'},
+  {text:"I was cooking dinner when the phone rang.", answer:'K'},
+  {text:"While she was reading, her husband was watching TV.", answer:'L'},
+  {text:"The sun was shining and the birds were singing as we walked down the street.", answer:'M'},
+  {text:"She used to have long hair when she was a child.", answer:'N'},
+  {text:"Every Sunday, my dad would take us to the park.", answer:'O'},
+  {text:"She lives in a large house in the countryside.", answer:'A'}
+];
+
+const mcqQuestions = [
+  {text:"The soup _____ delicious! What did you put in it?", options:{A:"tastes",B:"is tasting",C:"taste",D:"tasted"}, answer:'A'},
+  {text:"She _____ with her parents this week because her house is being painted.", options:{A:"stays",B:"is staying",C:"stay",D:"stayed"}, answer:'B'},
+  {text:"I _____ a shower when all the lights suddenly went out.", options:{A:"had",B:"have",C:"was having",D:"am having"}, answer:'C'},
+  {text:"My grandfather _____ have a big motorcycle when he was young.", options:{A:"would",B:"is used to",C:"was having",D:"used to"}, answer:'D'},
+  {text:"I _____ getting up early, so I really don't mind taking the morning shift.", options:{A:"am used to",B:"used to",C:"get used to",D:"would"}, answer:'A'},
+  {text:"He _____ his dirty socks on the living room floor! It's so annoying.", options:{A:"always leaves",B:"is always leaving",C:"left always",D:"always left"}, answer:'B'},
+  {text:"She opened the door, turned on the light, and _____ her keys on the table.", options:{A:"drops",B:"dropping",C:"dropped",D:"was dropping"}, answer:'C'},
+  {text:"The Moon _____ around the Earth.", options:{A:"is going",B:"go",C:"gone",D:"goes"}, answer:'D'},
+  {text:"While I was working upstairs, my friends _____ a movie in the living room.", options:{A:"watched",B:"watch",C:"are watching",D:"were watching"}, answer:'D'},
+  {text:"Your English _____ better and better every day! Keep it up!", options:{A:"is getting",B:"gets",C:"get",D:"got"}, answer:'A'},
+  {text:"We _____ to Paris for our summer holiday last year.", options:{A:"go",B:"went",C:"were going",D:"have gone"}, answer:'B'},
+  {text:"Why _____ the milk? Does it smell bad?", options:{A:"do you smell",B:"did you smell",C:"are you smelling",D:"have you smelled"}, answer:'C'},
+  {text:"The train to London _____ at 8:00 AM tomorrow. Don't be late!", options:{A:"leaves",B:"is leaving",C:"left",D:"leave"}, answer:'A'},
+  {text:"It's a very stressful new job, but I'll _____ it soon.", options:{A:"used to",B:"get used to",C:"am used to",D:"be used to"}, answer:'B'},
+  {text:"At exactly 8 PM last night, I _____ dinner with my family.", options:{A:"ate",B:"eat",C:"was eating",D:"am eating"}, answer:'C'},
+  {text:"When we were kids, we _____ build wooden forts in the woods every summer.", options:{A:"are used to",B:"use to",C:"was going to",D:"would"}, answer:'D'},
+  {text:"When I was at primary school, I _____ the answer to almost every math question.", options:{A:"was knowing",B:"know",C:"am knowing",D:"knew"}, answer:'D'},
+  {text:"In the end of the film, the hero _____ the villain and saves the day.", options:{A:"defeats",B:"is defeating",C:"defeated",D:"was defeating"}, answer:'A'},
+  {text:"We were walking in the park when it suddenly _____ to rain.", options:{A:"starts",B:"started",C:"was starting",D:"is starting"}, answer:'B'},
+  {text:"When I arrived at the party, the music was playing loudly and people _____.", options:{A:"dance",B:"danced",C:"were dancing",D:"are dancing"}, answer:'C'}
+];
+
+const fillblankQuestions = [
+  {text:"I (walk) {0} down the street when I suddenly saw my old friend.", blanks:[["was walking"]]},
+  {text:"She usually (drink) {0} coffee in the morning, but today she (drink) {1} tea.", blanks:[["drinks"],["is drinking"]]},
+  {text:"My dad (always / complain) {0} about the weather! It's so frustrating to listen to.", blanks:[["is always complaining"]]},
+  {text:"They (meet) {0} each other while they (study) {1} at a university in London.", blanks:[["met"],["were studying"]]},
+  {text:"He (taste) {0} the sauce to see if it needs more salt.", blanks:[["is tasting"]]},
+  {text:"I (not / use to) {0} like broccoli when I was a kid, but now I love it.", blanks:[["didn't use to","did not use to","didnt use to"]]},
+  {text:"We (sit) {0} in the garden. The sun (shine) {1} and the birds (sing) {2}.", blanks:[["were sitting"],["was shining"],["were singing"]]},
+  {text:"First, he (read) {0} the mysterious message, then he (smile) {1}.", blanks:[["read"],["smiled"]]},
+  {text:"I (think) {0} of moving to a new apartment next month.", blanks:[["am thinking"]]},
+  {text:"I (think) {0} that learning English is very important for your future.", blanks:[["think"]]}
+];
+
+const TOTAL_MATCHING = matchingQuestions.length; // 15
+const TOTAL_MCQ = mcqQuestions.length; // 20
+const TOTAL_FILLBLANK = fillblankQuestions.length; // 10
+const TOTAL_QUESTIONS = TOTAL_MATCHING + TOTAL_MCQ + TOTAL_FILLBLANK; // 45
+
+const matchingExplanations = [
+  "Nước sôi ở 100 độ là sự thật khoa học không đổi - dùng Hiện tại đơn diễn tả general truths.",
+  "Đi gym 3 lần một tuần là thói quen lặp lại - Hiện tại đơn diễn tả habitual actions.",
+  "Khi tóm tắt cốt truyện phim/sách (dù đã xảy ra), tiếng Anh quy ước dùng Hiện tại đơn để tạo cảm giác sinh động - mẹo hay gặp trong bài thi FCE.",
+  "Chỉ ở nhờ nhà dì trong lúc chờ sửa nhà, không phải ở mãi mãi - tình huống tạm thời dùng Hiện tại tiếp diễn.",
+  "Có 'always' và mang sắc thái phàn nàn, khó chịu - Hiện tại tiếp diễn diễn tả annoying habit.",
+  "Em bé đang ngủ ngay lúc nói - hành động đang xảy ra tại thời điểm nói.",
+  "Cấu trúc so sánh kép 'colder and colder' cho thấy tình huống đang thay đổi/phát triển dần - Hiện tại tiếp diễn.",
+  "Có mốc thời gian quá khứ rõ ràng 'last week' - hành động đã hoàn tất, dùng Quá khứ đơn.",
+  "Một chuỗi hành động làm nối tiếp nhau (dậy, tắm, đi làm) - tất cả chia Quá khứ đơn.",
+  "Đang nấu ăn (hành động kéo dài, Quá khứ tiếp diễn) thì điện thoại reo (hành động ngắn, Quá khứ đơn) cắt ngang.",
+  "Hai hành động xảy ra song song cùng lúc trong quá khứ, có 'while' - cả hai đều chia Quá khứ tiếp diễn.",
+  "Mô tả khung cảnh làm nền cho câu chuyện (nắng chiếu, chim hót) - dùng Quá khứ tiếp diễn.",
+  "Từng có mái tóc dài, nay không còn nữa - trạng thái quá khứ, dùng used to (không dùng would vì 'have' là động từ trạng thái).",
+  "Thói quen lặp lại trong quá khứ, là hành động chứ không phải trạng thái - có thể thay used to bằng would.",
+  "Sống ở một ngôi nhà lớn ở vùng quê là thực tế lâu dài, cố định - Hiện tại đơn."
+];
+
+const mcqExplanations = [
+  "'taste' ở đây là động từ trạng thái (có vị), không thêm -ing - chọn A (tastes).",
+  "Cô ấy chỉ ở nhà bố mẹ tuần này vì nhà đang sửa - tình huống tạm thời - is staying.",
+  "Đang tắm (hành động kéo dài) thì mất điện (hành động xen vào) - was having.",
+  "'have' (sở hữu xe máy) là động từ trạng thái, would không dùng được với động từ trạng thái - used to.",
+  "Phía sau là V-ing (getting up), nghĩa 'đã quen với' ở hiện tại - am used to.",
+  "'always' mang nghĩa phàn nàn về thói quen xấu ở hiện tại - is always leaving.",
+  "Mở cửa, bật đèn, và vứt chìa khoá - chuỗi hành động nối tiếp - dropped (Quá khứ đơn).",
+  "Mặt trăng quay quanh Trái Đất là chân lý khoa học - Hiện tại đơn, số ít nên là goes.",
+  "Hai hành động song song, có 'while' - were watching (Quá khứ tiếp diễn).",
+  "Tiếng Anh đang tốt lên dần (so sánh kép) - tình huống đang phát triển - is getting.",
+  "Có mốc thời gian 'last year' đã kết thúc rõ ràng - went (Quá khứ đơn).",
+  "'smell' ở đây là hành động chủ động (đưa mũi ngửi), không phải trạng thái - are you smelling.",
+  "Giờ tàu chạy là lịch trình cố định (timetable) - Hiện tại đơn dù nói về tương lai - leaves.",
+  "Chuyển từ chưa quen sang dần quen với công việc mới - get used to, đứng sau will nên giữ nguyên 'get'.",
+  "'At exactly 8 PM last night' - mốc thời gian rất cụ thể trong quá khứ, tại đúng lúc đó đang làm gì - was eating.",
+  "Kể chuyện tuổi thơ, thói quen lặp lại (hành động) - would build.",
+  "'know' là động từ chỉ nhận thức/trạng thái, không có dạng 'was knowing' - knew.",
+  "Tóm tắt cốt truyện phim/tiểu thuyết luôn dùng Hiện tại đơn dù phim đã xem xong - defeats.",
+  "Đang đi (hành động kéo dài) thì trời đổ mưa (hành động xen vào) - started.",
+  "Miêu tả khung cảnh nền lúc bước vào bữa tiệc (nhạc đang chơi, người đang nhảy) - were dancing."
+];
+
+const fillblankExplanations = [
+  "Đang đi dạo (hành động kéo dài, làm nền) thì nhìn thấy bạn cũ (hành động ngắn xen vào) - was walking.",
+  "'usually' - thói quen cố định - Hiện tại đơn (drinks). 'today' - phá vỡ thói quen, chỉ tạm thời hôm nay - Hiện tại tiếp diễn (is drinking).",
+  "'always' + phàn nàn về thói quen xấu ở hiện tại - is always complaining.",
+  "Việc học đại học kéo dài (were studying), trong khoảng đó việc gặp nhau đã xảy ra và hoàn tất (met).",
+  "Chủ động nếm thử sốt xem có thiếu muối không (hành động) - is tasting.",
+  "Phủ định của 'used to' là 'didn't use to' (bỏ 'd' ở use vì đã mượn trợ động từ didn't).",
+  "Miêu tả khung cảnh làm nền trong quá khứ (ngồi, nắng chiếu, chim hót) - cả 3 đều chia Quá khứ tiếp diễn.",
+  "Đọc thư xong mới mỉm cười - chuỗi hành động nối tiếp - Quá khứ đơn (read / smiled).",
+  "'think' mang nghĩa 'đang cân nhắc, đang tính toán' (hành động) - am thinking.",
+  "'think' mang nghĩa 'cho rằng, quan điểm' (trạng thái) - không dùng tiếp diễn, chỉ dùng think."
+];
+
+/* ============ STATE ============ */
+let state = {
+  studentName: "",
+  currentPart: 'matching',   // sequential flow: matching -> mcq -> fillblank -> submit
+  answers: {},              // globalIndex -> answer (string letter, or array for fillblank)
+  checked: {},              // globalIndex -> true once that question has been checked/revealed
+  violationCount: 0,
+  blocked: false,
+  startTime: null,
+  endTime: null,
+  timerInterval: null,
+  pollInterval: null,
+  submitted: false
+};
+
+/* ============ SCREEN SWITCHING ============ */
+// Switches screens by setting inline display styles directly on ALL screens
+// (not just toggling a CSS class). This is deliberately redundant with the
+// .screen/.screen.active CSS rule: if the page's <style> block is ever
+// stripped, ignored, or overridden by an embedding environment (e.g. a
+// preview iframe), inline styles still guarantee only one screen is visible.
+const ALL_SCREEN_IDS = ['screen-welcome', 'screen-exam', 'screen-result'];
+const SCREEN_DISPLAY_TYPE = { 'screen-welcome': 'flex', 'screen-exam': 'block', 'screen-result': 'flex' };
+function showScreen(targetId){
+  ALL_SCREEN_IDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(id === targetId){
+      el.classList.add('active');
+      el.style.display = SCREEN_DISPLAY_TYPE[id];
+    } else {
+      el.classList.remove('active');
+      el.style.display = 'none';
+    }
+  });
+}
+
+function normalize(str){
+  // Unify all apostrophe-like characters (straight, curly left/right, backtick, prime)
+  // so answers typed with phone "smart quotes" (e.g. iOS auto-correct) are still accepted.
+  return str.trim().toLowerCase().replace(/\s+/g,' ').replace(/[\u2018\u2019\u02BC\u2032`']/g,"'");
+}
+
+/* ============ TOAST ============ */
+function showToast(msg){
+  const container = document.getElementById('toast-container');
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  container.appendChild(el);
+  setTimeout(()=> el.remove(), 3500);
+}
+
+/* ============ FEEDBACK BOX (shared by all 3 parts) ============ */
+function renderFeedbackHtml(isCorrect, correctDisplay, explanationText){
+  return `
+    <div class="rounded-lg p-3 border-2" style="border-color:${isCorrect ? 'var(--c-primary)' : '#f87171'}; background:var(--c-explain-bg)">
+      <p class="font-semibold text-sm ${isCorrect ? '' : 'text-red-700'}">${isCorrect ? '✅ Correct!' : '❌ Incorrect'} - Correct answer: ${correctDisplay}</p>
+      <p class="text-gray-600 text-sm mt-1">💡 ${explanationText}</p>
+    </div>
+  `;
+}
+
+/* ============ PART TABS (3 separate pages: Matching / MCQ / Fill in the blank) ============ */
+function countChecked(partKey){
+  let count = 0;
+  if(partKey === 'matching'){
+    for(let i=0;i<TOTAL_MATCHING;i++) if(state.checked[i]) count++;
+  } else if(partKey === 'mcq'){
+    for(let i=0;i<TOTAL_MCQ;i++) if(state.checked[TOTAL_MATCHING+i]) count++;
+  } else {
+    for(let i=0;i<TOTAL_FILLBLANK;i++) if(state.checked[TOTAL_MATCHING+TOTAL_MCQ+i]) count++;
+  }
+  return count;
+}
+
+const PART_ORDER = ['matching', 'mcq', 'fillblank'];
+const PART_META = {
+  matching:  {label: 'Part 1: Matching',            total: TOTAL_MATCHING},
+  mcq:       {label: 'Part 2: Multiple Choice',     total: TOTAL_MCQ},
+  fillblank: {label: 'Part 3: Fill in the blank',   total: TOTAL_FILLBLANK}
+};
+
+function nextPartKey(){
+  const i = PART_ORDER.indexOf(state.currentPart);
+  return (i >= 0 && i < PART_ORDER.length - 1) ? PART_ORDER[i+1] : null;
+}
+
+function updateProgressAndNextButton(){
+  const meta = PART_META[state.currentPart];
+  const checkedCount = countChecked(state.currentPart);
+  const allDone = checkedCount === meta.total;
+
+  document.getElementById('part-progress').textContent = meta.label + ' - ' + checkedCount + '/' + meta.total + ' checked';
+
+  const btn = document.getElementById('btn-next-part');
+  btn.disabled = !allDone;
+  const upcoming = nextPartKey();
+  if(upcoming){
+    btn.textContent = allDone ? ('Next: ' + PART_META[upcoming].label) : ('Check all ' + meta.total + ' questions to continue');
+  } else {
+    btn.textContent = allDone ? 'Submit Exam' : ('Check all ' + meta.total + ' questions to submit');
+  }
+}
+
+function renderExamScreen(){
+  const container = document.getElementById('part-content');
+  container.innerHTML = '';
+  if(state.currentPart === 'matching') renderMatchingPart(container);
+  if(state.currentPart === 'mcq') renderMcqPart(container);
+  if(state.currentPart === 'fillblank') renderFillblankPart(container);
+  updateProgressAndNextButton();
+  try{ window.scrollTo(0,0); } catch(e){ /* scrollTo not critical - ignore if unavailable */ }
+}
+
+document.getElementById('btn-next-part').addEventListener('click', ()=>{
+  const upcoming = nextPartKey();
+  if(upcoming){
+    state.currentPart = upcoming;
+    renderExamScreen();
+  } else {
+    submitExam(false);
+  }
+});
+
+/* ============ PART 1: MATCHING (full sentence shown in the dropdown; checked instantly on selection) ============ */
+function renderMatchingPart(container){
+  container.innerHTML = `
+    <p class="text-xs text-gray-400 mb-4">Choose the option that best matches each sentence. Your answer is checked as soon as you choose it.</p>
+    <div id="matching-list" class="space-y-5"></div>
+  `;
+  const list = document.getElementById('matching-list');
+
+  matchingQuestions.forEach((q, idx)=>{
+    const gIdx = idx;
+    const isChecked = !!state.checked[gIdx];
+    const studentVal = state.answers[gIdx] || "";
+
+    const row = document.createElement('div');
+    row.className = 'border-b pb-4';
+    row.innerHTML = `
+      <p class="font-medium text-gray-800 mb-2">${idx+1}. ${q.text}</p>
+      <select class="matching-select border-2 rounded-xl px-3 py-2 w-full" style="border-color:var(--c-primary)" ${isChecked ? 'disabled' : ''}>
+        <option value="">-- Choose --</option>
+        ${matchingLegend.map(o=>`<option value="${o.l}" ${studentVal===o.l ? 'selected' : ''}>${o.l}. ${o.t}</option>`).join('')}
+      </select>
+      <div class="feedback-box mt-2 ${isChecked ? '' : 'hidden'}"></div>
+    `;
+    list.appendChild(row);
+
+    const sel = row.querySelector('.matching-select');
+    const feedbackDiv = row.querySelector('.feedback-box');
+    const correctText = q.answer + '. ' + matchingLegend.find(o=>o.l===q.answer).t;
+
+    sel.addEventListener('change', ()=>{
+      if(state.checked[gIdx] || !sel.value) return;
+      state.answers[gIdx] = sel.value;
+      state.checked[gIdx] = true;
+      sel.disabled = true;
+      const isCorrect = sel.value === q.answer;
+      feedbackDiv.classList.remove('hidden');
+      feedbackDiv.innerHTML = renderFeedbackHtml(isCorrect, correctText, matchingExplanations[idx]);
+      updateProgressAndNextButton();
+    });
+
+    if(isChecked){
+      feedbackDiv.innerHTML = renderFeedbackHtml(studentVal === q.answer, correctText, matchingExplanations[idx]);
+    }
+  });
+}
+
+/* ============ PART 2: MULTIPLE CHOICE (instant check + explanation on selection) ============ */
+function renderMcqPart(container){
+  container.innerHTML = `<div id="mcq-list" class="space-y-5"></div>`;
+  const list = document.getElementById('mcq-list');
+
+  mcqQuestions.forEach((q, idx)=>{
+    const gIdx = TOTAL_MATCHING + idx;
+    const isChecked = !!state.checked[gIdx];
+
+    const card = document.createElement('div');
+    card.className = 'border rounded-xl p-4';
+    card.innerHTML = `
+      <p class="font-semibold text-gray-800 mb-4">${idx+1}. ${q.text}</p>
+      <div class="mcq-options grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      <div class="feedback-box mt-3 ${isChecked ? '' : 'hidden'}"></div>
+    `;
+    list.appendChild(card);
+
+    const optsDiv = card.querySelector('.mcq-options');
+    const feedbackDiv = card.querySelector('.feedback-box');
+    const buttons = {};
+
+    Object.keys(q.options).forEach(letter=>{
+      const btn = document.createElement('button');
+      btn.className = 'opt-btn rounded-xl px-4 py-3 text-left font-medium';
+      btn.innerHTML = `<b>${letter}.</b> ${q.options[letter]}`;
+      buttons[letter] = btn;
+      optsDiv.appendChild(btn);
+    });
+
+    // Applies the "checked" visuals (locking + coloring + feedback) to THIS card only.
+    // Deliberately does NOT call renderExamScreen()/full re-render - doing so previously
+    // reset window.scrollTo(0,0) on every single click, which jarringly jumped the page
+    // back up to question 1 every time a student checked an MCQ answer.
+    function applyCheckedVisuals(){
+      const currentAns = state.answers[gIdx];
+      Object.keys(buttons).forEach(letter=>{
+        const btn = buttons[letter];
+        btn.disabled = true;
+        if(letter === q.answer){
+          btn.style.background = 'var(--c-explain-bg)';
+          btn.style.borderColor = 'var(--c-primary)';
+        } else if(letter === currentAns){
+          btn.style.background = '#fee2e2';
+          btn.style.borderColor = '#f87171';
+        } else {
+          btn.style.opacity = '0.55';
+        }
+      });
+      const isCorrect = currentAns === q.answer;
+      feedbackDiv.classList.remove('hidden');
+      feedbackDiv.innerHTML = renderFeedbackHtml(isCorrect, q.answer + '. ' + q.options[q.answer], mcqExplanations[idx]);
+    }
+
+    Object.keys(buttons).forEach(letter=>{
+      buttons[letter].addEventListener('click', ()=>{
+        if(state.checked[gIdx]) return; // lock: instant-check means one shot only
+        state.answers[gIdx] = letter;
+        state.checked[gIdx] = true;
+        applyCheckedVisuals();
+        updateProgressAndNextButton();
+      });
+    });
+
+    if(isChecked){
+      applyCheckedVisuals();
+    }
+  });
+}
+
+/* ============ PART 3: FILL IN THE BLANK (check on Submit button per question) ============ */
+function renderFillblankPart(container){
+  container.innerHTML = `<div id="fillblank-list" class="space-y-5"></div>`;
+  const list = document.getElementById('fillblank-list');
+
+  fillblankQuestions.forEach((q, idx)=>{
+    const gIdx = TOTAL_MATCHING + TOTAL_MCQ + idx;
+    const isChecked = !!state.checked[gIdx];
+    const userVals = state.answers[gIdx] || [];
+
+    const parts = q.text.split(/\{(\d+)\}/);
+    let qHtml = `<p class="font-semibold text-gray-800 leading-loose mb-3">${idx+1}. `;
+    parts.forEach((part, pIdx)=>{
+      if(pIdx % 2 === 0){
+        qHtml += part;
+      } else {
+        const blankIdx = parseInt(part,10);
+        const savedVal = userVals[blankIdx] || "";
+        qHtml += `<input type="text" class="fillblank-input" data-blank="${blankIdx}" value="${savedVal.replace(/"/g,'&quot;')}" placeholder="..." ${isChecked ? 'disabled' : ''}>`;
+      }
+    });
+    qHtml += `</p>`;
+
+    const card = document.createElement('div');
+    card.className = 'border rounded-xl p-4';
+    card.innerHTML = qHtml + `
+      <button class="submit-btn px-4 py-2 rounded-xl font-semibold text-white" style="background:var(--c-check)" disabled>${isChecked ? 'Checked' : 'Submit'}</button>
+      <div class="feedback-box mt-3 ${isChecked ? '' : 'hidden'}"></div>
+    `;
+    list.appendChild(card);
+
+    const submitBtn = card.querySelector('.submit-btn');
+    const feedbackDiv = card.querySelector('.feedback-box');
+    const blankCount = q.blanks.length;
+
+    // The Submit/Check button only becomes clickable once the student has
+    // typed something into every blank for this question - it should not be
+    // possible to check an answer that hasn't been attempted yet.
+    function updateSubmitEnabled(){
+      if(state.checked[gIdx]) return; // already checked and locked, leave as-is
+      const vals = state.answers[gIdx] || [];
+      const allFilled = vals.length === blankCount && vals.every(v => v && v.trim() !== '');
+      submitBtn.disabled = !allFilled;
+    }
+
+    card.querySelectorAll('.fillblank-input').forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        if(!state.answers[gIdx]) state.answers[gIdx] = [];
+        state.answers[gIdx][parseInt(inp.dataset.blank,10)] = inp.value;
+        updateSubmitEnabled();
+      });
+    });
+    updateSubmitEnabled();
+    if(isChecked) submitBtn.disabled = true;
+
+    function evaluate(){
+      const vals = state.answers[gIdx] || [];
+      let allCorrect = true;
+      const correctParts = [];
+      q.blanks.forEach((accepted, bIdx)=>{
+        const val = vals[bIdx] || "";
+        const isBCorrect = accepted.some(a => normalize(a) === normalize(val));
+        if(!isBCorrect) allCorrect = false;
+        correctParts.push(accepted[0]);
+      });
+      return {allCorrect, correctDisplay: correctParts.join(' / ')};
+    }
+
+    submitBtn.addEventListener('click', ()=>{
+      if(state.checked[gIdx] || submitBtn.disabled) return;
+      state.checked[gIdx] = true;
+      card.querySelectorAll('.fillblank-input').forEach(inp => inp.disabled = true);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Checked';
+      const result = evaluate();
+      feedbackDiv.classList.remove('hidden');
+      feedbackDiv.innerHTML = renderFeedbackHtml(result.allCorrect, result.correctDisplay, fillblankExplanations[idx]);
+      updateProgressAndNextButton();
+    });
+
+    if(isChecked){
+      const result = evaluate();
+      feedbackDiv.innerHTML = renderFeedbackHtml(result.allCorrect, result.correctDisplay, fillblankExplanations[idx]);
+    }
+  });
+}
+
+/* ============ TIMER ============ */
+function formatDuration(ms){
+  const totalSec = Math.floor(ms/1000);
+  const h = Math.floor(totalSec/3600);
+  const m = Math.floor((totalSec%3600)/60);
+  const s = totalSec%60;
+  return (h>0? String(h).padStart(2,'0')+':' : '') + String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+function startTimer(){
+  state.startTime = new Date();
+  state.timerInterval = setInterval(()=>{
+    const elapsed = Date.now() - state.startTime.getTime();
+    document.getElementById('timer').textContent = formatDuration(elapsed);
+  }, 1000);
+}
+
+/* ============ SECURITY / ANTI-CHEAT ============ */
+function enterFullscreen(){
+  // Wrapped in try/catch because some contexts (sandboxed iframes, previews without
+  // "allow=fullscreen", strict permissions policies) make requestFullscreen() throw
+  // SYNCHRONOUSLY instead of returning a rejected promise. Without this guard, that
+  // throw would abort the rest of the Start-button click handler and the app would
+  // appear completely frozen on the welcome screen.
+  try{
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+    if(req){
+      const result = req.call(el);
+      if(result && typeof result.catch === 'function'){
+        result.catch(()=>{ console.warn('Fullscreen request was rejected by the browser.'); });
+      }
+    }
+  } catch(e){
+    console.warn('Fullscreen is not available in this context, continuing without it: ', e);
+  }
+}
+function isFullscreen(){
+  return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+}
+
+function triggerViolation(reason){
+  if(state.submitted) return;
+  if(state.blocked) return; // already showing overlay, avoid double counting
+  state.violationCount++;
+  showToast('Violation detected: ' + reason);
+  if(state.violationCount >= 3){
+    document.getElementById('violation-overlay').style.display = 'none';
+    submitExam(true);
+    return;
+  }
+  state.blocked = true;
+  document.getElementById('ov-count').textContent = state.violationCount;
+  document.getElementById('violation-overlay').style.display = 'flex';
+}
+
+document.addEventListener('visibilitychange', ()=>{
+  if(document.hidden && !state.submitted && document.getElementById('screen-exam').classList.contains('active')){
+    triggerViolation('You switched tabs or minimized the window.');
+  }
+});
+window.addEventListener('blur', ()=>{
+  if(!state.submitted && document.getElementById('screen-exam').classList.contains('active') && !state.blocked){
+    triggerViolation('You clicked outside the exam window.');
+  }
+});
+document.addEventListener('fullscreenchange', ()=>{
+  if(!isFullscreen() && !state.submitted && document.getElementById('screen-exam').classList.contains('active')){
+    triggerViolation('You exited fullscreen mode.');
+  }
+});
+
+function startResizePolling(){
+  state.pollInterval = setInterval(()=>{
+    if(state.submitted) return;
+    if(!document.getElementById('screen-exam').classList.contains('active')) return;
+    const shrunk = window.innerHeight < screen.height * 0.85 || window.innerWidth < screen.width * 0.85;
+    if(shrunk && !state.blocked){
+      triggerViolation('The exam window was resized or minimized.');
+    }
+  }, 1000);
+}
+
+document.getElementById('btn-back-fullscreen').addEventListener('click', ()=>{
+  enterFullscreen();
+  setTimeout(()=>{
+    if(isFullscreen()){
+      state.blocked = false;
+      document.getElementById('violation-overlay').style.display = 'none';
+    } else {
+      showToast('Please allow fullscreen mode to continue.');
+    }
+  }, 300);
+});
+
+/* ============ START EXAM (welcome -> exam, separate pages) ============ */
+document.getElementById('btn-start').addEventListener('click', ()=>{
+  const nameInput = document.getElementById('input-name');
+  const name = nameInput.value.trim();
+  if(!name){
+    document.getElementById('name-error').classList.remove('hidden');
+    nameInput.classList.remove('shake-error');
+    // force reflow so the shake animation can be re-triggered on repeated clicks
+    void nameInput.offsetWidth;
+    nameInput.classList.add('shake-error');
+    nameInput.focus();
+    return;
+  }
+  document.getElementById('name-error').classList.add('hidden');
+  nameInput.classList.remove('shake-error');
+  state.studentName = name;
+
+  enterFullscreen();
+
+  showScreen('screen-exam');
+
+  state.currentPart = 'matching';
+  renderExamScreen();
+  startTimer();
+  startResizePolling();
+});
+
+function scoreMatching(){
+  let correct = 0;
+  for(let idx=0; idx<TOTAL_MATCHING; idx++){
+    if(state.answers[idx] === matchingQuestions[idx].answer) correct++;
+  }
+  return correct;
+}
+function scoreMcq(){
+  let correct = 0;
+  for(let idx=0; idx<TOTAL_MCQ; idx++){
+    const gIdx = TOTAL_MATCHING + idx;
+    if(state.answers[gIdx] === mcqQuestions[idx].answer) correct++;
+  }
+  return correct;
+}
+function scoreFillblank(){
+  let correct = 0;
+  for(let idx=0; idx<TOTAL_FILLBLANK; idx++){
+    const gIdx = TOTAL_MATCHING + TOTAL_MCQ + idx;
+    const userVals = state.answers[gIdx] || [];
+    const blanks = fillblankQuestions[idx].blanks;
+    blanks.forEach((accepted, bIdx)=>{
+      const val = userVals[bIdx] || "";
+      const isCorrect = accepted.some(a => normalize(a) === normalize(val));
+      if(isCorrect) correct++;
+    });
+  }
+  return correct;
+}
+
+function submitExam(forced){
+  if(state.submitted) return;
+  state.submitted = true;
+  state.endTime = new Date();
+  clearInterval(state.timerInterval);
+  clearInterval(state.pollInterval);
+  document.getElementById('violation-overlay').style.display = 'none';
+
+  const mCorrect = scoreMatching();
+  const qCorrect = scoreMcq();
+  const fCorrect = scoreFillblank();
+  const fTotal = fillblankQuestions.reduce((sum,q)=>sum+q.blanks.length,0);
+  const totalCorrect = mCorrect + qCorrect + fCorrect;
+  const totalPoints = TOTAL_MATCHING + TOTAL_MCQ + fTotal;
+  const percent = Math.round((totalCorrect/totalPoints)*100);
+
+  document.getElementById('result-name').textContent = state.studentName;
+  document.getElementById('score-percent').textContent = percent + '%';
+  document.getElementById('score-fraction').textContent = totalCorrect + '/' + totalPoints;
+  document.getElementById('score-matching').textContent = mCorrect + '/' + TOTAL_MATCHING;
+  document.getElementById('score-mcq').textContent = qCorrect + '/' + TOTAL_MCQ;
+  document.getElementById('score-fillblank').textContent = fCorrect + '/' + fTotal;
+
+  const circle = document.getElementById('score-circle');
+  const circumference = 2 * Math.PI * 88;
+  circle.style.strokeDasharray = circumference;
+  circle.style.strokeDashoffset = circumference - (percent/100)*circumference;
+
+  document.getElementById('result-start').textContent = state.startTime.toLocaleString('en-GB');
+  document.getElementById('result-end').textContent = state.endTime.toLocaleString('en-GB');
+  document.getElementById('result-duration').textContent = formatDuration(state.endTime - state.startTime);
+  document.getElementById('result-violations').textContent = state.violationCount;
+
+  showScreen('screen-result');
+
+  if(document.fullscreenElement){
+    document.exitFullscreen().catch(()=>{});
+  }
+}
+</script>
+</body>
+</html>
